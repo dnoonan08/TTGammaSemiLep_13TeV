@@ -264,9 +264,10 @@ double makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReader reade
 		else if(jetflavor == 4) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
 		else SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
 
-		SFb = 1.;
+		//		SFb = 1.;
 		prod *= 1.0 - SFb;
 	}
+
 	return 1.0 - prod;
 }
 
