@@ -21,6 +21,28 @@ const double photonID_RhoCorrR03NeuHadIso_1[2][3] = { {0.04, 0.04, 0.04} ,    {0
 const double photonID_RhoCorrR03PhoIso_0[2][3]    = { {1.3, 0.7, 0.5} ,       {999, 1.0, 1.0}       };
 const double photonID_RhoCorrR03PhoIso_1[2][3]    = { {0.005, 0.005, 0.005} , {0.005, 0.005, 0.005} };
 
+// Effective areas for photon rho correction
+// First index is the egammaRegion (from above) second is whether it isChHad, NeuHad, or Pho 
+///                                   chhadEA, nhadEA, photEA
+static const double photonEA[7][3] = {{0.0360, 0.0597, 0.1210},
+									  {0.0377, 0.0807, 0.1107},
+									  {0.0306, 0.0629, 0.0699},
+									  {0.0283, 0.0197, 0.1056},
+									  {0.0254, 0.0184, 0.1457},
+									  {0.0217, 0.0284, 0.1719},
+									  {0.0167, 0.0591, 0.1998}};
+
+//https://indico.cern.ch/event/482673/contributions/2187022/attachments/1282446/1905912/talk_electron_ID_spring16.pdf
+static const double electronEA[7] = {0.1703,
+									 0.1715,
+									 0.1213,
+									 0.1230,
+									 0.1635,
+									 0.1937,
+									 0.2393};
+
+
+
 double dR(double eta1, double phi1, double eta2, double phi2);
 
 class Selector{
@@ -44,15 +66,17 @@ public:
 	std::vector<int> bJets;
 	
 	// calculated rho corrected PF isolations
-	std::vector<double> Ele03RelIso;
-	std::vector<double> Mu04RelIso;
-	std::vector<double> Pho03ChHadIso;
-	std::vector<double> Pho03ChHadSCRIso;
-	std::vector<double> Pho03NeuHadIso;
-	std::vector<double> Pho03PhoIso;
-	std::vector<double> Pho03PhoSCRIso;
-	std::vector<double> Pho03RandPhoIso;
-	std::vector<double> Pho03RandChHadIso;
+	std::vector<double> EleRelIso_corr;
+	std::vector<double> MuRelIso_corr;
+
+	std::vector<double> PhoChHadIso_corr;
+	std::vector<double> PhoNeuHadIso_corr;
+	std::vector<double> PhoPhoIso_corr;
+
+	/* std::vector<double> Pho03ChHadSCRIso; */
+	/* std::vector<double> Pho03PhoSCRIso; */
+	/* std::vector<double> Pho03RandPhoIso; */
+	/* std::vector<double> Pho03RandChHadIso; */
 	
 	// jets
 	double jet_Pt_cut;
@@ -112,7 +136,7 @@ private:
 	double phoEffArea03ChHad(double phoEta);
 	double phoEffArea03NeuHad(double phoEta);
 	double phoEffArea03Pho(double phoEta);
-	int phoRegion(double absEta);
+	int egammaRegion(double absEta);
 
 	bool passEleTightID(int eleInd);
 	bool passEleLooseID(int eleInd);

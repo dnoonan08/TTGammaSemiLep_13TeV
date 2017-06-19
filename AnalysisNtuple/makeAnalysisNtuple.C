@@ -8,7 +8,9 @@
 #include"PUReweight.h"
 
 
-std::string PUfilename = "MyDataPileupHistogram.root";
+std::string PUfilename = "Data_2016BCDGH_Pileup.root";
+std::string PUfilename_up = "Data_2016BCDGH_Pileup_scaledUp.root";
+std::string PUfilename_down = "Data_2016BCDGH_Pileup_scaledDown.root";
 int jecvar012_g = 1; // 0:down, 1:norm, 2:up
 int jervar012_g = 1; // 0:down, 1:norm, 2:up
 int mueff012_g = 1; // 0:down, 1:norm, 2:up
@@ -22,11 +24,6 @@ int toppt012_g = 1; // 0:down, 1:norm, 2: up
 
 #include "BTagCalibrationStandalone.h"
 
-BTagCalibration calib("csvv2", "CSVv2_Moriond17_B_H.csv");
-
-BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
-							 "central",             // central sys type
-							 {"up", "down"});      // other sys types
 
 #ifdef makeAnalysisNtuple_cxx
 makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
@@ -36,6 +33,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	selector = new Selector();
 	evtPick = new EventPick("");
+
+	BTagCalibration calib("csvv2", "CSVv2_Moriond17_B_H.csv");
+
+	BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
+								 "central",             // central sys type
+								 {"up", "down"});      // other sys types
 
 	if (tree == 0) {
 		std::cout <<"Tree not recognized" << endl;
@@ -84,9 +87,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	
 	outputTree = new TTree("AnalysisTree","AnalysisTree");
 
+	InitBranches();
+
 	PUReweight* PUweighter = new PUReweight(ac-3, av+3, PUfilename);
-	// PUReweight* PUweighterUp = new PUReweight(ac-3, av+3, PUfilename);
-	// PUReweight* PUweighterDown = new PUReweight(ac-3, av+3, PUfilename);
+	PUReweight* PUweighterUp = new PUReweight(ac-3, av+3, PUfilename_up);
+	PUReweight* PUweighterDown = new PUReweight(ac-3, av+3, PUfilename_down);
 	bool isMC;
 
 
@@ -96,7 +101,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	Long64_t nEntr = tree->GetEntries();
 	//	for(Long64_t entry=0; entry<100; entry++){
 	for(Long64_t entry=0; entry<nEntr; entry++){
-		if(entry%10000 == 0) std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
+		if(entry%1000 == 0) std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
 
 		tree->GetEntry(entry);
 		isMC = !(tree->isData_);
@@ -111,14 +116,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 			if(isMC) {
 				_PUweight    = PUweighter->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
-				std::cout << "PUweight " << _PUweight << std::endl;
-				// _PUweight_Up = PUweighterUp->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
-				// _PUweight_Do = PUweighterDown->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
-				_btagWeight    = getBtagSF("central");
-				// _btagWeight_Up = getBtagSF("up");
-				// _btagWeight_Do = getBtagSF("down");
-				
-
+				//				std::cout << "PUweight " << _PUweight << std::endl;
+				_PUweight_Up = PUweighterUp->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
+				_PUweight_Do = PUweighterDown->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
+				_btagWeight    = getBtagSF("central", reader);
+				_btagWeight_Up = getBtagSF("up", reader);
+				_btagWeight_Do = getBtagSF("down", reader);				
 			}
 
 			outputTree->Fill();
@@ -143,7 +146,7 @@ void makeAnalysisNtuple::FillEvent()
 	_nVtx		     = tree->nVtx_;
 	_nGoodVtx	     = tree->nGoodVtx;
 	_isPVGood	     = tree->isPVGood_;
-	_rho		     = tree->isPVGood_;
+	_rho		     = tree->rho_;
 
 	_genMET		     = tree->genMET_;
 	_pfMET		     = tree->pfMET_;
@@ -155,41 +158,38 @@ void makeAnalysisNtuple::FillEvent()
 	_nJet            = evtPick->Jets.size();
 	_nBJet           = evtPick->bJets.size();
 
+
 	for (int i_ele = 0; i_ele <_nEle; i_ele++){
 		int eleInd = evtPick->Electrons.at(i_ele);
 		_elePt.push_back(tree->elePt_->at(eleInd));
 		_elePhi.push_back(tree->elePhi_->at(eleInd));
 		_eleSCEta.push_back(tree->eleSCEta_->at(eleInd));
-		_elePFChIso.push_back(tree->elePFChIso_->at(eleInd));
-		_elePFPhoIso.push_back(tree->elePFPhoIso_->at(eleInd));
-		_elePFNeuIso.push_back(tree->elePFNeuIso_->at(eleInd));
+		_elePFRelIso.push_back(selector->EleRelIso_corr.at(eleInd));
 	}
+
 
 	for (int i_mu = 0; i_mu <_nMu; i_mu++){
 		int muInd = evtPick->Muons.at(i_mu);
 		_muPt.push_back(tree->muPt_->at(muInd));
 		_muPhi.push_back(tree->muPhi_->at(muInd));
 		_muEta.push_back(tree->muEta_->at(muInd));
-		_muPFChIso.push_back(tree->muPFChIso_->at(muInd));
-		_muPFPhoIso.push_back(tree->muPFPhoIso_->at(muInd));
-		_muPFNeuIso.push_back(tree->muPFNeuIso_->at(muInd));
-		_muPFPUIso.push_back(tree->muPFPUIso_->at(muInd));
+		_muPFRelIso.push_back(selector->MuRelIso_corr.at(muInd));
 	}
 
 	_passPresel_Ele  = evtPick->passPresel_ele;
 	_passPresel_Mu   = evtPick->passPresel_mu;
 	_passAll_Ele     = evtPick->passAll_ele;
 	_passAll_Mu      = evtPick->passAll_mu;
-   
+
 	for (int i_pho = 0; i_pho <_nPho; i_pho++){
 		int phoInd = evtPick->Photons.at(i_pho);
 		_phoEt.push_back(tree->phoEt_->at(phoInd));
 		_phoEta.push_back(tree->phoEta_->at(phoInd));
 		_phoPhi.push_back(tree->phoPhi_->at(phoInd));
 		_phoSigmaIEtaIEtaFull5x5.push_back(tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd));
-		_phoPFChIso.push_back(tree->phoPFChIso_->at(phoInd));
-		_phoPFPhoIso.push_back(tree->phoPFPhoIso_->at(phoInd));
-		_phoPFNeuIso.push_back(tree->phoPFNeuIso_->at(phoInd));
+		_phoPFChIso.push_back( selector->PhoChHadIso_corr.at(phoInd));
+		_phoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
+		_phoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
 	}
 
 
@@ -242,7 +242,7 @@ double makeAnalysisNtuple::topPtWeight(){
 	return 1.0;
 }
 
-double makeAnalysisNtuple::getBtagSF(string sysType){
+double makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReader reader){
 	
 	double prod = 1.0;
 	double jetpt;
@@ -250,7 +250,10 @@ double makeAnalysisNtuple::getBtagSF(string sysType){
 	int jetflavor;
 	double SFb;
 
-	if(evtPick->bJets.size() == 0) return 1.0;
+	if(evtPick->bJets.size() == 0) {
+		std::cout << "No bJets" << std::endl;
+		return 1.0;
+	}
 
 	for(std::vector<int>::const_iterator bjetInd = evtPick->bJets.begin(); bjetInd != evtPick->bJets.end(); bjetInd++){
 		jetpt = tree->jetPt_->at(*bjetInd);

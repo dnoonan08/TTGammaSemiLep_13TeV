@@ -75,15 +75,15 @@ void Selector::clear_vectors(){
 	Jets.clear();
 	bJets.clear();
 	
-	Ele03RelIso.clear();
-	Mu04RelIso.clear();
-	Pho03ChHadIso.clear();
-	Pho03ChHadSCRIso.clear();
-	Pho03NeuHadIso.clear();
-	Pho03PhoIso.clear();
-	Pho03PhoSCRIso.clear();
-	Pho03RandPhoIso.clear();
-	Pho03RandChHadIso.clear();
+	EleRelIso_corr.clear();
+	MuRelIso_corr.clear();
+	PhoChHadIso_corr.clear();
+	PhoNeuHadIso_corr.clear();
+	PhoPhoIso_corr.clear();
+	// Pho03ChHadSCRIso.clear();
+	// Pho03PhoSCRIso.clear();
+	// Pho03RandPhoIso.clear();
+	// Pho03RandChHadIso.clear();
 }
 
 void Selector::filter_photons(){
@@ -96,6 +96,16 @@ void Selector::filter_photons(){
 		// bool passLoosePhotonID  = photonIDbit >> 0 & 1;
 		// bool passMediumPhotonID = photonIDbit >> 1 & 1;
 		// bool passTightPhotonID  = photonIDbit >> 2 & 1;
+
+
+		double rhoCorrPFChIso = tree->phoPFChIso_->at(phoInd) - phoEffArea03ChHad(eta)*tree->rho_;
+		double rhoCorrPFNeuIso = tree->phoPFNeuIso_->at(phoInd) - phoEffArea03NeuHad(eta)*tree->rho_;
+		double rhoCorrPFPhoIso = tree->phoPFPhoIso_->at(phoInd) - phoEffArea03Pho(eta)*tree->rho_;
+
+		PhoChHadIso_corr.push_back(rhoCorrPFChIso);
+		PhoNeuHadIso_corr.push_back(rhoCorrPFNeuIso);
+		PhoPhoIso_corr.push_back(rhoCorrPFPhoIso);
+
 
 		bool passMediumPhotonID = passPhoMediumID(phoInd);
 
@@ -141,8 +151,19 @@ void Selector::filter_electrons(){
 		double pt = tree->elePt_->at(eleInd);
 
 		// Not actually needed at the moment, the relIso cuts are incorporated into the electron ID requirements
-		double rho_zero = std::max(0.0, (double)tree->rho_);
-		double relIso = 0;
+		double rho = tree->rho_;
+		double ea = electronEA[egammaRegion(absEta)];
+
+
+		// EA subtraction
+		double PFrelIso_corr = ( tree->elePFChIso_->at(eleInd) + 
+								 max(0.0, tree->elePFNeuIso_->at(eleInd) + 
+									 tree->elePFPhoIso_->at(eleInd) -
+									 rho*ea
+									 )
+								 ) / pt;
+		
+		EleRelIso_corr.push_back(PFrelIso_corr);
 
 
 		uint eleID = tree->eleIDbit_->at(eleInd);
@@ -196,13 +217,15 @@ void Selector::filter_muons(){
 		double eta = tree->muEta_->at(muInd);
 		double pt = tree->muPt_->at(muInd);
 
-
+		// Applying the beta corrections
 		double PFrelIso_corr = ( tree->muPFChIso_->at(muInd) + 
-					 max(0.0, tree->muPFNeuIso_->at(muInd) + 
-					     tree->muPFPhoIso_->at(muInd) -
-					     0.5*tree->muPFPUIso_->at(muInd)
-					     ) 
-					 ) / pt;
+								 max(0.0, tree->muPFNeuIso_->at(muInd) + 
+									 tree->muPFPhoIso_->at(muInd) -
+									 0.5*tree->muPFPUIso_->at(muInd)
+									 ) 
+								 ) / pt;
+
+		MuRelIso_corr.push_back(PFrelIso_corr);
 
 		//MuonID, cuts outlined here:
 		//https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2#Muon_Identification
@@ -295,7 +318,7 @@ bool Selector::fidEtaPass(double Eta){
 }
 
 // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonID2012#Effective_Areas_for_rho_correcti
-int Selector::phoRegion(double absEta){
+int Selector::egammaRegion(double absEta){
 	int region = 0;
 	if( absEta >= 1.0  ) region++;
 	if( absEta >= 1.479) region++;
@@ -308,30 +331,20 @@ int Selector::phoRegion(double absEta){
 
 // Currently, these are the listed values for the SPRING16 MC samples, need to verify that they are what should be used from SUMMER16 as well
 
-// Effective areas for photon rho correction
-// First index is the phoRegion (from above) second is whether it isChHad, NeuHad, or Pho 
-///                                   chhadEA, nhadEA, photEA
-static const double photonEA[7][3] = {{0.0360, 0.0597, 0.1210},
-				      {0.0377, 0.0807, 0.1107},
-				      {0.0306, 0.0629, 0.0699},
-				      {0.0283, 0.0197, 0.1056},
-				      {0.0254, 0.0184, 0.1457},
-				      {0.0217, 0.0284, 0.1719},
-				      {0.0167, 0.0591, 0.1998}};
 
 double Selector::phoEffArea03ChHad(double phoEta){
 	double eta = TMath::Abs(phoEta);
-	return photonEA[phoRegion(eta)][0];
+	return photonEA[egammaRegion(eta)][0];
 }
 
 double Selector::phoEffArea03NeuHad(double phoEta){
 	double eta = TMath::Abs(phoEta);
-	return photonEA[phoRegion(eta)][1];
+	return photonEA[egammaRegion(eta)][1];
 }
 
 double Selector::phoEffArea03Pho(double phoEta){
 	double eta = TMath::Abs(phoEta);
-	return photonEA[phoRegion(eta)][2];
+	return photonEA[egammaRegion(eta)][2];
 }
 
 bool Selector::passEleTightID(int eleInd){
@@ -343,7 +356,7 @@ bool Selector::passEleLooseID(int eleInd){
 }
 
 bool Selector::passPhoMediumID(int phoInd){
-	double pt = tree->phoEt_->at(phoInd);  
+	double pt = tree->phoEt_->at(phoInd);
     double eta = TMath::Abs(tree->phoEta_->at(phoInd));
     bool passMediumID = false;
 

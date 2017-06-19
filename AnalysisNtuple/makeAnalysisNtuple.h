@@ -74,18 +74,13 @@ private :
 	std::vector<float>   _elePt;
 	std::vector<float>   _elePhi;
 	std::vector<float>   _eleSCEta;
-	std::vector<float>   _elePFChIso;
-	std::vector<float>   _elePFPhoIso;
-	std::vector<float>   _elePFNeuIso;
+	std::vector<float>   _elePFRelIso;
 	
 	Int_t           _nMu;
 	std::vector<float>   _muPt;
 	std::vector<float>   _muEta;
 	std::vector<float>   _muPhi;
-	std::vector<float>   _muPFChIso;
-	std::vector<float>   _muPFPhoIso;
-	std::vector<float>   _muPFNeuIso;
-	std::vector<float>   _muPFPUIso;
+	std::vector<float>   _muPFRelIso;
 	
 	Int_t                _nJet;
 	Int_t                _nBJet;
@@ -119,7 +114,7 @@ private :
 
 	double SFtop(double pt);
 	double topPtWeight();
-	double getBtagSF(string sysType);
+	double getBtagSF(string sysType, BTagCalibrationReader reader);
 	double WjetsBRreweight();
 
 };
@@ -159,20 +154,16 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("elePt"					   , &_elePt					   );
 	outputTree->Branch("elePhi"					   , &_elePhi				   ); 
 	outputTree->Branch("eleSCEta"					   , &_eleSCEta				   ); 
-	outputTree->Branch("elePFChIso"				   , &_elePFChIso			   ); 
-	outputTree->Branch("elePFPhoIso"				   , &_elePFPhoIso			   ); 
-	outputTree->Branch("elePFNeuIso"				   , &_elePFNeuIso			   ); 
+	outputTree->Branch("elePFRelIso"				   , &_elePFRelIso			   ); 
 	
 	outputTree->Branch("nMu"						   , &_nMu					   ); 
 	outputTree->Branch("muPt"						   , &_muPt					   ); 
 	outputTree->Branch("muEta"					   , &_muEta					   );
 	outputTree->Branch("muPhi"					   , &_muPhi					   );
-	outputTree->Branch("muPFChIso"				   , &_muPFChIso				   );
-	outputTree->Branch("muPFPhoIso"				   , &_muPFPhoIso			   ); 
-	outputTree->Branch("muPFNeuIso"				   , &_muPFNeuIso			   ); 
-	outputTree->Branch("muPFPUIso"				   , &_muPFPUIso				   );
+	outputTree->Branch("muPFRelIso"				   , &_muPFRelIso				   );
 	
 	outputTree->Branch("nJet"						 , &_nJet					   ); 
+	outputTree->Branch("nBJet"						 , &_nBJet					   ); 
 	outputTree->Branch("jetPt"					     , &_jetPt					   );
 	outputTree->Branch("jetEn"					     , &_jetEn					   );
 	outputTree->Branch("jetEta"					     , &_jetEta				   ); 
@@ -223,17 +214,12 @@ void makeAnalysisNtuple::InitVariables()
 	_elePt.clear();
 	_elePhi.clear();
 	_eleSCEta.clear();
-	_elePFChIso.clear();
-	_elePFPhoIso.clear();
-	_elePFNeuIso.clear();
+	_elePFRelIso.clear();
 
 	_muPt.clear();
 	_muEta.clear();
 	_muPhi.clear();
-	_muPFChIso.clear();
-	_muPFPhoIso.clear();
-	_muPFNeuIso.clear();
-	_muPFPUIso.clear();
+	_muPFRelIso.clear();
 
 	_phoEt.clear();
 	_phoEta.clear();
