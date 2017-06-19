@@ -61,8 +61,8 @@ int main(int ac, char** av){
 	TTree* newTree = tree->chain->CloneTree(0);
 	
 	Long64_t nEntr = tree->GetEntries();
-	//	for(Long64_t entry= 0; entry < nEntr; entry++){
-	for(Long64_t entry= 0; entry < 300; entry++){ 	
+	for(Long64_t entry= 0; entry < nEntr; entry++){
+	//	for(Long64_t entry= 0; entry < 300; entry++){ 	
 		if(entry%1000 == 0) {
 			std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
 		}
