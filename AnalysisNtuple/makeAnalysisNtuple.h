@@ -22,6 +22,9 @@
 // Header file for the classes stored in the TTree if any.
 #include "vector"
 
+// Header file that includes all of the event luminosity scaling
+#include "ScaleFactors.h"
+
 class makeAnalysisNtuple {
 public :
 
@@ -112,6 +115,7 @@ private :
 	void FillEvent();
 	void InitBranches();
 
+	double getEvtWeight(string outputName);
 	double SFtop(double pt);
 	double topPtWeight();
 	double getBtagSF(string sysType, BTagCalibrationReader reader);

@@ -95,7 +95,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	bool isMC;
 
 
-
+	_evtWeight = getEvtWeight(outDirName);
 
 
 	Long64_t nEntr = tree->GetEntries();
@@ -270,6 +270,35 @@ double makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReader reade
 
 	return 1.0 - prod;
 }
+
+double makeAnalysisNtuple::getEvtWeight(string outputName){
+	double evtWeight = -1.;
+	if( outputName.find("TTGamma_hadronic") != std::string::npos) {evtWeight = TTGamma_hadronic_SF;}
+	else if( outputName.find("TTGamma_semilept") != std::string::npos) {evtWeight = TTGamma_semilept_SF;}
+	else if( outputName.find("TTGamma_dilept") != std::string::npos) {evtWeight = TTGamma_dilept_SF;}
+	else if( outputName.find("TTbar") != std::string::npos) {evtWeight = TTbar_SF;}
+	else if( outputName.find("W1jets") != std::string::npos) {evtWeight = W1jets_SF;}
+	else if( outputName.find("W2jets") != std::string::npos) {evtWeight = W2jets_SF;}
+	else if( outputName.find("W3jets") != std::string::npos) {evtWeight = W3jets_SF;}
+	else if( outputName.find("W4jets") != std::string::npos) {evtWeight = W4jets_SF;}
+	else if( outputName.find("DYjets") != std::string::npos) {evtWeight = DYjets_SF;}
+	else if( outputName.find("ST_tW") != std::string::npos) {evtWeight = ST_tW_SF;}
+	else if( outputName.find("ST_tbarW") != std::string::npos) {evtWeight = ST_tbarW_SF;}
+	else if( outputName.find("ST_tchannel") != std::string::npos) {evtWeight = ST_tchannel_SF;}
+	else if( outputName.find("ST_tbarchannel") != std::string::npos) {evtWeight = ST_tbarchannel_SF;}
+	else if( outputName.find("ST_schannel") != std::string::npos) {evtWeight = ST_schannel_SF;}
+	else {
+		cout << "-------------------------------------------------" << endl;
+		cout << "-------------------------------------------------" << endl;
+		cout << "-- Unable to find event weight for this sample --" << endl;
+		cout << "-- Sample will be saved with a weight of -1    --" << endl;
+		cout << "-------------------------------------------------" << endl;
+		cout << "-------------------------------------------------" << endl;
+	}
+
+	return evtWeight;
+}
+
 
 double makeAnalysisNtuple::WjetsBRreweight(){
 
