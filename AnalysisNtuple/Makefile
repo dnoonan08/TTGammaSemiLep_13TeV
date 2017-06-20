@@ -22,4 +22,4 @@ EventPick.o: EventPick.cpp EventPick.h
 	g++ -c -I `root-config --incdir` -std=c++11 EventPick.cpp 
 
 clean:
-	rm EventTree.o Selector.o EventPick.o
+	rm EventTree.o Selector.o EventPick.o BTagCalibrationStandalone.o
