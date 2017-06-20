@@ -48,12 +48,23 @@ private :
 	Long64_t        _event;
 	Int_t           _lumis;
 	Bool_t          _isData;
+
 	Float_t         _PUweight;
 	Float_t         _PUweight_Up;
 	Float_t         _PUweight_Do;
+
 	Float_t         _btagWeight;
 	Float_t         _btagWeight_Up;
 	Float_t         _btagWeight_Do;
+
+	Float_t         _muEffWeight;
+	Float_t         _muEffWeight_Up;
+	Float_t         _muEffWeight_Do;
+
+	Float_t         _eleEffWeight;
+	Float_t         _eleEffWeight_Up;
+	Float_t         _eleEffWeight_Do;
+
 	Float_t         _evtWeight;
 
 	Int_t           _nVtx;
@@ -120,7 +131,8 @@ private :
 	double topPtWeight();
 	double getBtagSF(string sysType, BTagCalibrationReader reader);
 	double WjetsBRreweight();
-
+	double getMuSF(int muInd, int systLevel);
+	double getEleSF(int eleInd, int systLevel);
 };
 
 
@@ -136,6 +148,12 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("btagWeight"                , &_btagWeight     );
     outputTree->Branch("btagWeight_Up"             , &_btagWeight_Up  );
     outputTree->Branch("btagWeight_Do"             , &_btagWeight_Do  );
+    outputTree->Branch("muEffWeight"               , &_muEffWeight     );
+    outputTree->Branch("muEffWeight_Up"            , &_muEffWeight_Up  );
+    outputTree->Branch("muEffWeight_Do"            , &_muEffWeight_Do  );
+    outputTree->Branch("eleEffWeight"              , &_eleEffWeight     );
+    outputTree->Branch("eleEffWeight_Up"           , &_eleEffWeight_Up  );
+    outputTree->Branch("eleEffWeight_Do"           , &_eleEffWeight_Do  );
 	outputTree->Branch("evtWeight"                 , &_evtWeight    );      
 	outputTree->Branch("nVtx"					   , &_nVtx					   ); 
 	outputTree->Branch("nGoodVtx"				   , &_nGoodVtx				   ); 
