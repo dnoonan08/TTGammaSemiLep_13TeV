@@ -68,8 +68,8 @@ EventPick::EventPick(std::string titleIn){
 	MET_cut = 20.0;
 	no_trigger = false;
 
-	Njet_ge = 4;
-	SkimNjet_ge = 3;
+	Njet_ge = 3;
+	SkimNjet_ge = 2;
 
 	NBjet_ge = 2;
 	SkimNBjet_ge = 1;

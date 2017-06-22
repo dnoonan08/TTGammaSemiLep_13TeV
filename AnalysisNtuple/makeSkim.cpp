@@ -39,7 +39,12 @@ int main(int ac, char** av){
 		evtPick->no_trigger = true;
 	}
 
-	evtPick->NBjet_ge = 1;
+	selector->jet_Pt_cut = 27.;
+	selector->ele_Pt_cut = 32.;
+	selector->mu_Pt_cut = 24.;
+
+	evtPick->SkimNjet_ge = 2;
+	evtPick->SkimNBjet_ge = 1;
 
 	TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",1000,500);
         c1->SetFillColor(42);
@@ -61,9 +66,17 @@ int main(int ac, char** av){
 	TTree* newTree = tree->chain->CloneTree(0);
 	
 	Long64_t nEntr = tree->GetEntries();
+
+	int dumpFreq = 100;
+	if (nEntr >3000)   { dumpFreq = 1000; }
+	if (nEntr >30000)  { dumpFreq = 10000; }
+	if (nEntr >300000) { dumpFreq = 100000; }
+	if (nEntr >3000000){ dumpFreq = 1000000; }
+	
+
 	for(Long64_t entry= 0; entry < nEntr; entry++){
 	//	for(Long64_t entry= 0; entry < 300; entry++){ 	
-		if(entry%1000 == 0) {
+		if(entry%dumpFreq == 0) {
 			std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
 		}
 		tree->GetEntry(entry);
