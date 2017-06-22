@@ -3,6 +3,7 @@
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
+#include <TLorentzVector.h>
 #include <iostream>
 
 #include"PUReweight.h"
@@ -107,8 +108,16 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	Long64_t nEntr = tree->GetEntries();
 	//	for(Long64_t entry=0; entry<100; entry++){
+
+	int dumpFreq = 100;
+	if (nEntr >3000)   { dumpFreq = 1000; }
+	if (nEntr >30000)  { dumpFreq = 10000; }
+	if (nEntr >300000) { dumpFreq = 100000; }
+	if (nEntr >3000000){ dumpFreq = 1000000; }
+	
+
 	for(Long64_t entry=0; entry<nEntr; entry++){
-		if(entry%1000 == 0) std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
+		if(entry%dumpFreq == 0) std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
 
 		tree->GetEntry(entry);
 		isMC = !(tree->isData_);
@@ -238,6 +247,32 @@ void makeAnalysisNtuple::FillEvent()
 		_jetGenEta.push_back(tree->jetGenEta_->at(jetInd));
 		_jetGenPhi.push_back(tree->jetGenPhi_->at(jetInd));
 	}	
+
+	//Compute M3
+	_M3 = -1.;
+	double maxPt = -1;
+	if (_nJet>2) {
+		TLorentzVector jet_i;
+		TLorentzVector jet_j;
+		TLorentzVector jet_k;
+		for (int i_jet = 0; i_jet <_nJet-2; i_jet++){
+			int jetInd_i = evtPick->Jets.at(i_jet);
+			jet_i.SetPtEtaPhiM(tree->jetPt_->at(jetInd_i),tree->jetEta_->at(jetInd_i),tree->jetPhi_->at(jetInd_i),0.0);
+			for (int j_jet = i_jet+1; j_jet <_nJet-1; j_jet++){
+				int jetInd_j = evtPick->Jets.at(j_jet);
+				jet_j.SetPtEtaPhiM(tree->jetPt_->at(jetInd_j),tree->jetEta_->at(jetInd_j),tree->jetPhi_->at(jetInd_j),0.0);
+				for (int k_jet = j_jet+1; k_jet <_nJet; k_jet++){
+					int jetInd_k = evtPick->Jets.at(k_jet);
+					jet_k.SetPtEtaPhiM(tree->jetPt_->at(jetInd_k),tree->jetEta_->at(jetInd_k),tree->jetPhi_->at(jetInd_k),0.0);
+
+					if ((jet_i + jet_j + jet_k).Pt()>maxPt){
+						_M3 = (jet_i + jet_j + jet_k).M();
+					}
+				}
+			}
+		}
+	}
+
 
 }
 
@@ -399,9 +434,9 @@ double makeAnalysisNtuple::getEleSF(int eleInd, int systLevel){
 double makeAnalysisNtuple::getEvtWeight(string outputName){
 	double evtWeight = -1.;
 	if( outputName.find("Data") != std::string::npos) {evtWeight = 1.;}
-	else if( outputName.find("TTGamma_hadronic") != std::string::npos) {evtWeight = TTGamma_hadronic_SF;}
-	else if( outputName.find("TTGamma_semilept") != std::string::npos) {evtWeight = TTGamma_semilept_SF;}
-	else if( outputName.find("TTGamma_dilept") != std::string::npos) {evtWeight = TTGamma_dilept_SF;}
+	else if( outputName.find("TTGamma_Hadronic") != std::string::npos) {evtWeight = TTGamma_hadronic_SF;}
+	else if( outputName.find("TTGamma_Semilept") != std::string::npos) {evtWeight = TTGamma_semilept_SF;}
+	else if( outputName.find("TTGamma_Dilept") != std::string::npos) {evtWeight = TTGamma_dilept_SF;}
 	else if( outputName.find("TTbar") != std::string::npos) {evtWeight = TTbar_SF;}
 	else if( outputName.find("W1jets") != std::string::npos) {evtWeight = W1jets_SF;}
 	else if( outputName.find("W2jets") != std::string::npos) {evtWeight = W2jets_SF;}

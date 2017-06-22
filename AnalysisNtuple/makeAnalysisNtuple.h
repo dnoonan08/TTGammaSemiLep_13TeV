@@ -111,6 +111,8 @@ private :
 	std::vector<float>   _jetGenPt;
 	std::vector<float>   _jetGenEta;
 	std::vector<float>   _jetGenPhi;
+
+	double               _M3;
 	
 	bool  _passPresel_Ele;
 	bool  _passPresel_Mu;
@@ -199,6 +201,8 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("jetGenPt"					 , &_jetGenPt				   ); 
 	outputTree->Branch("jetGenEta"				     , &_jetGenEta				   );
 	outputTree->Branch("jetGenPhi"				     , &_jetGenPhi				   );
+
+	outputTree->Branch("M3"	     					 , &_M3					   ); 
 	
 	outputTree->Branch("passPresel_Ele"			     , &_passPresel_Ele		   ); 
 	outputTree->Branch("passPresel_Mu"			     , &_passPresel_Mu			   );
