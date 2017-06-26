@@ -13,18 +13,34 @@
 std::string PUfilename = "Data_2016BCDGH_Pileup.root";
 std::string PUfilename_up = "Data_2016BCDGH_Pileup_scaledUp.root";
 std::string PUfilename_down = "Data_2016BCDGH_Pileup_scaledDown.root";
+
 int jecvar012_g = 1; // 0:down, 1:norm, 2:up
 int jervar012_g = 1; // 0:down, 1:norm, 2:up
-int mueff012_g = 1; // 0:down, 1:norm, 2:up
-int eleeff012_g = 1;
-int btagvar012_g = 1; // 0:down, 1:norm, 2:up
 int phosmear012_g = 1; // 0:down, 1:norm, 2:up 
 int musmear012_g = 1; // 0:down, 1:norm, 2: up
 int elesmear012_g = 1; // 0:down, 1:norm, 2: up
-int toppt012_g = 1; // 0:down, 1:norm, 2: up
+
 
 
 #include "BTagCalibrationStandalone.h"
+
+const std::string allowedSampleTypes[17] = {"Data",
+											"TTGamma_Hadronic",
+											"TTGamma_SemileptfromTbar",
+											"TTGamma_SemileptfromT",
+											"TTGamma_Dilepton",
+											"TTbar",
+											"Wjets",
+											"W1jets",
+											"W2jets",
+											"W3jets",
+											"W4jets",
+											"DYjets",
+											"ST_tW",
+											"ST_tbarW",
+											"ST_tchannel",
+											"ST_tbarchannel",
+											"ST_schannel"};
 
 
 #ifdef makeAnalysisNtuple_cxx
@@ -32,6 +48,18 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 {
 
 	tree = new EventTree(ac-3, av+3);
+
+	sampleType = av[1];
+	cout << sampleType << endl;
+
+	if (std::end(allowedSampleTypes) == std::find(std::begin(allowedSampleTypes), std::end(allowedSampleTypes), sampleType)){
+		cout << "This is not an allowed sample, please specify one from this list (or add to this list in the code):" << endl;
+		for (int i =0; i < sizeof(allowedSampleTypes)/sizeof(allowedSampleTypes[0]); i++){
+			cout << "    "<<allowedSampleTypes[i] << endl;
+		}			
+		return;
+	}
+
 
 	selector = new Selector();
 	evtPick = new EventPick("");
@@ -66,27 +94,17 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	if( outDirName.find("JEC_down") != std::string::npos) {systematics=true; jecvar012_g = 0;}
 	if( outDirName.find("JER_up") != std::string::npos) {systematics=true; jervar012_g = 2;}
 	if( outDirName.find("JER_down") != std::string::npos) {systematics=true; jervar012_g = 0;}
-	if( outDirName.find("EleEff_up") != std::string::npos) {systematics=true; eleeff012_g = 2;}
-	if( outDirName.find("EleEff_down") != std::string::npos) {systematics=true; eleeff012_g = 0;}
-	if( outDirName.find("MuEff_up") != std::string::npos) {systematics=true; mueff012_g = 2;}
-	if( outDirName.find("MuEff_down") != std::string::npos) {systematics=true; mueff012_g = 0;}
-	if( outDirName.find("Btag_up") != std::string::npos) {systematics=true; btagvar012_g = 2;}
-	if( outDirName.find("Btag_down") != std::string::npos) {systematics=true; btagvar012_g = 0;}
 	if( outDirName.find("pho_up") != std::string::npos) {systematics=true; phosmear012_g = 2;}
 	if( outDirName.find("pho_down") != std::string::npos) {systematics=true; phosmear012_g = 0;}
 	if( outDirName.find("musmear_up") != std::string::npos) {systematics=true; musmear012_g = 2;}
 	if( outDirName.find("musmear_down") != std::string::npos) {systematics=true; musmear012_g = 0;}
 	if( outDirName.find("elesmear_up") != std::string::npos) {systematics=true; elesmear012_g = 2;}
 	if( outDirName.find("elesmear_down") != std::string::npos) {systematics=true; elesmear012_g = 0;}
-	if( outDirName.find("toppt_up") != std::string::npos) {systematics=true; toppt012_g = 2;}
-	if( outDirName.find("toppt_down") != std::string::npos) {systematics=true; toppt012_g = 0;}	
 
-	std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << "  MuEff: " << mueff012_g << "  BtagVar: " << btagvar012_g << "  ";
-	std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << "  ";
-	std::cout << "  topPt: " << toppt012_g << std::endl;
-
-
+	std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << "  ";
+	std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << endl;
 	
+
 	outputTree = new TTree("AnalysisTree","AnalysisTree");
 
 	InitBranches();
@@ -252,22 +270,26 @@ void makeAnalysisNtuple::FillEvent()
 	_M3 = -1.;
 	double maxPt = -1;
 	if (_nJet>2) {
-		TLorentzVector jet_i;
-		TLorentzVector jet_j;
-		TLorentzVector jet_k;
-		for (int i_jet = 0; i_jet <_nJet-2; i_jet++){
-			int jetInd_i = evtPick->Jets.at(i_jet);
-			jet_i.SetPtEtaPhiM(tree->jetPt_->at(jetInd_i),tree->jetEta_->at(jetInd_i),tree->jetPhi_->at(jetInd_i),0.0);
-			for (int j_jet = i_jet+1; j_jet <_nJet-1; j_jet++){
-				int jetInd_j = evtPick->Jets.at(j_jet);
-				jet_j.SetPtEtaPhiM(tree->jetPt_->at(jetInd_j),tree->jetEta_->at(jetInd_j),tree->jetPhi_->at(jetInd_j),0.0);
-				for (int k_jet = j_jet+1; k_jet <_nJet; k_jet++){
-					int jetInd_k = evtPick->Jets.at(k_jet);
-					jet_k.SetPtEtaPhiM(tree->jetPt_->at(jetInd_k),tree->jetEta_->at(jetInd_k),tree->jetPhi_->at(jetInd_k),0.0);
+		TLorentzVector jet1;
+		TLorentzVector jet2;
+		TLorentzVector jet3;
+		for (int i_jet1 = 0; i_jet1 <_nJet-2; i_jet1++){
+			int jetInd1 = evtPick->Jets.at(i_jet1);
+			jet1.SetPtEtaPhiM(tree->jetPt_->at(jetInd1),tree->jetEta_->at(jetInd1),tree->jetPhi_->at(jetInd1),0.0);
 
-					if ((jet_i + jet_j + jet_k).Pt()>maxPt){
-						_M3 = (jet_i + jet_j + jet_k).M();
+			for (int i_jet2 = i_jet1+1; i_jet2 <_nJet-1; i_jet2++){
+				int jetInd2 = evtPick->Jets.at(i_jet2);
+				jet2.SetPtEtaPhiM(tree->jetPt_->at(jetInd2),tree->jetEta_->at(jetInd2),tree->jetPhi_->at(jetInd2),0.0);
+
+				for (int i_jet3 = i_jet2+1; i_jet3 <_nJet; i_jet3++){
+					int jetInd3 = evtPick->Jets.at(i_jet3);
+					jet3.SetPtEtaPhiM(tree->jetPt_->at(jetInd3),tree->jetEta_->at(jetInd3),tree->jetPhi_->at(jetInd3),0.0);
+
+					if ((jet1 + jet2 + jet3).Pt()>maxPt){
+						_M3 = (jet1 + jet2 + jet3).M();
+						maxPt=(jet1 + jet2 + jet3).Pt();
 					}
+
 				}
 			}
 		}
@@ -296,12 +318,8 @@ double makeAnalysisNtuple::topPtWeight(){
 		weight = sqrt( SFtop(toppt) * SFtop(antitoppt) );
 	
 	//This has been changed, the new prescription is to not use the top pt reweighting, and the syst is using it
-	if(toppt012_g == 1) return 1.0;
-	if(toppt012_g == 0) return weight;
-	if(toppt012_g == 2) return weight;
+	return weight;
 
-	// should not get here
-	return 1.0;
 }
 
 double makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReader reader){
@@ -433,21 +451,22 @@ double makeAnalysisNtuple::getEleSF(int eleInd, int systLevel){
 
 double makeAnalysisNtuple::getEvtWeight(string outputName){
 	double evtWeight = -1.;
-	if( outputName.find("Data") != std::string::npos) {evtWeight = 1.;}
-	else if( outputName.find("TTGamma_Hadronic") != std::string::npos) {evtWeight = TTGamma_hadronic_SF;}
-	else if( outputName.find("TTGamma_Semilept") != std::string::npos) {evtWeight = TTGamma_semilept_SF;}
-	else if( outputName.find("TTGamma_Dilept") != std::string::npos) {evtWeight = TTGamma_dilept_SF;}
-	else if( outputName.find("TTbar") != std::string::npos) {evtWeight = TTbar_SF;}
-	else if( outputName.find("W1jets") != std::string::npos) {evtWeight = W1jets_SF;}
-	else if( outputName.find("W2jets") != std::string::npos) {evtWeight = W2jets_SF;}
-	else if( outputName.find("W3jets") != std::string::npos) {evtWeight = W3jets_SF;}
-	else if( outputName.find("W4jets") != std::string::npos) {evtWeight = W4jets_SF;}
-	else if( outputName.find("DYjets") != std::string::npos) {evtWeight = DYjets_SF;}
-	else if( outputName.find("ST_tW") != std::string::npos) {evtWeight = ST_tW_SF;}
-	else if( outputName.find("ST_tbarW") != std::string::npos) {evtWeight = ST_tbarW_SF;}
-	else if( outputName.find("ST_tchannel") != std::string::npos) {evtWeight = ST_tchannel_SF;}
-	else if( outputName.find("ST_tbarchannel") != std::string::npos) {evtWeight = ST_tbarchannel_SF;}
-	else if( outputName.find("ST_schannel") != std::string::npos) {evtWeight = ST_schannel_SF;}
+	if( sampleType=="Data") {evtWeight = 1.;}
+	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
+	else if( sampleType=="TTGamma_SemileptfromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
+	else if( sampleType=="TTGamma_SemileptfromT") {evtWeight = TTGamma_semilept_T_SF;}
+	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_SF;}
+	else if( sampleType=="TTbar") {evtWeight = TTbar_SF;}
+	else if( sampleType=="W1jets") {evtWeight = W1jets_SF;}
+	else if( sampleType=="W2jets") {evtWeight = W2jets_SF;}
+	else if( sampleType=="W3jets") {evtWeight = W3jets_SF;}
+	else if( sampleType=="W4jets") {evtWeight = W4jets_SF;}
+	else if( sampleType=="DYjets") {evtWeight = DYjets_SF;}
+	else if( sampleType=="ST_tW") {evtWeight = ST_tW_SF;}
+	else if( sampleType=="ST_tbarW") {evtWeight = ST_tbarW_SF;}
+	else if( sampleType=="ST_tchannel") {evtWeight = ST_tchannel_SF;}
+	else if( sampleType=="ST_tbarchannel") {evtWeight = ST_tbarchannel_SF;}
+	else if( sampleType=="ST_schannel") {evtWeight = ST_schannel_SF;}
 	else {
 		cout << "-------------------------------------------------" << endl;
 		cout << "-------------------------------------------------" << endl;
@@ -512,6 +531,44 @@ double makeAnalysisNtuple::WjetsBRreweight(){
 	return reweight;
 	
 }
+
+void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronic){
+
+	*genuine  = false;
+	*misIDele = false;
+	*hadronic = false;
+
+	int mcPhotonInd = -1;
+	int mcEleInd = -1;
+
+	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
+		// crude matching to get candidates
+		bool etetamatch = (dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd)) < 0.2 && 
+						   (fabs(tree->phoEt_->at(phoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd)) < 1.0);
+		
+		if( etetamatch && mcPhotonInd < 0 && tree->mcPID->at(mcInd) == 22)
+			mcPhotonInd = mcInd; 
+		if( etetamatch && mcEleInd < 0 && abs(tree->mcPID->at(mcInd)) == 11 )
+			mcEleInd = mcInd;
+	}
+
+	// see OverlapRemove.cpp for definitions of isSignalPhoton and isGoodElectron	
+	if(mcPhotonInd >= 0){
+		*genuine = true;
+
+		// signal: parents are quarks, gluons, bosons or leptons
+		// if(isSignalPhoton(tree, mcPhotonInd, phoInd)) *rs = true; <<should look into this again
+		// else *rb = true;
+	}
+	else{
+		// no good matched Gen Photon found - our photon is fake
+		// && isGoodElectron(tree, mcEleInd, phoInd)  <<should look into this again
+		if(mcEleInd >= 0) *misIDele = true;
+		else *hadronic = true;
+	}
+}
+
+
 
 #endif
 

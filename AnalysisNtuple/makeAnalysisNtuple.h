@@ -41,6 +41,8 @@ private :
 
 	TTree* outputTree;
 
+	string sampleType;
+
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
@@ -113,16 +115,16 @@ private :
 	std::vector<float>   _jetGenPhi;
 
 	double               _M3;
+	double               _HT;
 	
 	bool  _passPresel_Ele;
 	bool  _passPresel_Mu;
 	bool  _passAll_Ele;
 	bool  _passAll_Mu;
-	
-	/* BTagCalibration calib; */
-	/* BTagCalibrationReader reader_b; */
-	/* BTagCalibrationReader reader_c; */
-	/* BTagCalibrationReader reader_udsg; */
+
+	bool  _photonIsGenuine;
+	bool  _photonIsMisIDEle;
+	bool  _photonIsHadronic;
 
 	void InitVariables();
 	void FillEvent();
@@ -135,85 +137,93 @@ private :
 	double WjetsBRreweight();
 	double getMuSF(int muInd, int systLevel);
 	double getEleSF(int eleInd, int systLevel);
+
+
+	void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronic);
+
 };
 
 
 void makeAnalysisNtuple::InitBranches(){
 
-	outputTree->Branch("run"                       , &_run                      );
-	outputTree->Branch("event"					   , &_event					   );
-	outputTree->Branch("lumis"					   , &_lumis					   );
-	outputTree->Branch("isData"					   , &_isData				   ); 
-    outputTree->Branch("PUweight"                  , &_PUweight     );
-    outputTree->Branch("PUweight_Up"               , &_PUweight_Up  );
-    outputTree->Branch("PUweight_Do"               , &_PUweight_Do  );
-    outputTree->Branch("btagWeight"                , &_btagWeight     );
-    outputTree->Branch("btagWeight_Up"             , &_btagWeight_Up  );
-    outputTree->Branch("btagWeight_Do"             , &_btagWeight_Do  );
-    outputTree->Branch("muEffWeight"               , &_muEffWeight     );
-    outputTree->Branch("muEffWeight_Up"            , &_muEffWeight_Up  );
-    outputTree->Branch("muEffWeight_Do"            , &_muEffWeight_Do  );
-    outputTree->Branch("eleEffWeight"              , &_eleEffWeight     );
-    outputTree->Branch("eleEffWeight_Up"           , &_eleEffWeight_Up  );
-    outputTree->Branch("eleEffWeight_Do"           , &_eleEffWeight_Do  );
-	outputTree->Branch("evtWeight"                 , &_evtWeight    );      
-	outputTree->Branch("nVtx"					   , &_nVtx					   ); 
-	outputTree->Branch("nGoodVtx"				   , &_nGoodVtx				   ); 
-	outputTree->Branch("isPVGood"				   , &_isPVGood				   ); 
-	outputTree->Branch("rho"					   , &_rho					   ); 
-	outputTree->Branch("genMET"					   , &_genMET				   ); 
-	outputTree->Branch("pfMET"					   , &_pfMET					   );
-	outputTree->Branch("pfMETPhi"				   , &_pfMETPhi				   ); 
+	outputTree->Branch("run"                        , &_run                         );
+	outputTree->Branch("event"                      , &_event                       );
+	outputTree->Branch("lumis"                      , &_lumis                       );
+	outputTree->Branch("isData"                     , &_isData                      ); 
+	outputTree->Branch("PUweight"                   , &_PUweight                    );
+	outputTree->Branch("PUweight_Up"                , &_PUweight_Up                 );
+	outputTree->Branch("PUweight_Do"                , &_PUweight_Do                 );
+	outputTree->Branch("btagWeight"                 , &_btagWeight                  );
+	outputTree->Branch("btagWeight_Up"              , &_btagWeight_Up               );
+	outputTree->Branch("btagWeight_Do"              , &_btagWeight_Do               );
+	outputTree->Branch("muEffWeight"                , &_muEffWeight                 );
+	outputTree->Branch("muEffWeight_Up"             , &_muEffWeight_Up              );
+	outputTree->Branch("muEffWeight_Do"             , &_muEffWeight_Do              );
+	outputTree->Branch("eleEffWeight"               , &_eleEffWeight                );
+	outputTree->Branch("eleEffWeight_Up"            , &_eleEffWeight_Up             );
+	outputTree->Branch("eleEffWeight_Do"            , &_eleEffWeight_Do             );
+	outputTree->Branch("evtWeight"                  , &_evtWeight                   );      
+	outputTree->Branch("nVtx"                       , &_nVtx                        ); 
+	outputTree->Branch("nGoodVtx"                   , &_nGoodVtx                    ); 
+	outputTree->Branch("isPVGood"                   , &_isPVGood                    ); 
+	outputTree->Branch("rho"                        , &_rho                         ); 
+	outputTree->Branch("genMET"                     , &_genMET                      ); 
+	outputTree->Branch("pfMET"                      , &_pfMET                       );
+	outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
+    
+	outputTree->Branch("nPho"                       , &_nPho                        ); 
+	outputTree->Branch("phoEt"                      , &_phoEt                       );
+	outputTree->Branch("phoEta"                     , &_phoEta                      ); 
+	outputTree->Branch("phoPhi"                     , &_phoPhi                      ); 
+	outputTree->Branch("phoSigmaIEtaIEtaFull5x5"    , &_phoSigmaIEtaIEtaFull5x5     ); 
+	outputTree->Branch("phoPFChIso"                 , &_phoPFChIso                  ); 
+	outputTree->Branch("phoPFPhoIso"                , &_phoPFPhoIso                 ); 
+	outputTree->Branch("phoPFNeuIso"                , &_phoPFNeuIso                 ); 
 	
-	outputTree->Branch("nPho"						   , &_nPho					   ); 
-	outputTree->Branch("phoEt"					   , &_phoEt					   );
-	outputTree->Branch("phoEta"					   , &_phoEta				   ); 
-	outputTree->Branch("phoPhi"					   , &_phoPhi				   ); 
-	outputTree->Branch("phoSigmaIEtaIEtaFull5x5"	   , &_phoSigmaIEtaIEtaFull5x5  ); 
-	outputTree->Branch("phoPFChIso"				   , &_phoPFChIso			   ); 
-	outputTree->Branch("phoPFPhoIso"				   , &_phoPFPhoIso			   ); 
-	outputTree->Branch("phoPFNeuIso"				   , &_phoPFNeuIso			   ); 
+	outputTree->Branch("nEle"                        , &_nEle                       ); 
+	outputTree->Branch("elePt"                       , &_elePt                      );
+	outputTree->Branch("elePhi"                      , &_elePhi                     ); 
+	outputTree->Branch("eleSCEta"                    , &_eleSCEta                   ); 
+	outputTree->Branch("elePFRelIso"                 , &_elePFRelIso                ); 
 	
-	outputTree->Branch("nEle"						   , &_nEle					   ); 
-	outputTree->Branch("elePt"					   , &_elePt					   );
-	outputTree->Branch("elePhi"					   , &_elePhi				   ); 
-	outputTree->Branch("eleSCEta"					   , &_eleSCEta				   ); 
-	outputTree->Branch("elePFRelIso"				   , &_elePFRelIso			   ); 
-	
-	outputTree->Branch("nMu"						   , &_nMu					   ); 
-	outputTree->Branch("muPt"						   , &_muPt					   ); 
-	outputTree->Branch("muEta"					   , &_muEta					   );
-	outputTree->Branch("muPhi"					   , &_muPhi					   );
-	outputTree->Branch("muPFRelIso"				   , &_muPFRelIso				   );
-	
-	outputTree->Branch("nJet"						 , &_nJet					   ); 
-	outputTree->Branch("nBJet"						 , &_nBJet					   ); 
-	outputTree->Branch("jetPt"					     , &_jetPt					   );
-	outputTree->Branch("jetEn"					     , &_jetEn					   );
-	outputTree->Branch("jetEta"					     , &_jetEta				   ); 
-	outputTree->Branch("jetPhi"					     , &_jetPhi				   ); 
-	outputTree->Branch("jetRawPt"					 , &_jetRawPt				   ); 
-	outputTree->Branch("jetArea"					 , &_jetArea				   ); 
-	outputTree->Branch("jetpfCombinedMVAV2BJetTags"  , &_jetpfCombinedMVAV2BJetTags);
-	outputTree->Branch("jetPartonID"				 , &_jetPartonID			   ); 
-	outputTree->Branch("jetGenJetPt"				 , &_jetGenJetPt			   ); 
-	outputTree->Branch("jetGenPartonID"			     , &_jetGenPartonID		   ); 
-	outputTree->Branch("jetGenPt"					 , &_jetGenPt				   ); 
-	outputTree->Branch("jetGenEta"				     , &_jetGenEta				   );
-	outputTree->Branch("jetGenPhi"				     , &_jetGenPhi				   );
+	outputTree->Branch("nMu"                         , &_nMu                        ); 
+	outputTree->Branch("muPt"                        , &_muPt                       ); 
+	outputTree->Branch("muEta"                       , &_muEta                      );
+	outputTree->Branch("muPhi"                       , &_muPhi                      );
+	outputTree->Branch("muPFRelIso"                  , &_muPFRelIso                 );
+    
+	outputTree->Branch("nJet"                        , &_nJet                       ); 
+	outputTree->Branch("nBJet"                       , &_nBJet                      ); 
+	outputTree->Branch("jetPt"                       , &_jetPt                      );
+	outputTree->Branch("jetEn"                       , &_jetEn                      );
+	outputTree->Branch("jetEta"                      , &_jetEta                     ); 
+	outputTree->Branch("jetPhi"                      , &_jetPhi                     ); 
+	outputTree->Branch("jetRawPt"                    , &_jetRawPt                   ); 
+	outputTree->Branch("jetArea"                     , &_jetArea                    ); 
+	outputTree->Branch("jetpfCombinedMVAV2BJetTags"  , &_jetpfCombinedMVAV2BJetTags );
+	outputTree->Branch("jetPartonID"                 , &_jetPartonID                ); 
+	outputTree->Branch("jetGenJetPt"                 , &_jetGenJetPt                ); 
+	outputTree->Branch("jetGenPartonID"              , &_jetGenPartonID             ); 
+	outputTree->Branch("jetGenPt"                    , &_jetGenPt                   ); 
+	outputTree->Branch("jetGenEta"                   , &_jetGenEta                  );
+	outputTree->Branch("jetGenPhi"                   , &_jetGenPhi                  );
 
-	outputTree->Branch("M3"	     					 , &_M3					   ); 
-	
-	outputTree->Branch("passPresel_Ele"			     , &_passPresel_Ele		   ); 
-	outputTree->Branch("passPresel_Mu"			     , &_passPresel_Mu			   );
-	outputTree->Branch("passAll_Ele"				 , &_passAll_Ele			   ); 
-	outputTree->Branch("passAll_Mu"                  , &_passAll_Mu               );
+    outputTree->Branch("M3"                          , &_M3                         ); 
+    outputTree->Branch("HT"                          , &_HT                         ); 
+
+	outputTree->Branch("passPresel_Ele"              , &_passPresel_Ele             ); 
+	outputTree->Branch("passPresel_Mu"               , &_passPresel_Mu              );
+	outputTree->Branch("passAll_Ele"                 , &_passAll_Ele                ); 
+	outputTree->Branch("passAll_Mu"                  , &_passAll_Mu                 );
+
+	outputTree->Branch("photonIsGenuine"             , &_photonIsGenuine            );
+	outputTree->Branch("photonIsMisIDEle"            , &_photonIsMisIDEle           );
+	outputTree->Branch("photonIsHadronic"            , &_photonIsHadronic           );
 	
 }
 
 void makeAnalysisNtuple::InitVariables()
 {
-
 
 	_run             = -9999;
 	_event           = -9999;
@@ -236,6 +246,10 @@ void makeAnalysisNtuple::InitVariables()
 	_passPresel_Mu   = false;
 	_passAll_Ele     = false;
 	_passAll_Mu      = false;
+
+	_photonIsGenuine  = false;
+	_photonIsMisIDEle = false;
+	_photonIsHadronic = false;
 
 	_elePt.clear();
 	_elePhi.clear();
