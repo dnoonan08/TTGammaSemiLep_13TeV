@@ -105,9 +105,9 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("eleIDMVA",1);
 	chain->SetBranchAddress("eleIDMVA", &eleIDMVA_);
         
-	eleIDMVAHZZ_ = new vector<float>;
-        chain->SetBranchStatus("eleIDMVAHZZ",1);
-        chain->SetBranchAddress("eleIDMVAHZZ", &eleIDMVAHZZ_); 
+	// eleIDMVAHZZ_ = new vector<float>;
+    //     chain->SetBranchStatus("eleIDMVAHZZ",1);
+    //     chain->SetBranchAddress("eleIDMVAHZZ", &eleIDMVAHZZ_); 
         
 	eleIDbit_ = new vector<unsigned short>;
         chain->SetBranchStatus("eleIDbit",1);
@@ -268,29 +268,29 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("jetP4SmearDo",1);
 	chain->SetBranchAddress("jetP4SmearDo", &jetP4SmearDo_);
 
-	AK8Jetnconstituents_ = new vector<int>;
-	chain->SetBranchStatus("AK8Jetnconstituents",1);
-	chain->SetBranchAddress("AK8Jetnconstituents", &AK8Jetnconstituents_);
+	// AK8Jetnconstituents_ = new vector<int>;
+	// chain->SetBranchStatus("AK8Jetnconstituents",1);
+	// chain->SetBranchAddress("AK8Jetnconstituents", &AK8Jetnconstituents_);
 	
 	//jetNCharged_ = new vector<float>;
 	//chain->SetBranchStatus("jetNCharged",1);
 	//chain->SetBranchAddress("jetNCharged", &jetNCharged_);
 
-	AK8JetCEF_ = new vector<float>;	
-	chain->SetBranchStatus("AK8JetCEF",1);
-	chain->SetBranchAddress("AK8JetCEF", &AK8JetCEF_);
+	// AK8JetCEF_ = new vector<float>;	
+	// chain->SetBranchStatus("AK8JetCEF",1);
+	// chain->SetBranchAddress("AK8JetCEF", &AK8JetCEF_);
 
-	AK8JetNHF_ = new vector<float>;
-	chain->SetBranchStatus("AK8JetNHF",1);
-	chain->SetBranchAddress("AK8JetNHF", &AK8JetNHF_);
+	// AK8JetNHF_ = new vector<float>;
+	// chain->SetBranchStatus("AK8JetNHF",1);
+	// chain->SetBranchAddress("AK8JetNHF", &AK8JetNHF_);
 	
-	AK8JetNEF_ = new vector<float>;
-	chain->SetBranchStatus("AK8JetNEF",1);
-	chain->SetBranchAddress("AK8JetNEF", &AK8JetNEF_);
+	// AK8JetNEF_ = new vector<float>;
+	// chain->SetBranchStatus("AK8JetNEF",1);
+	// chain->SetBranchAddress("AK8JetNEF", &AK8JetNEF_);
 	
-	AK8JetCHF_ = new vector<float>;
-	chain->SetBranchStatus("AK8JetCHF",1);
-	chain->SetBranchAddress("AK8JetCHF", &AK8JetCHF_);
+	// AK8JetCHF_ = new vector<float>;
+	// chain->SetBranchStatus("AK8JetCHF",1);
+	// chain->SetBranchAddress("AK8JetCHF", &AK8JetCHF_);
 
 	jetpfCombinedMVAV2BJetTags_ = new vector<float>;
 	chain->SetBranchStatus("jetpfCombinedMVAV2BJetTags",1);
@@ -358,8 +358,8 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchAddress("phoEleVeto", &phoEleVeto_);
 	
 	phoIDbit_ = new vector<unsigned short>;
-        chain->SetBranchStatus("phoIDbit",1);
-        chain->SetBranchAddress("phoIDbit", &phoIDbit_);
+	chain->SetBranchStatus("phoIDbit",1);
+	chain->SetBranchAddress("phoIDbit", &phoIDbit_);
 
 	phoHoverE_ = new vector<float>;
 	chain->SetBranchStatus("phoHoverE",1);
@@ -380,6 +380,11 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	phoPFPhoIso_ = new vector<float>;
 	chain->SetBranchStatus("phoPFPhoIso",1);
 	chain->SetBranchAddress("phoPFPhoIso", &phoPFPhoIso_);
+
+	phoR9_ = new vector<float>;
+	chain->SetBranchStatus("phoR9",1);
+	chain->SetBranchAddress("phoR9", &phoR9_);
+
 
 	//phoPFPhoIso_ = new vector<float>;
 	//chain->SetBranchStatus("phoPFPhoIso",1);

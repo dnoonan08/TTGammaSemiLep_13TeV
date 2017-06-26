@@ -11,13 +11,13 @@
 #include<TCanvas.h>
 
 int main(int ac, char** av){
-	if(ac < 3){
-		std::cout << "usage: ./makeSkim outputFileName inputFile[s]" << std::endl;
+	if(ac < 4){
+		std::cout << "usage: ./makeSkim channel outputFileName inputFile[s]" << std::endl;
 		return -1;
 	}
 	// input: dealing with TTree first
 	bool isMC = true;
-	EventTree* tree = new EventTree(ac-2, av+2);
+	EventTree* tree = new EventTree(ac-3, av+3);
 	Selector* selector = new Selector();
 
 	//Lower the jet Pt and lepton Pt cuts, so that smearing systematics can be performed on same sample
@@ -25,7 +25,7 @@ int main(int ac, char** av){
 
 	EventPick* evtPick = new EventPick("nominal");
 	evtPick->MET_cut = -1.0;	
-	std::string outDirName(av[1]);
+	std::string outDirName(av[2]);
 	// antiselection for QCD fit
 	if( outDirName.find("QCD") != std::string::npos){
 		std::cout << "muon antiselection is on" << std::endl;
@@ -34,33 +34,50 @@ int main(int ac, char** av){
 		selector->mu_Iso_invert = true;
 	}
 
-	if( outDirName.find("TTgamma") != std::string::npos){
-		std::cout << "Skipping Trigger Selection for TTGamma" << std::endl;
-		evtPick->no_trigger = true;
-	}
+	// if( outDirName.find("TTgamma") != std::string::npos){
+	// 	std::cout << "Skipping Trigger Selection for TTGamma" << std::endl;
+	// 	evtPick->no_trigger = true;
+	// }
 
+	// reduce the pt cuts by 10% in the skim, so that energy corrections can still be done on same skims
 	selector->jet_Pt_cut = 27.;
-	selector->ele_Pt_cut = 32.;
-	selector->mu_Pt_cut = 24.;
+	selector->ele_Pt_cut = 27.;
+	selector->mu_Pt_cut = 27.;
 
 	evtPick->SkimNjet_ge = 2;
 	evtPick->SkimNBjet_ge = 1;
 
-	TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",1000,500);
-        c1->SetFillColor(42);
-        c1->SetGrid();
+	std::string channel(av[1]);
 
-        TCanvas *c2 = new TCanvas("c2","A Simple Graph Example",1000,500);
-        c2->SetFillColor(42);
-        c2->SetGrid();
+	if (channel=="ele"){
+		evtPick->skimEle = true;
+	} else if (channel=="mu"){
+		evtPick->skimMu = true;
+	} else {
+		cout << av[1] << endl;
+		cout << (av[1]=="ele") << endl;
+		cout << (channel=="ele") << endl;
+		cout << "please specify either ele or mu for the skim channel" << endl;
+		return -1;		
+	}
 
+	// TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",1000,500);
+	// c1->SetFillColor(42);
+	// c1->SetGrid();
 
-        TCanvas *c3 = new TCanvas("c3","A Simple Graph Example",1000,500);
-        c3->SetFillColor(42);
-        c3->SetGrid();
+	// TCanvas *c2 = new TCanvas("c2","A Simple Graph Example",1000,500);
+	// c2->SetFillColor(42);
+	// c2->SetGrid();
+	
 
+	// TCanvas *c3 = new TCanvas("c3","A Simple Graph Example",1000,500);
+	// c3->SetFillColor(42);
+	// c3->SetGrid();
+	
 	//TFile *theFile = TFile::Open("root://cmsxrootd.fnal.gov//store/user/troy2012/rootFile.root");
-	TFile* outFile = TFile::Open( av[1] ,"RECREATE" );
+
+
+	TFile* outFile = TFile::Open( av[2] ,"RECREATE" );
 	TDirectory* ggDir = outFile->mkdir("ggNtuplizer","ggNtuplizer");
 	ggDir->cd();
 	TTree* newTree = tree->chain->CloneTree(0);
@@ -68,10 +85,10 @@ int main(int ac, char** av){
 	Long64_t nEntr = tree->GetEntries();
 
 	int dumpFreq = 100;
-	if (nEntr >3000)   { dumpFreq = 1000; }
-	if (nEntr >30000)  { dumpFreq = 10000; }
-	if (nEntr >300000) { dumpFreq = 100000; }
-	if (nEntr >3000000){ dumpFreq = 1000000; }
+	if (nEntr >5000)   { dumpFreq = 1000; }
+	if (nEntr >50000)  { dumpFreq = 10000; }
+	if (nEntr >500000) { dumpFreq = 100000; }
+	if (nEntr >5000000){ dumpFreq = 1000000; }
 	
 
 	for(Long64_t entry= 0; entry < nEntr; entry++){
@@ -102,7 +119,7 @@ int main(int ac, char** av){
 
 	std::map<std::string, TH1F*> histMap;
 	// copy histograms
-	for(int fileInd = 2; fileInd < ac; ++fileInd){
+	for(int fileInd = 3; fileInd < ac; ++fileInd){
 		TFile* tempFile = TFile::Open(av[fileInd], "READ");
 		TIter next(((TDirectory*)tempFile->Get("ggNtuplizer"))->GetListOfKeys());
 		TObject* obj;

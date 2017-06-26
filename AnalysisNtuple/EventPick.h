@@ -66,6 +66,9 @@ public:
 	int NlooseEleVeto_le;
 	int NmediumEleVeto_le;
 	
+	bool skimEle;
+	bool skimMu;
+
 	// variables showing passing or failing selections
 	bool passSkim;
 	bool passPresel_ele; // passed preselection

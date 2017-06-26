@@ -67,6 +67,9 @@ EventPick::EventPick(std::string titleIn){
 	veto_pho_lep_dR = 0.7;
 	MET_cut = 20.0;
 	no_trigger = false;
+	
+	skimEle = false;
+	skimMu = false;
 
 	Njet_ge = 3;
 	SkimNjet_ge = 2;
@@ -198,8 +201,12 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 	if( passPresel_ele && (selector->MuonsLoose.size() + selector->Muons.size() ) <=  NlooseMuVeto_le ) {cutFlow_ele->Fill(5); cutFlowWeight_ele->Fill(5,weight);}
 	else { passPresel_ele = false;}
 
+	//This line skims both ele and mu at the same time, which doesn't save space, and adds time to the ntuplizer step
+	//	if ( (passPresel_ele || passPresel_mu) && Jets.size() >= SkimNjet_ge && bJets.size() >= SkimNBjet_ge ){ passSkim = true; }
 
-	if ( (passPresel_ele || passPresel_mu) && Jets.size() >= SkimNjet_ge && bJets.size() >= SkimNBjet_ge ){ passSkim = true; }
+	// split skim into ele and mu
+	if ( (skimEle && passPresel_ele) || (skimMu && passPresel_mu) && Jets.size() >= SkimNjet_ge && bJets.size() >= SkimNBjet_ge ){ passSkim = true; }
+
 
 
 	// NJet cuts for electrons
