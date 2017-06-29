@@ -1,4 +1,4 @@
-all: makeSkim makeAnalysisNtuple
+all: Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple
 
 makeSkim: Selector.o EventPick.o EventTree.o  makeSkim.cpp OverlapRemove.cpp
 	g++ -o makeSkim `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o EventPick.o Selector.o  OverlapRemove.cpp makeSkim.cpp 

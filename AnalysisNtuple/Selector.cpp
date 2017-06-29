@@ -50,14 +50,18 @@ void Selector::process_objects(EventTree* inp_tree){
 	tree = inp_tree;
 
 	clear_vectors();
-
+	//	cout << "before selector photons" << endl;
 	filter_photons();
 
+	//	cout << "before selector muons" << endl;
 	filter_muons();
 
+	//	cout << "before selector electrons" << endl;
  	filter_electrons();
 	
+	//	cout << "before selector jets" << endl;
 	filter_jets();
+	//	cout << "end selector" << endl;
 
 }
 
@@ -257,9 +261,11 @@ void Selector::filter_muons(){
 // jet ID is not likely to be altered, so it is hardcoded
 void Selector::filter_jets(){
 	TLorentzVector tMET;
+
 	if (JECsystLevel==0 || JECsystLevel==2){
 		tMET.SetPtEtaPhiM(tree->pfMET_,0.0,tree->pfMETPhi_,0.0);
 	}
+
 	for(int jetInd = 0; jetInd < tree->nJet_; ++jetInd){
 
 
@@ -284,9 +290,9 @@ void Selector::filter_jets(){
 		double pt = tree->jetPt_->at(jetInd);
 		bool jetID_pass = tree->jetPFLooseID_->at(jetInd);
 
-		if (JERsystLevel==1) jetSmear = tree->jetP4Smear_->at(jetInd);
-		if (JERsystLevel==0) jetSmear = tree->jetP4SmearDo_->at(jetInd);
-		if (JERsystLevel==2) jetSmear = tree->jetP4SmearUp_->at(jetInd);
+		if (not tree->isData_ and JERsystLevel==1) jetSmear = tree->jetP4Smear_->at(jetInd);
+		if (not tree->isData_ and JERsystLevel==0) jetSmear = tree->jetP4SmearDo_->at(jetInd);
+		if (not tree->isData_ and JERsystLevel==2) jetSmear = tree->jetP4SmearUp_->at(jetInd);
 
 		tree->jetPt_->at(jetInd) = jetSmear * pt;
 		tree->jetEn_->at(jetInd) = jetSmear*tree->jetEn_->at(jetInd);
@@ -298,7 +304,7 @@ void Selector::filter_jets(){
 
 		if( jetPresel){
 			Jets.push_back(jetInd);
-			if(tree->jetpfCombinedMVAV2BJetTags_->at(jetInd) > btag_cut) bJets.push_back(jetInd);
+			if(tree->jetCSV2BJetTags_->at(jetInd) > btag_cut) bJets.push_back(jetInd);
 		}
 	}
 
