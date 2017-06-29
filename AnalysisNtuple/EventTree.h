@@ -155,6 +155,8 @@ public:
 	vector<float>*  elePhi_;
 	vector<float>*  eleSCEta_;
 	vector<float>*  eleSCPhi_;
+	vector<float>*  eleCalibPt_;
+	vector<float>*  eleCalibEn_;
 	vector<vector<float> >*  eleEtVtx_;
 	vector<vector<float> >*  eleEtaVtx_;
 	vector<vector<float> >*  elePhiVtx_;
@@ -266,6 +268,8 @@ public:
 	vector<float>*  phoEt_;
 	vector<float>*  phoEta_;
 	vector<float>*  phoPhi_;
+	vector<float>*  phoCalibEt_;
+	vector<float>*  phoCalibE_;
 	vector<unsigned short>*    phoIDbit_;
 	vector<vector<float> >*  phoEtVtx_;
 	vector<vector<float> >*  phoEtaVtx_;
@@ -516,6 +520,7 @@ public:
 	vector<ULong_t> muTrg_;
 	vector<float>*  muEta_;
 	vector<float>*  muPhi_;
+	vector<float>*  muEn_;
 	vector<int>*    muCharge_;
 	vector<float>*  muPt_;
 	vector<float>*  muPz_;

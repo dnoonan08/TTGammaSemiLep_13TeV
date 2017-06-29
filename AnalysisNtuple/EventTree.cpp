@@ -78,6 +78,10 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("elePt",1);
 	chain->SetBranchAddress("elePt", &elePt_);
 
+	eleEn_ = new vector<float>;
+	chain->SetBranchStatus("eleEn",1);
+	chain->SetBranchAddress("eleEn", &eleEn_);
+
 	eleSCEta_ = new vector<float>;
 	chain->SetBranchStatus("eleSCEta",1);
 	chain->SetBranchAddress("eleSCEta", &eleSCEta_);
@@ -85,6 +89,14 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	elePhi_ = new vector<float>;
 	chain->SetBranchStatus("elePhi",1);
 	chain->SetBranchAddress("elePhi", &elePhi_);
+
+	eleCalibPt_ = new vector<float>;
+	chain->SetBranchStatus("eleCalibPt",1);
+	chain->SetBranchAddress("eleCalibPt", &eleCalibPt_);
+
+	eleCalibEn_ = new vector<float>;
+	chain->SetBranchStatus("eleCalibEn",1);
+	chain->SetBranchAddress("eleCalibEn", &eleCalibEn_);
 
 	elePFChIso_ = new vector<float>;
 	chain->SetBranchStatus("elePFChIso",1);
@@ -191,6 +203,10 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("muPt",1);
 	chain->SetBranchAddress("muPt", &muPt_);
 
+	muEn_ = new vector<float>;
+	chain->SetBranchStatus("muEn",1);
+	chain->SetBranchAddress("muEn", &muEn_);
+
 	muEta_ = new vector<float>;
 	chain->SetBranchStatus("muEta",1);
 	chain->SetBranchAddress("muEta", &muEta_);
@@ -296,9 +312,13 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("jetpfCombinedMVAV2BJetTags",1);
 	chain->SetBranchAddress("jetpfCombinedMVAV2BJetTags", &jetpfCombinedMVAV2BJetTags_);
 	
-	//jetCombinedSecondaryVtxMVABJetTags_ = new vector<float>;
-	//chain->SetBranchStatus("jetCombinedSecondaryVtxMVABJetTags",1);
-	//chain->SetBranchAddress("jetCombinedSecondaryVtxMVABJetTags", &jetCombinedSecondaryVtxMVABJetTags_);
+	jetCSV2BJetTags_ = new vector<float>;
+	chain->SetBranchStatus("jetCSV2BJetTags",1);
+	chain->SetBranchAddress("jetCSV2BJetTags", &jetCSV2BJetTags_);
+
+	// jetCombinedSecondaryVtxMVABJetTags_ = new vector<float>;
+	// chain->SetBranchStatus("jetCombinedSecondaryVtxMVABJetTags",1);
+	// chain->SetBranchAddress("jetCombinedSecondaryVtxMVABJetTags", &jetCombinedSecondaryVtxMVABJetTags_);
 
 	jetPartonID_ = new vector<int>;
 	chain->SetBranchStatus("jetPartonID",1);
@@ -333,6 +353,10 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("nPho",1);
 	chain->SetBranchAddress("nPho", &nPho_);
 
+	phoE_ = new vector<float>;	
+	chain->SetBranchStatus("phoE",1);
+	chain->SetBranchAddress("phoE", &phoE_);
+	
 	phoEt_ = new vector<float>;	
 	chain->SetBranchStatus("phoEt",1);
 	chain->SetBranchAddress("phoEt", &phoEt_);
@@ -344,6 +368,14 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	phoPhi_ = new vector<float>;
 	chain->SetBranchStatus("phoPhi",1);
 	chain->SetBranchAddress("phoPhi", &phoPhi_);
+	
+	phoCalibE_ = new vector<float>;	
+	chain->SetBranchStatus("phoCalibE",1);
+	chain->SetBranchAddress("phoCalibE", &phoCalibE_);
+	
+	phoCalibEt_ = new vector<float>;	
+	chain->SetBranchStatus("phoCalibEt",1);
+	chain->SetBranchAddress("phoCalibEt", &phoCalibEt_);
 	
 	//phoSeedBCE_ = new vector<int>;
 	//chain->SetBranchStatus("phoSeedBCE",1);
