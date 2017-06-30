@@ -2,18 +2,17 @@
 
 job=$1
 
-if [ -z ${_CONDOR_SCRATCH_DIR} ] ; 
-then 
-echo "Running Interactively" ; 
+if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then 
+	echo "Running Interactively" ; 
 else
-echo "Running In Batch"
-cd ${_CONDOR_SCRATCH_DIR}
-echo ${_CONDOR_SCRATCH_DIR}
-echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
-tar -xzf CMSSW_8_0_26_patch1.tgz
-cd CMSSW_8_0_26_patch1/src/
-source /cvmfs/cms.cern.ch/cmsset_default.sh
-cd  TTGammaSemiLep_13TeV/
+	echo "Running In Batch"
+	cd ${_CONDOR_SCRATCH_DIR}
+	echo ${_CONDOR_SCRATCH_DIR}
+	echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
+	tar -xzf CMSSW_8_0_26_patch1.tgz
+	cd CMSSW_8_0_26_patch1/src/
+	source /cvmfs/cms.cern.ch/cmsset_default.sh
+	cd  TTGammaSemiLep_13TeV/
 fi
 
 eval `scramv1 runtime -sh`
@@ -59,27 +58,27 @@ inputfiles=("root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_Si
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_hadronic.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTbar.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ntuple_DYjets.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/W1jets.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/W2jets.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/W3jets.root" \
-"root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/W4jets.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_s.root" \
+"root://cmseos.fnal.gov//store/user/dnoonan/Ntuples/W1jets.root" \
+"root://cmseos.fnal.gov//store/user/dnoonan/Ntuples/W2jets.root" \
+"root://cmseos.fnal.gov//store/user/dnoonan/Ntuples/W3jets.root" \
+"root://cmseos.fnal.gov//store/user/dnoonan/Ntuples/W4jets.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/ST_s.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_top.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_bar.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_tW_top.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_tWbar.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTWJets.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTZ.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/data_ele_b.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/data_ele_c.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/data_ele_d.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/data_ele_e.root" \
-"root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/data_ele_f1.root root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/data_ele_f1.root" \
-"root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/data_ele_g.root " \
-"root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/data_ele_h.root root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/data_ele_h2.root")
+"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016B_FebReminiAOD.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016C_FebReminiAOD.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016D_FebReminiAOD.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016E_FebReminiAOD.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016F_FebReminiAOD1.root /uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016F_FebReminiAOD2.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016G_FebReminiAOD.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016H_FebReminiAODv2.root /uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016H_FebReminiAODv3.root")
 
+echo "AnalysisNtuple/makeSkim ele ${outputfiles[job]} ${inputfiles[job]}"
+AnalysisNtuple/makeSkim ele ${outputfiles[job]} ${inputfiles[job]}
 
-echo "AnalysisNtuple/makeSkim ele ${outputdir}${outputfiles[job]} ${inputfiles[job]}"
-
-AnalysisNtuple/makeSkim ele ${outputdir}${outputfiles[job]} ${inputfiles[job]}
-
+echo "xrdcp -f ${outputfiles[job]} ${outputdir}"
+xrdcp -f ${outputfiles[job]} ${outputdir}
