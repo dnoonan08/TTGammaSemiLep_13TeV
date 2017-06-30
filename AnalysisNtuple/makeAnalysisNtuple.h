@@ -107,12 +107,28 @@ private :
 	std::vector<float>   _jetRawPt;
 	std::vector<float>   _jetArea;
 	std::vector<float>   _jetpfCombinedMVAV2BJetTags;
+	std::vector<float>   _jetCSV2BJetTags;
 	std::vector<int>     _jetPartonID;
 	std::vector<float>   _jetGenJetPt;
 	std::vector<int>     _jetGenPartonID;
 	std::vector<float>   _jetGenPt;
 	std::vector<float>   _jetGenEta;
 	std::vector<float>   _jetGenPhi;
+
+	std::vector<float>   _dRPhotonJet;
+	std::vector<float>   _dRPhotonLepton;
+	std::vector<float>   _MPhotonLepton;
+
+	Int_t                _nMC;
+	std::vector<float>   _mcPt;
+	std::vector<float>   _mcEta;
+	std::vector<float>   _mcPhi;
+	std::vector<float>   _mcMass;
+	std::vector<int>     _mcStatus;
+	std::vector<int>     _mcPID;
+	std::vector<int>     _mcMomPID;
+	std::vector<int>     _mcGMomPID;
+	std::vector<int>     _mcParentage;
 
 	double               _M3;
 	double               _HT;
@@ -125,6 +141,11 @@ private :
 	bool  _photonIsGenuine;
 	bool  _photonIsMisIDEle;
 	bool  _photonIsHadronic;
+
+	TLorentzVector jetVector;
+	TLorentzVector lepVector;
+	TLorentzVector phoVector;
+
 
 	void InitVariables();
 	void FillEvent();
@@ -201,12 +222,33 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("jetRawPt"                    , &_jetRawPt                   ); 
 	outputTree->Branch("jetArea"                     , &_jetArea                    ); 
 	outputTree->Branch("jetpfCombinedMVAV2BJetTags"  , &_jetpfCombinedMVAV2BJetTags );
-	outputTree->Branch("jetPartonID"                 , &_jetPartonID                ); 
-	outputTree->Branch("jetGenJetPt"                 , &_jetGenJetPt                ); 
-	outputTree->Branch("jetGenPartonID"              , &_jetGenPartonID             ); 
-	outputTree->Branch("jetGenPt"                    , &_jetGenPt                   ); 
-	outputTree->Branch("jetGenEta"                   , &_jetGenEta                  );
-	outputTree->Branch("jetGenPhi"                   , &_jetGenPhi                  );
+	outputTree->Branch("jetCSV2BJetTags"             , &_jetCSV2BJetTags            );
+	
+	if (!tree->isData_){
+		outputTree->Branch("jetPartonID"                 , &_jetPartonID                ); 
+		outputTree->Branch("jetGenJetPt"                 , &_jetGenJetPt                ); 
+		outputTree->Branch("jetGenPartonID"              , &_jetGenPartonID             ); 
+		outputTree->Branch("jetGenPt"                    , &_jetGenPt                   ); 
+		outputTree->Branch("jetGenEta"                   , &_jetGenEta                  );
+		outputTree->Branch("jetGenPhi"                   , &_jetGenPhi                  );
+	}		
+
+	outputTree->Branch("dRPhotonJet"                 , &_dRPhotonJet                );
+	outputTree->Branch("dRPhotonLepton"              , &_dRPhotonLepton             );
+	outputTree->Branch("MPhotonLepton"               , &_MPhotonLepton             );
+
+	if (!tree->isData_){
+		outputTree->Branch("nMC"   	                     , &_nMC		                ); 
+		outputTree->Branch("mcPt"	                     , &_mcPt	   	                );
+		outputTree->Branch("mcEta"	                     , &_mcEta	                    ); 
+		outputTree->Branch("mcPhi"	                     , &_mcPhi	                    ); 
+		outputTree->Branch("mcMass"	                     , &_mcMass	                    ); 
+		outputTree->Branch("mcStatus"                    , &_mcStatus                   );
+		outputTree->Branch("mcPID"	                     , &_mcPID	                    ); 
+		outputTree->Branch("mcMomPID"                    , &_mcMomPID                   );
+		outputTree->Branch("mcGMomPID"                   , &_mcGMomPID                  );
+		outputTree->Branch("mcParentage"                 , &_mcParentage                );
+	}
 
     outputTree->Branch("M3"                          , &_M3                         ); 
     outputTree->Branch("HT"                          , &_HT                         ); 
@@ -276,12 +318,27 @@ void makeAnalysisNtuple::InitVariables()
 	_jetRawPt.clear();
 	_jetArea.clear();
 	_jetpfCombinedMVAV2BJetTags.clear();
+	_jetCSV2BJetTags.clear();
 	_jetPartonID.clear();
 	_jetGenJetPt.clear();
 	_jetGenPartonID.clear();
 	_jetGenPt.clear();
 	_jetGenEta.clear();
 	_jetGenPhi.clear();
+
+	_dRPhotonJet.clear();
+	_dRPhotonLepton.clear();
+	_MPhotonLepton.clear();
+
+	_mcPt.clear();
+	_mcPhi.clear();
+	_mcEta.clear();
+	_mcMass.clear();
+	_mcStatus.clear();
+	_mcPID.clear();
+	_mcMomPID.clear();
+	_mcGMomPID.clear();
+	_mcParentage.clear();
 
 
 }

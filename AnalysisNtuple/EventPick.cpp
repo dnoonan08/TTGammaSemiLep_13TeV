@@ -65,7 +65,7 @@ EventPick::EventPick(std::string titleIn){
 	veto_lep_jet_dR = 0.4;
 	veto_pho_jet_dR = 0.7;
 	veto_pho_lep_dR = 0.7;
-	MET_cut = 20.0;
+	MET_cut = 0.0;
 	no_trigger = false;
 	
 	skimEle = false;
@@ -74,9 +74,10 @@ EventPick::EventPick(std::string titleIn){
 	Njet_ge = 3;
 	SkimNjet_ge = 2;
 
-	NBjet_ge = 2;
+	NBjet_ge = 1;
 	SkimNBjet_ge = 1;
 	Nlep_eq = 1;
+
 
 	Npho_ge = 1;
 	NlooseMuVeto_le = 0;
@@ -104,12 +105,13 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 	// keep jets not close to electrons (veto_jet_dR)
 	for(std::vector<int>::const_iterator jetInd = selector->Jets.begin(); jetInd != selector->Jets.end(); jetInd++){
 		bool goodJet = true;
+
+		//This is now applied in the selector
+		// for(std::vector<int>::const_iterator eleInd = selector->Electrons.begin(); eleInd != selector->Electrons.end(); eleInd++)
+		// 	if(dR_jet_ele(*jetInd, *eleInd) < veto_lep_jet_dR) goodJet = false;
 		
-		for(std::vector<int>::const_iterator eleInd = selector->Electrons.begin(); eleInd != selector->Electrons.end(); eleInd++)
-			if(dR_jet_ele(*jetInd, *eleInd) < veto_lep_jet_dR) goodJet = false;
-		
-		for(std::vector<int>::const_iterator muInd = selector->Muons.begin(); muInd != selector->Muons.end(); muInd++)
-			if(dR_jet_mu(*jetInd, *muInd) < veto_lep_jet_dR) goodJet = false;
+		// for(std::vector<int>::const_iterator muInd = selector->Muons.begin(); muInd != selector->Muons.end(); muInd++)
+		// 	if(dR_jet_mu(*jetInd, *muInd) < veto_lep_jet_dR) goodJet = false;
 
 		if(goodJet) Jets.push_back(*jetInd);
 
@@ -210,20 +212,25 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 
 
 	// NJet cuts for electrons
-	if(passPresel_ele && Jets.size() >= 1 ) {cutFlow_ele->Fill(6); cutFlowWeight_ele->Fill(6,weight);}
-	else passPresel_ele = false;
-	if(passPresel_ele && Jets.size() >= 2 ) {cutFlow_ele->Fill(7); cutFlowWeight_ele->Fill(7,weight);}
-        else passPresel_ele = false;
-	if(passPresel_ele && Jets.size() >= 3 ) {cutFlow_ele->Fill(8); cutFlowWeight_ele->Fill(8,weight);}
-        else passPresel_ele = false;
-	if(passPresel_ele && Jets.size() >= 4) {cutFlow_ele->Fill(9); cutFlowWeight_ele->Fill(9,weight);}
-	else passPresel_ele = false;	
+	// Implemented in this way (with a loop) to check for numbers failing each level of cut < Njet cut, and filling cutflow histo
+	// cutflow histo will not be filled for bins where the cut is > Njet_ge (ex, if cut is at 3, Njets>=4 bin is left empty)
+	for (int ijetCut = 1; ijetCut <= Njet_ge; ijetCut++){
+		if(passPresel_ele && Jets.size() >= ijetCut ) {cutFlow_ele->Fill(5+ijetCut); cutFlowWeight_ele->Fill(5+ijetCut,weight);}
+		else passPresel_ele = false;
+	}
 
 	// Nbtag cuts for electrons
-        if ( passPresel_ele && bJets.size() >= 1) {cutFlow_ele->Fill(10); cutFlowWeight_ele->Fill(10,weight);}
-        else passPresel_ele = false;
-	if( passPresel_ele && bJets.size() >= 2) {cutFlow_ele->Fill(11); cutFlowWeight_ele->Fill(11,weight);}
-	else passPresel_ele = false;
+	for (int ibjetCut = 1; ibjetCut <= NBjet_ge; ibjetCut++){
+		if(passPresel_ele && bJets.size() >= ibjetCut ) {cutFlow_ele->Fill(9+ibjetCut); cutFlowWeight_ele->Fill(9+ibjetCut,weight);}
+		else passPresel_ele = false;
+	}
+
+
+	// if(passPresel_ele && Jets.size() >= Njet_ge) {passPrese_ele=true;}
+	// else passPresel_ele = false;	
+	// if(passPresel_ele && Jets.size() >= Njet_ge) {passPrese_ele=true;}
+	// else passPresel_ele = false;	
+
 
 	// MET cut for electrons
 	if(passPresel_ele && tree->pfMET_ >= MET_cut) {cutFlow_ele->Fill(13); cutFlowWeight_ele->Fill(13,weight);}
@@ -235,27 +242,25 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 
 
 	// NJet cuts for muons
-	if(passPresel_mu && Jets.size() >= 1 ) {cutFlow_mu->Fill(6); cutFlowWeight_mu->Fill(6,weight);}
-	else passPresel_mu = false;
-	if(passPresel_mu && Jets.size() >= 2 ) {cutFlow_mu->Fill(7); cutFlowWeight_mu->Fill(7,weight);}
-        else passPresel_mu = false;
-	if(passPresel_mu && Jets.size() >= 3 ) {cutFlow_mu->Fill(8); cutFlowWeight_mu->Fill(8,weight);}
-        else passPresel_mu = false;
-	if(passPresel_mu && Jets.size() >= 4) {cutFlow_mu->Fill(9); cutFlowWeight_mu->Fill(9,weight);}
-	else passPresel_mu = false;	
+	// Implemented in this way (with a loop) to check for numbers failing each level of cut < Njet cut, and filling cutflow histo
+	// cutflow histo will not be filled for bins where the cut is > Njet_ge (ex, if cut is at 3, Njet>=4 bin is left empty)
+	for (int ijetCut = 1; ijetCut <= Njet_ge; ijetCut++){
+		if(passPresel_mu && Jets.size() >= ijetCut ) {cutFlow_mu->Fill(5+ijetCut); cutFlowWeight_mu->Fill(5+ijetCut,weight);}
+		else passPresel_mu = false;
+	}
 
 	// Nbtag cuts for muons
-        if ( passPresel_mu && bJets.size() >= 1) {cutFlow_mu->Fill(10); cutFlowWeight_mu->Fill(10,weight);}
-        else passPresel_mu = false;
-	if( passPresel_mu && bJets.size() >= 2) {cutFlow_mu->Fill(11); cutFlowWeight_mu->Fill(11,weight);}
-	else passPresel_mu = false;
+	for (int ibjetCut = 1; ibjetCut <= NBjet_ge; ibjetCut++){
+		if(passPresel_mu && bJets.size() >= ibjetCut ) {cutFlow_mu->Fill(9+ibjetCut); cutFlowWeight_mu->Fill(9+ibjetCut,weight);}
+		else passPresel_mu = false;
+	}
 
 	// MET cut for muons
 	if(passPresel_mu && tree->pfMET_ >= MET_cut) {cutFlow_mu->Fill(13); cutFlowWeight_mu->Fill(13,weight);}
 	else passPresel_mu = false;
 
 	// Photon cut for muons
-	if(passPresel_mu && Photons.size() >= 1) { cutFlow_mu->Fill(14); cutFlowWeight_mu->Fill(14,weight); passAll_mu = true;}
+	if(passPresel_mu && Photons.size() >= Npho_ge) { cutFlow_mu->Fill(14); cutFlowWeight_mu->Fill(14,weight); passAll_mu = true;}
 	else passAll_mu = false ; 
 	
 

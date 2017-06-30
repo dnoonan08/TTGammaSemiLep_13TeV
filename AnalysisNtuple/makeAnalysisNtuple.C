@@ -24,23 +24,26 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 
 #include "BTagCalibrationStandalone.h"
 
-const std::string allowedSampleTypes[17] = {"Data",
+const std::string allowedSampleTypes[20] = {"Data",
 											"TTGamma_Hadronic",
-											"TTGamma_SemileptfromTbar",
-											"TTGamma_SemileptfromT",
+											"TTGamma_SingleLeptFromTbar",
+											"TTGamma_SingleLeptFromT",
 											"TTGamma_Dilepton",
-											"TTbar",
+											"TTbarPowheg",
+											"TTbarMCatNLO",
 											"Wjets",
 											"W1jets",
 											"W2jets",
 											"W3jets",
 											"W4jets",
 											"DYjets",
-											"ST_tW",
-											"ST_tbarW",
-											"ST_tchannel",
-											"ST_tbarchannel",
-											"ST_schannel"};
+											"TTW",
+											"TTZ",
+											"ST_tW-channel",
+											"ST_tbarW-channel",
+											"ST_t-channel",
+											"ST_tbar-channel",
+											"ST_s-channel"};
 
 
 #ifdef makeAnalysisNtuple_cxx
@@ -63,6 +66,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	selector = new Selector();
 	evtPick = new EventPick("");
+
+	
+
 
 	BTagCalibration calib("csvv2", "CSVv2_Moriond17_B_H.csv");
 
@@ -211,7 +217,16 @@ void makeAnalysisNtuple::FillEvent()
 	_nMu		     = evtPick->Muons.size();
 	_nJet            = evtPick->Jets.size();
 	_nBJet           = evtPick->bJets.size();
+	_nMC             = tree->nMC_;
 
+
+	if (_nPho > 0 ){
+		int phoInd = evtPick->Photons.at(0);
+		phoVector.SetPtEtaPhiM(tree->phoEt_->at(phoInd),
+							   tree->phoEta_->at(phoInd),
+							   tree->phoPhi_->at(phoInd),
+							   0.0);
+	}
 
 	for (int i_ele = 0; i_ele <_nEle; i_ele++){
 		int eleInd = evtPick->Electrons.at(i_ele);
@@ -219,6 +234,11 @@ void makeAnalysisNtuple::FillEvent()
 		_elePhi.push_back(tree->elePhi_->at(eleInd));
 		_eleSCEta.push_back(tree->eleSCEta_->at(eleInd));
 		_elePFRelIso.push_back(selector->EleRelIso_corr.at(eleInd));
+		lepVector.SetPtEtaPhiE(tree->elePt_->at(eleInd),
+							   tree->eleSCEta_->at(eleInd),
+							   tree->elePhi_->at(eleInd),
+							   tree->eleEn_->at(eleInd));
+
 	}
 
 
@@ -228,6 +248,15 @@ void makeAnalysisNtuple::FillEvent()
 		_muPhi.push_back(tree->muPhi_->at(muInd));
 		_muEta.push_back(tree->muEta_->at(muInd));
 		_muPFRelIso.push_back(selector->MuRelIso_corr.at(muInd));
+		lepVector.SetPtEtaPhiE(tree->muPt_->at(muInd),
+							   tree->muEta_->at(muInd),
+							   tree->muPhi_->at(muInd),
+							   tree->muEn_->at(muInd));
+	}
+
+	if (_nPho > 0 ){
+		_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
+		_MPhotonLepton.push_back((phoVector+lepVector).M());
 	}
 
 	_passPresel_Ele  = evtPick->passPresel_ele;
@@ -247,7 +276,6 @@ void makeAnalysisNtuple::FillEvent()
 	}
 
 
-
 	for (int i_jet = 0; i_jet <_nJet; i_jet++){
 		
 		int jetInd = evtPick->Jets.at(i_jet);
@@ -258,12 +286,25 @@ void makeAnalysisNtuple::FillEvent()
 		_jetRawPt.push_back(tree->jetRawPt_->at(jetInd));
 		_jetArea.push_back(tree->jetArea_->at(jetInd));
 		_jetpfCombinedMVAV2BJetTags.push_back(tree->jetpfCombinedMVAV2BJetTags_->at(jetInd));
-		_jetPartonID.push_back(tree->jetPartonID_->at(jetInd));
-		_jetGenJetPt.push_back(tree->jetGenJetPt_->at(jetInd));
-		_jetGenPartonID.push_back(tree->jetGenPartonID_->at(jetInd));
-		_jetGenPt.push_back(tree->jetGenPt_->at(jetInd));
-		_jetGenEta.push_back(tree->jetGenEta_->at(jetInd));
-		_jetGenPhi.push_back(tree->jetGenPhi_->at(jetInd));
+		_jetCSV2BJetTags.push_back(tree->jetCSV2BJetTags_->at(jetInd));
+
+		if (!tree->isData_){
+			_jetPartonID.push_back(tree->jetPartonID_->at(jetInd));
+			_jetGenJetPt.push_back(tree->jetGenJetPt_->at(jetInd));
+			_jetGenPartonID.push_back(tree->jetGenPartonID_->at(jetInd));
+			_jetGenPt.push_back(tree->jetGenPt_->at(jetInd));
+			_jetGenEta.push_back(tree->jetGenEta_->at(jetInd));
+			_jetGenPhi.push_back(tree->jetGenPhi_->at(jetInd));
+		}
+
+		if (_nPho > 0 ){
+			jetVector.SetPtEtaPhiE(tree->jetPt_->at(jetInd),
+								   tree->jetEta_->at(jetInd),
+								   tree->jetPhi_->at(jetInd),
+								   tree->jetEn_->at(jetInd));
+			_dRPhotonJet.push_back(phoVector.DeltaR(jetVector));
+		}
+
 	}	
 
 	//Compute M3
@@ -294,8 +335,19 @@ void makeAnalysisNtuple::FillEvent()
 			}
 		}
 	}
-
-
+	if (!tree->isData_){
+		for (int i_mc = 0; i_mc <_nMC; i_mc++){
+			_mcPt.push_back(tree->mcPt->at(i_mc));
+			_mcPhi.push_back(tree->mcPhi->at(i_mc));
+			_mcEta.push_back(tree->mcEta->at(i_mc));
+			_mcMass.push_back(tree->mcMass->at(i_mc));
+			_mcStatus.push_back(tree->mcStatus->at(i_mc));
+			_mcPID.push_back(tree->mcPID->at(i_mc));
+			_mcMomPID.push_back(tree->mcMomPID->at(i_mc));
+			_mcGMomPID.push_back(tree->mcGMomPID->at(i_mc));
+			_mcParentage.push_back(tree->mcParentage->at(i_mc));
+		}
+	}
 }
 
 
@@ -453,20 +505,23 @@ double makeAnalysisNtuple::getEvtWeight(string outputName){
 	double evtWeight = -1.;
 	if( sampleType=="Data") {evtWeight = 1.;}
 	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
-	else if( sampleType=="TTGamma_SemileptfromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
-	else if( sampleType=="TTGamma_SemileptfromT") {evtWeight = TTGamma_semilept_T_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_T_SF;}
 	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_SF;}
-	else if( sampleType=="TTbar") {evtWeight = TTbar_SF;}
+	else if( sampleType=="TTbarPowheg") {evtWeight = TTbarPowheg_SF;}
+	else if( sampleType=="TTbarMCatNLO") {evtWeight = TTbarMCatNLO_SF;}
 	else if( sampleType=="W1jets") {evtWeight = W1jets_SF;}
 	else if( sampleType=="W2jets") {evtWeight = W2jets_SF;}
 	else if( sampleType=="W3jets") {evtWeight = W3jets_SF;}
 	else if( sampleType=="W4jets") {evtWeight = W4jets_SF;}
 	else if( sampleType=="DYjets") {evtWeight = DYjets_SF;}
-	else if( sampleType=="ST_tW") {evtWeight = ST_tW_SF;}
-	else if( sampleType=="ST_tbarW") {evtWeight = ST_tbarW_SF;}
-	else if( sampleType=="ST_tchannel") {evtWeight = ST_tchannel_SF;}
-	else if( sampleType=="ST_tbarchannel") {evtWeight = ST_tbarchannel_SF;}
-	else if( sampleType=="ST_schannel") {evtWeight = ST_schannel_SF;}
+	else if( sampleType=="TTW") {evtWeight = TTW_SF;}
+	else if( sampleType=="TTZ") {evtWeight = TTZ_SF;}
+	else if( sampleType=="ST_tW-channel") {evtWeight = ST_tW_SF;}
+	else if( sampleType=="ST_tbarW-channel") {evtWeight = ST_tbarW_SF;}
+	else if( sampleType=="ST_t-channel") {evtWeight = ST_tchannel_SF;}
+	else if( sampleType=="ST_tbar-channel") {evtWeight = ST_tbarchannel_SF;}
+	else if( sampleType=="ST_s-channel") {evtWeight = ST_schannel_SF;}
 	else {
 		cout << "-------------------------------------------------" << endl;
 		cout << "-------------------------------------------------" << endl;

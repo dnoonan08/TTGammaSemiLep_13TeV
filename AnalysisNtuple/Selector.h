@@ -82,6 +82,7 @@ public:
 	double jet_Pt_cut;
 	double jet_Eta_cut;
 	double btag_cut;
+	double veto_lep_jet_dR;
 	int JERsystLevel; //0= syst down, 1 = central, 2 = syst up
 	int JECsystLevel; //0= syst down, 1 = central, 2 = syst up
 

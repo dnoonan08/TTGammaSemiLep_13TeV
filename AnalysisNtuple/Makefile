@@ -1,7 +1,10 @@
-all: Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple
+all: Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple makeCutflows
 
 makeSkim: Selector.o EventPick.o EventTree.o  makeSkim.cpp OverlapRemove.cpp
 	g++ -o makeSkim `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o EventPick.o Selector.o  OverlapRemove.cpp makeSkim.cpp 
+
+makeCutflows: Selector.o EventPick.o EventTree.o  makeCutflows.cpp OverlapRemove.cpp
+	g++ -o makeCutflows `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o EventPick.o Selector.o  OverlapRemove.cpp makeCutflows.cpp 
 
 EventTree.o: EventTree.cpp EventTree.h
 	g++ -c -I`root-config --incdir` -std=c++11 EventTree.cpp
@@ -18,7 +21,7 @@ makeAnalysisNtuple: Selector.o EventPick.o EventTree.o makeAnalysisNtuple.C Over
 Selector.o: EventTree.o Selector.cpp Selector.h
 	g++ -c -I`root-config --incdir` -std=c++11 Selector.cpp
 
-EventPick.o: EventPick.cpp EventPick.h
+EventPick.o: Selector.o EventPick.cpp EventPick.h
 	g++ -c -I `root-config --incdir` -std=c++11 EventPick.cpp 
 
 clean:

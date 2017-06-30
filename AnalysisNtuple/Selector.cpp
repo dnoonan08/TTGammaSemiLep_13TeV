@@ -14,6 +14,8 @@ Selector::Selector(){
 	jet_Pt_cut = 30;
 	jet_Eta_cut = 2.4;
 
+	veto_lep_jet_dR = 0.4;
+
 	JERsystLevel = 1;
 	JECsystLevel = 1;
 
@@ -27,19 +29,19 @@ Selector::Selector(){
 	ele_PtLoose_cut = 15.0;
 
 	// muons
-	mu_Pt_cut = 25;
+	mu_Pt_cut = 30;
 	mu_Eta_tight = 2.4;
 	mu_RelIso_tight = 0.15;
 
-	mu_PtLoose_cut = 10.0;
+	mu_PtLoose_cut = 15.0;
 	mu_Eta_loose = 2.4;
 	mu_RelIso_loose = 0.25;
 	
 	mu_Iso_invert = false;
 
 	// photons
-	pho_Et_cut = 25.0; 
-	pho_Eta_cut = 2.1; 
+	pho_Et_cut = 15.0; 
+	pho_Eta_cut = 2.5; 
 	pho_ID_ind = 0; // 0 - Loose, 1 - Medium, 2 - Tight
 	pho_noPixelSeed_cut = false;
 	pho_noEleVeto_cut = false;
@@ -50,9 +52,6 @@ void Selector::process_objects(EventTree* inp_tree){
 	tree = inp_tree;
 
 	clear_vectors();
-	//	cout << "before selector photons" << endl;
-	filter_photons();
-
 	//	cout << "before selector muons" << endl;
 	filter_muons();
 
@@ -61,6 +60,10 @@ void Selector::process_objects(EventTree* inp_tree){
 	
 	//	cout << "before selector jets" << endl;
 	filter_jets();
+
+	//	cout << "before selector photons" << endl;
+	filter_photons();
+
 	//	cout << "end selector" << endl;
 
 }
@@ -137,7 +140,7 @@ void Selector::filter_photons(){
 		//if (dR(tree->phoEta_->at(phoInd), tree->phoPhi_->at(phoInd),  2.37, 2.69) < 0.05) continue;		
 
 		bool phoPresel = (et > pho_Et_cut &&
-						  eta < pho_Eta_cut &&
+						  abs(eta) < pho_Eta_cut &&
 						  passEtaOverlap &&
 						  passMediumPhotonID &&
 						  !hasPixelSeed);
@@ -176,7 +179,7 @@ void Selector::filter_electrons(){
 		bool passEleTightID = (eleID >> 3) & 1;
 
 		// make sure it doesn't fall within the gap
-		bool passEtaOverlap = (absEta < 1.4442) || (absEta > 1.566);
+		bool passEtaEBEEGap = (absEta < 1.4442) || (absEta > 1.566);
 
 
 		// D0 and Dz cuts are different for barrel and endcap
@@ -187,7 +190,7 @@ void Selector::filter_electrons(){
 		
 
 
-		bool eleSel = (passEtaOverlap &&
+		bool eleSel = (passEtaEBEEGap &&
 			       absEta < ele_Eta_cut &&
 			       pt > ele_Pt_cut &&
 			       passEleTightID &&
@@ -195,7 +198,7 @@ void Selector::filter_electrons(){
 			       passDz);
 
 	
-		bool looseSel = (passEtaOverlap &&
+		bool looseSel = (passEtaEBEEGap &&
 				 absEta < ele_Eta_cut &&
 				 pt > ele_PtLoose_cut &&
 				 passEleLooseID &&
@@ -258,7 +261,7 @@ void Selector::filter_muons(){
 	}
 }
 
-// jet ID is not likely to be altered, so it is hardcoded
+
 void Selector::filter_jets(){
 	TLorentzVector tMET;
 
@@ -294,13 +297,36 @@ void Selector::filter_jets(){
 		if (not tree->isData_ and JERsystLevel==0) jetSmear = tree->jetP4SmearDo_->at(jetInd);
 		if (not tree->isData_ and JERsystLevel==2) jetSmear = tree->jetP4SmearUp_->at(jetInd);
 
-		tree->jetPt_->at(jetInd) = jetSmear * pt;
+		//		pt = pt*jetSmear;
+
+		tree->jetPt_->at(jetInd) = pt;
 		tree->jetEn_->at(jetInd) = jetSmear*tree->jetEn_->at(jetInd);
 		double eta = tree->jetEta_->at(jetInd);
 
+
+		//		cout << "starting DR cuts" << endl;
+
+		bool passDR_lep_jet = true;
+
+		//loop over selected electrons
+		for(std::vector<int>::const_iterator eleInd = Electrons.begin(); eleInd != Electrons.end(); eleInd++) {
+			if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->eleSCEta_->at(*eleInd), tree->elePhi_->at(*eleInd)) < veto_lep_jet_dR) passDR_lep_jet = false;
+		}
+
+		//loop over selected muons
+		for(std::vector<int>::const_iterator muInd = Muons.begin(); muInd != Muons.end(); muInd++) {
+			if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->muEta_->at(*muInd), tree->muPhi_->at(*muInd)) < veto_lep_jet_dR) passDR_lep_jet = false;
+		}
+
+		//		cout << "finished DR cuts" << endl;
+
 		bool jetPresel = (pt > jet_Pt_cut &&
-				  TMath::Abs(eta) < jet_Eta_cut &&
-				  jetID_pass);
+						  TMath::Abs(eta) < jet_Eta_cut &&
+						  jetID_pass &&
+						  passDR_lep_jet
+						  );
+
+
 
 		if( jetPresel){
 			Jets.push_back(jetInd);
@@ -308,8 +334,8 @@ void Selector::filter_jets(){
 		}
 	}
 
+	// Update the MET for JEC changes
 	if (JECsystLevel==0 || JECsystLevel==2){
-
 		tree->pfMET_ = float(tMET.Pt());
 		tree->pfMETPhi_ = float(tMET.Phi());
 	}
@@ -373,7 +399,7 @@ bool Selector::passPhoMediumID(int phoInd){
     if (eta < 1.47){
 		if (tree->phoHoverE_->at(phoInd)                < 0.0396  &&
 			tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.01022 &&
-			rhoCorrPFPhoIso                             < 0.441 &&
+			rhoCorrPFChIso                              < 0.441 &&
 			rhoCorrPFNeuIso                             < 2.725+0.0148*pt+0.000017*pt*pt &&
 			rhoCorrPFPhoIso                             < 2.571+0.0047*pt){
 			passMediumID = true;
@@ -381,7 +407,7 @@ bool Selector::passPhoMediumID(int phoInd){
     } else {
 		if (tree->phoHoverE_->at(phoInd)                < 0.0219  &&
 			tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.03001 &&
-			rhoCorrPFPhoIso                             < 0.442 &&
+			rhoCorrPFChIso                              < 0.442 &&
 			rhoCorrPFNeuIso                             < 1.715+0.0163*pt+0.000014*pt*pt &&
 			rhoCorrPFPhoIso                             < 3.863+0.0034*pt){
 			passMediumID = true;

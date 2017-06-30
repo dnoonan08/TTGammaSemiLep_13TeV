@@ -20,9 +20,6 @@ int main(int ac, char** av){
 	EventTree* tree = new EventTree(ac-3, av+3);
 	Selector* selector = new Selector();
 
-	//Lower the jet Pt and lepton Pt cuts, so that smearing systematics can be performed on same sample
-	selector->jet_Pt_cut = 25;
-
 	EventPick* evtPick = new EventPick("nominal");
 	evtPick->MET_cut = -1.0;	
 	std::string outDirName(av[2]);
@@ -41,10 +38,10 @@ int main(int ac, char** av){
 
 	// reduce the pt cuts by 10% in the skim, so that energy corrections can still be done on same skims
 	selector->jet_Pt_cut = 27.;
-	selector->ele_Pt_cut = 27.;
+	selector->ele_Pt_cut = 32.;
 	selector->mu_Pt_cut = 27.;
 
-	evtPick->SkimNjet_ge = 2;
+	evtPick->SkimNjet_ge = 3;
 	evtPick->SkimNBjet_ge = 1;
 
 	std::string channel(av[1]);
