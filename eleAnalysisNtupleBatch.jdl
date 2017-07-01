@@ -1,0 +1,17 @@
+universe = vanilla
+Executable = runSkims_ele.sh
+
+should_transfer_files = YES
+WhenTOTransferOutput  = ON_EXIT
+notification = never
+Transfer_input_files = CMSSW_8_0_26_patch1.tgz
+
+Output = condor/eleSkim_$(cluster)_$(process).stdout
+Error  = condor/eleSkim_$(cluster)_$(process).stderr
+Log    = condor/eleSkim_$(cluster)_$(process).condor
+Requirements          = (Memory >= 499 && OpSys == "LINUX" && (Arch != "DUMMY"))
+Arguments = $(process)
+#use_x509userproxy = true
+x509userproxy = $ENV(X509_USER_PROXY)
+# important, number of instances (jobs) of script
+Queue 24

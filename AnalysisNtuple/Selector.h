@@ -111,6 +111,7 @@ public:
 	int    pho_ID_ind; // 0 - Loose, 1 - Medium, 2 - Tight
 	bool   pho_noPixelSeed_cut;
 	bool   pho_noEleVeto_cut;
+	bool   pho_applyPhoID;
 
 	// muons
 	double mu_PtLoose_cut;

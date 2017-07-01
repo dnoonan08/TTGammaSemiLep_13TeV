@@ -45,6 +45,7 @@ Selector::Selector(){
 	pho_ID_ind = 0; // 0 - Loose, 1 - Medium, 2 - Tight
 	pho_noPixelSeed_cut = false;
 	pho_noEleVeto_cut = false;
+	pho_applyPhoID = true;
 	
 }
 
@@ -99,10 +100,10 @@ void Selector::filter_photons(){
 		double absEta = TMath::Abs(eta);
 		double et = tree->phoEt_->at(phoInd);
 
-		// uint photonIDbit = tree->phoIDbit_->at(phoInd);
-		// bool passLoosePhotonID  = photonIDbit >> 0 & 1;
-		// bool passMediumPhotonID = photonIDbit >> 1 & 1;
-		// bool passTightPhotonID  = photonIDbit >> 2 & 1;
+		uint photonIDbit = tree->phoIDbit_->at(phoInd);
+		bool passLoosePhotonID  = photonIDbit >> 0 & 1;
+		bool passMediumPhotonID = photonIDbit >> 1 & 1;
+		bool passTightPhotonID  = photonIDbit >> 2 & 1;
 
 
 		double rhoCorrPFChIso = tree->phoPFChIso_->at(phoInd) - phoEffArea03ChHad(eta)*tree->rho_;
@@ -114,7 +115,7 @@ void Selector::filter_photons(){
 		PhoPhoIso_corr.push_back(rhoCorrPFPhoIso);
 
 
-		bool passMediumPhotonID = passPhoMediumID(phoInd);
+		// bool passMediumPhotonID = passPhoMediumID(phoInd);
 
 
 		bool hasPixelSeed = tree->phohasPixelSeed_->at(phoInd);
@@ -142,7 +143,7 @@ void Selector::filter_photons(){
 		bool phoPresel = (et > pho_Et_cut &&
 						  abs(eta) < pho_Eta_cut &&
 						  passEtaOverlap &&
-						  passMediumPhotonID &&
+						  (!pho_applyPhoID || passMediumPhotonID) &&
 						  !hasPixelSeed);
 
 		if(phoPresel){

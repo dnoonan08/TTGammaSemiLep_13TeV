@@ -80,10 +80,14 @@ private :
 	std::vector<float>   _phoEt;
 	std::vector<float>   _phoEta;
 	std::vector<float>   _phoPhi;
+	std::vector<float>   _phoHoverE;
 	std::vector<float>   _phoSigmaIEtaIEtaFull5x5;
 	std::vector<float>   _phoPFChIso;
 	std::vector<float>   _phoPFPhoIso;
 	std::vector<float>   _phoPFNeuIso;
+	std::vector<bool>    _phoTightID;
+	std::vector<bool>    _phoMediumID;
+	std::vector<bool>    _phoLooseID;
    
 	Int_t           _nEle;
 
@@ -196,10 +200,14 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoEt"                      , &_phoEt                       );
 	outputTree->Branch("phoEta"                     , &_phoEta                      ); 
 	outputTree->Branch("phoPhi"                     , &_phoPhi                      ); 
+	outputTree->Branch("phoHoverE_"                 , &_phoHoverE                   ); 
 	outputTree->Branch("phoSigmaIEtaIEtaFull5x5"    , &_phoSigmaIEtaIEtaFull5x5     ); 
 	outputTree->Branch("phoPFChIso"                 , &_phoPFChIso                  ); 
 	outputTree->Branch("phoPFPhoIso"                , &_phoPFPhoIso                 ); 
 	outputTree->Branch("phoPFNeuIso"                , &_phoPFNeuIso                 ); 
+	outputTree->Branch("phoTightID"                 , &_phoTightID                  ); 
+	outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
+	outputTree->Branch("phoLooseID"                 , &_phoLooseID                  ); 
 	
 	outputTree->Branch("nEle"                        , &_nEle                       ); 
 	outputTree->Branch("elePt"                       , &_elePt                      );
@@ -306,10 +314,14 @@ void makeAnalysisNtuple::InitVariables()
 	_phoEt.clear();
 	_phoEta.clear();
 	_phoPhi.clear();
+	_phoHoverE.clear();
 	_phoSigmaIEtaIEtaFull5x5.clear();
 	_phoPFChIso.clear();
 	_phoPFPhoIso.clear();
 	_phoPFNeuIso.clear();
+	_phoTightID.clear();
+	_phoMediumID.clear();
+	_phoLooseID.clear();
 
 	_jetPt.clear();
 	_jetEn.clear();

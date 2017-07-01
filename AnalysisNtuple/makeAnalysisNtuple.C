@@ -65,6 +65,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
 	selector = new Selector();
+
+	selector->pho_applyPhoID = false;
+
 	evtPick = new EventPick("");
 
 	
@@ -269,10 +272,14 @@ void makeAnalysisNtuple::FillEvent()
 		_phoEt.push_back(tree->phoEt_->at(phoInd));
 		_phoEta.push_back(tree->phoEta_->at(phoInd));
 		_phoPhi.push_back(tree->phoPhi_->at(phoInd));
+		_phoHoverE.push_back(tree->phoHoverE_->at(phoInd));
 		_phoSigmaIEtaIEtaFull5x5.push_back(tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd));
 		_phoPFChIso.push_back( selector->PhoChHadIso_corr.at(phoInd));
 		_phoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
 		_phoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
+		_phoTightID.push_back(tree->phoIDbit_->at(phoInd)>>2&1);
+		_phoMediumID.push_back(tree->phoIDbit_->at(phoInd)>>1&1);
+		_phoLooseID.push_back(tree->phoIDbit_->at(phoInd)>>0&1);
 	}
 
 
