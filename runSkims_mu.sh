@@ -20,8 +20,8 @@ eval `scramv1 runtime -sh`
 
 
 
-outputdir="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_skims/muons/"
-#outputdir="/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/13TeV_skims/muons/"
+outputdir="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_skims/muons/"     
+#outputdir="/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/13TeV_skims/muons/"   
 
 outputfiles=("TTGamma_SingleLeptFromTbar_skim.root " \
 "TTGamma_SingleLeptFromT_skim.root    " \
@@ -57,10 +57,10 @@ inputfiles=("root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_Si
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_dilept.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_hadronic.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTbar.root" \
-"root://cmseos.fnal.gov//store/user/dnoonan/Ntuples/W1jets.root" \
-"root://cmseos.fnal.gov//store/user/dnoonan/Ntuples/W2jets.root" \
-"root://cmseos.fnal.gov//store/user/dnoonan/Ntuples/W3jets.root" \
-"root://cmseos.fnal.gov//store/user/dnoonan/Ntuples/W4jets.root" \
+"root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/W1jets.root" \
+"root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/W2jets.root" \
+"root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/W3jets.root" \
+"root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/W4jets.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ntuple_DYjets.root" \
 "/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/ST_s.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_top.root" \
