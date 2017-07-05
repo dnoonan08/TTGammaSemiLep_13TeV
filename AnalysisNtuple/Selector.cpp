@@ -101,21 +101,24 @@ void Selector::filter_photons(){
 		double et = tree->phoEt_->at(phoInd);
 
 		uint photonIDbit = tree->phoIDbit_->at(phoInd);
-		bool passLoosePhotonID  = photonIDbit >> 0 & 1;
+		// bool passLoosePhotonID  = photonIDbit >> 0 & 1;
 		bool passMediumPhotonID = photonIDbit >> 1 & 1;
-		bool passTightPhotonID  = photonIDbit >> 2 & 1;
+		// bool passTightPhotonID  = photonIDbit >> 2 & 1;
 
 
-		double rhoCorrPFChIso = tree->phoPFChIso_->at(phoInd) - phoEffArea03ChHad(eta)*tree->rho_;
-		double rhoCorrPFNeuIso = tree->phoPFNeuIso_->at(phoInd) - phoEffArea03NeuHad(eta)*tree->rho_;
-		double rhoCorrPFPhoIso = tree->phoPFPhoIso_->at(phoInd) - phoEffArea03Pho(eta)*tree->rho_;
+		double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd) - phoEffArea03ChHad(eta)*tree->rho_);
+		double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_->at(phoInd) - phoEffArea03NeuHad(eta)*tree->rho_);
+		double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_->at(phoInd) - phoEffArea03Pho(eta)*tree->rho_);
 
 		PhoChHadIso_corr.push_back(rhoCorrPFChIso);
 		PhoNeuHadIso_corr.push_back(rhoCorrPFNeuIso);
 		PhoPhoIso_corr.push_back(rhoCorrPFPhoIso);
 
 
-		// bool passMediumPhotonID = passPhoMediumID(phoInd);
+		// bool passMediumPhotonID            = passPhoMediumID(phoInd,  true,  true,  true);
+		// bool passMediumPhotonIDNoHoverECut = passPhoMediumID(phoInd, false,  true,  true);
+		// bool passMediumPhotonIDNoSIEIECut  = passPhoMediumID(phoInd,  true, false,  true);
+		// bool passMediumPhotonIDNoIsoCut    = passPhoMediumID(phoInd,  true,  true, false);
 
 
 		bool hasPixelSeed = tree->phohasPixelSeed_->at(phoInd);
@@ -388,34 +391,37 @@ bool Selector::passEleLooseID(int eleInd){
   return true;
 }
 
-bool Selector::passPhoMediumID(int phoInd){
+bool Selector::passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso){
+
 	double pt = tree->phoEt_->at(phoInd);
     double eta = TMath::Abs(tree->phoEta_->at(phoInd));
     bool passMediumID = false;
 
-    double rhoCorrPFChIso = tree->phoPFChIso_->at(phoInd) - phoEffArea03ChHad(eta)*tree->rho_;
-    double rhoCorrPFNeuIso = tree->phoPFNeuIso_->at(phoInd) - phoEffArea03NeuHad(eta)*tree->rho_;
-    double rhoCorrPFPhoIso = tree->phoPFPhoIso_->at(phoInd) - phoEffArea03Pho(eta)*tree->rho_;
+	double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd)  - phoEffArea03ChHad(eta) *tree->rho_);
+	double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_->at(phoInd) - phoEffArea03NeuHad(eta)*tree->rho_);
+	double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_->at(phoInd) - phoEffArea03Pho(eta)   *tree->rho_);
 	
     if (eta < 1.47){
-		if (tree->phoHoverE_->at(phoInd)                < 0.0396  &&
-			tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.01022 &&
-			rhoCorrPFChIso                              < 0.441 &&
-			rhoCorrPFNeuIso                             < 2.725+0.0148*pt+0.000017*pt*pt &&
-			rhoCorrPFPhoIso                             < 2.571+0.0047*pt){
+		if ((!cutHoverE || tree->phoHoverE_->at(phoInd)                < 0.0396  ) &&
+			(!cutSIEIE  || tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.01022 ) &&
+			(!cutIso    || (rhoCorrPFChIso                              < 0.441 &&
+							rhoCorrPFNeuIso                             < 2.725+0.0148*pt+0.000017*pt*pt &&
+							rhoCorrPFPhoIso                             < 2.571+0.0047*pt))){
 			passMediumID = true;
 		}
     } else {
-		if (tree->phoHoverE_->at(phoInd)                < 0.0219  &&
-			tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.03001 &&
-			rhoCorrPFChIso                              < 0.442 &&
-			rhoCorrPFNeuIso                             < 1.715+0.0163*pt+0.000014*pt*pt &&
-			rhoCorrPFPhoIso                             < 3.863+0.0034*pt){
+		if ((!cutHoverE || tree->phoHoverE_->at(phoInd)                < 0.0219  ) &&
+			(!cutSIEIE  || tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.03001 ) &&
+			(!cutIso    || (rhoCorrPFChIso                              < 0.442 &&
+							rhoCorrPFNeuIso                             < 1.715+0.0163*pt+0.000014*pt*pt &&
+							rhoCorrPFPhoIso                             < 3.863+0.0034*pt))){
 			passMediumID = true;
 		}
     }
     return passMediumID;
 }
+
+
 
 Selector::~Selector(){
 }

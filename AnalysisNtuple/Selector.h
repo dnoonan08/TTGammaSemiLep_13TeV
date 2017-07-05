@@ -24,6 +24,7 @@ const double photonID_RhoCorrR03PhoIso_1[2][3]    = { {0.005, 0.005, 0.005} , {0
 // Effective areas for photon rho correction
 // First index is the egammaRegion (from above) second is whether it isChHad, NeuHad, or Pho 
 ///                                   chhadEA, nhadEA, photEA
+///https://indico.cern.ch/event/491548/contributions/2384977/attachments/1377936/2117789/CutBasedPhotonID_25-11-2016.pdf
 static const double photonEA[7][3] = {{0.0360, 0.0597, 0.1210},
 									  {0.0377, 0.0807, 0.1107},
 									  {0.0306, 0.0629, 0.0699},
@@ -142,8 +143,8 @@ private:
 
 	bool passEleTightID(int eleInd);
 	bool passEleLooseID(int eleInd);
-	bool passPhoMediumID(int phoInd);
-	
+	//	bool passPhoMediumID(int phoInd);
+	bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso);
 };
 
 #endif

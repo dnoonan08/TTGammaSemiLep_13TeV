@@ -88,6 +88,10 @@ private :
 	std::vector<bool>    _phoTightID;
 	std::vector<bool>    _phoMediumID;
 	std::vector<bool>    _phoLooseID;
+	std::vector<bool>    _phoMediumIDFunction; 
+	std::vector<bool>    _phoMediumIDNoHoverECut; 
+	std::vector<bool>    _phoMediumIDNoSIEIECut; 
+	std::vector<bool>    _phoMediumIDNoIsoCut; 
    
 	Int_t           _nEle;
 
@@ -163,8 +167,8 @@ private :
 	double getMuSF(int muInd, int systLevel);
 	double getEleSF(int eleInd, int systLevel);
 
-
 	void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronic);
+	bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso);
 
 };
 
@@ -208,6 +212,10 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoTightID"                 , &_phoTightID                  ); 
 	outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
 	outputTree->Branch("phoLooseID"                 , &_phoLooseID                  ); 
+	outputTree->Branch("phoMediumIDFunction"        , &_phoMediumIDFunction         ); 
+	outputTree->Branch("phoMediumIDNoHoverECut"     , &_phoMediumIDNoHoverECut      ); 
+	outputTree->Branch("phoMediumIDNoSIEIECut"      , &_phoMediumIDNoSIEIECut       ); 
+	outputTree->Branch("phoMediumIDNoIsoCut"        , &_phoMediumIDNoIsoCut         ); 
 	
 	outputTree->Branch("nEle"                        , &_nEle                       ); 
 	outputTree->Branch("elePt"                       , &_elePt                      );
@@ -322,6 +330,10 @@ void makeAnalysisNtuple::InitVariables()
 	_phoTightID.clear();
 	_phoMediumID.clear();
 	_phoLooseID.clear();
+	_phoMediumIDFunction.clear(); 
+	_phoMediumIDNoHoverECut.clear(); 
+	_phoMediumIDNoSIEIECut.clear(); 
+	_phoMediumIDNoIsoCut.clear(); 
 
 	_jetPt.clear();
 	_jetEn.clear();

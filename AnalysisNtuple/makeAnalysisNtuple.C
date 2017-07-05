@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include"PUReweight.h"
+//#include"OverlapRemove.cpp"
 
 #include "elemuSF.h"
 
@@ -20,9 +21,9 @@ int phosmear012_g = 1; // 0:down, 1:norm, 2:up
 int musmear012_g = 1; // 0:down, 1:norm, 2: up
 int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 
-
-
 #include "BTagCalibrationStandalone.h"
+
+bool overlapRemovalTT(EventTree* tree);
 
 const std::string allowedSampleTypes[20] = {"Data",
 											"TTGamma_Hadronic",
@@ -96,6 +97,16 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				"comb");               // measurement type
 
 
+	bool doOverlapRemoval = false;
+	bool skipOverlap = false;
+	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO") doOverlapRemoval = true;
+
+
+	if(doOverlapRemoval) std::cout << "########## Will apply overlap removal ###########" << std::endl;
+
+
+
+
 	//Look into the output file names for indications of whether this is for a systematic
 	bool systematics = false;
 	std::string outDirName(av[2]);
@@ -112,8 +123,14 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << "  ";
 	std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << endl;
+
+
+
+
+
 	
 
+	TFile *outputFile = new TFile(av[2],"recreate");
 	outputTree = new TTree("AnalysisTree","AnalysisTree");
 
 	InitBranches();
@@ -137,10 +154,14 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	//	for(Long64_t entry=0; entry<100; entry++){
 
 	int dumpFreq = 100;
-	if (nEntr >3000)   { dumpFreq = 1000; }
-	if (nEntr >30000)  { dumpFreq = 10000; }
-	if (nEntr >300000) { dumpFreq = 100000; }
-	if (nEntr >3000000){ dumpFreq = 1000000; }
+	if (nEntr >5000)    { dumpFreq = 500; }
+	if (nEntr >10000)   { dumpFreq = 1000; }
+	if (nEntr >50000)   { dumpFreq = 5000; }
+	if (nEntr >100000)  { dumpFreq = 10000; }
+	if (nEntr >500000)  { dumpFreq = 50000; }
+	if (nEntr >1000000) { dumpFreq = 100000; }
+	if (nEntr >5000000) { dumpFreq = 500000; }
+	if (nEntr >10000000){ dumpFreq = 1000000; }
 	
 
 	for(Long64_t entry=0; entry<nEntr; entry++){
@@ -148,6 +169,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 		tree->GetEntry(entry);
 		isMC = !(tree->isData_);
+
+		if( isMC && doOverlapRemoval){
+			if (overlapRemovalTT(tree)){
+				//				cout << "removing event " << entry << endl;
+				continue;
+			}
+		}
 
 		selector->process_objects(tree);
 
@@ -192,7 +220,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 
 
-	TFile *outputFile = new TFile(av[2],"recreate");
+	outputFile->cd();
 	outputTree->Write();
 	outputFile->Close();
 
@@ -280,6 +308,12 @@ void makeAnalysisNtuple::FillEvent()
 		_phoTightID.push_back(tree->phoIDbit_->at(phoInd)>>2&1);
 		_phoMediumID.push_back(tree->phoIDbit_->at(phoInd)>>1&1);
 		_phoLooseID.push_back(tree->phoIDbit_->at(phoInd)>>0&1);
+		_phoMediumIDFunction.push_back(   passPhoMediumID(phoInd,true,true,true) );
+		_phoMediumIDNoHoverECut.push_back(passPhoMediumID(phoInd,false,true,true));
+		_phoMediumIDNoSIEIECut.push_back( passPhoMediumID(phoInd,true,false,true));
+		_phoMediumIDNoIsoCut.push_back(   passPhoMediumID(phoInd,true,true,false));
+		
+
 	}
 
 
@@ -309,7 +343,17 @@ void makeAnalysisNtuple::FillEvent()
 								   tree->jetEta_->at(jetInd),
 								   tree->jetPhi_->at(jetInd),
 								   tree->jetEn_->at(jetInd));
+			
 			_dRPhotonJet.push_back(phoVector.DeltaR(jetVector));
+
+			// if (phoVector.DeltaR(jetVector) < 0.1){
+			// 	int phoInd = evtPick->Photons.at(0);
+			// 	cout << "---------------------" << endl;
+			// 	cout << "   pho Pt/Eta/Phi: "<< phoVector.Pt() << " " << phoVector.Eta() << " " <<  phoVector.Phi() << endl;
+			// 	cout << "   jet Pt/Eta/Phi: "<< jetVector.Pt() << " " << jetVector.Eta() << " " <<  jetVector.Phi() << endl;
+			// 	cout << "   pho ID, Iso: " << (tree->phoIDbit_->at(phoInd)>>0&1) << (tree->phoIDbit_->at(phoInd)>>1&1) << (tree->phoIDbit_->at(phoInd)>>2&1) << " " << selector->PhoChHadIso_corr.at(phoInd) << endl;
+			// 	cout << "   jet ID, IDloose, NEF: " << (tree->jetID_->at(jetInd)>>2&1) << " " << (tree->jetID_->at(jetInd)>>1&1) << " " << tree->jetNEF_->at(jetInd) << endl;
+			// }
 		}
 
 	}	
@@ -593,6 +637,45 @@ double makeAnalysisNtuple::WjetsBRreweight(){
 	return reweight;
 	
 }
+
+bool makeAnalysisNtuple::passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso){
+
+	double pt = tree->phoEt_->at(phoInd);
+    double eta = TMath::Abs(tree->phoEta_->at(phoInd));
+    bool passMediumID = false;
+
+	int region = 0;
+	if( eta >= 1.0  ) region++;
+	if( eta >= 1.479) region++;
+	if( eta >= 2.0  ) region++;
+	if( eta >= 2.2  ) region++;
+	if( eta >= 2.3  ) region++;
+	if( eta >= 2.4  ) region++;
+
+	double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd)  - photonEA[region][0] *tree->rho_);
+	double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_->at(phoInd) - photonEA[region][1] *tree->rho_);
+	double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_->at(phoInd) - photonEA[region][2] *tree->rho_);
+	
+    if (eta < 1.47){
+		if ((!cutHoverE || tree->phoHoverE_->at(phoInd)                < 0.0396  ) &&
+			(!cutSIEIE  || tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.01022 ) &&
+			(!cutIso    || (rhoCorrPFChIso                              < 0.441 &&
+							rhoCorrPFNeuIso                             < 2.725+0.0148*pt+0.000017*pt*pt &&
+							rhoCorrPFPhoIso                             < 2.571+0.0047*pt))){
+			passMediumID = true;
+		}
+    } else {
+		if ((!cutHoverE || tree->phoHoverE_->at(phoInd)                < 0.0219  ) &&
+			(!cutSIEIE  || tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.03001 ) &&
+			(!cutIso    || (rhoCorrPFChIso                              < 0.442 &&
+							rhoCorrPFNeuIso                             < 1.715+0.0163*pt+0.000014*pt*pt &&
+							rhoCorrPFPhoIso                             < 3.863+0.0034*pt))){
+			passMediumID = true;
+		}
+    }
+    return passMediumID;
+}
+
 
 void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronic){
 
