@@ -11,18 +11,18 @@
 #include<TCanvas.h>
 
 int main(int ac, char** av){
-	if(ac < 2){
-		std::cout << "usage: ./makeCutflows inputFile[s]" << std::endl;
+	if(ac < 3){
+		std::cout << "usage: ./makeCutflows outputFile inputFile[s]" << std::endl;
 		return -1;
 	}
 
 	// input: dealing with TTree first
 	bool isMC = true;
-	EventTree* tree = new EventTree(ac-1, av+1);
+	EventTree* tree = new EventTree(ac-2, av+2);
 	Selector* selector = new Selector();
 
 	EventPick* evtPick = new EventPick("nominal");
-	evtPick->MET_cut = -1.0;	
+	evtPick->MET_cut = -1.0;
 
 	evtPick->Njet_ge = 4;	
 	evtPick->NBjet_ge = 2;	
@@ -38,6 +38,7 @@ int main(int ac, char** av){
 	selector->mu_Pt_cut = 30.;
 
 	Long64_t nEntr = tree->GetEntries();
+	std::string outDirName(av[1]);
 
 	int dumpFreq = 100;
 	if (nEntr >5000)    { dumpFreq = 500; }
@@ -66,6 +67,14 @@ int main(int ac, char** av){
 
 	std::cout << "mu+jets cutflow" << std::endl;
 	evtPick->print_cutflow_mu(evtPick->cutFlow_mu);
+
+	TFile* outputFile = TFile::Open(av[1],"RECREATE");
+
+	outputFile->cd();
+	evtPick->cutFlow_mu->Write();
+	evtPick->cutFlow_ele->Write();
+	outputFile->Close();
+
 
 	// std::map<std::string, TH1F*> histMap;
 	// // copy histograms
