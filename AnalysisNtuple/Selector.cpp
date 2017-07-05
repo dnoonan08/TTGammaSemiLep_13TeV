@@ -302,7 +302,7 @@ void Selector::filter_jets(){
 		if (not tree->isData_ and JERsystLevel==0) jetSmear = tree->jetP4SmearDo_->at(jetInd);
 		if (not tree->isData_ and JERsystLevel==2) jetSmear = tree->jetP4SmearUp_->at(jetInd);
 
-		//		pt = pt*jetSmear;
+		pt = pt*jetSmear;
 
 		tree->jetPt_->at(jetInd) = pt;
 		tree->jetEn_->at(jetInd) = jetSmear*tree->jetEn_->at(jetInd);
@@ -324,10 +324,14 @@ void Selector::filter_jets(){
 		}
 
 		bool passDR_pho_jet = true;
-
+		//		cout << "photon dR" << endl;
 		//loop over selected photons
+
 		for(std::vector<int>::const_iterator phoInd = PhotonsPresel.begin(); phoInd != PhotonsPresel.end(); phoInd++) {
-			if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->phoSCEta_->at(*phoInd), tree->phoPhi_->at(*phoInd)) < veto_pho_jet_dR) passDR_pho_jet = false;
+			// Only look at photons which pass the medium ID (this is left out of the selector in makeAnalysisNtuple so that different cuts can be invereted)
+			if (tree->phoIDbit_->at(*phoInd) >> 1 & 1){
+				if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->phoEta_->at(*phoInd), tree->phoPhi_->at(*phoInd)) < veto_pho_jet_dR) passDR_pho_jet = false;
+			}
 		}
 
 		//		cout << "finished DR cuts" << endl;

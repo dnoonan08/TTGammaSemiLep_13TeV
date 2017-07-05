@@ -1,5 +1,5 @@
 universe = vanilla
-Executable = runSkims_mu.sh
+Executable = runSkimsAndAnalysisNtuples_mu.sh
 
 should_transfer_files = YES
 WhenTOTransferOutput  = ON_EXIT

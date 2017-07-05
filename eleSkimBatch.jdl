@@ -1,5 +1,5 @@
 universe = vanilla
-Executable = runSkims_ele.sh
+Executable = runSkimsAndAnalysisNtuples_ele.sh
 
 should_transfer_files = YES
 WhenTOTransferOutput  = ON_EXIT

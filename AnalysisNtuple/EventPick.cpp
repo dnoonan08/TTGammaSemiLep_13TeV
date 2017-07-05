@@ -3,7 +3,7 @@
 #include <iomanip>
 
 
-double secondMinDr(int myInd, const EventTree* tree);
+//double secondMinDr(int myInd, const EventTree* tree);
 
 EventPick::EventPick(std::string titleIn){
 	title = titleIn;

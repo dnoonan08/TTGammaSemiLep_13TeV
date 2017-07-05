@@ -1,17 +1,17 @@
 universe = vanilla
-Executable = runSkims_mu.sh
+Executable = runAnalysisNtuples_mu.sh
 
 should_transfer_files = YES
 WhenTOTransferOutput  = ON_EXIT
 notification = never
 Transfer_input_files = CMSSW_8_0_26_patch1.tgz
 
-Output = condor/muSkim_$(cluster)_$(process).stdout
-Error  = condor/muSkim_$(cluster)_$(process).stderr
-Log    = condor/muSkim_$(cluster)_$(process).condor
+Output = condor/muNtuple_$(cluster)_$(process).stdout
+Error  = condor/muNtuple_$(cluster)_$(process).stderr
+Log    = condor/muNtuple_$(cluster)_$(process).condor
 Requirements          = (OpSys == "LINUX" && (Arch != "DUMMY"))
 Arguments = $(process)
 #use_x509userproxy = true
 x509userproxy = $ENV(X509_USER_PROXY)
 # important, number of instances (jobs) of script
-Queue 24
+Queue 5

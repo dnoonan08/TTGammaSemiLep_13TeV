@@ -148,7 +148,8 @@ private :
 
 	bool  _photonIsGenuine;
 	bool  _photonIsMisIDEle;
-	bool  _photonIsHadronic;
+	bool  _photonIsHadronicPhoton;
+	bool  _photonIsHadronicFake;
 
 	TLorentzVector jetVector;
 	TLorentzVector lepVector;
@@ -167,8 +168,11 @@ private :
 	double getMuSF(int muInd, int systLevel);
 	double getEleSF(int eleInd, int systLevel);
 
-	void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronic);
+	void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
 	bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso);
+
+	bool isSignalPhoton(EventTree* tree, int mcInd, int recoPhoInd);
+	bool isGoodElectron(EventTree* tree, int mcInd, int recoPhoInd);
 
 };
 
@@ -276,7 +280,8 @@ void makeAnalysisNtuple::InitBranches(){
 
 	outputTree->Branch("photonIsGenuine"             , &_photonIsGenuine            );
 	outputTree->Branch("photonIsMisIDEle"            , &_photonIsMisIDEle           );
-	outputTree->Branch("photonIsHadronic"            , &_photonIsHadronic           );
+	outputTree->Branch("photonIsHadronicPhoton"      , &_photonIsHadronicPhoton     );
+	outputTree->Branch("photonIsHadronicFake"        , &_photonIsHadronicFake       );
 	
 }
 
@@ -305,9 +310,10 @@ void makeAnalysisNtuple::InitVariables()
 	_passAll_Ele     = false;
 	_passAll_Mu      = false;
 
-	_photonIsGenuine  = false;
-	_photonIsMisIDEle = false;
-	_photonIsHadronic = false;
+	_photonIsGenuine        = false;
+	_photonIsMisIDEle       = false;
+	_photonIsHadronicPhoton = false;
+	_photonIsHadronicFake   = false;
 
 	_elePt.clear();
 	_elePhi.clear();

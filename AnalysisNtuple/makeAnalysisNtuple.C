@@ -295,8 +295,10 @@ void makeAnalysisNtuple::FillEvent()
 	_passAll_Ele     = evtPick->passAll_ele;
 	_passAll_Mu      = evtPick->passAll_mu;
 
+	int countMediumIDPho = 0;
 	for (int i_pho = 0; i_pho <_nPho; i_pho++){
 		int phoInd = evtPick->Photons.at(i_pho);
+
 		_phoEt.push_back(tree->phoEt_->at(phoInd));
 		_phoEta.push_back(tree->phoEta_->at(phoInd));
 		_phoPhi.push_back(tree->phoPhi_->at(phoInd));
@@ -313,7 +315,13 @@ void makeAnalysisNtuple::FillEvent()
 		_phoMediumIDNoSIEIECut.push_back( passPhoMediumID(phoInd,true,false,true));
 		_phoMediumIDNoIsoCut.push_back(   passPhoMediumID(phoInd,true,true,false));
 		
-
+		//Make the decision on the photon category based on the leading photon that has passed the mediumID
+		if (tree->phoIDbit_->at(phoInd)>>1&1){
+			countMediumIDPho++;
+			if (countMediumIDPho==1){
+				findPhotonCategory(phoInd, tree, &_photonIsGenuine, &_photonIsMisIDEle, &_photonIsHadronicPhoton, &_photonIsHadronicFake);
+			}
+		}
 	}
 
 
@@ -677,11 +685,12 @@ bool makeAnalysisNtuple::passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIE
 }
 
 
-void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronic){
+void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){
 
-	*genuine  = false;
-	*misIDele = false;
-	*hadronic = false;
+	*genuine        = false;
+	*misIDele       = false;
+	*hadronicphoton = false;
+	*hadronicfake   = false;
 
 	int mcPhotonInd = -1;
 	int mcEleInd = -1;
@@ -696,22 +705,51 @@ void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* g
 		if( etetamatch && mcEleInd < 0 && abs(tree->mcPID->at(mcInd)) == 11 )
 			mcEleInd = mcInd;
 	}
+	cout << "----------" << endl;
+	cout << mcPhotonInd << " " << mcEleInd << endl;
 
-	// see OverlapRemove.cpp for definitions of isSignalPhoton and isGoodElectron	
 	if(mcPhotonInd >= 0){
-		*genuine = true;
+		if(isSignalPhoton(tree,mcPhotonInd,phoInd)){
+			*genuine=true;
+		} else {
+			*hadronicphoton = true;
+		}
+	} else{
+		if(mcEleInd >= 0 && isGoodElectron(tree, mcEleInd, phoInd)){
+			*misIDele = true;
+		} else {
+			*hadronicfake = true;
+		}
+	}
 
-		// signal: parents are quarks, gluons, bosons or leptons
-		// if(isSignalPhoton(tree, mcPhotonInd, phoInd)) *rs = true; <<should look into this again
-		// else *rb = true;
-	}
-	else{
-		// no good matched Gen Photon found - our photon is fake
-		// && isGoodElectron(tree, mcEleInd, phoInd)  <<should look into this again
-		if(mcEleInd >= 0) *misIDele = true;
-		else *hadronic = true;
-	}
+	cout << genuine << misIDele << hadronicphoton << hadronicfake << endl;
 }
+
+//This is defined in OverlapRemoval.cpp
+double minDr(int myInd, const EventTree* tree);
+
+bool makeAnalysisNtuple::isSignalPhoton(EventTree* tree, int mcInd, int recoPhoInd){
+    bool parentagePass = tree->mcParentage->at(mcInd)==2 || tree->mcParentage->at(mcInd)==10 || tree->mcParentage->at(mcInd)==26;
+    double dptpt = (tree->phoEt_->at(recoPhoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd);
+    bool dptptPass = dptpt < 0.1;
+    bool drotherPass = minDr(mcInd, tree) > 0.2;
+    bool detarecogenPass = fabs(tree->phoEta_->at(recoPhoInd) - tree->mcEta->at(mcInd)) < 0.005;
+    bool drrecogenPass = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(recoPhoInd),tree->phoPhi_->at(recoPhoInd)) < 0.01;
+    if(parentagePass && dptptPass && drotherPass && detarecogenPass && drrecogenPass) return true;
+    else return false;
+}
+
+bool makeAnalysisNtuple::isGoodElectron(EventTree* tree, int mcInd, int recoPhoInd){
+    bool parentagePass = tree->mcParentage->at(mcInd)==10;
+    double dptpt = (tree->phoEt_->at(recoPhoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd);
+    bool dptptPass = dptpt < 0.1;
+    bool drotherPass = minDr(mcInd, tree) > 0.2;
+    bool detarecogenPass = fabs(tree->phoEta_->at(recoPhoInd) - tree->mcEta->at(mcInd)) < 0.005;
+    bool drrecogenPass = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(recoPhoInd),tree->phoPhi_->at(recoPhoInd)) < 0.04;
+    if(parentagePass && dptptPass && drotherPass && detarecogenPass && drrecogenPass) return true;
+    else return false;
+}
+
 
 
 
