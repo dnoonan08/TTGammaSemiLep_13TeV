@@ -15,6 +15,7 @@ Selector::Selector(){
 	jet_Eta_cut = 2.4;
 
 	veto_lep_jet_dR = 0.4;
+	veto_pho_jet_dR = 0.4;
 
 	JERsystLevel = 1;
 	JECsystLevel = 1;
@@ -59,11 +60,11 @@ void Selector::process_objects(EventTree* inp_tree){
 	//	cout << "before selector electrons" << endl;
  	filter_electrons();
 	
-	//	cout << "before selector jets" << endl;
-	filter_jets();
-
 	//	cout << "before selector photons" << endl;
 	filter_photons();
+
+	//	cout << "before selector jets" << endl;
+	filter_jets();
 
 	//	cout << "end selector" << endl;
 
@@ -322,12 +323,20 @@ void Selector::filter_jets(){
 			if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->muEta_->at(*muInd), tree->muPhi_->at(*muInd)) < veto_lep_jet_dR) passDR_lep_jet = false;
 		}
 
+		bool passDR_pho_jet = true;
+
+		//loop over selected photons
+		for(std::vector<int>::const_iterator phoInd = PhotonsPresel.begin(); phoInd != PhotonsPresel.end(); phoInd++) {
+			if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->phoSCEta_->at(*phoInd), tree->phoPhi_->at(*phoInd)) < veto_pho_jet_dR) passDR_pho_jet = false;
+		}
+
 		//		cout << "finished DR cuts" << endl;
 
 		bool jetPresel = (pt > jet_Pt_cut &&
 						  TMath::Abs(eta) < jet_Eta_cut &&
 						  jetID_pass &&
-						  passDR_lep_jet
+						  passDR_lep_jet &&
+						  passDR_pho_jet
 						  );
 
 

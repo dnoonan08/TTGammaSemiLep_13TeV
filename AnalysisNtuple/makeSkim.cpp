@@ -41,6 +41,10 @@ int main(int ac, char** av){
 	selector->ele_Pt_cut = 32.;
 	selector->mu_Pt_cut = 27.;
 
+	// remove the jet dR cuts, so we can play with these levels later on
+	selector->veto_lep_jet_dR = -1;
+	selector->veto_pho_jet_dR = -1;
+
 	evtPick->SkimNjet_ge = 3;
 	evtPick->SkimNBjet_ge = 1;
 
