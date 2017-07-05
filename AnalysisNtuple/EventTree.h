@@ -942,6 +942,16 @@ public:
 	vector<float>*  jetEta_;
 	vector<float>*  jetPhi_;
 	vector<float>*  jetEt_;
+	vector<float>*  jetCHF_;
+	vector<float>*  jetNHF_;
+	vector<float>*  jetCEF_;
+	vector<float>*  jetNEF_;
+	vector<int>*    jetNCH_;
+	vector<int>*    jetNNP_;
+	vector<float>*  jetMUF_;
+	vector<float>*  jetHFHAE_;
+	vector<float>*  jetHFEME_;
+	vector<int>*    jetNConstituents_;
 	vector<float>*  jetRawPt_;
 	vector<float>*  jetRawEn_;
 	vector<float>*  jetCharge_;
@@ -954,8 +964,8 @@ public:
 	vector<float>*  AK8JetCEF_;
 	vector<float>*  AK8JetNEF_;
 	vector<int>*    AK8JetNCH_;
-	vector<float>*  jetHFHAE_;
-	vector<float>*  jetHFEME_;
+	/* vector<float>*  jetHFHAE_; */
+	/* vector<float>*  jetHFEME_; */
 	vector<int>*    jetPartonID_;
 	vector<int>*    AK8Jetnconstituents_;
 	vector<float>*  jetpfCombinedMVAV2BJetTags_; // recommended
@@ -1008,6 +1018,7 @@ public:
 	vector<float>* jetNNeutrals_;
 	vector<float>* jetNCharged_;
 	vector<bool>*  jetPFLooseId_;
+	vector<int>*  jetID_;
 	// b-jet regression variables
 	vector<float>* jetMt_;
 	vector<float>* jetJECUnc_;

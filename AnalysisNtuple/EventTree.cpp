@@ -266,7 +266,11 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	
 	jetPFLooseID_ = new vector<bool>;
 	chain->SetBranchStatus("jetPFLooseId",1);
-        chain->SetBranchAddress("jetPFLooseId", &jetPFLooseID_);
+	chain->SetBranchAddress("jetPFLooseId", &jetPFLooseID_);
+
+	jetID_ = new vector<int>;
+	chain->SetBranchStatus("jetID",1);
+	chain->SetBranchAddress("jetID", &jetID_);
 
 	jetArea_ = new vector<float>;
 	chain->SetBranchStatus("jetArea",1);
@@ -283,6 +287,51 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	jetP4SmearDo_ = new vector<float>;
 	chain->SetBranchStatus("jetP4SmearDo",1);
 	chain->SetBranchAddress("jetP4SmearDo", &jetP4SmearDo_);
+
+	jetCHF_ = new vector<float>;
+	chain->SetBranchStatus("jetCHF",1);
+	chain->SetBranchAddress("jetCHF", &jetCHF_);
+
+	jetNHF_ = new vector<float>;
+	chain->SetBranchStatus("jetNHF",1);
+	chain->SetBranchAddress("jetNHF", &jetNHF_);
+
+	jetCEF_ = new vector<float>;
+	chain->SetBranchStatus("jetCEF",1);
+	chain->SetBranchAddress("jetCEF", &jetCEF_);
+
+	jetNEF_ = new vector<float>;
+	chain->SetBranchStatus("jetNEF",1);
+	chain->SetBranchAddress("jetNEF", &jetNEF_);
+
+	jetNCH_ = new vector<int>;
+	chain->SetBranchStatus("jetNCH",1);
+	chain->SetBranchAddress("jetNCH", &jetNCH_);
+
+	jetNNP_ = new vector<int>;
+	chain->SetBranchStatus("jetNNP",1);
+	chain->SetBranchAddress("jetNNP", &jetNNP_);
+
+	jetMUF_ = new vector<float>;
+	chain->SetBranchStatus("jetMUF",1);
+	chain->SetBranchAddress("jetMUF", &jetMUF_);
+
+	// This is only included in "development" versions of the ggNtuples
+	// jetHFHAE_ = new vector<float>;
+	// chain->SetBranchStatus("jetHFHAE",1);
+	// chain->SetBranchAddress("jetHFHAE", &jetHFHAE_);
+
+	// This is only included in "development" versions of the ggNtuples
+	// jetHFEME_ = new vector<float>;
+	// chain->SetBranchStatus("jetHFEME",1);
+	// chain->SetBranchAddress("jetHFEME", &jetHFEME_);
+
+	// This is only included in "development" versions of the ggNtuples
+	// jetNConstituents_ = new vector<int>;
+	// chain->SetBranchStatus("jetNConstituents",1);
+	// chain->SetBranchAddress("jetNConstituents", &jetNConstituents_);
+
+
 
 	// AK8Jetnconstituents_ = new vector<int>;
 	// chain->SetBranchStatus("AK8Jetnconstituents",1);
