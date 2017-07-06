@@ -40,6 +40,23 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "ST_tbarW-channel_" \
 "TTW_" \
 "TTZ_" \
+"ZGamma_" \
+"QCD_20to30EM_" \
+"QCD_30to50EM_" \
+"QCD_50to80EM_" \
+"QCD_80to120EM_" \
+"QCD_120to170EM_" \
+"QCD_170to300EM_" \
+"QCD_300toInfEM_" \
+"QCD_20to30Mu_" \
+"QCD_30to50Mu_" \
+"QCD_50to80Mu_" \
+"QCD_80to120Mu_" \
+"QCD_120to170Mu_" \
+"QCD_170to300Mu_" \
+"QCD_300to470Mu_" \
+"QCD_470to600Mu_" \
+"QCD_600to800Mu_" \
 "Data_SingleMu_b_" \
 "Data_SingleMu_c_" \
 "Data_SingleMu_d_" \
@@ -66,6 +83,23 @@ inputfiles=("root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_Si
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_tWbar.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTWJets.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTZ.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_summer16_Zg_aMCatNLO.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_20to30EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_30to50EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_50to80EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_80to120EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_120to170EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_170to300EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_300toInfEM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_20to30Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_30to50Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_50to80Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_80to120Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_120to170Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_170to300Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_300to470Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_470to600Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_600to800Mu.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/job_SingleMu_Run2016B_FebReminiAOD.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/job_SingleMu_Run2016C_FebReminiAOD.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/job_SingleMu_Run2016D_FebReminiAOD.root" \
@@ -91,6 +125,23 @@ sampleType=("TTGamma_SingleLeptFromTbar " \
 "ST_tbarW-channel           " \
 "TTW                        " \
 "TTZ                        " \
+"ZGamma                     " \
+"QCD_Pt20to30_EM            " \
+"QCD_Pt30to50_EM            " \
+"QCD_Pt50to80_EM            " \
+"QCD_Pt80to120_EM           " \
+"QCD_Pt120to170_EM          " \
+"QCD_Pt170to300_EM          " \
+"QCD_Pt300toInf_EM          " \
+"QCD_Pt20to30_Mu            " \
+"QCD_Pt30to50_Mu            " \
+"QCD_Pt50to80_Mu            " \
+"QCD_Pt80to120_Mu           " \
+"QCD_Pt120to170_Mu          " \
+"QCD_Pt170to300_Mu          " \
+"QCD_Pt300to470_Mu          " \
+"QCD_Pt470to600_Mu          " \
+"QCD_Pt600to800_Mu          " \
 "Data                       " \
 "Data                       " \
 "Data                       " \
@@ -101,17 +152,17 @@ sampleType=("TTGamma_SingleLeptFromTbar " \
 
 
 
-echo "AnalysisNtuple/makeSkim ele ${files[job]}skim.root ${inputfiles[job]}"
-AnalysisNtuple/makeSkim ele ${files[job]}skim.root ${inputfiles[job]}
+echo "AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}"
+AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}
 
 echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} ${files[job]}AnalysisNtuple.root ${files[job]}skim.root"
 AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} ${files[job]}AnalysisNtuple.root ${files[job]}skim.root
 
 
-echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/electrons/"
-xrdcp -f ${files[job]}skim.root ${outputdir}skims/electrons/
+echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/"
+xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/
 
-echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/electrons/"
-xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/electrons/
+echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/"
+xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/
 
 

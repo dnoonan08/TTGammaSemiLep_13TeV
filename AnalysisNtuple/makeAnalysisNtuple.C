@@ -25,7 +25,10 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 
 bool overlapRemovalTT(EventTree* tree);
 
-const std::string allowedSampleTypes[20] = {"Data",
+
+
+
+const std::string allowedSampleTypes[40] = {"Data",
 											"TTGamma_Hadronic",
 											"TTGamma_SingleLeptFromTbar",
 											"TTGamma_SingleLeptFromT",
@@ -40,11 +43,32 @@ const std::string allowedSampleTypes[20] = {"Data",
 											"DYjets",
 											"TTW",
 											"TTZ",
+											"ZGamma",
+											"WGamma",
 											"ST_tW-channel",
 											"ST_tbarW-channel",
 											"ST_t-channel",
 											"ST_tbar-channel",
-											"ST_s-channel"};
+											"ST_s-channel"
+											"QCD_Pt20to30_Mu",
+											"QCD_Pt30to50_Mu",
+											"QCD_Pt50to80_Mu",
+											"QCD_Pt80to120_Mu",
+											"QCD_Pt120to170_Mu",
+											"QCD_Pt170to300_Mu",
+											"QCD_Pt300to470_Mu",
+											"QCD_Pt470to600_Mu",
+											"QCD_Pt600to800_Mu",
+											"QCD_Pt800to1000_Mu",
+											"QCD_Pt1000toInf_Mu",
+											"QCD_Pt20to30_Ele",
+											"QCD_Pt30to50_Ele",
+											"QCD_Pt50to80_Ele",
+											"QCD_Pt80to120_Ele",
+											"QCD_Pt120to170_Ele",
+											"QCD_Pt170to300_Ele",
+											"QCD_Pt300toInf_Ele",
+};
 
 
 #ifdef makeAnalysisNtuple_cxx
@@ -576,11 +600,31 @@ double makeAnalysisNtuple::getEvtWeight(string outputName){
 	else if( sampleType=="DYjets") {evtWeight = DYjets_SF;}
 	else if( sampleType=="TTW") {evtWeight = TTW_SF;}
 	else if( sampleType=="TTZ") {evtWeight = TTZ_SF;}
+	else if( sampleType=="ZGamma") {evtWeight = ZGamma_SF;}
+	else if( sampleType=="WGamma") {evtWeight = WGamma_SF;}
 	else if( sampleType=="ST_tW-channel") {evtWeight = ST_tW_SF;}
 	else if( sampleType=="ST_tbarW-channel") {evtWeight = ST_tbarW_SF;}
 	else if( sampleType=="ST_t-channel") {evtWeight = ST_tchannel_SF;}
 	else if( sampleType=="ST_tbar-channel") {evtWeight = ST_tbarchannel_SF;}
 	else if( sampleType=="ST_s-channel") {evtWeight = ST_schannel_SF;}
+	else if( sampleType=="QCD_Pt20to30_Mu") {evtWeight = QCD_Pt20to30_Mu_SF;}
+	else if( sampleType=="QCD_Pt30to50_Mu") {evtWeight = QCD_Pt30to50_Mu_SF;}
+	else if( sampleType=="QCD_Pt50to80_Mu") {evtWeight = QCD_Pt50to80_Mu_SF;}
+	else if( sampleType=="QCD_Pt80to120_Mu") {evtWeight = QCD_Pt80to120_Mu_SF;}
+	else if( sampleType=="QCD_Pt120to170_Mu") {evtWeight = QCD_Pt120to170_Mu_SF;}
+	else if( sampleType=="QCD_Pt170to300_Mu") {evtWeight = QCD_Pt170to300_Mu_SF;}
+	else if( sampleType=="QCD_Pt300to470_Mu") {evtWeight = QCD_Pt300to470_Mu_SF;}
+	else if( sampleType=="QCD_Pt470to600_Mu") {evtWeight = QCD_Pt470to600_Mu_SF;}
+	else if( sampleType=="QCD_Pt600to800_Mu") {evtWeight = QCD_Pt600to800_Mu_SF;}
+	else if( sampleType=="QCD_Pt800to1000_Mu") {evtWeight = QCD_Pt800to1000_Mu_SF;}
+	else if( sampleType=="QCD_Pt1000toInf_Mu") {evtWeight = QCD_Pt1000toInf_Mu_SF;}
+	else if( sampleType=="QCD_Pt20to30_Ele") {evtWeight = QCD_Pt20to30_Ele_SF;}
+	else if( sampleType=="QCD_Pt30to50_Ele") {evtWeight = QCD_Pt30to50_Ele_SF;}
+	else if( sampleType=="QCD_Pt50to80_Ele") {evtWeight = QCD_Pt50to80_Ele_SF;}
+	else if( sampleType=="QCD_Pt80to120_Ele") {evtWeight = QCD_Pt80to120_Ele_SF;}
+	else if( sampleType=="QCD_Pt120to170_Ele") {evtWeight = QCD_Pt120to170_Ele_SF;}
+	else if( sampleType=="QCD_Pt170to300_Ele") {evtWeight = QCD_Pt170to300_Ele_SF;}
+	else if( sampleType=="QCD_Pt300toInf_Ele") {evtWeight = QCD_Pt300toInf_Ele_SF;}
 	else {
 		cout << "-------------------------------------------------" << endl;
 		cout << "-------------------------------------------------" << endl;
@@ -705,8 +749,8 @@ void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* g
 		if( etetamatch && mcEleInd < 0 && abs(tree->mcPID->at(mcInd)) == 11 )
 			mcEleInd = mcInd;
 	}
-	cout << "----------" << endl;
-	cout << mcPhotonInd << " " << mcEleInd << endl;
+	// cout << "----------" << endl;
+	// cout << mcPhotonInd << " " << mcEleInd << endl;
 
 	if(mcPhotonInd >= 0){
 		if(isSignalPhoton(tree,mcPhotonInd,phoInd)){
@@ -722,7 +766,7 @@ void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* g
 		}
 	}
 
-	cout << genuine << misIDele << hadronicphoton << hadronicfake << endl;
+	// cout << genuine << misIDele << hadronicphoton << hadronicfake << endl;
 }
 
 //This is defined in OverlapRemoval.cpp

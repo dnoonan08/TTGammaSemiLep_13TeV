@@ -24,12 +24,12 @@ int main(int ac, char** av){
 	evtPick->MET_cut = -1.0;	
 	std::string outDirName(av[2]);
 	// antiselection for QCD fit
-	if( outDirName.find("QCD") != std::string::npos){
-		std::cout << "muon antiselection is on" << std::endl;
-		selector->mu_RelIso_range[0] = 0.25; 
-		selector->mu_RelIso_range[1] = 1.;
-		selector->mu_Iso_invert = true;
-	}
+	// if( outDirName.find("QCD") != std::string::npos){
+	// 	std::cout << "muon antiselection is on" << std::endl;
+	// 	selector->mu_RelIso_range[0] = 0.25; 
+	// 	selector->mu_RelIso_range[1] = 1.;
+	// 	selector->mu_Iso_invert = true;
+	// }
 
 	// if( outDirName.find("TTgamma") != std::string::npos){
 	// 	std::cout << "Skipping Trigger Selection for TTGamma" << std::endl;
