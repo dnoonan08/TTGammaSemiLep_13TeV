@@ -39,7 +39,7 @@ Selector::Selector(){
 	mu_RelIso_loose = 0.25;
 	
 	mu_Iso_invert = false;
-
+	smearJetPt = true;
 	// photons
 	pho_Et_cut = 15.0; 
 	pho_Eta_cut = 2.5; 
@@ -297,15 +297,18 @@ void Selector::filter_jets(){
 		double jetSmear = 1.;
 		double pt = tree->jetPt_->at(jetInd);
 		bool jetID_pass = tree->jetPFLooseID_->at(jetInd);
+		double jetEn = tree->jetEn_->at(jetInd);
 
 		if (not tree->isData_ and JERsystLevel==1) jetSmear = tree->jetP4Smear_->at(jetInd);
 		if (not tree->isData_ and JERsystLevel==0) jetSmear = tree->jetP4SmearDo_->at(jetInd);
 		if (not tree->isData_ and JERsystLevel==2) jetSmear = tree->jetP4SmearUp_->at(jetInd);
 
-		pt = pt*jetSmear;
-
+		if (smearJetPt){
+			pt = pt*jetSmear;
+			jetEn = jetSmear*jetEn;
+		}
 		tree->jetPt_->at(jetInd) = pt;
-		tree->jetEn_->at(jetInd) = jetSmear*tree->jetEn_->at(jetInd);
+		tree->jetEn_->at(jetInd) = jetEn;
 		double eta = tree->jetEta_->at(jetInd);
 
 

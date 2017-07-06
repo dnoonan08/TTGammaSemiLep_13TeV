@@ -20,6 +20,8 @@ int main(int ac, char** av){
 	EventTree* tree = new EventTree(ac-3, av+3);
 	Selector* selector = new Selector();
 
+	selector->smearJetPt = false;
+
 	EventPick* evtPick = new EventPick("nominal");
 	evtPick->MET_cut = -1.0;	
 	std::string outDirName(av[2]);

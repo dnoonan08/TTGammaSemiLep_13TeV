@@ -87,6 +87,7 @@ public:
 	double veto_pho_jet_dR;
 	int JERsystLevel; //0= syst down, 1 = central, 2 = syst up
 	int JECsystLevel; //0= syst down, 1 = central, 2 = syst up
+	bool   smearJetPt;
 
 	// electrons
 	double ele_Pt_cut;
@@ -121,6 +122,7 @@ public:
 	double mu_RelIso_range[2];
  	double mu_MVA_range[2];
 	bool   mu_Iso_invert;
+
 
 private:
 	EventTree* tree;
