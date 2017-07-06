@@ -22,7 +22,7 @@ int main(int ac, char** av){
 	Selector* selector = new Selector();
 
 	EventPick* evtPick = new EventPick("nominal");
-	evtPick->MET_cut = -1.0;
+	// evtPick->MET_cut = 0;
 
 	evtPick->Njet_ge = 4;	
 	evtPick->NBjet_ge = 2;	
@@ -33,9 +33,11 @@ int main(int ac, char** av){
 	// }
 
 	// reduce the pt cuts by 10% in the skim, so that energy corrections can still be done on same skims
-	selector->jet_Pt_cut = 30.;
-	selector->ele_Pt_cut = 30.;
-	selector->mu_Pt_cut = 30.;
+	// selector->jet_Pt_cut = 30.;
+	// selector->ele_Pt_cut = 35.;
+	// selector->mu_Pt_cut = 30.;
+
+	//	selector->smearJetPt = false;
 
 	Long64_t nEntr = tree->GetEntries();
 	std::string outDirName(av[1]);

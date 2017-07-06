@@ -57,6 +57,7 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "QCD_300to470Mu_" \
 "QCD_470to600Mu_" \
 "QCD_600to800Mu_" \
+"QCD_800to1000Mu_" \
 "Data_SingleMu_b_" \
 "Data_SingleMu_c_" \
 "Data_SingleMu_d_" \
@@ -70,36 +71,37 @@ inputfiles=("root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_Si
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_semileptfromT.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_dilept.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_hadronic.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTbar.root" \
+"root://cmseos.fnal.gov//store/user/yumiceva/ntuples_2016/TTbar.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/W1jets.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/W2jets.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/W3jets.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/W4jets.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ntuple_DYjets.root" \
+"root://cmseos.fnal.gov//store/user/yumiceva/ntuples_2016/ntuple_DYjets.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_s.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_top.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_bar.root" \
+"root://cmseos.fnal.gov//store/user/yumiceva/ntuples_2016/ST_t_top.root" \
+"root://cmseos.fnal.gov//store/user/yumiceva/ntuples_2016/ST_t_bar.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_tW_top.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_tWbar.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTWJets.root" \
-"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTZ.root" \
+"root://cmseos.fnal.gov//store/user/yumiceva/ntuples_2016/TTZ.root" \
 "/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_summer16_Zg_aMCatNLO.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_20to30EM.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_30to50EM.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_50to80EM.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_80to120EM.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_120to170EM.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_170to300EM.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_300toInfEM.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_20to30Mu.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_30to50Mu.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_50to80Mu.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_80to120Mu.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_120to170Mu.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_170to300Mu.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_300to470Mu.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_470to600Mu.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_600to800Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_20to30EM.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_30to50EM.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_50to80EM.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_80to120EM.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_120to170EM.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_170to300EM.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_300toInfEM.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_20to30Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_30to50Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_50to80Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_80to120Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_120to170Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_170to300Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_300to470Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_470to600Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_600to800Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_800to1000Mu.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/job_SingleMu_Run2016B_FebReminiAOD.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/job_SingleMu_Run2016C_FebReminiAOD.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/job_SingleMu_Run2016D_FebReminiAOD.root" \
@@ -142,6 +144,7 @@ sampleType=("TTGamma_SingleLeptFromTbar " \
 "QCD_Pt300to470_Mu          " \
 "QCD_Pt470to600_Mu          " \
 "QCD_Pt600to800_Mu          " \
+"QCD_Pt800to1000_Mu         " \
 "Data                       " \
 "Data                       " \
 "Data                       " \
