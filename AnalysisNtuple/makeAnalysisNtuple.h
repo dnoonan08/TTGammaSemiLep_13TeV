@@ -55,9 +55,13 @@ private :
 	Float_t         _PUweight_Up;
 	Float_t         _PUweight_Do;
 
-	Float_t         _btagWeight;
-	Float_t         _btagWeight_Up;
-	Float_t         _btagWeight_Do;
+	std::vector<float> _btagWeight;
+	std::vector<float> _btagWeight_Up;
+	std::vector<float> _btagWeight_Do;
+
+	std::vector<float> _btagSF;
+	std::vector<float> _btagSF_Up;
+	std::vector<float> _btagSF_Do;
 
 	Float_t         _muEffWeight;
 	Float_t         _muEffWeight_Up;
@@ -163,7 +167,7 @@ private :
 
 	double SFtop(double pt);
 	double topPtWeight();
-	double getBtagSF(string sysType, BTagCalibrationReader reader);
+	vector<float> getBtagSF(string sysType, BTagCalibrationReader reader, vector<float> &btagSF);
 	double WjetsBRreweight();
 	/* double getMuSF(int muInd, int systLevel); */
 	/* double getEleSF(int eleInd, int systLevel); */
@@ -192,6 +196,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("btagWeight"                 , &_btagWeight                  );
 	outputTree->Branch("btagWeight_Up"              , &_btagWeight_Up               );
 	outputTree->Branch("btagWeight_Do"              , &_btagWeight_Do               );
+	outputTree->Branch("btagSF"                     , &_btagSF                      );
 	outputTree->Branch("muEffWeight"                , &_muEffWeight                 );
 	outputTree->Branch("muEffWeight_Up"             , &_muEffWeight_Up              );
 	outputTree->Branch("muEffWeight_Do"             , &_muEffWeight_Do              );
@@ -313,6 +318,13 @@ void makeAnalysisNtuple::InitVariables()
 	_passPresel_Mu   = false;
 	_passAll_Ele     = false;
 	_passAll_Mu      = false;
+
+
+	_btagWeight.clear();
+	_btagWeight_Up.clear();
+	_btagWeight_Do.clear();
+
+	_btagSF.clear();
 
 	_photonIsGenuine        = false;
 	_photonIsMisIDEle       = false;

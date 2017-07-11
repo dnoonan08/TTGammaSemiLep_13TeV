@@ -78,7 +78,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	reader.load(calib,                // calibration instance
 				BTagEntry::FLAV_UDSG,    // btag flavour
-				"comb");               // measurement type
+				"incl");               // measurement type
 
 
 	bool doOverlapRemoval = false;
@@ -176,9 +176,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				_PUweight_Up = PUweighterUp->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
 				_PUweight_Do = PUweighterDown->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
 
-				_btagWeight    = getBtagSF("central", reader);
-				_btagWeight_Up = getBtagSF("up", reader);
-				_btagWeight_Do = getBtagSF("down", reader);				
+				_btagWeight    = getBtagSF("central", reader, _btagSF);
+				_btagWeight_Up = getBtagSF("up", reader, _btagSF_Up);
+				_btagWeight_Do = getBtagSF("down", reader, _btagSF_Do);				
 
 				if (evtPick->passPresel_mu) {
 					int muInd_ = evtPick->Muons.at(0);
@@ -206,9 +206,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 
 
-	// outputFile->cd();
-	// outputTree->Write();
-	// outputFile->Close();
+	outputFile->cd();
+	outputTree->Write();
+	outputFile->Close();
 
 }
 
@@ -402,8 +402,11 @@ double makeAnalysisNtuple::topPtWeight(){
 
 }
 
-double makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReader reader){
-	
+vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReader reader, vector<float> &btagSF){
+
+	// Saving weights w(0|n), w(1|n), w(2|n)
+	vector<float> btagWeights;
+
 	double weight0tag = 1.0; 		//w(0|n)
 	double weight1tag = 0.0;		//w(1|n)
 
@@ -413,14 +416,6 @@ double makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReader reade
 	double SFb;
 	double SFb2;
 
-	if(evtPick->bJets.size() == 0) {
-		std::cout << "No bJets" << std::endl;
-		return 1.0;
-	}
-
-	// We are following the method 1c from the twiki
-	// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1c_Event_reweighting_using_scale
-
 	for(std::vector<int>::const_iterator bjetInd = evtPick->bJets.begin(); bjetInd != evtPick->bJets.end(); bjetInd++){
 		jetpt = tree->jetPt_->at(*bjetInd);
 		jeteta = fabs(tree->jetEta_->at(*bjetInd));
@@ -428,35 +423,53 @@ double makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReader reade
 		
 		if (jetflavor == 5) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_B, jeteta, jetpt); 
 		else if(jetflavor == 4) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
-		else SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
-
-		weight0tag *= 1.0 - SFb;
-
-
-		// We also have to calculate the weight for having 1 tag, given N
-		double prod = 1.;
-		if (evtPick->NBjet_ge==2){
-			for(std::vector<int>::const_iterator bjetInd2 = evtPick->bJets.begin(); bjetInd2 != evtPick->bJets.end(); bjetInd2++){
-				if (*bjetInd==*bjetInd2) continue;
-
-				jetpt = tree->jetPt_->at(*bjetInd2);
-				jeteta = fabs(tree->jetEta_->at(*bjetInd2));
-				jetflavor = abs(tree->jetPartonID_->at(*bjetInd2));
-
-				if (jetflavor == 5) SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_B, jeteta, jetpt); 
-				else if(jetflavor == 4) SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
-				else SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
-
-				//product of (1-SFi), i!=j in twiki example (method 1c)
-				prod *= 1.0 - SFb2;
-			}
-
-			//w(1|n) sum, SFj times product of 1-SFi
-			weight1tag += prod*SFb;
+		else {
+			SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
+			if (sysType=="central") cout << tree->event_ << " " << *bjetInd << " " << jetpt << " " << jeteta << " " << jetflavor << " " << SFb<<endl;
 		}
+		// if 
+		// if (SFb==0 && sysType=="central"){
+		// 	cout << tree->event_ << " " << *bjetInd << " " << jetpt << " " << jeteta << " " << jetflavor << endl;
+		// }
+		btagSF.push_back(SFb);
 	}
 
-	return 1.0 - weight0tag - weight1tag;
+	if(evtPick->bJets.size() == 0) {
+		std::cout << "No bJets" << std::endl;
+		btagWeights.push_back(1.0);
+		btagWeights.push_back(0.0);
+		btagWeights.push_back(0.0);
+
+		return btagWeights;
+
+	} else if (evtPick->bJets.size() == 1) {
+
+		btagWeights.push_back(1-btagSF.at(0));
+		btagWeights.push_back(btagSF.at(0));
+		btagWeights.push_back(0.0);
+		
+		return btagWeights;
+
+	} else {
+
+		// We are following the method 1SFc from the twiki
+		// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1c_Event_reweighting_using_scale
+		for (int i = 0; i < evtPick->bJets.size(); i++){
+			SFb = btagSF.at(i);
+			weight0tag *= 1.0 - SFb;
+			double prod = SFb;
+			for (int j = 0; i < evtPick->bJets.size(); i++){
+				if (j==i) continue;
+
+				prod *= (1.-btagSF.at(j));
+			}
+			weight1tag += prod;
+		}
+		btagWeights.push_back(weight0tag);
+		btagWeights.push_back(weight1tag);
+		btagWeights.push_back(1.0 - weight0tag - weight1tag);
+		return btagWeights;
+	}
 }
 
 
