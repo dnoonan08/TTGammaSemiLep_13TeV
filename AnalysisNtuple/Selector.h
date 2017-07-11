@@ -88,6 +88,7 @@ public:
 	int JERsystLevel; //0= syst down, 1 = central, 2 = syst up
 	int JECsystLevel; //0= syst down, 1 = central, 2 = syst up
 	bool   smearJetPt;
+	bool   looseJetID;
 
 	// electrons
 	double ele_Pt_cut;

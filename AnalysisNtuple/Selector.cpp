@@ -14,6 +14,7 @@ Selector::Selector(){
 	jet_Pt_cut = 30;
 	jet_Eta_cut = 2.4;
 
+	looseJetID = true;
 	veto_lep_jet_dR = 0.4;
 	veto_pho_jet_dR = 0.4;
 
@@ -296,12 +297,12 @@ void Selector::filter_jets(){
 
 		double jetSmear = 1.;
 		double pt = tree->jetPt_->at(jetInd);
-		bool jetID_pass = tree->jetPFLooseID_->at(jetInd);
+		bool jetID_pass = (tree->jetPFLooseID_->at(jetInd) && looseJetID) || (tree->jetID_->at(jetInd)>>2&1);
 		double jetEn = tree->jetEn_->at(jetInd);
 
-		if (not tree->isData_ and JERsystLevel==1) jetSmear = tree->jetP4Smear_->at(jetInd);
-		if (not tree->isData_ and JERsystLevel==0) jetSmear = tree->jetP4SmearDo_->at(jetInd);
-		if (not tree->isData_ and JERsystLevel==2) jetSmear = tree->jetP4SmearUp_->at(jetInd);
+		if (!tree->isData_ && JERsystLevel==1) {jetSmear = tree->jetP4Smear_->at(jetInd);}
+		if (!tree->isData_ && JERsystLevel==0) {jetSmear = tree->jetP4SmearDo_->at(jetInd);}
+		if (!tree->isData_ && JERsystLevel==2) {jetSmear = tree->jetP4SmearUp_->at(jetInd);}
 
 		if (smearJetPt){
 			pt = pt*jetSmear;
