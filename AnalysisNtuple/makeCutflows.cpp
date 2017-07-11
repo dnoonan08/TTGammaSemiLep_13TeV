@@ -10,22 +10,60 @@
 #include<TH1F.h>
 #include<TCanvas.h>
 
+std::string PUfilename = "Data_2016BCDGH_Pileup.root";
+std::string PUfilename_up = "Data_2016BCDGH_Pileup_scaledUp.root";
+std::string PUfilename_down = "Data_2016BCDGH_Pileup_scaledDown.root";
+
+#include"PUReweight.h"
+#include "BTagCalibrationStandalone.h"
+#include "ScaleFactors.h"
+
+bool overlapRemovalTT(EventTree* tree);
+
+
 int main(int ac, char** av){
-	if(ac < 3){
-		std::cout << "usage: ./makeCutflows outputFile inputFile[s]" << std::endl;
+	if(ac < 4){
+		std::cout << "usage: ./makeCutflows sampleType outputFile inputFile[s]" << std::endl;
 		return -1;
 	}
 
+	string sampleType = av[1];
+	cout << sampleType << endl;
+
+	if (std::end(allowedSampleTypes) == std::find(std::begin(allowedSampleTypes), std::end(allowedSampleTypes), sampleType)){
+		cout << "This is not an allowed sample, please specify one from this list (or add to this list in the code):" << endl;
+		for (int i =0; i < sizeof(allowedSampleTypes)/sizeof(allowedSampleTypes[0]); i++){
+			cout << "    "<<allowedSampleTypes[i] << endl;
+		}			
+		return -1;
+	}
+
+
 	// input: dealing with TTree first
 	bool isMC = true;
-	EventTree* tree = new EventTree(ac-2, av+2);
+
+	PUReweight* PUweighter = new PUReweight(ac-3, av+3, PUfilename);
+
+	EventTree* tree = new EventTree(ac-3, av+3);
 	Selector* selector = new Selector();
+	double _evtWeight = getEvtWeight(sampleType);
+
+
 
 	EventPick* evtPick = new EventPick("nominal");
 	// evtPick->MET_cut = 0;
 
+	selector->looseJetID = false;
+
 	evtPick->Njet_ge = 4;	
 	evtPick->NBjet_ge = 2;	
+
+
+	BTagCalibration calib("csvv2", "CSVv2_Moriond17_B_H.csv");
+
+	BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
+								 "central");             // central sys type
+
 
 	// if( outDirName.find("TTgamma") != std::string::npos){
 	// 	std::cout << "Skipping Trigger Selection for TTGamma" << std::endl;
@@ -40,7 +78,7 @@ int main(int ac, char** av){
 	//	selector->smearJetPt = false;
 
 	Long64_t nEntr = tree->GetEntries();
-	std::string outDirName(av[1]);
+	std::string outDirName(av[2]);
 
 	int dumpFreq = 100;
 	if (nEntr >5000)    { dumpFreq = 500; }
@@ -60,6 +98,8 @@ int main(int ac, char** av){
 		tree->GetEntry(entry);
 		
 		selector->process_objects(tree);
+	   
+		//
 		                              
 		evtPick->process_event(tree,selector);
 	}
@@ -70,7 +110,7 @@ int main(int ac, char** av){
 	std::cout << "mu+jets cutflow" << std::endl;
 	evtPick->print_cutflow_mu(evtPick->cutFlow_mu);
 
-	TFile* outputFile = TFile::Open(av[1],"RECREATE");
+	TFile* outputFile = TFile::Open(av[2],"RECREATE");
 
 	outputFile->cd();
 	evtPick->cutFlow_mu->Write();
@@ -109,3 +149,34 @@ int main(int ac, char** av){
 	
 	return 0;
 }
+
+double getBtagSF(EventTree* tree, EventPick* evtPick, string sysType, BTagCalibrationReader reader){
+	
+	double prod = 1.0;
+	double jetpt;
+	double jeteta;
+	int jetflavor;
+	double SFb;
+
+	if(evtPick->bJets.size() == 0) {
+		std::cout << "No bJets" << std::endl;
+		return 1.0;
+	}
+
+	for(std::vector<int>::const_iterator bjetInd = evtPick->bJets.begin(); bjetInd != evtPick->bJets.end(); bjetInd++){
+		jetpt = tree->jetPt_->at(*bjetInd);
+		jeteta = fabs(tree->jetEta_->at(*bjetInd));
+		jetflavor = abs(tree->jetPartonID_->at(*bjetInd));
+		
+		if (jetflavor == 5) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_B, jeteta, jetpt); 
+		else if(jetflavor == 4) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
+		else SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
+
+		//		SFb = 1.;
+		prod *= 1.0 - SFb;
+	}
+
+	return 1.0 - prod;
+}
+
+

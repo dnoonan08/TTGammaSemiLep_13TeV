@@ -86,3 +86,99 @@ double eleTrigSF[10][6][3]={ { {1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1
 							 { {1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1.,1.}, },
 							 { {1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1.,1.}, },
 							 { {1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1.,1.},{1.,1.,1.}, }, };
+
+
+double getMuSF(double pt, double eta, int systLevel){
+
+	double abseta = abs(eta);
+
+	//binned in 0.2 in absEta
+	int muTrackEtaRegion = int(abseta/0.2);
+
+	int muEtaRegion = -1;
+	if (abseta < 0.9) {muEtaRegion = 0;}
+	else if (abseta < 1.2) {muEtaRegion = 1;}
+	else if (abseta < 2.1) {muEtaRegion = 2;}
+	else {muEtaRegion = 3;}
+
+	int muPtRegion_Trigger = -1;
+	if (pt < 30){muPtRegion_Trigger = 0;}
+	else if (pt < 40){muPtRegion_Trigger = 1;}
+	else if (pt < 50){muPtRegion_Trigger = 2;}
+	else if (pt < 60){muPtRegion_Trigger = 3;}
+	else if (pt < 120){muPtRegion_Trigger = 4;}
+	else if (pt < 200){muPtRegion_Trigger = 5;}
+	else {muPtRegion_Trigger = 6;}
+
+	int muPtRegion_IDIso = -1;
+	if (pt < 25){muPtRegion_IDIso = 0;}
+	else if (pt < 30){muPtRegion_IDIso = 1;}
+	else if (pt < 40){muPtRegion_IDIso = 2;}
+	else if (pt < 50){muPtRegion_IDIso = 3;}
+	else if (pt < 60){muPtRegion_IDIso = 4;}
+	else {muPtRegion_IDIso = 5;}
+
+	double muEffSF = muTrackingSF[muTrackEtaRegion][systLevel] * muIdIsoSF[muPtRegion_IDIso][muEtaRegion][systLevel] * muTrigSF[muPtRegion_Trigger][muEtaRegion][systLevel];
+
+	return muEffSF;
+}
+
+
+double getEleSF(double pt, double eta, int systLevel){
+
+	
+	int eleRecoEtaRegion = 0;
+	int eleIDEtaRegion = 0;
+
+	if (eta > -2.45 ){eleRecoEtaRegion++;}
+	if (eta > -2.4	){eleRecoEtaRegion++;}
+	if (eta > -2.3	){eleRecoEtaRegion++;}
+	if (eta > -2.2	){eleRecoEtaRegion++;}
+	if (eta > -2.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
+	if (eta > -1.8	){eleRecoEtaRegion++;}
+	if (eta > -1.63	){eleRecoEtaRegion++;}
+	if (eta > -1.566){eleRecoEtaRegion++; eleIDEtaRegion++;}
+	if (eta > -1.444){eleRecoEtaRegion++; eleIDEtaRegion++;}
+	if (eta > -1.2	){eleRecoEtaRegion++;}
+	if (eta > -1.0	){eleRecoEtaRegion++;}
+	if (eta > -0.8	){eleIDEtaRegion++;}
+	if (eta > -0.6	){eleRecoEtaRegion++;}
+	if (eta > -0.4	){eleRecoEtaRegion++;}
+	if (eta > -0.2	){eleRecoEtaRegion++;}
+	if (eta > 0.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
+	if (eta > 0.2	){eleRecoEtaRegion++;}
+	if (eta > 0.4	){eleRecoEtaRegion++;}
+	if (eta > 0.6	){eleRecoEtaRegion++;}
+	if (eta > 0.8	){eleIDEtaRegion++;}
+	if (eta > 1.0	){eleRecoEtaRegion++;}
+	if (eta > 1.2	){eleRecoEtaRegion++;}
+	if (eta > 1.444	){eleRecoEtaRegion++; eleIDEtaRegion++;}
+	if (eta > 1.566	){eleRecoEtaRegion++; eleIDEtaRegion++;}
+	if (eta > 1.63	){eleRecoEtaRegion++;}
+	if (eta > 1.8	){eleRecoEtaRegion++;}
+	if (eta > 2.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
+	if (eta > 2.2	){eleRecoEtaRegion++;}
+	if (eta > 2.3	){eleRecoEtaRegion++;}
+	if (eta > 2.4	){eleRecoEtaRegion++;}
+	if (eta > 2.45	){eleRecoEtaRegion++;}
+
+	int eleIDPtRegion = 0;
+
+	if (pt > 20.0  ){eleIDPtRegion++;}
+	if (pt > 35.0  ){eleIDPtRegion++;}
+	if (pt > 50.0  ){eleIDPtRegion++;}
+	if (pt > 90.0  ){eleIDPtRegion++;}
+	if (pt > 150.0 ){eleIDPtRegion++;}
+	
+
+	int eleTrigEtaRegion = eleIDEtaRegion;
+	int eleTrigPtRegion  = eleIDPtRegion;
+
+
+	double eleEffSF = eleTrigSF[eleTrigEtaRegion][eleTrigPtRegion][systLevel] * eleIDSF[eleIDEtaRegion][eleIDPtRegion][systLevel] * eleRecoSF[eleRecoEtaRegion][systLevel];
+
+	return eleEffSF;
+
+
+}
+

@@ -36,12 +36,15 @@ public:
 	std::vector<bool> PhoPassChHadIso;
 	std::vector<bool> PhoPassPhoIso;
 	std::vector<bool> PhoPassSih;
+
+	bool saveCutflows;
+
 	
 	// delta R cuts
-	double veto_jet_dR;
-	double veto_lep_jet_dR;
-	double veto_pho_jet_dR;
-	double veto_pho_lep_dR;
+	/* double veto_jet_dR; */
+	/* double veto_lep_jet_dR; */
+	/* double veto_pho_jet_dR; */
+	/* double veto_pho_lep_dR; */
 	
 	// cuts as parameters, to modify easily
 	double MET_cut;
@@ -77,22 +80,24 @@ public:
 	bool passAll_mu; // single flag: event passed all cuts: preselection + photon
 	bool passFirstcut; // pass the sync cut	
 	// histograms
-	std::vector<TH1D*> histVector;
+	//	std::vector<TH1D*> histVector;
 	TH1D* cutFlow_mu;
 	TH1D* cutFlowWeight_mu;
 	TH1D* cutFlow_ele;
 	TH1D* cutFlowWeight_ele;
-	TH1D* genPhoRegionWeight;
-	TH1D* genPhoRegionWeight_1l_2l;
-	TH1D* genPhoRegionWeight_1fiducial;
-	TH1D* genPhoMinDR;
+
+	/* TH1D* genPhoRegionWeight; */
+	/* TH1D* genPhoRegionWeight_1l_2l; */
+	/* TH1D* genPhoRegionWeight_1fiducial; */
+	/* TH1D* genPhoMinDR; */
 
 private:
 	const EventTree* tree;
 	const Selector* selector;
 	
 	void clear_vectors();
-	void set_cutflow_labels(TH1D* hist);
+	void set_cutflow_labels_mu(TH1D* hist);
+	void set_cutflow_labels_ele(TH1D* hist);
 	double dR_jet_ele(int jetInd, int eleInd);
 	double dR_jet_mu(int jetInd, int muInd);
 	double dR_jet_pho(int jetInd, int phoInd);

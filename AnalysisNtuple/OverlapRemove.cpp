@@ -6,7 +6,7 @@
 double dR(double eta1, double phi1, double eta2, double phi2);
 
 //double secondMinDr(int myInd, const EventTree* tree)
-double minDr(int myInd, const EventTree* tree){
+double minGenDr(int myInd, const EventTree* tree){
 	double myEta = tree->mcEta->at(myInd); 
 	double myPhi = tree->mcPhi->at(myInd);
 	int myPID = tree->mcPID->at(myInd);
@@ -39,7 +39,7 @@ bool overlapRemovalTT(EventTree* tree){
 		fabs(tree->mcEta->at(mcInd)) < Eta_cut &&
 		(tree->mcParentage->at(mcInd)==2 || tree->mcParentage->at(mcInd)==10 || tree->mcParentage->at(mcInd)==26) ) {
 			// candidate for signal photon. check dR to other gen particles to confirm
-			if(minDr(mcInd, tree) > 0.2) {
+			if(minGenDr(mcInd, tree) > 0.2) {
 				haveOverlap = true;
 			}
 		}

@@ -28,48 +28,6 @@ bool overlapRemovalTT(EventTree* tree);
 
 
 
-const std::string allowedSampleTypes[40] = {"Data",
-											"TTGamma_Hadronic",
-											"TTGamma_SingleLeptFromTbar",
-											"TTGamma_SingleLeptFromT",
-											"TTGamma_Dilepton",
-											"TTbarPowheg",
-											"TTbarMCatNLO",
-											"Wjets",
-											"W1jets",
-											"W2jets",
-											"W3jets",
-											"W4jets",
-											"DYjets",
-											"TTW",
-											"TTZ",
-											"ZGamma",
-											"WGamma",
-											"ST_tW-channel",
-											"ST_tbarW-channel",
-											"ST_t-channel",
-											"ST_tbar-channel",
-											"ST_s-channel"
-											"QCD_Pt20to30_Mu",
-											"QCD_Pt30to50_Mu",
-											"QCD_Pt50to80_Mu",
-											"QCD_Pt80to120_Mu",
-											"QCD_Pt120to170_Mu",
-											"QCD_Pt170to300_Mu",
-											"QCD_Pt300to470_Mu",
-											"QCD_Pt470to600_Mu",
-											"QCD_Pt600to800_Mu",
-											"QCD_Pt800to1000_Mu",
-											"QCD_Pt1000toInf_Mu",
-											"QCD_Pt20to30_Ele",
-											"QCD_Pt30to50_Ele",
-											"QCD_Pt50to80_Ele",
-											"QCD_Pt80to120_Ele",
-											"QCD_Pt120to170_Ele",
-											"QCD_Pt170to300_Ele",
-											"QCD_Pt300toInf_Ele",
-};
-
 
 #ifdef makeAnalysisNtuple_cxx
 makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
@@ -92,6 +50,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	selector = new Selector();
 
 	selector->pho_applyPhoID = false;
+
+	selector->looseJetID = false;
 
 	evtPick = new EventPick("");
 
@@ -165,7 +125,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	bool isMC;
 
 
-	_evtWeight = getEvtWeight(outDirName);
+	_evtWeight = getEvtWeight(sampleType);
 
 	_muEffWeight    = 1.;
 	_muEffWeight_Do = 1.;
@@ -221,21 +181,23 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				_btagWeight_Do = getBtagSF("down", reader);				
 
 				if (evtPick->passPresel_mu) {
-					_muEffWeight    = getMuSF(evtPick->Muons.at(0),1);
-					_muEffWeight_Do = getMuSF(evtPick->Muons.at(0),0);
-					_muEffWeight_Up = getMuSF(evtPick->Muons.at(0),2);
+					int muInd_ = evtPick->Muons.at(0);
+					_muEffWeight    = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),1);
+					_muEffWeight_Do = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),0);
+					_muEffWeight_Up = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),2);
 					_eleEffWeight    = 1.;
 					_eleEffWeight_Up = 1.;
 					_eleEffWeight_Do = 1.;
 				}
 
 				if (evtPick->passPresel_ele) {
+					int eleInd_ = evtPick->Electrons.at(0);
 					_muEffWeight    = 1.;
 					_muEffWeight_Do = 1.;
 					_muEffWeight_Up = 1.;
-					_eleEffWeight    = getEleSF(evtPick->Electrons.at(0),1);
-					_eleEffWeight_Do = getEleSF(evtPick->Electrons.at(0),0);
-					_eleEffWeight_Up = getEleSF(evtPick->Electrons.at(0),2);
+					_eleEffWeight    = getEleSF(tree->elePt_->at(eleInd_),tree->eleSCEta_->at(eleInd_),1);
+					_eleEffWeight_Do = getEleSF(tree->elePt_->at(eleInd_),tree->eleSCEta_->at(eleInd_),0);
+					_eleEffWeight_Up = getEleSF(tree->elePt_->at(eleInd_),tree->eleSCEta_->at(eleInd_),2);
 				}
 			}
 
@@ -244,9 +206,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 
 
-	outputFile->cd();
-	outputTree->Write();
-	outputFile->Close();
+	// outputFile->cd();
+	// outputTree->Write();
+	// outputFile->Close();
 
 }
 
@@ -275,14 +237,6 @@ void makeAnalysisNtuple::FillEvent()
 	_nMC             = tree->nMC_;
 
 
-	if (_nPho > 0 ){
-		int phoInd = evtPick->Photons.at(0);
-		phoVector.SetPtEtaPhiM(tree->phoEt_->at(phoInd),
-							   tree->phoEta_->at(phoInd),
-							   tree->phoPhi_->at(phoInd),
-							   0.0);
-	}
-
 	for (int i_ele = 0; i_ele <_nEle; i_ele++){
 		int eleInd = evtPick->Electrons.at(i_ele);
 		_elePt.push_back(tree->elePt_->at(eleInd));
@@ -309,9 +263,7 @@ void makeAnalysisNtuple::FillEvent()
 							   tree->muEn_->at(muInd));
 	}
 
-	if (_nPho > 0 ){
-		_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
-		_MPhotonLepton.push_back((phoVector+lepVector).M());
+	if (_nPho > 0 ){	   
 	}
 
 	_passPresel_Ele  = evtPick->passPresel_ele;
@@ -322,6 +274,10 @@ void makeAnalysisNtuple::FillEvent()
 	int countMediumIDPho = 0;
 	for (int i_pho = 0; i_pho <_nPho; i_pho++){
 		int phoInd = evtPick->Photons.at(i_pho);
+		phoVector.SetPtEtaPhiM(tree->phoEt_->at(phoInd),
+							   tree->phoEta_->at(phoInd),
+							   tree->phoPhi_->at(phoInd),
+							   0.0);
 
 		_phoEt.push_back(tree->phoEt_->at(phoInd));
 		_phoEta.push_back(tree->phoEta_->at(phoInd));
@@ -346,6 +302,13 @@ void makeAnalysisNtuple::FillEvent()
 				findPhotonCategory(phoInd, tree, &_photonIsGenuine, &_photonIsMisIDEle, &_photonIsHadronicPhoton, &_photonIsHadronicFake);
 			}
 		}
+
+		_dRPhotonJet.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+		_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
+		_MPhotonLepton.push_back((phoVector+lepVector).M());
+		_AnglePhotonLepton.push_back(phoVector.Angle(lepVector.Vect()));
+
+
 	}
 
 
@@ -368,24 +331,6 @@ void makeAnalysisNtuple::FillEvent()
 			_jetGenPt.push_back(tree->jetGenPt_->at(jetInd));
 			_jetGenEta.push_back(tree->jetGenEta_->at(jetInd));
 			_jetGenPhi.push_back(tree->jetGenPhi_->at(jetInd));
-		}
-
-		if (_nPho > 0 ){
-			jetVector.SetPtEtaPhiE(tree->jetPt_->at(jetInd),
-								   tree->jetEta_->at(jetInd),
-								   tree->jetPhi_->at(jetInd),
-								   tree->jetEn_->at(jetInd));
-			
-			_dRPhotonJet.push_back(phoVector.DeltaR(jetVector));
-
-			// if (phoVector.DeltaR(jetVector) < 0.1){
-			// 	int phoInd = evtPick->Photons.at(0);
-			// 	cout << "---------------------" << endl;
-			// 	cout << "   pho Pt/Eta/Phi: "<< phoVector.Pt() << " " << phoVector.Eta() << " " <<  phoVector.Phi() << endl;
-			// 	cout << "   jet Pt/Eta/Phi: "<< jetVector.Pt() << " " << jetVector.Eta() << " " <<  jetVector.Phi() << endl;
-			// 	cout << "   pho ID, Iso: " << (tree->phoIDbit_->at(phoInd)>>0&1) << (tree->phoIDbit_->at(phoInd)>>1&1) << (tree->phoIDbit_->at(phoInd)>>2&1) << " " << selector->PhoChHadIso_corr.at(phoInd) << endl;
-			// 	cout << "   jet ID, IDloose, NEF: " << (tree->jetID_->at(jetInd)>>2&1) << " " << (tree->jetID_->at(jetInd)>>1&1) << " " << tree->jetNEF_->at(jetInd) << endl;
-			// }
 		}
 
 	}	
@@ -459,16 +404,22 @@ double makeAnalysisNtuple::topPtWeight(){
 
 double makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReader reader){
 	
-	double prod = 1.0;
+	double weight0tag = 1.0; 		//w(0|n)
+	double weight1tag = 0.0;		//w(1|n)
+
 	double jetpt;
 	double jeteta;
 	int jetflavor;
 	double SFb;
+	double SFb2;
 
 	if(evtPick->bJets.size() == 0) {
 		std::cout << "No bJets" << std::endl;
 		return 1.0;
 	}
+
+	// We are following the method 1c from the twiki
+	// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1c_Event_reweighting_using_scale
 
 	for(std::vector<int>::const_iterator bjetInd = evtPick->bJets.begin(); bjetInd != evtPick->bJets.end(); bjetInd++){
 		jetpt = tree->jetPt_->at(*bjetInd);
@@ -479,165 +430,133 @@ double makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReader reade
 		else if(jetflavor == 4) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
 		else SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
 
-		//		SFb = 1.;
-		prod *= 1.0 - SFb;
+		weight0tag *= 1.0 - SFb;
+
+
+		// We also have to calculate the weight for having 1 tag, given N
+		double prod = 1.;
+		if (evtPick->NBjet_ge==2){
+			for(std::vector<int>::const_iterator bjetInd2 = evtPick->bJets.begin(); bjetInd2 != evtPick->bJets.end(); bjetInd2++){
+				if (*bjetInd==*bjetInd2) continue;
+
+				jetpt = tree->jetPt_->at(*bjetInd2);
+				jeteta = fabs(tree->jetEta_->at(*bjetInd2));
+				jetflavor = abs(tree->jetPartonID_->at(*bjetInd2));
+
+				if (jetflavor == 5) SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_B, jeteta, jetpt); 
+				else if(jetflavor == 4) SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
+				else SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
+
+				//product of (1-SFi), i!=j in twiki example (method 1c)
+				prod *= 1.0 - SFb2;
+			}
+
+			//w(1|n) sum, SFj times product of 1-SFi
+			weight1tag += prod*SFb;
+		}
 	}
 
-	return 1.0 - prod;
+	return 1.0 - weight0tag - weight1tag;
 }
 
 
 
-double makeAnalysisNtuple::getMuSF(int muInd, int systLevel){
-	double abseta = abs(tree->muEta_->at(muInd));
-	double pt = tree->muPt_->at(muInd);
+// double makeAnalysisNtuple::getMuSF(int muInd, int systLevel){
+// 	double abseta = abs(tree->muEta_->at(muInd));
+// 	double pt = tree->muPt_->at(muInd);
 
-	//binned in 0.2 in absEta
-	int muTrackEtaRegion = int(abseta/0.2);
+// 	//binned in 0.2 in absEta
+// 	int muTrackEtaRegion = int(abseta/0.2);
 
-	int muEtaRegion = -1;
-	if (abseta < 0.9) {muEtaRegion = 0;}
-	else if (abseta < 1.2) {muEtaRegion = 1;}
-	else if (abseta < 2.1) {muEtaRegion = 2;}
-	else {muEtaRegion = 3;}
+// 	int muEtaRegion = -1;
+// 	if (abseta < 0.9) {muEtaRegion = 0;}
+// 	else if (abseta < 1.2) {muEtaRegion = 1;}
+// 	else if (abseta < 2.1) {muEtaRegion = 2;}
+// 	else {muEtaRegion = 3;}
 
-	int muPtRegion_Trigger = -1;
-	if (pt < 30){muPtRegion_Trigger = 0;}
-	else if (pt < 40){muPtRegion_Trigger = 1;}
-	else if (pt < 50){muPtRegion_Trigger = 2;}
-	else if (pt < 60){muPtRegion_Trigger = 3;}
-	else if (pt < 120){muPtRegion_Trigger = 4;}
-	else if (pt < 200){muPtRegion_Trigger = 5;}
-	else {muPtRegion_Trigger = 6;}
+// 	int muPtRegion_Trigger = -1;
+// 	if (pt < 30){muPtRegion_Trigger = 0;}
+// 	else if (pt < 40){muPtRegion_Trigger = 1;}
+// 	else if (pt < 50){muPtRegion_Trigger = 2;}
+// 	else if (pt < 60){muPtRegion_Trigger = 3;}
+// 	else if (pt < 120){muPtRegion_Trigger = 4;}
+// 	else if (pt < 200){muPtRegion_Trigger = 5;}
+// 	else {muPtRegion_Trigger = 6;}
 
-	int muPtRegion_IDIso = -1;
-	if (pt < 25){muPtRegion_IDIso = 0;}
-	else if (pt < 30){muPtRegion_IDIso = 1;}
-	else if (pt < 40){muPtRegion_IDIso = 2;}
-	else if (pt < 50){muPtRegion_IDIso = 3;}
-	else if (pt < 60){muPtRegion_IDIso = 4;}
-	else {muPtRegion_IDIso = 5;}
+// 	int muPtRegion_IDIso = -1;
+// 	if (pt < 25){muPtRegion_IDIso = 0;}
+// 	else if (pt < 30){muPtRegion_IDIso = 1;}
+// 	else if (pt < 40){muPtRegion_IDIso = 2;}
+// 	else if (pt < 50){muPtRegion_IDIso = 3;}
+// 	else if (pt < 60){muPtRegion_IDIso = 4;}
+// 	else {muPtRegion_IDIso = 5;}
 
-	double muEffSF = muTrackingSF[muTrackEtaRegion][systLevel] * muIdIsoSF[muPtRegion_IDIso][muEtaRegion][systLevel] * muTrigSF[muPtRegion_Trigger][muEtaRegion][systLevel];
+// 	double muEffSF = muTrackingSF[muTrackEtaRegion][systLevel] * muIdIsoSF[muPtRegion_IDIso][muEtaRegion][systLevel] * muTrigSF[muPtRegion_Trigger][muEtaRegion][systLevel];
 
-	return muEffSF;
-}
+// 	return muEffSF;
+// }
 
 
-double makeAnalysisNtuple::getEleSF(int eleInd, int systLevel){
+// double makeAnalysisNtuple::getEleSF(int eleInd, int systLevel){
 
-	double eta = tree->eleSCEta_->at(eleInd);
-	double pt = tree->elePt_->at(eleInd);
+// 	double eta = tree->eleSCEta_->at(eleInd);
+// 	double pt = tree->elePt_->at(eleInd);
 	
-	int eleRecoEtaRegion = 0;
-	int eleIDEtaRegion = 0;
+// 	int eleRecoEtaRegion = 0;
+// 	int eleIDEtaRegion = 0;
 
-	if (eta > -2.45 ){eleRecoEtaRegion++;}
-	if (eta > -2.4	){eleRecoEtaRegion++;}
-	if (eta > -2.3	){eleRecoEtaRegion++;}
-	if (eta > -2.2	){eleRecoEtaRegion++;}
-	if (eta > -2.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
-	if (eta > -1.8	){eleRecoEtaRegion++;}
-	if (eta > -1.63	){eleRecoEtaRegion++;}
-	if (eta > -1.566){eleRecoEtaRegion++; eleIDEtaRegion++;}
-	if (eta > -1.444){eleRecoEtaRegion++; eleIDEtaRegion++;}
-	if (eta > -1.2	){eleRecoEtaRegion++;}
-	if (eta > -1.0	){eleRecoEtaRegion++;}
-	if (eta > -0.8	){eleIDEtaRegion++;}
-	if (eta > -0.6	){eleRecoEtaRegion++;}
-	if (eta > -0.4	){eleRecoEtaRegion++;}
-	if (eta > -0.2	){eleRecoEtaRegion++;}
-	if (eta > 0.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
-	if (eta > 0.2	){eleRecoEtaRegion++;}
-	if (eta > 0.4	){eleRecoEtaRegion++;}
-	if (eta > 0.6	){eleRecoEtaRegion++;}
-	if (eta > 0.8	){eleIDEtaRegion++;}
-	if (eta > 1.0	){eleRecoEtaRegion++;}
-	if (eta > 1.2	){eleRecoEtaRegion++;}
-	if (eta > 1.444	){eleRecoEtaRegion++; eleIDEtaRegion++;}
-	if (eta > 1.566	){eleRecoEtaRegion++; eleIDEtaRegion++;}
-	if (eta > 1.63	){eleRecoEtaRegion++;}
-	if (eta > 1.8	){eleRecoEtaRegion++;}
-	if (eta > 2.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
-	if (eta > 2.2	){eleRecoEtaRegion++;}
-	if (eta > 2.3	){eleRecoEtaRegion++;}
-	if (eta > 2.4	){eleRecoEtaRegion++;}
-	if (eta > 2.45	){eleRecoEtaRegion++;}
+// 	if (eta > -2.45 ){eleRecoEtaRegion++;}
+// 	if (eta > -2.4	){eleRecoEtaRegion++;}
+// 	if (eta > -2.3	){eleRecoEtaRegion++;}
+// 	if (eta > -2.2	){eleRecoEtaRegion++;}
+// 	if (eta > -2.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
+// 	if (eta > -1.8	){eleRecoEtaRegion++;}
+// 	if (eta > -1.63	){eleRecoEtaRegion++;}
+// 	if (eta > -1.566){eleRecoEtaRegion++; eleIDEtaRegion++;}
+// 	if (eta > -1.444){eleRecoEtaRegion++; eleIDEtaRegion++;}
+// 	if (eta > -1.2	){eleRecoEtaRegion++;}
+// 	if (eta > -1.0	){eleRecoEtaRegion++;}
+// 	if (eta > -0.8	){eleIDEtaRegion++;}
+// 	if (eta > -0.6	){eleRecoEtaRegion++;}
+// 	if (eta > -0.4	){eleRecoEtaRegion++;}
+// 	if (eta > -0.2	){eleRecoEtaRegion++;}
+// 	if (eta > 0.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
+// 	if (eta > 0.2	){eleRecoEtaRegion++;}
+// 	if (eta > 0.4	){eleRecoEtaRegion++;}
+// 	if (eta > 0.6	){eleRecoEtaRegion++;}
+// 	if (eta > 0.8	){eleIDEtaRegion++;}
+// 	if (eta > 1.0	){eleRecoEtaRegion++;}
+// 	if (eta > 1.2	){eleRecoEtaRegion++;}
+// 	if (eta > 1.444	){eleRecoEtaRegion++; eleIDEtaRegion++;}
+// 	if (eta > 1.566	){eleRecoEtaRegion++; eleIDEtaRegion++;}
+// 	if (eta > 1.63	){eleRecoEtaRegion++;}
+// 	if (eta > 1.8	){eleRecoEtaRegion++;}
+// 	if (eta > 2.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
+// 	if (eta > 2.2	){eleRecoEtaRegion++;}
+// 	if (eta > 2.3	){eleRecoEtaRegion++;}
+// 	if (eta > 2.4	){eleRecoEtaRegion++;}
+// 	if (eta > 2.45	){eleRecoEtaRegion++;}
 
-	int eleIDPtRegion = 0;
+// 	int eleIDPtRegion = 0;
 
-	if (pt > 20.0  ){eleIDPtRegion++;}
-	if (pt > 35.0  ){eleIDPtRegion++;}
-	if (pt > 50.0  ){eleIDPtRegion++;}
-	if (pt > 90.0  ){eleIDPtRegion++;}
-	if (pt > 150.0 ){eleIDPtRegion++;}
+// 	if (pt > 20.0  ){eleIDPtRegion++;}
+// 	if (pt > 35.0  ){eleIDPtRegion++;}
+// 	if (pt > 50.0  ){eleIDPtRegion++;}
+// 	if (pt > 90.0  ){eleIDPtRegion++;}
+// 	if (pt > 150.0 ){eleIDPtRegion++;}
 	
 
-	int eleTrigEtaRegion = eleIDEtaRegion;
-	int eleTrigPtRegion  = eleIDPtRegion;
+// 	int eleTrigEtaRegion = eleIDEtaRegion;
+// 	int eleTrigPtRegion  = eleIDPtRegion;
 
 
-	double eleEffSF = eleTrigSF[eleTrigEtaRegion][eleTrigPtRegion][systLevel] * eleIDSF[eleIDEtaRegion][eleIDPtRegion][systLevel] * eleRecoSF[eleRecoEtaRegion][systLevel];
+// 	double eleEffSF = eleTrigSF[eleTrigEtaRegion][eleTrigPtRegion][systLevel] * eleIDSF[eleIDEtaRegion][eleIDPtRegion][systLevel] * eleRecoSF[eleRecoEtaRegion][systLevel];
 
-	return eleEffSF;
+// 	return eleEffSF;
 
 
-}
+// }
 
-double makeAnalysisNtuple::getEvtWeight(string outputName){
-	double evtWeight = -1.;
-	if( sampleType=="Data") {evtWeight = 1.;}
-	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
-	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
-	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_T_SF;}
-	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_SF;}
-	else if( sampleType=="TTbarPowheg") {evtWeight = TTbarPowheg_SF;}
-	else if( sampleType=="TTbarMCatNLO") {evtWeight = TTbarMCatNLO_SF;}
-	else if( sampleType=="W1jets") {evtWeight = W1jets_SF;}
-	else if( sampleType=="W2jets") {evtWeight = W2jets_SF;}
-	else if( sampleType=="W3jets") {evtWeight = W3jets_SF;}
-	else if( sampleType=="W4jets") {evtWeight = W4jets_SF;}
-	else if( sampleType=="DYjets") {evtWeight = DYjets_SF;}
-	else if( sampleType=="TTW") {evtWeight = TTW_SF;}
-	else if( sampleType=="TTZ") {evtWeight = TTZ_SF;}
-	else if( sampleType=="ZGamma") {evtWeight = ZGamma_SF;}
-	else if( sampleType=="WGamma") {evtWeight = WGamma_SF;}
-	else if( sampleType=="ST_tW-channel") {evtWeight = ST_tW_SF;}
-	else if( sampleType=="ST_tbarW-channel") {evtWeight = ST_tbarW_SF;}
-	else if( sampleType=="ST_t-channel") {evtWeight = ST_tchannel_SF;}
-	else if( sampleType=="ST_tbar-channel") {evtWeight = ST_tbarchannel_SF;}
-	else if( sampleType=="ST_s-channel") {evtWeight = ST_schannel_SF;}
-	else if( sampleType=="QCD_Pt20to30_Mu") {evtWeight = QCD_Pt20to30_Mu_SF;}
-	else if( sampleType=="QCD_Pt30to50_Mu") {evtWeight = QCD_Pt30to50_Mu_SF;}
-	else if( sampleType=="QCD_Pt50to80_Mu") {evtWeight = QCD_Pt50to80_Mu_SF;}
-	else if( sampleType=="QCD_Pt80to120_Mu") {evtWeight = QCD_Pt80to120_Mu_SF;}
-	else if( sampleType=="QCD_Pt120to170_Mu") {evtWeight = QCD_Pt120to170_Mu_SF;}
-	else if( sampleType=="QCD_Pt170to300_Mu") {evtWeight = QCD_Pt170to300_Mu_SF;}
-	else if( sampleType=="QCD_Pt300to470_Mu") {evtWeight = QCD_Pt300to470_Mu_SF;}
-	else if( sampleType=="QCD_Pt470to600_Mu") {evtWeight = QCD_Pt470to600_Mu_SF;}
-	else if( sampleType=="QCD_Pt600to800_Mu") {evtWeight = QCD_Pt600to800_Mu_SF;}
-	else if( sampleType=="QCD_Pt800to1000_Mu") {evtWeight = QCD_Pt800to1000_Mu_SF;}
-	else if( sampleType=="QCD_Pt1000toInf_Mu") {evtWeight = QCD_Pt1000toInf_Mu_SF;}
-	else if( sampleType=="QCD_Pt20to30_Ele") {evtWeight = QCD_Pt20to30_Ele_SF;}
-	else if( sampleType=="QCD_Pt30to50_Ele") {evtWeight = QCD_Pt30to50_Ele_SF;}
-	else if( sampleType=="QCD_Pt50to80_Ele") {evtWeight = QCD_Pt50to80_Ele_SF;}
-	else if( sampleType=="QCD_Pt80to120_Ele") {evtWeight = QCD_Pt80to120_Ele_SF;}
-	else if( sampleType=="QCD_Pt120to170_Ele") {evtWeight = QCD_Pt120to170_Ele_SF;}
-	else if( sampleType=="QCD_Pt170to300_Ele") {evtWeight = QCD_Pt170to300_Ele_SF;}
-	else if( sampleType=="QCD_Pt300toInf_Ele") {evtWeight = QCD_Pt300toInf_Ele_SF;}
-	else {
-		cout << "-------------------------------------------------" << endl;
-		cout << "-------------------------------------------------" << endl;
-		cout << "-- Unable to find event weight for this sample --" << endl;
-		cout << "-- Sample will be saved with a weight of -1    --" << endl;
-		cout << "-------------------------------------------------" << endl;
-		cout << "-------------------------------------------------" << endl;
-	}
-
-	cout << "Using event weight " << evtWeight << endl;
-
-	return evtWeight;
-}
 
 
 double makeAnalysisNtuple::WjetsBRreweight(){
@@ -770,13 +689,13 @@ void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* g
 }
 
 //This is defined in OverlapRemoval.cpp
-double minDr(int myInd, const EventTree* tree);
+double minGenDr(int myInd, const EventTree* tree);
 
 bool makeAnalysisNtuple::isSignalPhoton(EventTree* tree, int mcInd, int recoPhoInd){
     bool parentagePass = tree->mcParentage->at(mcInd)==2 || tree->mcParentage->at(mcInd)==10 || tree->mcParentage->at(mcInd)==26;
     double dptpt = (tree->phoEt_->at(recoPhoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd);
     bool dptptPass = dptpt < 0.1;
-    bool drotherPass = minDr(mcInd, tree) > 0.2;
+    bool drotherPass = minGenDr(mcInd, tree) > 0.2;
     bool detarecogenPass = fabs(tree->phoEta_->at(recoPhoInd) - tree->mcEta->at(mcInd)) < 0.005;
     bool drrecogenPass = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(recoPhoInd),tree->phoPhi_->at(recoPhoInd)) < 0.01;
     if(parentagePass && dptptPass && drotherPass && detarecogenPass && drrecogenPass) return true;
@@ -787,13 +706,32 @@ bool makeAnalysisNtuple::isGoodElectron(EventTree* tree, int mcInd, int recoPhoI
     bool parentagePass = tree->mcParentage->at(mcInd)==10;
     double dptpt = (tree->phoEt_->at(recoPhoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd);
     bool dptptPass = dptpt < 0.1;
-    bool drotherPass = minDr(mcInd, tree) > 0.2;
+    bool drotherPass = minGenDr(mcInd, tree) > 0.2;
     bool detarecogenPass = fabs(tree->phoEta_->at(recoPhoInd) - tree->mcEta->at(mcInd)) < 0.005;
     bool drrecogenPass = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(recoPhoInd),tree->phoPhi_->at(recoPhoInd)) < 0.04;
     if(parentagePass && dptptPass && drotherPass && detarecogenPass && drrecogenPass) return true;
     else return false;
 }
 
+int makeAnalysisNtuple::minDrIndex(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis){
+	double mindr = 999.0;
+	double dr;
+	int bestInd = -1;
+	for( std::vector<int>::iterator it = Inds.begin(); it != Inds.end(); ++it){
+		dr = dR(myEta, myPhi, etas->at(*it), phis->at(*it));
+		if( mindr > dr ) {
+			mindr = dr;
+			bestInd = *it;
+		}
+	}
+	return bestInd;
+}
+
+double makeAnalysisNtuple::minDr(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis){
+	int ind = minDrIndex(myEta, myPhi, Inds, etas, phis);
+	if(ind>=0) return dR(myEta, myPhi, etas->at(ind), phis->at(ind));
+	else return 999.0;
+}
 
 
 

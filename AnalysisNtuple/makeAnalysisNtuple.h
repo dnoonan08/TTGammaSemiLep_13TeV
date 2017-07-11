@@ -126,6 +126,7 @@ private :
 	std::vector<float>   _dRPhotonJet;
 	std::vector<float>   _dRPhotonLepton;
 	std::vector<float>   _MPhotonLepton;
+	std::vector<float>   _AnglePhotonLepton;
 
 	Int_t                _nMC;
 	std::vector<float>   _mcPt;
@@ -160,16 +161,18 @@ private :
 	void FillEvent();
 	void InitBranches();
 
-	double getEvtWeight(string outputName);
 	double SFtop(double pt);
 	double topPtWeight();
 	double getBtagSF(string sysType, BTagCalibrationReader reader);
 	double WjetsBRreweight();
-	double getMuSF(int muInd, int systLevel);
-	double getEleSF(int eleInd, int systLevel);
+	/* double getMuSF(int muInd, int systLevel); */
+	/* double getEleSF(int eleInd, int systLevel); */
 
 	void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
 	bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso);
+
+	int minDrIndex(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
+	double minDr(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
 
 	bool isSignalPhoton(EventTree* tree, int mcInd, int recoPhoInd);
 	bool isGoodElectron(EventTree* tree, int mcInd, int recoPhoInd);
@@ -256,6 +259,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("dRPhotonJet"                 , &_dRPhotonJet                );
 	outputTree->Branch("dRPhotonLepton"              , &_dRPhotonLepton             );
 	outputTree->Branch("MPhotonLepton"               , &_MPhotonLepton             );
+	outputTree->Branch("AnglePhotonLepton"           , &_AnglePhotonLepton         );
 
 	if (!tree->isData_){
 		outputTree->Branch("nMC"   	                     , &_nMC		                ); 
@@ -359,6 +363,7 @@ void makeAnalysisNtuple::InitVariables()
 	_dRPhotonJet.clear();
 	_dRPhotonLepton.clear();
 	_MPhotonLepton.clear();
+	_AnglePhotonLepton.clear();
 
 	_mcPt.clear();
 	_mcPhi.clear();

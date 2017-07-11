@@ -2,6 +2,7 @@
 // Total integrated luminosity //
 /////////////////////////////////
 
+
 double luminosity = 35860;
  
 /////////////////////////////////////////////////
@@ -28,8 +29,7 @@ double totalTTW              = 2160030.;
 double totalTTZ              = 59339060.;
 
 double totalZGamma           = 14372399.;
-double totalWGamma           = 1.;
-
+double totalWGamma           = 10231838.;
 
 double totalST_tchannel      = 67225849.;
 double totalST_tbarchannel   = 38810350;
@@ -46,8 +46,8 @@ double totalQCD_Pt170to300_Mu  =  7946703.;
 double totalQCD_Pt300to470_Mu  =  7936465.;
 double totalQCD_Pt470to600_Mu  =  3850452.;
 double totalQCD_Pt600to800_Mu  =  4008200.;
-double totalQCD_Pt800to1000_Mu =        1.;
-double totalQCD_Pt1000toInf_Mu =        1.;
+double totalQCD_Pt800to1000_Mu =  3959757.;
+double totalQCD_Pt1000toInf_Mu =  3985729.;
 double totalQCD_Pt20to30_Ele   =  9218839.;
 double totalQCD_Pt30to50_Ele   =  4730140.;
 double totalQCD_Pt50to80_Ele   = 22336804.;
@@ -87,7 +87,8 @@ double ST_tbarchannel_xs    =  80.95 ;
 double ST_schannel_xs       =  10.32;
 
 
-
+//Product fo XS and filter eff from table at:
+//https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#QCD
 double QCD_Pt20to30_Mu_xs    = 2960198.4;
 double QCD_Pt30to50_Mu_xs    = 1652471.46;
 double QCD_Pt50to80_Mu_xs    =  437504.1;
@@ -154,3 +155,105 @@ double QCD_Pt80to120_Ele_SF  = QCD_Pt80to120_Ele_xs  * luminosity / totalQCD_Pt8
 double QCD_Pt120to170_Ele_SF = QCD_Pt120to170_Ele_xs * luminosity / totalQCD_Pt120to170_Ele ;
 double QCD_Pt170to300_Ele_SF = QCD_Pt170to300_Ele_xs * luminosity / totalQCD_Pt170to300_Ele ;
 double QCD_Pt300toInf_Ele_SF = QCD_Pt300toInf_Ele_xs * luminosity / totalQCD_Pt300toInf_Ele ;
+
+
+double getEvtWeight(string sampleType){
+	double evtWeight = -1.;
+	if( sampleType=="Data") {evtWeight = 1.;}
+	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_T_SF;}
+	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_SF;}
+	else if( sampleType=="TTbarPowheg") {evtWeight = TTbarPowheg_SF;}
+	else if( sampleType=="TTbarMCatNLO") {evtWeight = TTbarMCatNLO_SF;}
+	else if( sampleType=="W1jets") {evtWeight = W1jets_SF;}
+	else if( sampleType=="W2jets") {evtWeight = W2jets_SF;}
+	else if( sampleType=="W3jets") {evtWeight = W3jets_SF;}
+	else if( sampleType=="W4jets") {evtWeight = W4jets_SF;}
+	else if( sampleType=="DYjets") {evtWeight = DYjets_SF;}
+	else if( sampleType=="TTW") {evtWeight = TTW_SF;}
+	else if( sampleType=="TTZ") {evtWeight = TTZ_SF;}
+	else if( sampleType=="ZGamma") {evtWeight = ZGamma_SF;}
+	else if( sampleType=="WGamma") {evtWeight = WGamma_SF;}
+	else if( sampleType=="ST_tW-channel") {evtWeight = ST_tW_SF;}
+	else if( sampleType=="ST_tbarW-channel") {evtWeight = ST_tbarW_SF;}
+	else if( sampleType=="ST_t-channel") {evtWeight = ST_tchannel_SF;}
+	else if( sampleType=="ST_tbar-channel") {evtWeight = ST_tbarchannel_SF;}
+	else if( sampleType=="ST_s-channel") {evtWeight = ST_schannel_SF;}
+	else if( sampleType=="QCD_Pt20to30_Mu") {evtWeight = QCD_Pt20to30_Mu_SF;}
+	else if( sampleType=="QCD_Pt30to50_Mu") {evtWeight = QCD_Pt30to50_Mu_SF;}
+	else if( sampleType=="QCD_Pt50to80_Mu") {evtWeight = QCD_Pt50to80_Mu_SF;}
+	else if( sampleType=="QCD_Pt80to120_Mu") {evtWeight = QCD_Pt80to120_Mu_SF;}
+	else if( sampleType=="QCD_Pt120to170_Mu") {evtWeight = QCD_Pt120to170_Mu_SF;}
+	else if( sampleType=="QCD_Pt170to300_Mu") {evtWeight = QCD_Pt170to300_Mu_SF;}
+	else if( sampleType=="QCD_Pt300to470_Mu") {evtWeight = QCD_Pt300to470_Mu_SF;}
+	else if( sampleType=="QCD_Pt470to600_Mu") {evtWeight = QCD_Pt470to600_Mu_SF;}
+	else if( sampleType=="QCD_Pt600to800_Mu") {evtWeight = QCD_Pt600to800_Mu_SF;}
+	else if( sampleType=="QCD_Pt800to1000_Mu") {evtWeight = QCD_Pt800to1000_Mu_SF;}
+	else if( sampleType=="QCD_Pt1000toInf_Mu") {evtWeight = QCD_Pt1000toInf_Mu_SF;}
+	else if( sampleType=="QCD_Pt20to30_EM") {evtWeight = QCD_Pt20to30_Ele_SF;}
+	else if( sampleType=="QCD_Pt30to50_EM") {evtWeight = QCD_Pt30to50_Ele_SF;}
+	else if( sampleType=="QCD_Pt50to80_EM") {evtWeight = QCD_Pt50to80_Ele_SF;}
+	else if( sampleType=="QCD_Pt80to120_EM") {evtWeight = QCD_Pt80to120_Ele_SF;}
+	else if( sampleType=="QCD_Pt120to170_EM") {evtWeight = QCD_Pt120to170_Ele_SF;}
+	else if( sampleType=="QCD_Pt170to300_EM") {evtWeight = QCD_Pt170to300_Ele_SF;}
+	else if( sampleType=="QCD_Pt300toInf_EM") {evtWeight = QCD_Pt300toInf_Ele_SF;}
+	else {
+		cout << "-------------------------------------------------" << endl;
+		cout << "-------------------------------------------------" << endl;
+		cout << "-- Unable to find event weight for this sample --" << endl;
+		cout << "-- Sample will be saved with a weight of -1    --" << endl;
+		cout << "-------------------------------------------------" << endl;
+		cout << "-------------------------------------------------" << endl;
+	}
+
+	cout << "Using event weight " << evtWeight << endl;
+
+	return evtWeight;
+}
+
+
+
+
+const std::string allowedSampleTypes[40] = {"Data",
+											"TTGamma_Hadronic",
+											"TTGamma_SingleLeptFromTbar",
+											"TTGamma_SingleLeptFromT",
+											"TTGamma_Dilepton",
+											"TTbarPowheg",
+											"TTbarMCatNLO",
+											"Wjets",
+											"W1jets",
+											"W2jets",
+											"W3jets",
+											"W4jets",
+											"DYjets",
+											"TTW",
+											"TTZ",
+											"ZGamma",
+											"WGamma",
+											"ST_tW-channel",
+											"ST_tbarW-channel",
+											"ST_t-channel",
+											"ST_tbar-channel",
+											"ST_s-channel",
+											"QCD_Pt20to30_Mu",
+											"QCD_Pt30to50_Mu",
+											"QCD_Pt50to80_Mu",
+											"QCD_Pt80to120_Mu",
+											"QCD_Pt120to170_Mu",
+											"QCD_Pt170to300_Mu",
+											"QCD_Pt300to470_Mu",
+											"QCD_Pt470to600_Mu",
+											"QCD_Pt600to800_Mu",
+											"QCD_Pt800to1000_Mu",
+											"QCD_Pt1000toInf_Mu",
+											"QCD_Pt20to30_EM",
+											"QCD_Pt30to50_EM",
+											"QCD_Pt50to80_EM",
+											"QCD_Pt80to120_EM",
+											"QCD_Pt120to170_EM",
+											"QCD_Pt170to300_EM",
+											"QCD_Pt300toInf_EM",
+};
+
