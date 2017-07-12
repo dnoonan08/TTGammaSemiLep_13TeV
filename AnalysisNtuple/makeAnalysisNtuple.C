@@ -282,18 +282,27 @@ void makeAnalysisNtuple::FillEvent()
 		_phoEt.push_back(tree->phoEt_->at(phoInd));
 		_phoEta.push_back(tree->phoEta_->at(phoInd));
 		_phoPhi.push_back(tree->phoPhi_->at(phoInd));
+		_phoIsBarrel.push_back( abs(tree->phoEta_->at(phoInd))<1.47 );
 		_phoHoverE.push_back(tree->phoHoverE_->at(phoInd));
-		_phoSigmaIEtaIEtaFull5x5.push_back(tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd));
+		_phoSIEIE.push_back(tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd));
 		_phoPFChIso.push_back( selector->PhoChHadIso_corr.at(phoInd));
 		_phoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
 		_phoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
 		_phoTightID.push_back(tree->phoIDbit_->at(phoInd)>>2&1);
 		_phoMediumID.push_back(tree->phoIDbit_->at(phoInd)>>1&1);
 		_phoLooseID.push_back(tree->phoIDbit_->at(phoInd)>>0&1);
-		_phoMediumIDFunction.push_back(   passPhoMediumID(phoInd,true,true,true) );
-		_phoMediumIDNoHoverECut.push_back(passPhoMediumID(phoInd,false,true,true));
-		_phoMediumIDNoSIEIECut.push_back( passPhoMediumID(phoInd,true,false,true));
-		_phoMediumIDNoIsoCut.push_back(   passPhoMediumID(phoInd,true,true,false));
+		vector<bool> phoMediumCuts =  passPhoMediumID(phoInd);
+		_phoMediumIDFunction.push_back(  phoMediumCuts.at(0));
+		_phoMediumIDPassHoverE.push_back(phoMediumCuts.at(1));
+		_phoMediumIDPassSIEIE.push_back( phoMediumCuts.at(2));
+		_phoMediumIDPassChIso.push_back( phoMediumCuts.at(3));
+		_phoMediumIDPassNeuIso.push_back(phoMediumCuts.at(4));
+		_phoMediumIDPassPhoIso.push_back(phoMediumCuts.at(5));
+			
+		// _phoMediumIDFunction.push_back(   passPhoMediumID(phoInd,true,true,true) );
+		// _phoMediumIDNoHoverECut.push_back(passPhoMediumID(phoInd,false,true,true));
+		// _phoMediumIDNoSIEIECut.push_back( passPhoMediumID(phoInd,true,false,true));
+		// _phoMediumIDNoIsoCut.push_back(   passPhoMediumID(phoInd,true,true,false));
 		
 		//Make the decision on the photon category based on the leading photon that has passed the mediumID
 		if (tree->phoIDbit_->at(phoInd)>>1&1){
@@ -416,6 +425,7 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 	double SFb;
 	double SFb2;
 
+
 	for(std::vector<int>::const_iterator bjetInd = evtPick->bJets.begin(); bjetInd != evtPick->bJets.end(); bjetInd++){
 		jetpt = tree->jetPt_->at(*bjetInd);
 		jeteta = fabs(tree->jetEta_->at(*bjetInd));
@@ -425,8 +435,9 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 		else if(jetflavor == 4) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
 		else {
 			SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
-			if (sysType=="central") cout << tree->event_ << " " << *bjetInd << " " << jetpt << " " << jeteta << " " << jetflavor << " " << SFb<<endl;
+			//			if (sysType=="central") cout << tree->event_ << " " << *bjetInd << " " << jetpt << " " << jeteta << " " << jetflavor << " " << SFb<<endl;
 		}
+
 		// if 
 		// if (SFb==0 && sysType=="central"){
 		// 	cout << tree->event_ << " " << *bjetInd << " " << jetpt << " " << jeteta << " " << jetflavor << endl;
@@ -443,7 +454,6 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 		return btagWeights;
 
 	} else if (evtPick->bJets.size() == 1) {
-
 		btagWeights.push_back(1-btagSF.at(0));
 		btagWeights.push_back(btagSF.at(0));
 		btagWeights.push_back(0.0);
@@ -458,9 +468,8 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 			SFb = btagSF.at(i);
 			weight0tag *= 1.0 - SFb;
 			double prod = SFb;
-			for (int j = 0; i < evtPick->bJets.size(); i++){
-				if (j==i) continue;
-
+			for (int j = 0; j < evtPick->bJets.size(); j++){
+				if (j==i) {continue;}
 				prod *= (1.-btagSF.at(j));
 			}
 			weight1tag += prod;
@@ -622,7 +631,8 @@ double makeAnalysisNtuple::WjetsBRreweight(){
 	
 }
 
-bool makeAnalysisNtuple::passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso){
+//bool makeAnalysisNtuple::passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso){
+vector<bool> makeAnalysisNtuple::passPhoMediumID(int phoInd){
 
 	double pt = tree->phoEt_->at(phoInd);
     double eta = TMath::Abs(tree->phoEta_->at(phoInd));
@@ -639,25 +649,58 @@ bool makeAnalysisNtuple::passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIE
 	double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd)  - photonEA[region][0] *tree->rho_);
 	double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_->at(phoInd) - photonEA[region][1] *tree->rho_);
 	double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_->at(phoInd) - photonEA[region][2] *tree->rho_);
+
+	bool passHoverE = false;
+	bool passSIEIE  = false;
+	bool passChIso  = false;
+	bool passNeuIso  = false;
+	bool passPhoIso  = false;
+	
 	
     if (eta < 1.47){
-		if ((!cutHoverE || tree->phoHoverE_->at(phoInd)                < 0.0396  ) &&
-			(!cutSIEIE  || tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.01022 ) &&
-			(!cutIso    || (rhoCorrPFChIso                              < 0.441 &&
-							rhoCorrPFNeuIso                             < 2.725+0.0148*pt+0.000017*pt*pt &&
-							rhoCorrPFPhoIso                             < 2.571+0.0047*pt))){
-			passMediumID = true;
-		}
+		if (tree->phoHoverE_->at(phoInd) < 0.0396 )               passHoverE = true;
+		if (tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd) < 0.01022) passSIEIE  = true;
+		if (rhoCorrPFChIso  < 0.441  )                            passChIso  = true;
+		if (rhoCorrPFNeuIso < 2.725+0.0148*pt+0.000017*pt*pt)     passNeuIso = true;
+		if (rhoCorrPFPhoIso < 2.571+0.0047*pt)                    passPhoIso = true;
     } else {
-		if ((!cutHoverE || tree->phoHoverE_->at(phoInd)                < 0.0219  ) &&
-			(!cutSIEIE  || tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.03001 ) &&
-			(!cutIso    || (rhoCorrPFChIso                              < 0.442 &&
-							rhoCorrPFNeuIso                             < 1.715+0.0163*pt+0.000014*pt*pt &&
-							rhoCorrPFPhoIso                             < 3.863+0.0034*pt))){
-			passMediumID = true;
-		}
-    }
-    return passMediumID;
+		if (tree->phoHoverE_->at(phoInd) < 0.0219 )                passHoverE = true;
+		if (tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.03001) passSIEIE  = true;
+		if (rhoCorrPFChIso < 0.442) 							   passChIso  = true;
+		if (rhoCorrPFNeuIso < 1.715+0.0163*pt+0.000014*pt*pt)	   passNeuIso = true;
+		if (rhoCorrPFPhoIso < 3.863+0.0034*pt)					   passPhoIso = true;
+	}
+
+	passMediumID = passHoverE && passSIEIE && passChIso && passNeuIso && passPhoIso;
+
+	vector<bool> cuts;
+	cuts.push_back(passMediumID);
+	cuts.push_back(passHoverE);
+	cuts.push_back(passSIEIE);
+	cuts.push_back(passChIso);
+	cuts.push_back(passNeuIso);
+	cuts.push_back(passPhoIso);
+
+	return cuts;
+
+    // if (eta < 1.47){
+	// 	if ((!cutHoverE || tree->phoHoverE_->at(phoInd)                < 0.0396  ) &&
+	// 		(!cutSIEIE  || tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.01022 ) &&
+	// 		(!cutIso    || (rhoCorrPFChIso                              < 0.441 &&
+	// 						rhoCorrPFNeuIso                             < 2.725+0.0148*pt+0.000017*pt*pt &&
+	// 						rhoCorrPFPhoIso                             < 2.571+0.0047*pt))){
+	// 		passMediumID = true;
+	// 	}
+    // } else {
+	// 	if ((!cutHoverE || tree->phoHoverE_->at(phoInd)                < 0.0219  ) &&
+	// 		(!cutSIEIE  || tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.03001 ) &&
+	// 		(!cutIso    || (rhoCorrPFChIso                              < 0.442 &&
+	// 						rhoCorrPFNeuIso                             < 1.715+0.0163*pt+0.000014*pt*pt &&
+	// 						rhoCorrPFPhoIso                             < 3.863+0.0034*pt))){
+	// 		passMediumID = true;
+	// 	}
+    // }
+    // return passMediumID;
 }
 
 

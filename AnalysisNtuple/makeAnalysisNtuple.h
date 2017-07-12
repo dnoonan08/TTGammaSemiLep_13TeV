@@ -84,8 +84,9 @@ private :
 	std::vector<float>   _phoEt;
 	std::vector<float>   _phoEta;
 	std::vector<float>   _phoPhi;
+	std::vector<bool>    _phoIsBarrel;
 	std::vector<float>   _phoHoverE;
-	std::vector<float>   _phoSigmaIEtaIEtaFull5x5;
+	std::vector<float>   _phoSIEIE;
 	std::vector<float>   _phoPFChIso;
 	std::vector<float>   _phoPFPhoIso;
 	std::vector<float>   _phoPFNeuIso;
@@ -93,9 +94,14 @@ private :
 	std::vector<bool>    _phoMediumID;
 	std::vector<bool>    _phoLooseID;
 	std::vector<bool>    _phoMediumIDFunction; 
-	std::vector<bool>    _phoMediumIDNoHoverECut; 
-	std::vector<bool>    _phoMediumIDNoSIEIECut; 
-	std::vector<bool>    _phoMediumIDNoIsoCut; 
+	std::vector<bool>    _phoMediumIDPassHoverE; 
+	std::vector<bool>    _phoMediumIDPassSIEIE; 
+	std::vector<bool>    _phoMediumIDPassChIso; 
+	std::vector<bool>    _phoMediumIDPassNeuIso; 
+	std::vector<bool>    _phoMediumIDPassPhoIso; 
+	/* std::vector<bool>    _phoMediumIDNoHoverECut;  */
+	/* std::vector<bool>    _phoMediumIDNoSIEIECut;  */
+	/* std::vector<bool>    _phoMediumIDNoIsoCut;  */
    
 	Int_t           _nEle;
 
@@ -173,7 +179,8 @@ private :
 	/* double getEleSF(int eleInd, int systLevel); */
 
 	void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
-	bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso);
+	vector<bool> passPhoMediumID(int phoInd);
+	/* bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso); */
 
 	int minDrIndex(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
 	double minDr(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
@@ -216,8 +223,9 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoEt"                      , &_phoEt                       );
 	outputTree->Branch("phoEta"                     , &_phoEta                      ); 
 	outputTree->Branch("phoPhi"                     , &_phoPhi                      ); 
-	outputTree->Branch("phoHoverE_"                 , &_phoHoverE                   ); 
-	outputTree->Branch("phoSigmaIEtaIEtaFull5x5"    , &_phoSigmaIEtaIEtaFull5x5     ); 
+	outputTree->Branch("phoIsBarrel"                , &_phoIsBarrel                 ); 
+	outputTree->Branch("phoHoverE"                  , &_phoHoverE                   ); 
+	outputTree->Branch("phoSIEIE"                   , &_phoSIEIE                    ); 
 	outputTree->Branch("phoPFChIso"                 , &_phoPFChIso                  ); 
 	outputTree->Branch("phoPFPhoIso"                , &_phoPFPhoIso                 ); 
 	outputTree->Branch("phoPFNeuIso"                , &_phoPFNeuIso                 ); 
@@ -225,9 +233,14 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
 	outputTree->Branch("phoLooseID"                 , &_phoLooseID                  ); 
 	outputTree->Branch("phoMediumIDFunction"        , &_phoMediumIDFunction         ); 
-	outputTree->Branch("phoMediumIDNoHoverECut"     , &_phoMediumIDNoHoverECut      ); 
-	outputTree->Branch("phoMediumIDNoSIEIECut"      , &_phoMediumIDNoSIEIECut       ); 
-	outputTree->Branch("phoMediumIDNoIsoCut"        , &_phoMediumIDNoIsoCut         ); 
+	outputTree->Branch("phoMediumIDPassHoverE"      , &_phoMediumIDPassHoverE       ); 
+	outputTree->Branch("phoMediumIDPassSIEIE"       , &_phoMediumIDPassSIEIE        ); 
+	outputTree->Branch("phoMediumIDPassChIso"       , &_phoMediumIDPassChIso        ); 
+	outputTree->Branch("phoMediumIDPassNeuIso"      , &_phoMediumIDPassNeuIso       ); 
+	outputTree->Branch("phoMediumIDPassPhoIso"      , &_phoMediumIDPassPhoIso       ); 
+	/* outputTree->Branch("phoMediumIDNoHoverECut"     , &_phoMediumIDNoHoverECut      );  */
+	/* outputTree->Branch("phoMediumIDNoSIEIECut"      , &_phoMediumIDNoSIEIECut       );  */
+	/* outputTree->Branch("phoMediumIDNoIsoCut"        , &_phoMediumIDNoIsoCut         );  */
 	
 	outputTree->Branch("nEle"                        , &_nEle                       ); 
 	outputTree->Branch("elePt"                       , &_elePt                      );
@@ -325,6 +338,8 @@ void makeAnalysisNtuple::InitVariables()
 	_btagWeight_Do.clear();
 
 	_btagSF.clear();
+	_btagSF_Up.clear();
+	_btagSF_Do.clear();
 
 	_photonIsGenuine        = false;
 	_photonIsMisIDEle       = false;
@@ -344,8 +359,9 @@ void makeAnalysisNtuple::InitVariables()
 	_phoEt.clear();
 	_phoEta.clear();
 	_phoPhi.clear();
+	_phoIsBarrel.clear();
 	_phoHoverE.clear();
-	_phoSigmaIEtaIEtaFull5x5.clear();
+	_phoSIEIE.clear();
 	_phoPFChIso.clear();
 	_phoPFPhoIso.clear();
 	_phoPFNeuIso.clear();
@@ -353,9 +369,14 @@ void makeAnalysisNtuple::InitVariables()
 	_phoMediumID.clear();
 	_phoLooseID.clear();
 	_phoMediumIDFunction.clear(); 
-	_phoMediumIDNoHoverECut.clear(); 
-	_phoMediumIDNoSIEIECut.clear(); 
-	_phoMediumIDNoIsoCut.clear(); 
+	_phoMediumIDPassHoverE.clear(); 
+	_phoMediumIDPassSIEIE.clear(); 
+	_phoMediumIDPassChIso.clear(); 
+	_phoMediumIDPassNeuIso.clear(); 
+	_phoMediumIDPassPhoIso.clear(); 
+	/* _phoMediumIDNoHoverECut.clear();  */
+	/* _phoMediumIDNoSIEIECut.clear();  */
+	/* _phoMediumIDNoIsoCut.clear();  */
 
 	_jetPt.clear();
 	_jetEn.clear();
