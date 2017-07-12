@@ -1,6 +1,6 @@
 #!/bin/bash
 
-job=$1
+job=17+$1
 
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then 
 	echo "Running Interactively"
@@ -40,6 +40,18 @@ outputfiles=("TTGamma_SingleLeptFromTbar_skim.root " \
 "ST_tbarW-channel_skim.root           " \
 "TTW_skim.root                        " \
 "TTZ_skim.root                        " \
+"ZGamma_skim.root                     " \
+"QCD_20to30Mu_skim.root               " \
+"QCD_30to50Mu_skim.root               " \
+"QCD_50to80Mu_skim.root               " \
+"QCD_80to120Mu_skim.root              " \
+"QCD_120to170Mu_skim.root             " \
+"QCD_170to300Mu_skim.root             " \
+"QCD_300to470Mu_skim.root             " \
+"QCD_470to600Mu_skim.root             " \
+"QCD_600to800Mu_skim.root             " \
+"QCD_800to1000Mu_skim.root            " \
+"QCD_1000toInfMu_skim.root            " \
 "Data_SingleMu_b_skim.root            " \
 "Data_SingleMu_c_skim.root            " \
 "Data_SingleMu_d_skim.root            " \
@@ -69,6 +81,16 @@ inputfiles=("root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_Si
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_tWbar.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTWJets.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTZ.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_summer16_Zg_aMCatNLO.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_20to30Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_30to50Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_50to80Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_80to120Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_120to170Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_170to300Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_300to470Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_470to600Mu.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_600to800Mu.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/job_SingleMu_Run2016B_FebReminiAOD.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/job_SingleMu_Run2016C_FebReminiAOD.root" \
 "root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/job_SingleMu_Run2016D_FebReminiAOD.root" \

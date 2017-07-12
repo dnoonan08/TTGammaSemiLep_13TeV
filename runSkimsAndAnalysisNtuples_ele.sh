@@ -40,6 +40,7 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "ST_tbarW-channel_" \
 "TTW_" \
 "TTZ_" \
+"WGamma_" \
 "ZGamma_" \
 "QCD_20to30EM_" \
 "QCD_30to50EM_" \
@@ -58,6 +59,7 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "QCD_470to600Mu_" \
 "QCD_600to800Mu_" \
 "QCD_800to1000Mu_" \
+"QCD_1000toInfMu_" \
 "Data_SingleEle_b_" \
 "Data_SingleEle_c_" \
 "Data_SingleEle_d_" \
@@ -84,7 +86,8 @@ inputfiles=("root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_Si
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_tWbar.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTWJets.root" \
 "root://cmseos.fnal.gov//store/user/yumiceva/ntuples_2016/TTZ.root" \
-"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_summer16_Zg_aMCatNLO.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/WGToLNuG_aMCatNLO_summer16.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ZGTo2LG_aMCatNLO_summer16.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_20to30EM.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_30to50EM.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_50to80EM.root" \
@@ -102,6 +105,7 @@ inputfiles=("root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_Si
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_470to600Mu.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_600to800Mu.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_800to1000Mu.root" \
+"root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/QCD_1000toInfMu.root" \
 "root://eoscms.cern.ch//store/caf/user/dnoonan/job_SingleEle_Run2016B_FebReminiAOD.root" \
 "root://eoscms.cern.ch//store/caf/user/dnoonan/job_SingleEle_Run2016C_FebReminiAOD.root" \
 "root://eoscms.cern.ch//store/caf/user/dnoonan/job_SingleEle_Run2016D_FebReminiAOD.root" \
@@ -109,6 +113,9 @@ inputfiles=("root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_Si
 "root://eoscms.cern.ch//store/caf/user/dnoonan/job_SingleEle_Run2016F_FebReminiAOD1.root root://eoscms.cern.ch//store/caf/user/dnoonan/job_SingleEle_Run2016F_FebReminiAOD2.root" \
 "root://eoscms.cern.ch//store/caf/user/dnoonan/job_SingleEle_Run2016G_FebReminiAOD.root" \
 "root://eoscms.cern.ch//store/caf/user/dnoonan/job_SingleEle_Run2016H_FebReminiAODv2.root root://eoscms.cern.ch//store/caf/user/dnoonan/job_SingleEle_Run2016H_FebReminiAODv3.root")
+
+
+
 
 sampleType=("TTGamma_SingleLeptFromTbar " \
 "TTGamma_SingleLeptFromT    " \
@@ -127,6 +134,7 @@ sampleType=("TTGamma_SingleLeptFromTbar " \
 "ST_tbarW-channel           " \
 "TTW                        " \
 "TTZ                        " \
+"WGamma                     " \
 "ZGamma                     " \
 "QCD_Pt20to30_EM            " \
 "QCD_Pt30to50_EM            " \
@@ -144,7 +152,8 @@ sampleType=("TTGamma_SingleLeptFromTbar " \
 "QCD_Pt300to470_Mu          " \
 "QCD_Pt470to600_Mu          " \
 "QCD_Pt600to800_Mu          " \
-"QCD_Pt800to1000_Mu          " \
+"QCD_Pt800to1000_Mu         " \
+"QCD_Pt1000toInf_Mu         " \
 "Data                       " \
 "Data                       " \
 "Data                       " \

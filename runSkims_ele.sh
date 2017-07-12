@@ -1,6 +1,6 @@
 #!/bin/bash
 
-job=$1
+job=17+$1
 
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then 
 	echo "Running Interactively" ; 
@@ -40,13 +40,21 @@ outputfiles=("TTGamma_SingleLeptFromTbar_skim.root " \
 "ST_tbarW-channel_skim.root           " \
 "TTW_skim.root                        " \
 "TTZ_skim.root                        " \
-"Data_SingleEle_b_skim.root            " \
-"Data_SingleEle_c_skim.root            " \
-"Data_SingleEle_d_skim.root            " \
-"Data_SingleEle_e_skim.root            " \
-"Data_SingleEle_f_skim.root            " \
-"Data_SingleEle_g_skim.root            " \
-"Data_SingleEle_h_skim.root            ")
+"ZGamma_skim.root                     " \
+"QCD_20to30EM_skim.root               " \
+"QCD_30to50EM_skim.root               " \
+"QCD_50to80EM_skim.root               " \
+"QCD_80to120EM_skim.root              " \
+"QCD_120to170EM_skim.root             " \
+"QCD_170to300EM_skim.root             " \
+"QCD_300toInfEM_skim.root             " \
+"Data_SingleEle_b_skim.root           " \
+"Data_SingleEle_c_skim.root           " \
+"Data_SingleEle_d_skim.root           " \
+"Data_SingleEle_e_skim.root           " \
+"Data_SingleEle_f_skim.root           " \
+"Data_SingleEle_g_skim.root           " \
+"Data_SingleEle_h_skim.root           ")
 
 
 
@@ -69,6 +77,14 @@ inputfiles=("root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ttgamma_Si
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/ST_t_tWbar.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTWJets.root" \
 "root://cmseos.fnal.gov//store/user/troy2012/ntuples_2016/TTZ.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_summer16_Zg_aMCatNLO.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_20to30EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_30to50EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_50to80EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_80to120EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_120to170EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_170to300EM.root" \
+"/uscmst1b_scratch/lpc1/3DayLifetime/troy2012/ntuples_temp/QCD_300toInfEM.root" \
 "/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016B_FebReminiAOD.root" \
 "/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016C_FebReminiAOD.root" \
 "/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/Ntuples/job_SingleEle_Run2016D_FebReminiAOD.root" \

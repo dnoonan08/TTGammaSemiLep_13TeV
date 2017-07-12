@@ -21,8 +21,7 @@ eval `scramv1 runtime -sh`
 
 
 inputdir="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_skims/muons/"
-outputdir="../../../Ntuples/muons/"
-#outputdir="/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/13TeV_skims/muons/"
+outputdir="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_AnalysisNtuples/muons/"
 
 files=("TTGamma_SingleLeptFromTbar_" \
 "TTGamma_SingleLeptFromT_" \
@@ -41,6 +40,26 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "ST_tbarW-channel_" \
 "TTW_" \
 "TTZ_" \
+"WGamma_" \
+"ZGamma_" \
+"QCD_20to30EM_" \
+"QCD_30to50EM_" \
+"QCD_50to80EM_" \
+"QCD_80to120EM_" \
+"QCD_120to170EM_" \
+"QCD_170to300EM_" \
+"QCD_300toInfEM_" \
+"QCD_20to30Mu_" \
+"QCD_30to50Mu_" \
+"QCD_50to80Mu_" \
+"QCD_80to120Mu_" \
+"QCD_120to170Mu_" \
+"QCD_170to300Mu_" \
+"QCD_300to470Mu_" \
+"QCD_470to600Mu_" \
+"QCD_600to800Mu_" \
+"QCD_800to1000Mu_" \
+"QCD_1000toInfMu_" \
 "Data_SingleMu_b_" \
 "Data_SingleMu_c_" \
 "Data_SingleMu_d_" \
@@ -67,6 +86,26 @@ sampleType=("TTGamma_SingleLeptFromTbar " \
 "ST_tbarW-channel           " \
 "TTW                        " \
 "TTZ                        " \
+"WGamma                     " \
+"ZGamma                     " \
+"QCD_Pt20to30_EM            " \
+"QCD_Pt30to50_EM            " \
+"QCD_Pt50to80_EM            " \
+"QCD_Pt80to120_EM           " \
+"QCD_Pt120to170_EM          " \
+"QCD_Pt170to300_EM          " \
+"QCD_Pt300toInf_EM          " \
+"QCD_Pt20to30_Mu            " \
+"QCD_Pt30to50_Mu            " \
+"QCD_Pt50to80_Mu            " \
+"QCD_Pt80to120_Mu           " \
+"QCD_Pt120to170_Mu          " \
+"QCD_Pt170to300_Mu          " \
+"QCD_Pt300to470_Mu          " \
+"QCD_Pt470to600_Mu          " \
+"QCD_Pt600to800_Mu          " \
+"QCD_Pt800to1000_Mu          " \
+"QCD_Pt1000toInf_Mu          " \
 "Data                       " \
 "Data                       " \
 "Data                       " \
@@ -76,9 +115,10 @@ sampleType=("TTGamma_SingleLeptFromTbar " \
 "Data                       ")
 
 
+echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} ${files[job]}AnalysisNtuple.root ${inputdir}${files[job]}skim.root"
 
-echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} ${outputdir}${files[job]}AnalysisNtuple.root ${inputdir}${files[job]}skim.root"
+AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} ${files[job]}AnalysisNtuple.root ${inputdir}${files[job]}skim.root
 
-AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} ${outputdir}${files[job]}AnalysisNtuple.root ${inputdir}${files[job]}skim.root
+echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/."
 
-#echo "xrdcp -f ${outputfiles[job]} ${outputdir}"
+xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/.
