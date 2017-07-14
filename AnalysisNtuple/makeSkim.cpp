@@ -47,7 +47,7 @@ int main(int ac, char** av){
 	selector->veto_lep_jet_dR = -1;
 	selector->veto_pho_jet_dR = -1;
 
-	evtPick->SkimNjet_ge = 3;
+	evtPick->SkimNjet_ge = 2;
 	evtPick->SkimNBjet_ge = 1;
 
 	std::string channel(av[1]);

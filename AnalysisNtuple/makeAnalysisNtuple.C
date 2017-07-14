@@ -53,9 +53,14 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	selector->looseJetID = false;
 
+	//DELETE THIS LINE AFTER TEST
+	selector->veto_pho_jet_dR = -1;
+
+
 	evtPick = new EventPick("");
 
-	
+	evtPick->Njet_ge = 2;
+
 
 
 	BTagCalibration calib("csvv2", "CSVv2_Moriond17_B_H.csv");
