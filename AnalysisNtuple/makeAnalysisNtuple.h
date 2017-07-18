@@ -83,6 +83,7 @@ private :
 	Int_t           _nPho;
 	std::vector<float>   _phoEt;
 	std::vector<float>   _phoEta;
+	std::vector<float>   _phoSCEta;
 	std::vector<float>   _phoPhi;
 	std::vector<bool>    _phoIsBarrel;
 	std::vector<float>   _phoHoverE;
@@ -222,6 +223,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("nPho"                       , &_nPho                        ); 
 	outputTree->Branch("phoEt"                      , &_phoEt                       );
 	outputTree->Branch("phoEta"                     , &_phoEta                      ); 
+	outputTree->Branch("phoSCEta"                   , &_phoSCEta                    ); 
 	outputTree->Branch("phoPhi"                     , &_phoPhi                      ); 
 	outputTree->Branch("phoIsBarrel"                , &_phoIsBarrel                 ); 
 	outputTree->Branch("phoHoverE"                  , &_phoHoverE                   ); 
@@ -358,6 +360,7 @@ void makeAnalysisNtuple::InitVariables()
 
 	_phoEt.clear();
 	_phoEta.clear();
+	_phoSCEta.clear();
 	_phoPhi.clear();
 	_phoIsBarrel.clear();
 	_phoHoverE.clear();

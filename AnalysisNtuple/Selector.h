@@ -94,6 +94,7 @@ public:
 	double ele_Pt_cut;
 	double ele_PtLoose_cut;
 	double ele_Eta_cut;
+	double ele_EtaLoose_cut;
 	double mu_Eta_loose;
 	double mu_Eta_tight;
 	double mu_Pt_cut;
@@ -140,9 +141,9 @@ private:
 	// effective areas, see Selector.cpp for more information
 	double eleEffArea03(double SCEta);
 	double muEffArea04(double muEta);
-	double phoEffArea03ChHad(double phoEta);
-	double phoEffArea03NeuHad(double phoEta);
-	double phoEffArea03Pho(double phoEta);
+	double phoEffArea03ChHad(double phoSCEta);
+	double phoEffArea03NeuHad(double phoSCEta);
+	double phoEffArea03Pho(double phoSCEta);
 	int egammaRegion(double absEta);
 
 	bool passEleTightID(int eleInd);

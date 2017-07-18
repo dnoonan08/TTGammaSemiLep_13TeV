@@ -29,6 +29,7 @@ Selector::Selector(){
 	ele_Pt_cut = 35.0;
 	ele_Eta_cut = 2.1;
 	ele_PtLoose_cut = 15.0;
+	ele_EtaLoose_cut = 2.5;
 
 	// muons
 	mu_Pt_cut = 30;
@@ -98,7 +99,7 @@ void Selector::clear_vectors(){
 
 void Selector::filter_photons(){
 	for(int phoInd = 0; phoInd < tree->nPho_; ++phoInd){
-		double eta = tree->phoEta_->at(phoInd);
+		double eta = tree->phoSCEta_->at(phoInd);
 		double absEta = TMath::Abs(eta);
 		double et = tree->phoEt_->at(phoInd);
 
@@ -131,20 +132,6 @@ void Selector::filter_photons(){
 		bool isEndCap = (absEta > 1.479);
 
 		
-		// Pho03ChHadIso.push_back( max(0., tree->phoPFChIso_->at(phoInd)   - tree->rho_ * phoEffArea03ChHad(eta) ));
-		// Pho03ChHadSCRIso.push_back( max(0., tree->phoPFChIso_->at(phoInd)  - tree->rho_ * phoEffArea03ChHad(eta) ));
-		// Pho03RandChHadIso.push_back( max(0., tree->phoPFChIso_->at(phoInd) - tree->rho_ * phoEffArea03ChHad(eta) ));
-		
-		// Pho03NeuHadIso.push_back( max(0., tree->phoPFNeuIso_->at(phoInd) - tree->rho_ * phoEffArea03NeuHad(eta) ));
-		
-		// Pho03PhoIso.push_back( max(0., tree->phoPFPhoIso_->at(phoInd)  - tree->rho_ * phoEffArea03Pho(eta) ));
-		// Pho03PhoSCRIso.push_back(   max(0., tree->phoPFPhoIso_->at(phoInd) - tree->rho_ * phoEffArea03Pho(eta) ));
-		// Pho03RandPhoIso.push_back(  max(0., tree->phoPFPhoIso_->at(phoInd) - tree->rho_ * phoEffArea03Pho(eta) ));
-		
-		// manual spike cleaning (was necessary before)
-		//if (dR(tree->phoEta_->at(phoInd), tree->phoPhi_->at(phoInd), -1.76, 1.37) < 0.05) continue;
-		//if (dR(tree->phoEta_->at(phoInd), tree->phoPhi_->at(phoInd),  2.37, 2.69) < 0.05) continue;		
-
 		bool phoPresel = (et > pho_Et_cut &&
 						  abs(eta) < pho_Eta_cut &&
 						  passEtaOverlap &&
@@ -205,7 +192,7 @@ void Selector::filter_electrons(){
 
 	
 		bool looseSel = (passEtaEBEEGap &&
-				 absEta < ele_Eta_cut &&
+				 absEta < ele_EtaLoose_cut &&
 				 pt > ele_PtLoose_cut &&
 				 passEleLooseID &&
 				 passD0 &&
@@ -334,7 +321,7 @@ void Selector::filter_jets(){
 		for(std::vector<int>::const_iterator phoInd = PhotonsPresel.begin(); phoInd != PhotonsPresel.end(); phoInd++) {
 			// Only look at photons which pass the medium ID (this is left out of the selector in makeAnalysisNtuple so that different cuts can be invereted)
 			if (tree->phoIDbit_->at(*phoInd) >> 1 & 1){
-				if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->phoEta_->at(*phoInd), tree->phoPhi_->at(*phoInd)) < veto_pho_jet_dR) passDR_pho_jet = false;
+				if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->phoSCEta_->at(*phoInd), tree->phoPhi_->at(*phoInd)) < veto_pho_jet_dR) passDR_pho_jet = false;
 			}
 		}
 
@@ -385,18 +372,19 @@ int Selector::egammaRegion(double absEta){
 // Currently, these are the listed values for the SPRING16 MC samples, need to verify that they are what should be used from SUMMER16 as well
 
 
-double Selector::phoEffArea03ChHad(double phoEta){
-	double eta = TMath::Abs(phoEta);
+double Selector::phoEffArea03ChHad(double phoSCEta){
+	double eta = TMath::Abs(phoSCEta);
+	cout << eta << "   " << photonEA[egammaRegion(eta)][0] << endl;
 	return photonEA[egammaRegion(eta)][0];
 }
 
-double Selector::phoEffArea03NeuHad(double phoEta){
-	double eta = TMath::Abs(phoEta);
+double Selector::phoEffArea03NeuHad(double phoSCEta){
+	double eta = TMath::Abs(phoSCEta);
 	return photonEA[egammaRegion(eta)][1];
 }
 
-double Selector::phoEffArea03Pho(double phoEta){
-	double eta = TMath::Abs(phoEta);
+double Selector::phoEffArea03Pho(double phoSCEta){
+	double eta = TMath::Abs(phoSCEta);
 	return photonEA[egammaRegion(eta)][2];
 }
 
@@ -411,7 +399,7 @@ bool Selector::passEleLooseID(int eleInd){
 bool Selector::passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso){
 
 	double pt = tree->phoEt_->at(phoInd);
-    double eta = TMath::Abs(tree->phoEta_->at(phoInd));
+    double eta = TMath::Abs(tree->phoSCEta_->at(phoInd));
     bool passMediumID = false;
 
 	double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd)  - phoEffArea03ChHad(eta) *tree->rho_);
