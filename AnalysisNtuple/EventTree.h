@@ -414,7 +414,6 @@ public:
 	vector<float>*  phoSCE_;
 	vector<float>*  phoSCRawE_;
 	vector<float>*  phoESEn_;
-	vector<float>*  phoSCEt_;
 	vector<float>*  phoSCEta_;
 	vector<float>*  phoSCPhi_;
 	vector<float>*  phoSCEtaWidth_;

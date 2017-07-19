@@ -86,6 +86,10 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("eleSCEta",1);
 	chain->SetBranchAddress("eleSCEta", &eleSCEta_);
 
+	eleEta_ = new vector<float>;
+	chain->SetBranchStatus("eleEta",1);
+	chain->SetBranchAddress("eleEta", &eleEta_);
+
 	elePhi_ = new vector<float>;
 	chain->SetBranchStatus("elePhi",1);
 	chain->SetBranchAddress("elePhi", &elePhi_);
@@ -418,6 +422,10 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("phoPhi",1);
 	chain->SetBranchAddress("phoPhi", &phoPhi_);
 	
+	phoSCEta_ = new vector<float>;
+	chain->SetBranchStatus("phoSCEta",1);
+	chain->SetBranchAddress("phoSCEta", &phoSCEta_);
+
 	phoSCPhi_ = new vector<float>;
 	chain->SetBranchStatus("phoSCPhi",1);
 	chain->SetBranchAddress("phoSCPhi", &phoSCPhi_);
@@ -425,10 +433,6 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	phoSCE_ = new vector<float>;
 	chain->SetBranchStatus("phoSCE",1);
 	chain->SetBranchAddress("phoSCE", &phoSCE_);
-
-	phoSCEt_ = new vector<float>;
-	chain->SetBranchStatus("phoSCEt",1);
-	chain->SetBranchAddress("phoSCEt", &phoSCEt_);
 
 	phoCalibE_ = new vector<float>;	
 	chain->SetBranchStatus("phoCalibE",1);

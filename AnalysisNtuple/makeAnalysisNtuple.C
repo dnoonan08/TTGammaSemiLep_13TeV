@@ -49,18 +49,17 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	selector = new Selector();
 
-	selector->pho_applyPhoID = false;
-
-	selector->looseJetID = false;
-
-	//DELETE THIS LINE AFTER TEST
-	selector->veto_pho_jet_dR = -1;
-
-
 	evtPick = new EventPick("");
 
-	evtPick->Njet_ge = 2;
+	selector->pho_applyPhoID = false;
+	selector->looseJetID = false;
 
+	// selector->veto_pho_jet_dR = -1.; //remove jets which have a photon close to them 
+	// selector->veto_jet_pho_dR = -1.; //remove photons which have a jet close to them (after having removed jets too close to photon from above cut)
+
+	
+	evtPick->Njet_ge = 2;	
+	evtPick->NBjet_ge = 1;	
 
 
 	BTagCalibration calib("csvv2", "CSVv2_Moriond17_B_H.csv");
@@ -173,7 +172,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		selector->process_objects(tree);
 
 		evtPick->process_event(tree, selector, _PUweight);
-		cout << evtPick->passPresel_mu << endl;
+
 
 		if ( evtPick->passPresel_ele || evtPick->passPresel_mu ) {
 			InitVariables();
@@ -273,8 +272,12 @@ void makeAnalysisNtuple::FillEvent()
 							   tree->muEn_->at(muInd));
 	}
 
-	if (_nPho > 0 ){	   
-	}
+	METVector.SetPtEtaPhiM(tree->pfMET_,
+						   0,
+						   tree->pfMETPhi_,
+						   0);
+
+	_WtransMass = (lepVector + METVector).Mt();
 
 	_passPresel_Ele  = evtPick->passPresel_ele;
 	_passPresel_Mu   = evtPick->passPresel_mu;
@@ -309,6 +312,14 @@ void makeAnalysisNtuple::FillEvent()
 		_phoMediumIDPassChIso.push_back( phoMediumCuts.at(3));
 		_phoMediumIDPassNeuIso.push_back(phoMediumCuts.at(4));
 		_phoMediumIDPassPhoIso.push_back(phoMediumCuts.at(5));
+
+		vector<bool> phoTightCuts =  passPhoTightID(phoInd);
+		_phoTightIDFunction.push_back(  phoTightCuts.at(0));
+		_phoTightIDPassHoverE.push_back(phoTightCuts.at(1));
+		_phoTightIDPassSIEIE.push_back( phoTightCuts.at(2));
+		_phoTightIDPassChIso.push_back( phoTightCuts.at(3));
+		_phoTightIDPassNeuIso.push_back(phoTightCuts.at(4));
+		_phoTightIDPassPhoIso.push_back(phoTightCuts.at(5));
 			
 		// _phoMediumIDFunction.push_back(   passPhoMediumID(phoInd,true,true,true) );
 		// _phoMediumIDNoHoverECut.push_back(passPhoMediumID(phoInd,false,true,true));
@@ -712,6 +723,60 @@ vector<bool> makeAnalysisNtuple::passPhoMediumID(int phoInd){
 	// 	}
     // }
     // return passMediumID;
+}
+
+
+vector<bool> makeAnalysisNtuple::passPhoTightID(int phoInd){
+
+	double pt = tree->phoEt_->at(phoInd);
+    double eta = TMath::Abs(tree->phoSCEta_->at(phoInd));
+    bool passTightID = false;
+
+	int region = 0;
+	if( eta >= 1.0  ) region++;
+	if( eta >= 1.479) region++;
+	if( eta >= 2.0  ) region++;
+	if( eta >= 2.2  ) region++;
+	if( eta >= 2.3  ) region++;
+	if( eta >= 2.4  ) region++;
+
+	double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd)  - photonEA[region][0] *tree->rho_);
+	double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_->at(phoInd) - photonEA[region][1] *tree->rho_);
+	double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_->at(phoInd) - photonEA[region][2] *tree->rho_);
+
+	bool passHoverE = false;
+	bool passSIEIE  = false;
+	bool passChIso  = false;
+	bool passNeuIso  = false;
+	bool passPhoIso  = false;
+	
+	
+    if (eta < 1.47){
+		if (tree->phoHoverE_->at(phoInd) < 0.0269 )               passHoverE = true;
+		if (tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd) < 0.00994) passSIEIE  = true;
+		if (rhoCorrPFChIso  < 0.202  )                            passChIso  = true;
+		if (rhoCorrPFNeuIso < 0.264+0.0148*pt+0.000017*pt*pt)     passNeuIso = true;
+		if (rhoCorrPFPhoIso < 2.362+0.0047*pt)                    passPhoIso = true;
+    } else {
+		if (tree->phoHoverE_->at(phoInd) < 0.0213 )                passHoverE = true;
+		if (tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd)  < 0.03000) passSIEIE  = true;
+		if (rhoCorrPFChIso < 0.034) 							   passChIso  = true;
+		if (rhoCorrPFNeuIso < 0.586+0.0163*pt+0.000014*pt*pt)	   passNeuIso = true;
+		if (rhoCorrPFPhoIso < 2.617+0.0034*pt)					   passPhoIso = true;
+	}
+
+	passTightID = passHoverE && passSIEIE && passChIso && passNeuIso && passPhoIso;
+
+	vector<bool> cuts;
+	cuts.push_back(passTightID);
+	cuts.push_back(passHoverE);
+	cuts.push_back(passSIEIE);
+	cuts.push_back(passChIso);
+	cuts.push_back(passNeuIso);
+	cuts.push_back(passPhoIso);
+
+	return cuts;
+
 }
 
 

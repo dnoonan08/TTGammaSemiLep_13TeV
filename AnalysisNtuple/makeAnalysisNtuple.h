@@ -80,6 +80,7 @@ private :
 	Float_t         _genMET;
 	Float_t         _pfMET;
 	Float_t         _pfMETPhi;
+	Float_t         _WtransMass;
 	Int_t           _nPho;
 	std::vector<float>   _phoEt;
 	std::vector<float>   _phoEta;
@@ -100,6 +101,12 @@ private :
 	std::vector<bool>    _phoMediumIDPassChIso; 
 	std::vector<bool>    _phoMediumIDPassNeuIso; 
 	std::vector<bool>    _phoMediumIDPassPhoIso; 
+	std::vector<bool>    _phoTightIDFunction; 
+	std::vector<bool>    _phoTightIDPassHoverE; 
+	std::vector<bool>    _phoTightIDPassSIEIE; 
+	std::vector<bool>    _phoTightIDPassChIso; 
+	std::vector<bool>    _phoTightIDPassNeuIso; 
+	std::vector<bool>    _phoTightIDPassPhoIso; 
 	/* std::vector<bool>    _phoMediumIDNoHoverECut;  */
 	/* std::vector<bool>    _phoMediumIDNoSIEIECut;  */
 	/* std::vector<bool>    _phoMediumIDNoIsoCut;  */
@@ -166,6 +173,7 @@ private :
 	TLorentzVector jetVector;
 	TLorentzVector lepVector;
 	TLorentzVector phoVector;
+	TLorentzVector METVector;
 
 
 	void InitVariables();
@@ -181,6 +189,7 @@ private :
 
 	void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
 	vector<bool> passPhoMediumID(int phoInd);
+	vector<bool> passPhoTightID(int phoInd);
 	/* bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso); */
 
 	int minDrIndex(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
@@ -219,6 +228,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("genMET"                     , &_genMET                      ); 
 	outputTree->Branch("pfMET"                      , &_pfMET                       );
 	outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
+	outputTree->Branch("WtransMass"                   , &_WtransMass                    ); 
     
 	outputTree->Branch("nPho"                       , &_nPho                        ); 
 	outputTree->Branch("phoEt"                      , &_phoEt                       );
@@ -240,6 +250,12 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoMediumIDPassChIso"       , &_phoMediumIDPassChIso        ); 
 	outputTree->Branch("phoMediumIDPassNeuIso"      , &_phoMediumIDPassNeuIso       ); 
 	outputTree->Branch("phoMediumIDPassPhoIso"      , &_phoMediumIDPassPhoIso       ); 
+	outputTree->Branch("phoTightIDFunction"        , &_phoTightIDFunction         ); 
+	outputTree->Branch("phoTightIDPassHoverE"      , &_phoTightIDPassHoverE       ); 
+	outputTree->Branch("phoTightIDPassSIEIE"       , &_phoTightIDPassSIEIE        ); 
+	outputTree->Branch("phoTightIDPassChIso"       , &_phoTightIDPassChIso        ); 
+	outputTree->Branch("phoTightIDPassNeuIso"      , &_phoTightIDPassNeuIso       ); 
+	outputTree->Branch("phoTightIDPassPhoIso"      , &_phoTightIDPassPhoIso       ); 
 	/* outputTree->Branch("phoMediumIDNoHoverECut"     , &_phoMediumIDNoHoverECut      );  */
 	/* outputTree->Branch("phoMediumIDNoSIEIECut"      , &_phoMediumIDNoSIEIECut       );  */
 	/* outputTree->Branch("phoMediumIDNoIsoCut"        , &_phoMediumIDNoIsoCut         );  */
@@ -323,6 +339,7 @@ void makeAnalysisNtuple::InitVariables()
 	_genMET		     = -9999;
 	_pfMET		     = -9999;
 	_pfMETPhi	     = -9999;
+	_WtransMass      = -9999;
 	_nPho		     = -9999;
 	_nEle		     = -9999;
 	_nMu		     = -9999;
@@ -377,6 +394,12 @@ void makeAnalysisNtuple::InitVariables()
 	_phoMediumIDPassChIso.clear(); 
 	_phoMediumIDPassNeuIso.clear(); 
 	_phoMediumIDPassPhoIso.clear(); 
+	_phoTightIDFunction.clear(); 
+	_phoTightIDPassHoverE.clear(); 
+	_phoTightIDPassSIEIE.clear(); 
+	_phoTightIDPassChIso.clear(); 
+	_phoTightIDPassNeuIso.clear(); 
+	_phoTightIDPassPhoIso.clear(); 
 	/* _phoMediumIDNoHoverECut.clear();  */
 	/* _phoMediumIDNoSIEIECut.clear();  */
 	/* _phoMediumIDNoIsoCut.clear();  */
