@@ -15,8 +15,11 @@ Selector::Selector(){
 	jet_Eta_cut = 2.4;
 
 	looseJetID = true;
-	veto_lep_jet_dR = 0.4;
-	veto_pho_jet_dR = 0.4;
+	veto_lep_jet_dR = 0.4; // remove jets with a lepton closer than this cut level
+	veto_pho_jet_dR = 0.1; // remove jets with a photon closer than this cut level
+
+	veto_lep_pho_dR = 0.4; // remove photons with a lepton closer than this cut level
+	veto_jet_pho_dR = 0.4; // remove photons with a jet closer than this cut level
 
 	JERsystLevel = 1;
 	JECsystLevel = 1;
@@ -68,6 +71,9 @@ void Selector::process_objects(EventTree* inp_tree){
 	//	cout << "before selector jets" << endl;
 	filter_jets();
 
+	// add in the DR(photon,jet), removing photons with jet < 0.4 away, needs to be done after the jet selection
+	filter_photons_jetsDR();
+
 	//	cout << "end selector" << endl;
 
 }
@@ -99,42 +105,51 @@ void Selector::clear_vectors(){
 
 void Selector::filter_photons(){
 	for(int phoInd = 0; phoInd < tree->nPho_; ++phoInd){
-		double eta = tree->phoSCEta_->at(phoInd);
+		double SCeta = tree->phoSCEta_->at(phoInd);
+		double absSCEta = TMath::Abs(SCeta);
+
+		double eta = tree->phoEta_->at(phoInd);
 		double absEta = TMath::Abs(eta);
 		double et = tree->phoEt_->at(phoInd);
+		double phi = tree->phoPhi_->at(phoInd);
 
 		uint photonIDbit = tree->phoIDbit_->at(phoInd);
 		// bool passLoosePhotonID  = photonIDbit >> 0 & 1;
 		bool passMediumPhotonID = photonIDbit >> 1 & 1;
 		// bool passTightPhotonID  = photonIDbit >> 2 & 1;
 
-
-		double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd) - phoEffArea03ChHad(eta)*tree->rho_);
-		double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_->at(phoInd) - phoEffArea03NeuHad(eta)*tree->rho_);
-		double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_->at(phoInd) - phoEffArea03Pho(eta)*tree->rho_);
+		double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd) - phoEffArea03ChHad(SCeta)*tree->rho_);
+		double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_->at(phoInd) - phoEffArea03NeuHad(SCeta)*tree->rho_);
+		double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_->at(phoInd) - phoEffArea03Pho(SCeta)*tree->rho_);
 
 		PhoChHadIso_corr.push_back(rhoCorrPFChIso);
 		PhoNeuHadIso_corr.push_back(rhoCorrPFNeuIso);
 		PhoPhoIso_corr.push_back(rhoCorrPFPhoIso);
 
+		bool passDR_lep_pho = true;
 
-		// bool passMediumPhotonID            = passPhoMediumID(phoInd,  true,  true,  true);
-		// bool passMediumPhotonIDNoHoverECut = passPhoMediumID(phoInd, false,  true,  true);
-		// bool passMediumPhotonIDNoSIEIECut  = passPhoMediumID(phoInd,  true, false,  true);
-		// bool passMediumPhotonIDNoIsoCut    = passPhoMediumID(phoInd,  true,  true, false);
+		//loop over selected electrons
+		for(std::vector<int>::const_iterator eleInd = Electrons.begin(); eleInd != Electrons.end(); eleInd++) {
+			if (dR(eta, phi, tree->eleEta_->at(*eleInd), tree->elePhi_->at(*eleInd)) < veto_lep_pho_dR) passDR_lep_pho = false;
+		}
+
+		//loop over selected muons
+		for(std::vector<int>::const_iterator muInd = Muons.begin(); muInd != Muons.end(); muInd++) {
+			if (dR(eta, phi, tree->muEta_->at(*muInd), tree->muPhi_->at(*muInd)) < veto_lep_pho_dR) passDR_lep_pho = false;
+		}
 
 
 		bool hasPixelSeed = tree->phohasPixelSeed_->at(phoInd);
 
 		// make sure it doesn't fall within the gap
-		bool passEtaOverlap = (absEta < 1.4442) || (absEta > 1.566);
+		bool passEtaOverlap = (absSCEta < 1.4442) || (absSCEta > 1.566);
 
 		bool isEndCap = (absEta > 1.479);
 
-		
 		bool phoPresel = (et > pho_Et_cut &&
 						  abs(eta) < pho_Eta_cut &&
 						  passEtaOverlap &&
+						  passDR_lep_pho && 
 						  (!pho_applyPhoID || passMediumPhotonID) &&
 						  !hasPixelSeed);
 
@@ -144,15 +159,47 @@ void Selector::filter_photons(){
 	}
 }
 
+
+void Selector::filter_photons_jetsDR(){
+	if (veto_jet_pho_dR < 0) return;
+
+	for(int i = PhotonsPresel.size()-1; i >= 0; i--){
+	// for(std::vector<int>::const_iterator phoInd = PhotonsPresel.begin(); phoInd != PhotonsPresel.end(); phoInd++) {
+		int phoInd = PhotonsPresel.at(i);
+		double eta = tree->phoEta_->at(phoInd);
+		//		double et = tree->phoEt_->at(phoInd);
+		double phi = tree->phoPhi_->at(phoInd);
+
+		bool passDR_jet_pho = true;
+		double _dr;
+		//loop over selected muons
+		for(std::vector<int>::const_iterator jetInd = Jets.begin(); jetInd != Jets.end(); jetInd++) {
+
+			_dr = dR(eta, phi, tree->jetEta_->at(*jetInd), tree->jetPhi_->at(*jetInd));
+			//			cout <<"                " << tree->jetEta_->at(*jetInd) << "  " << tree->jetPhi_->at(*jetInd) << "  "<<_dr << endl;
+			if (_dr < veto_jet_pho_dR) passDR_jet_pho = false;
+		}
+		if (!passDR_jet_pho){
+			//			cout << "removing Photon" << endl;			
+			PhotonsPresel.erase(PhotonsPresel.begin()+i);
+		}
+
+	}
+
+
+
+}
 void Selector::filter_electrons(){
 	for(int eleInd = 0; eleInd < tree->nEle_; ++eleInd){
-		double eta = tree->eleSCEta_->at(eleInd);
+		double eta = tree->eleEta_->at(eleInd);
 		double absEta = TMath::Abs(eta);
+		double SCeta = tree->eleSCEta_->at(eleInd);
+		double absSCEta = TMath::Abs(SCeta);
 		double pt = tree->elePt_->at(eleInd);
 
 		// Not actually needed at the moment, the relIso cuts are incorporated into the electron ID requirements
 		double rho = tree->rho_;
-		double ea = electronEA[egammaRegion(absEta)];
+		double ea = electronEA[egammaRegion(absSCEta)];
 
 
 		// EA subtraction
@@ -167,12 +214,13 @@ void Selector::filter_electrons(){
 
 
 		uint eleID = tree->eleIDbit_->at(eleInd);
+		bool passEleVetoID = (eleID >> 0) & 1;
 		bool passEleLooseID = (eleID >> 1) & 1;
 		bool passEleMediumID = (eleID >> 2) & 1;
 		bool passEleTightID = (eleID >> 3) & 1;
 
 		// make sure it doesn't fall within the gap
-		bool passEtaEBEEGap = (absEta < 1.4442) || (absEta > 1.566);
+		bool passEtaEBEEGap = (absSCEta < 1.4442) || (absSCEta > 1.566);
 
 
 		// D0 and Dz cuts are different for barrel and endcap
@@ -194,7 +242,7 @@ void Selector::filter_electrons(){
 		bool looseSel = (passEtaEBEEGap &&
 				 absEta < ele_EtaLoose_cut &&
 				 pt > ele_PtLoose_cut &&
-				 passEleLooseID &&
+				 passEleVetoID &&
 				 passD0 &&
 				 passDz);
 
@@ -264,7 +312,6 @@ void Selector::filter_jets(){
 
 	for(int jetInd = 0; jetInd < tree->nJet_; ++jetInd){
 
-
 		if (JECsystLevel==0 || JECsystLevel==2){
 			TLorentzVector tJet;
 			tJet.SetPtEtaPhiE(tree->jetPt_->at(jetInd),tree->jetEta_->at(jetInd),tree->jetPhi_->at(jetInd),tree->jetEn_->at(jetInd));
@@ -306,7 +353,7 @@ void Selector::filter_jets(){
 
 		//loop over selected electrons
 		for(std::vector<int>::const_iterator eleInd = Electrons.begin(); eleInd != Electrons.end(); eleInd++) {
-			if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->eleSCEta_->at(*eleInd), tree->elePhi_->at(*eleInd)) < veto_lep_jet_dR) passDR_lep_jet = false;
+			if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->eleEta_->at(*eleInd), tree->elePhi_->at(*eleInd)) < veto_lep_jet_dR) passDR_lep_jet = false;
 		}
 
 		//loop over selected muons
@@ -321,7 +368,7 @@ void Selector::filter_jets(){
 		for(std::vector<int>::const_iterator phoInd = PhotonsPresel.begin(); phoInd != PhotonsPresel.end(); phoInd++) {
 			// Only look at photons which pass the medium ID (this is left out of the selector in makeAnalysisNtuple so that different cuts can be invereted)
 			if (tree->phoIDbit_->at(*phoInd) >> 1 & 1){
-				if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->phoSCEta_->at(*phoInd), tree->phoPhi_->at(*phoInd)) < veto_pho_jet_dR) passDR_pho_jet = false;
+				if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->phoEta_->at(*phoInd), tree->phoPhi_->at(*phoInd)) < veto_pho_jet_dR) passDR_pho_jet = false;
 			}
 		}
 
@@ -350,13 +397,6 @@ void Selector::filter_jets(){
 }
 
 
-bool Selector::fidEtaPass(double Eta){
-	double fabsEta = TMath::Abs(Eta);
-	if( fabsEta > 2.5) return false;
-	if( 1.4442 < fabsEta && fabsEta < 1.566) return false;
-	return true;
-}
-
 // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonID2012#Effective_Areas_for_rho_correcti
 int Selector::egammaRegion(double absEta){
 	int region = 0;
@@ -374,7 +414,6 @@ int Selector::egammaRegion(double absEta){
 
 double Selector::phoEffArea03ChHad(double phoSCEta){
 	double eta = TMath::Abs(phoSCEta);
-	cout << eta << "   " << photonEA[egammaRegion(eta)][0] << endl;
 	return photonEA[egammaRegion(eta)][0];
 }
 

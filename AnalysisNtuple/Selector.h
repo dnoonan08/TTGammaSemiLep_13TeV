@@ -85,6 +85,8 @@ public:
 	double btag_cut;
 	double veto_lep_jet_dR;
 	double veto_pho_jet_dR;
+	double veto_lep_pho_dR;
+	double veto_jet_pho_dR;
 	int JERsystLevel; //0= syst down, 1 = central, 2 = syst up
 	int JECsystLevel; //0= syst down, 1 = central, 2 = syst up
 	bool   smearJetPt;
@@ -133,10 +135,9 @@ private:
 	void filter_electrons();
 	void filter_muons();
 	void filter_jets();
+	void filter_photons_jetsDR();
 
 	/* double JER(int jetInd); */
-	
-	bool fidEtaPass(double Eta);
 	
 	// effective areas, see Selector.cpp for more information
 	double eleEffArea03(double SCEta);
