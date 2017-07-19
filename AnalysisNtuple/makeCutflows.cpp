@@ -17,9 +17,10 @@ std::string PUfilename_down = "Data_2016BCDGH_Pileup_scaledDown.root";
 #include"PUReweight.h"
 #include "BTagCalibrationStandalone.h"
 #include "ScaleFactors.h"
+#include "elemuSF.h"
 
 bool overlapRemovalTT(EventTree* tree);
-
+double getBtagSF(EventTree *tree, Selector *selector,  string sysType, BTagCalibrationReader reader, int NBjet_ge);
 
 int main(int ac, char** av){
 	if(ac < 4){
@@ -40,9 +41,20 @@ int main(int ac, char** av){
 
 
 	// input: dealing with TTree first
-	bool isMC = true;
+	bool isMC = false;
+	PUReweight* PUweighter;
+	if (sampleType!="Data") {
+		PUweighter = new PUReweight(ac-3, av+3, PUfilename);
+		isMC = true;
+	}
 
-	PUReweight* PUweighter = new PUReweight(ac-3, av+3, PUfilename);
+	bool doOverlapRemoval = false;
+	bool skipOverlap = false;
+	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO") doOverlapRemoval = true;
+
+	if(doOverlapRemoval) std::cout << "########## Will apply overlap removal ###########" << std::endl;
+
+
 
 	EventTree* tree = new EventTree(ac-3, av+3);
 	Selector* selector = new Selector();
@@ -53,29 +65,44 @@ int main(int ac, char** av){
 	EventPick* evtPick = new EventPick("nominal");
 	// evtPick->MET_cut = 0;
 
-	selector->looseJetID = false;
+	evtPick->saveCutflows = true;
 
+	selector->looseJetID = false;
+	
 	evtPick->Njet_ge = 4;	
 	evtPick->NBjet_ge = 2;	
 
+	//	selector->veto_jet_pho_dR = -1.;
+	//	selector->veto_pho_jet_dR = -1.;
 
+	
 	BTagCalibration calib("csvv2", "CSVv2_Moriond17_B_H.csv");
 
 	BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
 								 "central");             // central sys type
 
+	if (isMC){
+		reader.load(calib,                // calibration instance
+					BTagEntry::FLAV_B,    // btag flavour
+					"comb");               // measurement type
+		
+		reader.load(calib,                // calibration instance
+					BTagEntry::FLAV_C,    // btag flavour
+					"comb");               // measurement type
+		
+		reader.load(calib,                // calibration instance
+					BTagEntry::FLAV_UDSG,    // btag flavour
+					"incl");               // measurement type
+	}
 
-	// if( outDirName.find("TTgamma") != std::string::npos){
-	// 	std::cout << "Skipping Trigger Selection for TTGamma" << std::endl;
-	// 	evtPick->no_trigger = true;
-	// }
 
-	// reduce the pt cuts by 10% in the skim, so that energy corrections can still be done on same skims
-	// selector->jet_Pt_cut = 30.;
-	// selector->ele_Pt_cut = 35.;
-	// selector->mu_Pt_cut = 30.;
 
-	//	selector->smearJetPt = false;
+	selector->smearJetPt = false;
+
+	double _PUweight;
+	double _muWeight;
+	double _eleWeight;
+	double _btagWeight;
 
 	Long64_t nEntr = tree->GetEntries();
 	std::string outDirName(av[2]);
@@ -90,18 +117,54 @@ int main(int ac, char** av){
 	if (nEntr >5000000) { dumpFreq = 500000; }
 	if (nEntr >10000000){ dumpFreq = 1000000; }
 	
-
+	dumpFreq=10000;
 	for(Long64_t entry= 0; entry < nEntr; entry++){
 		if(entry%dumpFreq == 0) {
 			std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
 		}
 		tree->GetEntry(entry);
+
+		if( isMC && doOverlapRemoval){
+			if (overlapRemovalTT(tree)){
+				//				cout << "removing event " << entry << endl;
+				continue;
+			}
+		}
+
 		
 		selector->process_objects(tree);
 	   
-		//
-		                              
-		evtPick->process_event(tree,selector);
+		//add in the weights
+		double weight = 1.;
+		if (isMC){
+			weight = _evtWeight;
+			_PUweight    = PUweighter->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
+			weight *= _PUweight;
+
+			if (selector->Muons.size()==1) {
+				int muInd_ = selector->Muons.at(0);
+				_muWeight    = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),1);
+				weight *= _muWeight;
+			}
+
+			if (selector->Electrons.size()==1) {
+				int eleInd_ = selector->Electrons.at(0);
+				_eleWeight    = getEleSF(tree->elePt_->at(eleInd_),tree->eleSCEta_->at(eleInd_),1);
+				weight *= _eleWeight;
+			}
+
+			_btagWeight    = getBtagSF(tree, selector, "central", reader, evtPick->NBjet_ge);
+			weight *= _btagWeight;
+		}
+
+		evtPick->process_event(tree,selector,weight);
+
+
+		// if (evtPick->passPresel_mu){
+		// 	cout << tree->event_ << endl;// "  " << tree->phoEt_->at(selector->PhotonsPresel.at(0)) << endl;
+		// 	cout << tree->event_ << endl;// "  " << tree->phoEt_->at(selector->PhotonsPresel.at(0)) << endl;
+		// }
+
 	}
 
 	std::cout << "e+jets cutflow" << std::endl;
@@ -115,6 +178,8 @@ int main(int ac, char** av){
 	outputFile->cd();
 	evtPick->cutFlow_mu->Write();
 	evtPick->cutFlow_ele->Write();
+	evtPick->cutFlowWeight_mu->Write();
+	evtPick->cutFlowWeight_ele->Write();
 	outputFile->Close();
 
 
@@ -150,20 +215,25 @@ int main(int ac, char** av){
 	return 0;
 }
 
-double getBtagSF(EventTree* tree, EventPick* evtPick, string sysType, BTagCalibrationReader reader){
+double getBtagSF(EventTree *tree, Selector *selector,  string sysType, BTagCalibrationReader reader, int NBjet_ge){
 	
-	double prod = 1.0;
+	double weight0tag = 1.0; 		//w(0|n)
+	double weight1tag = 0.0;		//w(1|n)
+
 	double jetpt;
 	double jeteta;
 	int jetflavor;
 	double SFb;
+	double SFb2;
 
-	if(evtPick->bJets.size() == 0) {
-		std::cout << "No bJets" << std::endl;
+	if(selector->bJets.size() == 0) {
 		return 1.0;
 	}
 
-	for(std::vector<int>::const_iterator bjetInd = evtPick->bJets.begin(); bjetInd != evtPick->bJets.end(); bjetInd++){
+	// We are following the method 1c from the twiki
+	// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1c_Event_reweighting_using_scale
+
+	for(std::vector<int>::const_iterator bjetInd = selector->bJets.begin(); bjetInd != selector->bJets.end(); bjetInd++){
 		jetpt = tree->jetPt_->at(*bjetInd);
 		jeteta = fabs(tree->jetEta_->at(*bjetInd));
 		jetflavor = abs(tree->jetPartonID_->at(*bjetInd));
@@ -172,11 +242,32 @@ double getBtagSF(EventTree* tree, EventPick* evtPick, string sysType, BTagCalibr
 		else if(jetflavor == 4) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
 		else SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
 
-		//		SFb = 1.;
-		prod *= 1.0 - SFb;
+		weight0tag *= 1.0 - SFb;
+
+
+		// We also have to calculate the weight for having 1 tag, given N
+		double prod = 1.;
+		if (NBjet_ge==2){
+			for(std::vector<int>::const_iterator bjetInd2 = selector->bJets.begin(); bjetInd2 != selector->bJets.end(); bjetInd2++){
+				if (*bjetInd==*bjetInd2) continue;
+
+				jetpt = tree->jetPt_->at(*bjetInd2);
+				jeteta = fabs(tree->jetEta_->at(*bjetInd2));
+				jetflavor = abs(tree->jetPartonID_->at(*bjetInd2));
+
+				if (jetflavor == 5) SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_B, jeteta, jetpt); 
+				else if(jetflavor == 4) SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
+				else SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
+
+				//product of (1-SFi), i!=j in twiki example (method 1c)
+				prod *= 1.0 - SFb2;
+			}
+
+			//w(1|n) sum, SFj times product of 1-SFi
+			weight1tag += prod*SFb;
+		}
 	}
 
-	return 1.0 - prod;
+	return 1.0 - weight0tag - weight1tag;
 }
-
 
