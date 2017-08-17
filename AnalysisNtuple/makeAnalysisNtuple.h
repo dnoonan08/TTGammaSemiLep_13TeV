@@ -107,6 +107,18 @@ private :
 	std::vector<bool>    _phoTightIDPassChIso; 
 	std::vector<bool>    _phoTightIDPassNeuIso; 
 	std::vector<bool>    _phoTightIDPassPhoIso; 
+
+
+	std::vector<bool>  _photonIsGenuine;
+	std::vector<bool>  _photonIsMisIDEle;
+	std::vector<bool>  _photonIsHadronicPhoton;
+	std::vector<bool>  _photonIsHadronicFake;
+
+	int  _eventCategoryMediumID;
+	int  _eventCategoryTightID;
+
+
+
 	/* std::vector<bool>    _phoMediumIDNoHoverECut;  */
 	/* std::vector<bool>    _phoMediumIDNoSIEIECut;  */
 	/* std::vector<bool>    _phoMediumIDNoIsoCut;  */
@@ -164,11 +176,6 @@ private :
 	bool  _passPresel_Mu;
 	bool  _passAll_Ele;
 	bool  _passAll_Mu;
-
-	bool  _photonIsGenuine;
-	bool  _photonIsMisIDEle;
-	bool  _photonIsHadronicPhoton;
-	bool  _photonIsHadronicFake;
 
 	TLorentzVector jetVector;
 	TLorentzVector lepVector;
@@ -323,6 +330,8 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("photonIsHadronicPhoton"      , &_photonIsHadronicPhoton     );
 	outputTree->Branch("photonIsHadronicFake"        , &_photonIsHadronicFake       );
 	
+	outputTree->Branch("_eventCategoryMediumID"      , &_eventCategoryMediumID      );
+	outputTree->Branch("_eventCategoryTightID"       , &_eventCategoryTightID       );
 }
 
 void makeAnalysisNtuple::InitVariables()
@@ -360,10 +369,13 @@ void makeAnalysisNtuple::InitVariables()
 	_btagSF_Up.clear();
 	_btagSF_Do.clear();
 
-	_photonIsGenuine        = false;
-	_photonIsMisIDEle       = false;
-	_photonIsHadronicPhoton = false;
-	_photonIsHadronicFake   = false;
+	_photonIsGenuine.clear();
+	_photonIsMisIDEle.clear();
+	_photonIsHadronicPhoton.clear();
+	_photonIsHadronicFake.clear();
+
+	_eventCategoryMediumID = -1;
+	_eventCategoryTightID = -1;
 
 	_elePt.clear();
 	_elePhi.clear();

@@ -71,6 +71,7 @@ void Selector::process_objects(EventTree* inp_tree){
 	//	cout << "before selector jets" << endl;
 	filter_jets();
 
+	//	cout << "before photon jet dr" << endl;
 	// add in the DR(photon,jet), removing photons with jet < 0.4 away, needs to be done after the jet selection
 	filter_photons_jetsDR();
 
@@ -162,21 +163,23 @@ void Selector::filter_photons(){
 
 void Selector::filter_photons_jetsDR(){
 	if (veto_jet_pho_dR < 0) return;
-
+	//	cout << tree->event_ << endl;
+	//	cout << "muon Pt/Eta/Phi " << tree->muPt_->at(muInd) << "  " << tree->muEta_->at(muInd) << "  " << tree->muPhi_->at(muInd) << endl;
 	for(int i = PhotonsPresel.size()-1; i >= 0; i--){
 	// for(std::vector<int>::const_iterator phoInd = PhotonsPresel.begin(); phoInd != PhotonsPresel.end(); phoInd++) {
 		int phoInd = PhotonsPresel.at(i);
 		double eta = tree->phoEta_->at(phoInd);
-		//		double et = tree->phoEt_->at(phoInd);
+		double et = tree->phoEt_->at(phoInd);
 		double phi = tree->phoPhi_->at(phoInd);
 
 		bool passDR_jet_pho = true;
 		double _dr;
 		//loop over selected muons
+		//		cout << "Photon Et/Eta/Phi " << et << "  " << eta << "  " << phi << endl; 
 		for(std::vector<int>::const_iterator jetInd = Jets.begin(); jetInd != Jets.end(); jetInd++) {
 
 			_dr = dR(eta, phi, tree->jetEta_->at(*jetInd), tree->jetPhi_->at(*jetInd));
-			//			cout <<"                " << tree->jetEta_->at(*jetInd) << "  " << tree->jetPhi_->at(*jetInd) << "  "<<_dr << endl;
+			//			cout <<"     jet Pt/Eta/Phi/DR " << tree->jetPt_->at(*jetInd) << "  " << tree->jetEta_->at(*jetInd) << "  " << tree->jetPhi_->at(*jetInd) << "  "<<_dr << endl;
 			if (_dr < veto_jet_pho_dR) passDR_jet_pho = false;
 		}
 		if (!passDR_jet_pho){
