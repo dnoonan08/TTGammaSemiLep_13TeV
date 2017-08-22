@@ -142,6 +142,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	Long64_t nEntr = tree->GetEntries();
 	//	for(Long64_t entry=0; entry<100; entry++){
 
+	//	nEntr = 1000;
+
 	int dumpFreq = 1;
 	if (nEntr >50)     { dumpFreq = 5; }
 	if (nEntr >100)     { dumpFreq = 10; }
@@ -304,6 +306,7 @@ void makeAnalysisNtuple::FillEvent()
 		_phoPFChIso.push_back( selector->PhoChHadIso_corr.at(phoInd));
 		_phoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
 		_phoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
+		_phoPFRandConeChIso.push_back( selector->PhoRandConeChHadIso_corr.at(phoInd));
 		_phoTightID.push_back(tree->phoIDbit_->at(phoInd)>>2&1);
 		_phoMediumID.push_back(tree->phoIDbit_->at(phoInd)>>1&1);
 		_phoLooseID.push_back(tree->phoIDbit_->at(phoInd)>>0&1);
@@ -380,6 +383,8 @@ void makeAnalysisNtuple::FillEvent()
 		_jetArea.push_back(tree->jetArea_->at(jetInd));
 		_jetpfCombinedMVAV2BJetTags.push_back(tree->jetpfCombinedMVAV2BJetTags_->at(jetInd));
 		_jetCSV2BJetTags.push_back(tree->jetCSV2BJetTags_->at(jetInd));
+		_jetDeepCSVTags_b.push_back(tree->jetDeepCSVTags_b_->at(jetInd));
+		_jetDeepCSVTags_bb.push_back(tree->jetDeepCSVTags_bb_->at(jetInd));
 
 		if (!tree->isData_){
 			_jetPartonID.push_back(tree->jetPartonID_->at(jetInd));
@@ -916,15 +921,15 @@ bool makeAnalysisNtuple::isSignalPhoton(EventTree* tree, int mcInd, int recoPhoI
     bool drotherPass = minGenDr(mcInd, tree) > 0.2;
     bool detarecogenPass = fabs(tree->phoEta_->at(recoPhoInd) - tree->mcEta->at(mcInd)) < 0.005;
     bool drrecogenPass = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(recoPhoInd),tree->phoPhi_->at(recoPhoInd)) < 0.01;
-	cout << "-----------------------------------" << endl;
-	cout << "eventnum "<<tree->event_<<endl;
-	cout << "recoPhoInd " << recoPhoInd << " mcInd " << mcInd << endl;
-	cout << "parentagePass " << parentagePass <<endl;
-	cout << "dptpt " << dptpt <<endl;
-	cout << "dptptPass " << dptptPass <<endl;
-	cout << "drotherPass " << drotherPass <<endl;
-	cout << "detarecogenPass " << detarecogenPass << "     " << tree->phoEta_->at(recoPhoInd) << "  " << tree->mcEta->at(mcInd) <<endl;
-	cout << "drrecogenPass " << drrecogenPass << tree->mcEta->at(mcInd)<< "  " <<tree->mcPhi->at(mcInd)<< "  " <<tree->phoEta_->at(recoPhoInd)<< "  " <<tree->phoPhi_->at(recoPhoInd) << endl;
+	// cout << "-----------------------------------" << endl;
+	// cout << "eventnum "<<tree->event_<<endl;
+	// cout << "recoPhoInd " << recoPhoInd << " mcInd " << mcInd << endl;
+	// cout << "parentagePass " << parentagePass <<endl;
+	// cout << "dptpt " << dptpt <<endl;
+	// cout << "dptptPass " << dptptPass <<endl;
+	// cout << "drotherPass " << drotherPass <<endl;
+	// cout << "detarecogenPass " << detarecogenPass << "     " << tree->phoEta_->at(recoPhoInd) << "  " << tree->mcEta->at(mcInd) <<endl;
+	// cout << "drrecogenPass " << drrecogenPass << tree->mcEta->at(mcInd)<< "  " <<tree->mcPhi->at(mcInd)<< "  " <<tree->phoEta_->at(recoPhoInd)<< "  " <<tree->phoPhi_->at(recoPhoInd) << endl;
     if(parentagePass && dptptPass && drotherPass && detarecogenPass && drrecogenPass) return true;
     else return false;
 }

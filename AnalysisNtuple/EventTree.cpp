@@ -35,6 +35,15 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchAddress("puTrue", &puTrue_);
 	chain->SetBranchStatus("pdf",1);
 	chain->SetBranchAddress("pdf", &pdf_);
+
+
+	pdfSystWeight_ = new vector<float>;
+	chain->SetBranchStatus("pdfSystWeight",1);
+	chain->SetBranchAddress("pdfSystWeight", &pdfSystWeight_);
+	genScaleSystWeights_ = new vector<float>;
+	chain->SetBranchStatus("genScaleSystWeights",1);
+	chain->SetBranchAddress("genScaleSystWeights", &genScaleSystWeights_);
+
 	//chain->SetBranchStatus("",1);
 	
 	// event
@@ -369,6 +378,26 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("jetCSV2BJetTags",1);
 	chain->SetBranchAddress("jetCSV2BJetTags", &jetCSV2BJetTags_);
 
+	jetDeepCSVTags_b_ = new vector<float>;
+	chain->SetBranchStatus("jetDeepCSVTags_b",1);
+	chain->SetBranchAddress("jetDeepCSVTags_b", &jetDeepCSVTags_b_);
+
+	jetDeepCSVTags_bb_ = new vector<float>;
+	chain->SetBranchStatus("jetDeepCSVTags_bb",1);
+	chain->SetBranchAddress("jetDeepCSVTags_bb", &jetDeepCSVTags_bb_);
+
+	jetDeepCSVTags_c_ = new vector<float>;
+	chain->SetBranchStatus("jetDeepCSVTags_c",1);
+	chain->SetBranchAddress("jetDeepCSVTags_c", &jetDeepCSVTags_c_);
+
+	jetDeepCSVTags_cc_ = new vector<float>;
+	chain->SetBranchStatus("jetDeepCSVTags_cc",1);
+	chain->SetBranchAddress("jetDeepCSVTags_cc", &jetDeepCSVTags_cc_);
+
+	jetDeepCSVTags_udsg_ = new vector<float>;
+	chain->SetBranchStatus("jetDeepCSVTags_udsg",1);
+	chain->SetBranchAddress("jetDeepCSVTags_udsg", &jetDeepCSVTags_udsg_);
+
 	// jetCombinedSecondaryVtxMVABJetTags_ = new vector<float>;
 	// chain->SetBranchStatus("jetCombinedSecondaryVtxMVABJetTags",1);
 	// chain->SetBranchAddress("jetCombinedSecondaryVtxMVABJetTags", &jetCombinedSecondaryVtxMVABJetTags_);
@@ -482,6 +511,9 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("phoR9",1);
 	chain->SetBranchAddress("phoR9", &phoR9_);
 
+	phoPFRandConeChIso_ = new vector<float>;
+	chain->SetBranchStatus("phoPFRandConeChIso",1);
+	chain->SetBranchAddress("phoPFRandConeChIso", &phoPFRandConeChIso_);
 
 	//phoPFPhoIso_ = new vector<float>;
 	//chain->SetBranchStatus("phoPFPhoIso",1);

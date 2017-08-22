@@ -98,6 +98,7 @@ void Selector::clear_vectors(){
 	PhoChHadIso_corr.clear();
 	PhoNeuHadIso_corr.clear();
 	PhoPhoIso_corr.clear();
+	PhoRandConeChHadIso_corr.clear();
 	// Pho03ChHadSCRIso.clear();
 	// Pho03PhoSCRIso.clear();
 	// Pho03RandPhoIso.clear();
@@ -122,10 +123,12 @@ void Selector::filter_photons(){
 		double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd) - phoEffArea03ChHad(SCeta)*tree->rho_);
 		double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_->at(phoInd) - phoEffArea03NeuHad(SCeta)*tree->rho_);
 		double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_->at(phoInd) - phoEffArea03Pho(SCeta)*tree->rho_);
+		double rhoCorrPFRandConeChIso  = max(0.0, tree->phoPFRandConeChIso_->at(phoInd) - phoEffArea03ChHad(SCeta)*tree->rho_);
 
 		PhoChHadIso_corr.push_back(rhoCorrPFChIso);
 		PhoNeuHadIso_corr.push_back(rhoCorrPFNeuIso);
 		PhoPhoIso_corr.push_back(rhoCorrPFPhoIso);
+		PhoRandConeChHadIso_corr.push_back(rhoCorrPFRandConeChIso);
 
 		bool passDR_lep_pho = true;
 

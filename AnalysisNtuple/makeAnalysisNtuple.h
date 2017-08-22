@@ -92,6 +92,7 @@ private :
 	std::vector<float>   _phoPFChIso;
 	std::vector<float>   _phoPFPhoIso;
 	std::vector<float>   _phoPFNeuIso;
+	std::vector<float>   _phoPFRandConeChIso;
 	std::vector<bool>    _phoTightID;
 	std::vector<bool>    _phoMediumID;
 	std::vector<bool>    _phoLooseID;
@@ -146,6 +147,8 @@ private :
 	std::vector<float>   _jetArea;
 	std::vector<float>   _jetpfCombinedMVAV2BJetTags;
 	std::vector<float>   _jetCSV2BJetTags;
+	std::vector<float>   _jetDeepCSVTags_b;
+	std::vector<float>   _jetDeepCSVTags_bb;
 	std::vector<int>     _jetPartonID;
 	std::vector<float>   _jetGenJetPt;
 	std::vector<int>     _jetGenPartonID;
@@ -248,6 +251,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoPFChIso"                 , &_phoPFChIso                  ); 
 	outputTree->Branch("phoPFPhoIso"                , &_phoPFPhoIso                 ); 
 	outputTree->Branch("phoPFNeuIso"                , &_phoPFNeuIso                 ); 
+	outputTree->Branch("phoPFRandConeChIso"         , &_phoPFRandConeChIso          ); 
 	outputTree->Branch("phoTightID"                 , &_phoTightID                  ); 
 	outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
 	outputTree->Branch("phoLooseID"                 , &_phoLooseID                  ); 
@@ -289,6 +293,8 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("jetArea"                     , &_jetArea                    ); 
 	outputTree->Branch("jetpfCombinedMVAV2BJetTags"  , &_jetpfCombinedMVAV2BJetTags );
 	outputTree->Branch("jetCSV2BJetTags"             , &_jetCSV2BJetTags            );
+	outputTree->Branch("jetDeepCSVTags_b"            , &_jetDeepCSVTags_b           );
+	outputTree->Branch("jetDeepCSVTags_bb"           , &_jetDeepCSVTags_bb          );
 	
 	if (!tree->isData_){
 		outputTree->Branch("jetPartonID"                 , &_jetPartonID                ); 
@@ -397,6 +403,7 @@ void makeAnalysisNtuple::InitVariables()
 	_phoPFChIso.clear();
 	_phoPFPhoIso.clear();
 	_phoPFNeuIso.clear();
+	_phoPFRandConeChIso.clear();
 	_phoTightID.clear();
 	_phoMediumID.clear();
 	_phoLooseID.clear();
@@ -424,6 +431,8 @@ void makeAnalysisNtuple::InitVariables()
 	_jetArea.clear();
 	_jetpfCombinedMVAV2BJetTags.clear();
 	_jetCSV2BJetTags.clear();
+	_jetDeepCSVTags_b.clear();
+	_jetDeepCSVTags_bb.clear();
 	_jetPartonID.clear();
 	_jetGenJetPt.clear();
 	_jetGenPartonID.clear();
