@@ -88,7 +88,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	bool doOverlapRemoval = false;
 	bool skipOverlap = false;
-	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO") doOverlapRemoval = true;
+	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton") doOverlapRemoval = true;
 
 
 	if(doOverlapRemoval) std::cout << "########## Will apply overlap removal ###########" << std::endl;
@@ -307,6 +307,10 @@ void makeAnalysisNtuple::FillEvent()
 		_phoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
 		_phoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
 		_phoPFRandConeChIso.push_back( selector->PhoRandConeChHadIso_corr.at(phoInd));
+		_phoPFChIsoUnCorr.push_back( tree->phoPFChIso_->at(phoInd));
+		_phoPFNeuIsoUnCorr.push_back(tree->phoPFNeuIso_->at(phoInd));
+		_phoPFPhoIsoUnCorr.push_back(tree->phoPFPhoIso_->at(phoInd));
+		_phoPFRandConeChIsoUnCorr.push_back( tree->phoPFRandConeChIso_->at(phoInd) );
 		_phoTightID.push_back(tree->phoIDbit_->at(phoInd)>>2&1);
 		_phoMediumID.push_back(tree->phoIDbit_->at(phoInd)>>1&1);
 		_phoLooseID.push_back(tree->phoIDbit_->at(phoInd)>>0&1);

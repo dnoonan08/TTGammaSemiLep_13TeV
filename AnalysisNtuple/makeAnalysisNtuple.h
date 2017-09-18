@@ -93,6 +93,10 @@ private :
 	std::vector<float>   _phoPFPhoIso;
 	std::vector<float>   _phoPFNeuIso;
 	std::vector<float>   _phoPFRandConeChIso;
+	std::vector<float>   _phoPFChIsoUnCorr;
+	std::vector<float>   _phoPFPhoIsoUnCorr;
+	std::vector<float>   _phoPFNeuIsoUnCorr;
+	std::vector<float>   _phoPFRandConeChIsoUnCorr;
 	std::vector<bool>    _phoTightID;
 	std::vector<bool>    _phoMediumID;
 	std::vector<bool>    _phoLooseID;
@@ -252,6 +256,10 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoPFPhoIso"                , &_phoPFPhoIso                 ); 
 	outputTree->Branch("phoPFNeuIso"                , &_phoPFNeuIso                 ); 
 	outputTree->Branch("phoPFRandConeChIso"         , &_phoPFRandConeChIso          ); 
+	outputTree->Branch("phoPFChIsoUnCorr"                 , &_phoPFChIsoUnCorr                  ); 
+	outputTree->Branch("phoPFPhoIsoUnCorr"                , &_phoPFPhoIsoUnCorr                 ); 
+	outputTree->Branch("phoPFNeuIsoUnCorr"                , &_phoPFNeuIsoUnCorr                 ); 
+	outputTree->Branch("phoPFRandConeChIsoUnCorr"         , &_phoPFRandConeChIsoUnCorr          ); 
 	outputTree->Branch("phoTightID"                 , &_phoTightID                  ); 
 	outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
 	outputTree->Branch("phoLooseID"                 , &_phoLooseID                  ); 
@@ -404,6 +412,10 @@ void makeAnalysisNtuple::InitVariables()
 	_phoPFPhoIso.clear();
 	_phoPFNeuIso.clear();
 	_phoPFRandConeChIso.clear();
+	_phoPFChIsoUnCorr.clear();
+	_phoPFPhoIsoUnCorr.clear();
+	_phoPFNeuIsoUnCorr.clear();
+	_phoPFRandConeChIsoUnCorr.clear();
 	_phoTightID.clear();
 	_phoMediumID.clear();
 	_phoLooseID.clear();
