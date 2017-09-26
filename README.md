@@ -6,7 +6,8 @@ To compile, first a couple of files must be checked out (for use in JES systemat
 ```
 mkdir jecFiles
 cd jecFiles
-wget https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer16_23Sep2016V4_MC.tar.gz
+wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep2016V4_MC.tar.gz
 tar -zxf Summer16_23Sep2016V4_MC.tar.gz
+cd -
 ```
 Then, simply compile the code with `make`
