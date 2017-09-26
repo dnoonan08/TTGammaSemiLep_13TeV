@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include"PUReweight.h"
+#include"JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
 
 #include "elemuSF.h"
@@ -36,7 +37,15 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	tree = new EventTree(ac-3, av+3);
 
 	sampleType = av[1];
+	systematicType = "";
 	cout << sampleType << endl;
+	
+	size_t pos = sampleType.find("__");
+	if (pos != std::string::npos){
+		systematicType = sampleType.substr(pos+2,sampleType.length());
+		sampleType = sampleType.substr(0,pos);
+	}
+    cout << sampleType << "  " << systematicType << endl;
 
 	if (std::end(allowedSampleTypes) == std::find(std::begin(allowedSampleTypes), std::end(allowedSampleTypes), sampleType)){
 		cout << "This is not an allowed sample, please specify one from this list (or add to this list in the code):" << endl;
@@ -96,30 +105,34 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
 
-	//Look into the output file names for indications of whether this is for a systematic
-	bool systematics = false;
-	std::string outDirName(av[2]);
-	if( outDirName.find("JEC_up") != std::string::npos) {systematics=true; jecvar012_g = 2;}
-	if( outDirName.find("JEC_down") != std::string::npos) {systematics=true; jecvar012_g = 0;}
-	if( outDirName.find("JER_up") != std::string::npos) {systematics=true; jervar012_g = 2;}
-	if( outDirName.find("JER_down") != std::string::npos) {systematics=true; jervar012_g = 0;}
-	if( outDirName.find("pho_up") != std::string::npos) {systematics=true; phosmear012_g = 2;}
-	if( outDirName.find("pho_down") != std::string::npos) {systematics=true; phosmear012_g = 0;}
-	if( outDirName.find("musmear_up") != std::string::npos) {systematics=true; musmear012_g = 2;}
-	if( outDirName.find("musmear_down") != std::string::npos) {systematics=true; musmear012_g = 0;}
-	if( outDirName.find("elesmear_up") != std::string::npos) {systematics=true; elesmear012_g = 2;}
-	if( outDirName.find("elesmear_down") != std::string::npos) {systematics=true; elesmear012_g = 0;}
 
+	if( systematicType=="JEC_up")       {jecvar012_g = 2;}
+	if( systematicType=="JEC_down")     {jecvar012_g = 0;}
+	if( systematicType=="JER_up")       {jervar012_g = 2;}
+	if( systematicType=="JER_down")     {jervar012_g = 0;}
+	if( systematicType=="pho_up")       {phosmear012_g = 2;}
+	if( systematicType=="pho_down")     {phosmear012_g = 0;}
+	if( systematicType=="musmear_up")   {musmear012_g = 2;}
+	if( systematicType=="musmear_down") {musmear012_g = 0;}
+	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
+	if( systematicType=="elesmear_down"){elesmear012_g = 0;}
 	std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << "  ";
 	std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << endl;
 
 
 
-
-
-	
-
-	TFile *outputFile = new TFile(av[2],"recreate");
+	std::string outputDirectory(av[2]);
+	std::string outputFileName = outputDirectory + "/" + sampleType+"_AnalysisNtuple.root";
+	// char outputFileName[100];
+	cout << av[2] << " " << sampleType << " " << systematicType << endl;
+	//	outputFileName = sprintf("%s_AnalysisNtuple.root",sampleType);
+	if (systematicType!=""){
+		outputFileName = outputDirectory + "/"+systematicType + "_" +sampleType+"_AnalysisNtuple.root";
+		//		sprintf(outputFileName,"%s/%s_%s_AnalysisNtuple.root",av[2],systematicType,sampleType);
+	}
+	cout << av[2] << " " << sampleType << " " << systematicType << endl;
+	cout << outputFileName << endl;
+	TFile *outputFile = new TFile(outputFileName.c_str(),"recreate");
 	outputTree = new TTree("AnalysisTree","AnalysisTree");
 
 	InitBranches();
@@ -129,6 +142,14 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	PUReweight* PUweighterDown = new PUReweight(ac-3, av+3, PUfilename_down);
 	bool isMC;
 
+	tree->GetEntry(0);
+	isMC = !(tree->isData_);
+	std::cout << "isMC: " << isMC << endl;
+
+	JECvariation* jecvar;
+	if (isMC) {
+		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC);
+	}
 
 	_evtWeight = getEvtWeight(sampleType);
 
@@ -142,7 +163,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	Long64_t nEntr = tree->GetEntries();
 	//	for(Long64_t entry=0; entry<100; entry++){
 
-	//	nEntr = 1000;
+	nEntr = 10000;
 
 	int dumpFreq = 1;
 	if (nEntr >50)     { dumpFreq = 5; }
@@ -158,7 +179,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	if (nEntr >5000000) { dumpFreq = 500000; }
 	if (nEntr >10000000){ dumpFreq = 1000000; }
 	
-
 	for(Long64_t entry=0; entry<nEntr; entry++){
 		if(entry%dumpFreq == 0) std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
 
@@ -171,6 +191,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				continue;
 			}
 		}
+
+		//Apply systematics shifts where needed
+		if( isMC ){
+			jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
+
+		}
+
 
 		selector->process_objects(tree);
 
@@ -975,7 +1002,7 @@ double makeAnalysisNtuple::minDr(double myEta, double myPhi, std::vector<int> In
 
 int main(int ac, char** av){
   if(ac != 4){
-    std::cout << "usage: ./makeAnalysisNtuple sampleName outputFile inputFile[s]" << std::endl;
+    std::cout << "usage: ./makeAnalysisNtuple sampleName outputFileDir inputFile[s]" << std::endl;
     return -1;
   }
 

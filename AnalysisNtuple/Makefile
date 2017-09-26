@@ -1,4 +1,6 @@
-all: Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple makeCutflows
+.PHONY: JEC
+
+all: JEC Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple makeCutflows
 
 makeSkim: Selector.o EventPick.o EventTree.o  makeSkim.cpp OverlapRemove.cpp
 	g++ -o makeSkim `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o EventPick.o Selector.o  OverlapRemove.cpp makeSkim.cpp 
@@ -12,11 +14,11 @@ EventTree.o: EventTree.cpp EventTree.h
 BTagCalibrationStandalone.o: BTagCalibrationStandalone.cpp BTagCalibrationStandalone.h
 	g++ -c -I`root-config --incdir` -std=c++11 BTagCalibrationStandalone.cpp
 
-JECUncertainty.o: JECUncertainty.cpp JetDefs.hpp ErrorTypes.cpp ErrorTypes.hpp
-	g++ -c -I`root-config --incdir` -std=c++11 JECUncertainty.cpp
+JEC: JEC/FactorizedJetCorrector.cpp JEC/JetCorrectorParameters.cpp JEC/SimpleJetCorrector.cpp JEC/JetCorrectionUncertainty.cpp JEC/SimpleJetCorrectionUncertainty.cpp
+	$(MAKE) -C JEC
 
-makeAnalysisNtuple: Selector.o EventPick.o EventTree.o makeAnalysisNtuple.C OverlapRemove.cpp PUReweight.cpp PUReweight.h BTagCalibrationStandalone.o ScaleFactors.h
-	g++ -o makeAnalysisNtuple `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o EventPick.o Selector.o  OverlapRemove.cpp makeAnalysisNtuple.C PUReweight.cpp BTagCalibrationStandalone.o
+makeAnalysisNtuple: Selector.o EventPick.o EventTree.o makeAnalysisNtuple.C OverlapRemove.cpp PUReweight.cpp PUReweight.h BTagCalibrationStandalone.o ScaleFactors.h JEC/JECvariation.o
+	g++ -o makeAnalysisNtuple `root-config --libs` -I`root-config --incdir` -std=c++11 makeAnalysisNtuple.C EventTree.o EventPick.o Selector.o  OverlapRemove.cpp  PUReweight.cpp BTagCalibrationStandalone.o JEC/FactorizedJetCorrector.o JEC/JetCorrectorParameters.o JEC/SimpleJetCorrector.o JEC/JetCorrectionUncertainty.o JEC/SimpleJetCorrectionUncertainty.o JEC/JECvariation.o
 
 Selector.o: EventTree.o Selector.cpp Selector.h
 	g++ -c -I`root-config --incdir` -std=c++11 Selector.cpp
@@ -26,3 +28,4 @@ EventPick.o: Selector.o EventPick.cpp EventPick.h
 
 clean:
 	rm EventTree.o Selector.o EventPick.o BTagCalibrationStandalone.o
+	$(MAKE) -C JEC clean

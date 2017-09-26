@@ -42,6 +42,7 @@ private :
 	TTree* outputTree;
 
 	string sampleType;
+	string systematicType;
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
