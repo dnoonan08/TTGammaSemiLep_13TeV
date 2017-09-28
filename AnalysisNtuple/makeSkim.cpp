@@ -48,7 +48,7 @@ int main(int ac, char** av){
 	selector->veto_pho_jet_dR = -1;
 
 	evtPick->SkimNjet_ge = 2;
-	evtPick->SkimNBjet_ge = 1;
+	evtPick->SkimNBjet_ge = 0;
 
 	std::string channel(av[1]);
 
@@ -114,11 +114,11 @@ int main(int ac, char** av){
 	}
 
 	newTree->Write();
-	std::cout << "e+jets cutflow" << std::endl;
-	evtPick->print_cutflow_ele(evtPick->cutFlow_ele);
+	// std::cout << "e+jets cutflow" << std::endl;
+	// evtPick->print_cutflow_ele(evtPick->cutFlow_ele);
 
-	std::cout << "mu+jets cutflow" << std::endl;
-	evtPick->print_cutflow_mu(evtPick->cutFlow_mu);
+	// std::cout << "mu+jets cutflow" << std::endl;
+	// evtPick->print_cutflow_mu(evtPick->cutFlow_mu);
 
 	std::map<std::string, TH1F*> histMap;
 	// copy histograms

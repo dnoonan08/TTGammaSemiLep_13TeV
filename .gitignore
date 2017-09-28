@@ -3,4 +3,15 @@ makeAnalysisNtuple
 makeSkim
 makeCutflows
 *.root
+*.pdf
+*.pyc
+*.png
+*.tgz
+*.txt
 *~
+DeepCSV_Moriond17_B_H.csv
+CSVv2_Moriond17_B_H.csv
+
+condor
+Test
+jecFiles

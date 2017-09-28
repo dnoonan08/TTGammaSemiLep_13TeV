@@ -88,6 +88,10 @@ public:
 	vector<int>*    mcDecayType;
 	vector<int>*    mcParentage;
 	vector<int>*    mcStatus;
+
+	vector<float>* pdfSystWeight_;
+	vector<float>* genScaleSystWeights_;
+
 	// PU
 	Int_t    nPUInfo_;  
 	vector<int>* nPU_;
@@ -341,6 +345,7 @@ public:
 	vector<float>*  phoPFChIso_;
 	vector<float>*  phoPFPhoIso_;
 	vector<float>*  phoPFNeuIso_;
+	vector<float>*  phoPFRandConeChIso_;
 //	vector<float>*  phoPFChIsoFrix7_;
 //	vector<float>*  phoPFPhoIso_;
 	vector<float>*  phoSCRNeuIso_;
@@ -969,6 +974,11 @@ public:
 	vector<int>*    AK8Jetnconstituents_;
 	vector<float>*  jetpfCombinedMVAV2BJetTags_; // recommended
 	vector<float>*  jetCSV2BJetTags_;
+	vector<float>*  jetDeepCSVTags_b_;
+	vector<float>*  jetDeepCSVTags_bb_;
+	vector<float>*  jetDeepCSVTags_c_;
+	vector<float>*  jetDeepCSVTags_cc_;
+	vector<float>*  jetDeepCSVTags_udsg_;
 	vector<float>*  jetJetProbabilityBJetTags_;
 	vector<float>*  jetJetBProbabilityBJetTags_;
 	vector<vector<float> >*  jetBetaStar_;

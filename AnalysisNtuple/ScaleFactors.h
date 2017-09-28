@@ -18,6 +18,10 @@ double totalTTGamma_dilept        = 4907307.;
 double totalTTbarPowheg           = 77227178.;
 double totalTTbarMCatNLO          = 77227178.;
 
+double totalTTbarMadgraph_SingleLeptFromT     = 11956689.;
+double totalTTbarMadgraph_SingleLeptFromTbar  = 11943716.;
+double totalTTbarMadgraph_Dilepton            = 6094300.;
+
 double totalW1jets           = 45366416.;
 double totalW2jets           = 30318880.;
 double totalW3jets           = 39268750.;
@@ -63,6 +67,11 @@ double totalQCD_Pt300toInf_Ele =  7373130.;
 //////////////////////////
 
 double TTbar_xs             =  831.76;
+
+double TTbar_dilepton_xs             =  87.315;
+double TTbar_semilept_xs             =  182.175;
+double TTbar_hadronic_xs             =  831.76-TTbar_dilepton_xs-2*TTbar_semilept_xs;
+
 
 double TTGamma_hadronic_xs  =  4.599;
 double TTGamma_semilept_xs  =  4.499/2.;
@@ -118,6 +127,11 @@ double TTGamma_dilept_SF   = TTGamma_dilept_xs * luminosity / totalTTGamma_dilep
 double TTbarPowheg_SF = TTbar_xs * luminosity / totalTTbarPowheg;
 double TTbarMCatNLO_SF = TTbar_xs * luminosity / totalTTbarMCatNLO;
 
+double TTbarMadgraph_SingleLeptFromT_SF = TTbar_semilept_xs * luminosity / totalTTbarMadgraph_SingleLeptFromT;
+double TTbarMadgraph_SingleLeptFromTbar_SF = TTbar_semilept_xs * luminosity / totalTTbarMadgraph_SingleLeptFromTbar;
+double TTbarMadgraph_Dilepton_SF = TTbar_dilepton_xs * luminosity / totalTTbarMadgraph_Dilepton;
+
+
 double W1jets_SF = W1jets_xs * luminosity / totalW1jets;
 double W2jets_SF = W2jets_xs * luminosity / totalW2jets;
 double W3jets_SF = W3jets_xs * luminosity / totalW3jets;
@@ -159,13 +173,17 @@ double QCD_Pt300toInf_Ele_SF = QCD_Pt300toInf_Ele_xs * luminosity / totalQCD_Pt3
 
 double getEvtWeight(string sampleType){
 	double evtWeight = -1.;
-	if( sampleType=="Data") {evtWeight = 1.;}
+	if( sampleType.substr(0,4)=="Data") {evtWeight = 1.;}
+	else if( sampleType=="Test") {evtWeight = 1.;}
 	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_T_SF;}
 	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_SF;}
 	else if( sampleType=="TTbarPowheg") {evtWeight = TTbarPowheg_SF;}
 	else if( sampleType=="TTbarMCatNLO") {evtWeight = TTbarMCatNLO_SF;}
+	else if( sampleType=="TTbarMadgraph_Dilepton") {evtWeight = TTbarMadgraph_Dilepton_SF;}
+	else if( sampleType=="TTbarMadgraph_SingleLeptFromT") {evtWeight = TTbarMadgraph_SingleLeptFromT_SF;}
+	else if( sampleType=="TTbarMadgraph_SingleLeptFromTbar") {evtWeight = TTbarMadgraph_SingleLeptFromTbar_SF;}
 	else if( sampleType=="W1jets") {evtWeight = W1jets_SF;}
 	else if( sampleType=="W2jets") {evtWeight = W2jets_SF;}
 	else if( sampleType=="W3jets") {evtWeight = W3jets_SF;}
@@ -215,7 +233,19 @@ double getEvtWeight(string sampleType){
 
 
 
-const std::string allowedSampleTypes[40] = {"Data",
+
+
+
+
+
+const std::string allowedSampleTypes[48] = {"Data",
+											"Data_SingleMu_b",
+											"Data_SingleMu_c",
+											"Data_SingleMu_d",
+											"Data_SingleMu_e",
+											"Data_SingleMu_f",
+											"Data_SingleMu_g",
+											"Data_SingleMu_h",
 											"TTGamma_Hadronic",
 											"TTGamma_SingleLeptFromTbar",
 											"TTGamma_SingleLeptFromT",
@@ -228,8 +258,9 @@ const std::string allowedSampleTypes[40] = {"Data",
 											"W3jets",
 											"W4jets",
 											"DYjets",
-											"TTW",
-											"TTZ",
+											"TTWtoQQ",
+											"TTWtoLNu",
+											"TTZtoLL",
 											"ZGamma",
 											"WGamma",
 											"ST_tW-channel",
@@ -255,5 +286,6 @@ const std::string allowedSampleTypes[40] = {"Data",
 											"QCD_Pt120to170_EM",
 											"QCD_Pt170to300_EM",
 											"QCD_Pt300toInf_EM",
+											"Test",
 };
 

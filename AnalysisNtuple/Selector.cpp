@@ -24,9 +24,13 @@ Selector::Selector(){
 	JERsystLevel = 1;
 	JECsystLevel = 1;
 
-	// CSVv2M
+	useDeepCSVbTag = false;
 	//https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation80XReReco
+	// CSVv2M
 	btag_cut = 0.8484;  
+	// DeepCSV
+	btag_cut_DeepCSV = 0.6324;  
+
 
 	// electrons
 	ele_Pt_cut = 35.0;
@@ -98,6 +102,7 @@ void Selector::clear_vectors(){
 	PhoChHadIso_corr.clear();
 	PhoNeuHadIso_corr.clear();
 	PhoPhoIso_corr.clear();
+	PhoRandConeChHadIso_corr.clear();
 	// Pho03ChHadSCRIso.clear();
 	// Pho03PhoSCRIso.clear();
 	// Pho03RandPhoIso.clear();
@@ -122,10 +127,12 @@ void Selector::filter_photons(){
 		double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd) - phoEffArea03ChHad(SCeta)*tree->rho_);
 		double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_->at(phoInd) - phoEffArea03NeuHad(SCeta)*tree->rho_);
 		double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_->at(phoInd) - phoEffArea03Pho(SCeta)*tree->rho_);
+		double rhoCorrPFRandConeChIso  = max(0.0, tree->phoPFRandConeChIso_->at(phoInd) - phoEffArea03ChHad(SCeta)*tree->rho_);
 
 		PhoChHadIso_corr.push_back(rhoCorrPFChIso);
 		PhoNeuHadIso_corr.push_back(rhoCorrPFNeuIso);
 		PhoPhoIso_corr.push_back(rhoCorrPFPhoIso);
+		PhoRandConeChHadIso_corr.push_back(rhoCorrPFRandConeChIso);
 
 		bool passDR_lep_pho = true;
 
@@ -388,7 +395,11 @@ void Selector::filter_jets(){
 
 		if( jetPresel){
 			Jets.push_back(jetInd);
-			if(tree->jetCSV2BJetTags_->at(jetInd) > btag_cut) bJets.push_back(jetInd);
+			if (!useDeepCSVbTag){
+				if(tree->jetCSV2BJetTags_->at(jetInd) > btag_cut) bJets.push_back(jetInd);
+			} else {
+				if( (tree->jetDeepCSVTags_b_->at(jetInd) + tree->jetDeepCSVTags_b_->at(jetInd) ) > btag_cut_DeepCSV) bJets.push_back(jetInd);
+			}				
 		}
 	}
 
