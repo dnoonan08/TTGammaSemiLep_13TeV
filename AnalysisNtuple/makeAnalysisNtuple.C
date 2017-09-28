@@ -63,6 +63,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	selector->pho_applyPhoID = false;
 	selector->looseJetID = false;
 
+	selector->useDeepCSVbTag = true;
+
 	// selector->veto_pho_jet_dR = -1.; //remove jets which have a photon close to them 
 	// selector->veto_jet_pho_dR = -1.; //remove photons which have a jet close to them (after having removed jets too close to photon from above cut)
 
@@ -70,9 +72,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	//	selector->jet_Pt_cut = 40.;
 	evtPick->Njet_ge = 2;	
 	evtPick->NBjet_ge = 1;	
-
-
-	BTagCalibration calib("csvv2", "CSVv2_Moriond17_B_H.csv");
+	BTagCalibration calib;
+	if (!selector->useDeepCSVbTag){
+		calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
+	} else {
+		calib = BTagCalibration("deepcsv", "DeepCSV_Moriond17_B_H.csv");
+	}
 
 	BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
 								 "central",             // central sys type
@@ -163,7 +168,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	Long64_t nEntr = tree->GetEntries();
 	//	for(Long64_t entry=0; entry<100; entry++){
 
-	nEntr = 10000;
+	//	nEntr = 10000;
 
 	int dumpFreq = 1;
 	if (nEntr >50)     { dumpFreq = 5; }

@@ -84,6 +84,7 @@ public:
 	double jet_Pt_cut;
 	double jet_Eta_cut;
 	double btag_cut;
+	double btag_cut_DeepCSV;
 	double veto_lep_jet_dR;
 	double veto_pho_jet_dR;
 	double veto_lep_pho_dR;
@@ -92,7 +93,8 @@ public:
 	int JECsystLevel; //0= syst down, 1 = central, 2 = syst up
 	bool   smearJetPt;
 	bool   looseJetID;
-
+	bool   useDeepCSVbTag;
+	
 	// electrons
 	double ele_Pt_cut;
 	double ele_PtLoose_cut;

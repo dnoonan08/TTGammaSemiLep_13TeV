@@ -24,9 +24,13 @@ Selector::Selector(){
 	JERsystLevel = 1;
 	JECsystLevel = 1;
 
-	// CSVv2M
+	useDeepCSVbTag = false;
 	//https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation80XReReco
+	// CSVv2M
 	btag_cut = 0.8484;  
+	// DeepCSV
+	btag_cut_DeepCSV = 0.6324;  
+
 
 	// electrons
 	ele_Pt_cut = 35.0;
@@ -391,7 +395,11 @@ void Selector::filter_jets(){
 
 		if( jetPresel){
 			Jets.push_back(jetInd);
-			if(tree->jetCSV2BJetTags_->at(jetInd) > btag_cut) bJets.push_back(jetInd);
+			if (!useDeepCSVbTag){
+				if(tree->jetCSV2BJetTags_->at(jetInd) > btag_cut) bJets.push_back(jetInd);
+			} else {
+				if( (tree->jetDeepCSVTags_b_->at(jetInd) + tree->jetDeepCSVTags_b_->at(jetInd) ) > btag_cut_DeepCSV) bJets.push_back(jetInd);
+			}				
 		}
 	}
 

@@ -10,4 +10,12 @@ wget https://github.com/cms-jet/JECDatabase/raw/master/tarballs/Summer16_23Sep20
 tar -zxf Summer16_23Sep2016V4_MC.tar.gz
 cd -
 ```
+
+Additionally, for btagging scale factors, the appropriate scale factor files can be copied from Danny's area.  These have been taken from the twiki, and placed on cmslpc for easier access.
+
+```
+cp /uscms/homes/d/dnoonan/TTGammaFiles/CSVv2_Moriond17_B_H.csv .
+cp /uscms/homes/d/dnoonan/TTGammaFiles/DeepCSV_Moriond17_B_H.csv .
+```
+
 Then, simply compile the code with `make`
