@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include"PUReweight.h"
-#include"JEC/JECvariation.h"
+//#include"JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
 
 #include "elemuSF.h"
@@ -111,10 +111,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
 
-	if( systematicType=="JEC_up")       {jecvar012_g = 2;}
-	if( systematicType=="JEC_down")     {jecvar012_g = 0;}
-	if( systematicType=="JER_up")       {jervar012_g = 2;}
-	if( systematicType=="JER_down")     {jervar012_g = 0;}
+	if( systematicType=="JEC_up")       {jecvar012_g = 2; selector->JECsystLevel=2;}
+	if( systematicType=="JEC_down")     {jecvar012_g = 0; selector->JECsystLevel=0;}
+	if( systematicType=="JER_up")       {jervar012_g = 2; selector->JERsystLevel=2;}
+	if( systematicType=="JER_down")     {jervar012_g = 0; selector->JERsystLevel=0;}
 	if( systematicType=="pho_up")       {phosmear012_g = 2;}
 	if( systematicType=="pho_down")     {phosmear012_g = 0;}
 	if( systematicType=="musmear_up")   {musmear012_g = 2;}
@@ -151,10 +151,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	isMC = !(tree->isData_);
 	std::cout << "isMC: " << isMC << endl;
 
-	JECvariation* jecvar;
-	if (isMC) {
-		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC);
-	}
+	// JECvariation* jecvar;
+	// if (isMC) {
+	// 	jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC);
+	// }
 
 	_evtWeight = getEvtWeight(sampleType);
 
@@ -168,7 +168,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	Long64_t nEntr = tree->GetEntries();
 	//	for(Long64_t entry=0; entry<100; entry++){
 
-	//	nEntr = 10000;
+	nEntr = 10000;
 
 	int dumpFreq = 1;
 	if (nEntr >50)     { dumpFreq = 5; }
@@ -197,11 +197,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			}
 		}
 
-		//Apply systematics shifts where needed
-		if( isMC ){
-			jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
+		// //Apply systematics shifts where needed
+		// if( isMC ){
+		// 	jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
 
-		}
+		// }
 
 
 		selector->process_objects(tree);
@@ -572,102 +572,6 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 
 
 
-// double makeAnalysisNtuple::getMuSF(int muInd, int systLevel){
-// 	double abseta = abs(tree->muEta_->at(muInd));
-// 	double pt = tree->muPt_->at(muInd);
-
-// 	//binned in 0.2 in absEta
-// 	int muTrackEtaRegion = int(abseta/0.2);
-
-// 	int muEtaRegion = -1;
-// 	if (abseta < 0.9) {muEtaRegion = 0;}
-// 	else if (abseta < 1.2) {muEtaRegion = 1;}
-// 	else if (abseta < 2.1) {muEtaRegion = 2;}
-// 	else {muEtaRegion = 3;}
-
-// 	int muPtRegion_Trigger = -1;
-// 	if (pt < 30){muPtRegion_Trigger = 0;}
-// 	else if (pt < 40){muPtRegion_Trigger = 1;}
-// 	else if (pt < 50){muPtRegion_Trigger = 2;}
-// 	else if (pt < 60){muPtRegion_Trigger = 3;}
-// 	else if (pt < 120){muPtRegion_Trigger = 4;}
-// 	else if (pt < 200){muPtRegion_Trigger = 5;}
-// 	else {muPtRegion_Trigger = 6;}
-
-// 	int muPtRegion_IDIso = -1;
-// 	if (pt < 25){muPtRegion_IDIso = 0;}
-// 	else if (pt < 30){muPtRegion_IDIso = 1;}
-// 	else if (pt < 40){muPtRegion_IDIso = 2;}
-// 	else if (pt < 50){muPtRegion_IDIso = 3;}
-// 	else if (pt < 60){muPtRegion_IDIso = 4;}
-// 	else {muPtRegion_IDIso = 5;}
-
-// 	double muEffSF = muTrackingSF[muTrackEtaRegion][systLevel] * muIdIsoSF[muPtRegion_IDIso][muEtaRegion][systLevel] * muTrigSF[muPtRegion_Trigger][muEtaRegion][systLevel];
-
-// 	return muEffSF;
-// }
-
-
-// double makeAnalysisNtuple::getEleSF(int eleInd, int systLevel){
-
-// 	double eta = tree->eleSCEta_->at(eleInd);
-// 	double pt = tree->elePt_->at(eleInd);
-	
-// 	int eleRecoEtaRegion = 0;
-// 	int eleIDEtaRegion = 0;
-
-// 	if (eta > -2.45 ){eleRecoEtaRegion++;}
-// 	if (eta > -2.4	){eleRecoEtaRegion++;}
-// 	if (eta > -2.3	){eleRecoEtaRegion++;}
-// 	if (eta > -2.2	){eleRecoEtaRegion++;}
-// 	if (eta > -2.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
-// 	if (eta > -1.8	){eleRecoEtaRegion++;}
-// 	if (eta > -1.63	){eleRecoEtaRegion++;}
-// 	if (eta > -1.566){eleRecoEtaRegion++; eleIDEtaRegion++;}
-// 	if (eta > -1.444){eleRecoEtaRegion++; eleIDEtaRegion++;}
-// 	if (eta > -1.2	){eleRecoEtaRegion++;}
-// 	if (eta > -1.0	){eleRecoEtaRegion++;}
-// 	if (eta > -0.8	){eleIDEtaRegion++;}
-// 	if (eta > -0.6	){eleRecoEtaRegion++;}
-// 	if (eta > -0.4	){eleRecoEtaRegion++;}
-// 	if (eta > -0.2	){eleRecoEtaRegion++;}
-// 	if (eta > 0.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
-// 	if (eta > 0.2	){eleRecoEtaRegion++;}
-// 	if (eta > 0.4	){eleRecoEtaRegion++;}
-// 	if (eta > 0.6	){eleRecoEtaRegion++;}
-// 	if (eta > 0.8	){eleIDEtaRegion++;}
-// 	if (eta > 1.0	){eleRecoEtaRegion++;}
-// 	if (eta > 1.2	){eleRecoEtaRegion++;}
-// 	if (eta > 1.444	){eleRecoEtaRegion++; eleIDEtaRegion++;}
-// 	if (eta > 1.566	){eleRecoEtaRegion++; eleIDEtaRegion++;}
-// 	if (eta > 1.63	){eleRecoEtaRegion++;}
-// 	if (eta > 1.8	){eleRecoEtaRegion++;}
-// 	if (eta > 2.0	){eleRecoEtaRegion++; eleIDEtaRegion++;}
-// 	if (eta > 2.2	){eleRecoEtaRegion++;}
-// 	if (eta > 2.3	){eleRecoEtaRegion++;}
-// 	if (eta > 2.4	){eleRecoEtaRegion++;}
-// 	if (eta > 2.45	){eleRecoEtaRegion++;}
-
-// 	int eleIDPtRegion = 0;
-
-// 	if (pt > 20.0  ){eleIDPtRegion++;}
-// 	if (pt > 35.0  ){eleIDPtRegion++;}
-// 	if (pt > 50.0  ){eleIDPtRegion++;}
-// 	if (pt > 90.0  ){eleIDPtRegion++;}
-// 	if (pt > 150.0 ){eleIDPtRegion++;}
-	
-
-// 	int eleTrigEtaRegion = eleIDEtaRegion;
-// 	int eleTrigPtRegion  = eleIDPtRegion;
-
-
-// 	double eleEffSF = eleTrigSF[eleTrigEtaRegion][eleTrigPtRegion][systLevel] * eleIDSF[eleIDEtaRegion][eleIDPtRegion][systLevel] * eleRecoSF[eleRecoEtaRegion][systLevel];
-
-// 	return eleEffSF;
-
-
-// }
-
 
 
 
@@ -721,27 +625,7 @@ double makeAnalysisNtuple::WjetsBRreweight(){
 	
 }
 
-// bool makeAnalysisNtuple::passEleTight(int eleInd){
-// 	double pt = tree->elePt_->at(eleInd);
-//     double eta = TMath::Abs(tree->eleEta_->at(eleInd));
-//     double SCeta = TMath::Abs(tree->eleSCEta_->at(eleInd));
 
-
-// 	double rho = tree->rho_;
-// 	double ea = electronEA[egammaRegion(absSCEta)];
-
-// 	// EA subtraction
-// 	double PFrelIso_corr = ( tree->elePFChIso_->at(eleInd) + 
-// 							 max(0.0, tree->elePFNeuIso_->at(eleInd) + 
-// 								 tree->elePFPhoIso_->at(eleInd) -
-// 								 rho*ea
-// 								 )
-// 							 ) / pt;
-	
-// 	tree->eleHoverE_->at(eleInd) < 0.00998	
-
-
-//bool makeAnalysisNtuple::passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso){
 vector<bool> makeAnalysisNtuple::passPhoMediumID(int phoInd){
 
 	double pt = tree->phoEt_->at(phoInd);

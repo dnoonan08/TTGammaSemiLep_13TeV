@@ -301,6 +301,10 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("jetP4SmearDo",1);
 	chain->SetBranchAddress("jetP4SmearDo", &jetP4SmearDo_);
 
+	jetJECUnc_ = new vector<float>;
+	chain->SetBranchStatus("jetJECUnc",1);
+	chain->SetBranchAddress("jetJECUnc", &jetJECUnc_);
+
 	jetCHF_ = new vector<float>;
 	chain->SetBranchStatus("jetCHF",1);
 	chain->SetBranchAddress("jetCHF", &jetCHF_);

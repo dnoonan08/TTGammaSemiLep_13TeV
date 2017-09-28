@@ -173,7 +173,7 @@ double QCD_Pt300toInf_Ele_SF = QCD_Pt300toInf_Ele_xs * luminosity / totalQCD_Pt3
 
 double getEvtWeight(string sampleType){
 	double evtWeight = -1.;
-	if( sampleType=="Data") {evtWeight = 1.;}
+	if( sampleType.substr(0,4)=="Data") {evtWeight = 1.;}
 	else if( sampleType=="Test") {evtWeight = 1.;}
 	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
@@ -233,7 +233,19 @@ double getEvtWeight(string sampleType){
 
 
 
-const std::string allowedSampleTypes[41] = {"Data",
+
+
+
+
+
+const std::string allowedSampleTypes[48] = {"Data",
+											"Data_SingleMu_b",
+											"Data_SingleMu_c",
+											"Data_SingleMu_d",
+											"Data_SingleMu_e",
+											"Data_SingleMu_f",
+											"Data_SingleMu_g",
+											"Data_SingleMu_h",
 											"TTGamma_Hadronic",
 											"TTGamma_SingleLeptFromTbar",
 											"TTGamma_SingleLeptFromT",
@@ -246,8 +258,9 @@ const std::string allowedSampleTypes[41] = {"Data",
 											"W3jets",
 											"W4jets",
 											"DYjets",
-											"TTW",
-											"TTZ",
+											"TTWtoQQ",
+											"TTWtoLNu",
+											"TTZtoLL",
 											"ZGamma",
 											"WGamma",
 											"ST_tW-channel",
