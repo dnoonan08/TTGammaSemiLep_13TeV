@@ -4,7 +4,6 @@ Executable = runSkimsAndAnalysisNtuples_mu.sh
 should_transfer_files = YES
 WhenTOTransferOutput  = ON_EXIT
 notification = never
-Transfer_input_files = CMSSW_8_0_26_patch1.tgz
 
 Output = condor/muSkim_$(cluster)_$(process).stdout
 Error  = condor/muSkim_$(cluster)_$(process).stderr
@@ -14,4 +13,14 @@ Arguments = $(process)
 #use_x509userproxy = true
 x509userproxy = $ENV(X509_USER_PROXY)
 # important, number of instances (jobs) of script
-Queue 42
+Queue 30
+
+
+# Arguments = 5
+# Queue 1
+
+# Arguments = 6
+# Queue 1
+
+# Arguments = 7
+# Queue 1
