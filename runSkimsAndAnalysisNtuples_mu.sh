@@ -30,10 +30,10 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "TTGamma_SingleLeptFromT_" \
 "TTGamma_Dilepton_" \
 "TTGamma_Hadronic_" \
-"TTbar_" \
-"TTbar_SingleLeptFromT_" \
-"TTbar_SingleLeptFromTbar_" \
-"TTbar_Dilepton_" \
+"TTbarPowheg_" \
+"TTbarMadgraph_SingleLeptFromT_" \
+"TTbarMadgraph_SingleLeptFromTbar_" \
+"TTbarMadgraph_Dilepton_" \
 "W1jets_" \
 "W2jets_" \
 "W3jets_" \
@@ -134,16 +134,16 @@ sampleType=("TTGamma_SingleLeptFromTbar " \
 
 
 echo "AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}"
-# AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}
+AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}
 
-# echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.root"
-# AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} ${files[job]}AnalysisNtuple.root ${files[job]}skim.root
+echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.root"
+AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.root
 
 
-# echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/"
-# xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/
+echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/"
+xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/
 
-# echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/"
-# xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/
+echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/"
+xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/
 
 

@@ -238,7 +238,7 @@ double getEvtWeight(string sampleType){
 
 
 
-const std::string allowedSampleTypes[48] = {"Data",
+const std::string allowedSampleTypes[53] = {"Data",
 											"Data_SingleMu_b",
 											"Data_SingleMu_c",
 											"Data_SingleMu_d",
@@ -252,6 +252,9 @@ const std::string allowedSampleTypes[48] = {"Data",
 											"TTGamma_Dilepton",
 											"TTbarPowheg",
 											"TTbarMCatNLO",
+											"TTbarMadgraph_SingleLeptFromTbar",
+											"TTbarMadgraph_SingleLeptFromT",
+											"TTbarMadgraph_Dilepton",
 											"Wjets",
 											"W1jets",
 											"W2jets",
