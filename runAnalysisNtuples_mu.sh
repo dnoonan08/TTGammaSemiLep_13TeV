@@ -96,9 +96,9 @@ sampleType=("TTGamma_SingleLeptFromTbar " \
 
 
 echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root"
-# AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root
+AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root
 
 echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}"
-# xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}
+xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}
 
 
