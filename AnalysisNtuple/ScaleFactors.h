@@ -25,12 +25,14 @@ double totalTTbarMadgraph_Dilepton            = 6094300.;
 double totalW1jets           = 45366416.;
 double totalW2jets           = 30318880.;
 double totalW3jets           = 39268750.;
-double totalW4jets           = 18751100;
+double totalW4jets           = 18751100.;
 
-double totalDYjets           = 27652599.; 
+double totalDYjetsM50       = 122053259.;
+double totalDYjetsM10to50   = 71301217.;
 
-double totalTTW              = 2160030.;
-double totalTTZ              = 59339060.;
+double totalTTWtoQQ         = 833257.;
+double totalTTWtoLNu        = 2160030.;
+double totalTTZtoLL         = 5933898.;
 
 double totalZGamma           = 14372399.;
 double totalWGamma           = 10231838.;
@@ -81,10 +83,13 @@ double W1jets_xs            =  9493.0;
 double W2jets_xs            =  3120.0;
 double W3jets_xs            =  942.3;
 double W4jets_xs            =  524.2;
-double DYjets_xs            =  5765.4; 
 
-double TTW_xs               =  0.57;
-double TTZ_xs               =  0.839;
+double DYjetsM50_xs         =  5765.4; 
+double DYjetsM10to50_xs     =  18610.; 
+
+double TTWtoQQ_xs               =  0.40620;
+double TTWtoLNu_xs              =  0.2043;
+double TTZtoLL_xs               =  0.2728;
 
 double ZGamma_xs            = 131.3;
 double WGamma_xs            = 585.8;
@@ -137,10 +142,12 @@ double W2jets_SF = W2jets_xs * luminosity / totalW2jets;
 double W3jets_SF = W3jets_xs * luminosity / totalW3jets;
 double W4jets_SF = W4jets_xs * luminosity / totalW4jets;
 
-double DYjets_SF = DYjets_xs * luminosity / totalDYjets;
+double DYjetsM10to50_SF = DYjetsM10to50_xs * luminosity / totalDYjetsM10to50;
+double DYjetsM50_SF = DYjetsM50_xs * luminosity / totalDYjetsM50;
 
-double TTW_SF = TTW_xs * luminosity / totalTTW;
-double TTZ_SF = TTZ_xs * luminosity / totalTTZ;
+double TTWtoQQ_SF = TTWtoQQ_xs * luminosity / totalTTWtoQQ;
+double TTWtoLNu_SF = TTWtoLNu_xs * luminosity / totalTTWtoLNu;
+double TTZtoLL_SF = TTZtoLL_xs * luminosity / totalTTZtoLL;
 
 double ZGamma_SF = ZGamma_xs * luminosity / totalZGamma;
 double WGamma_SF = WGamma_xs * luminosity / totalWGamma;
@@ -188,9 +195,11 @@ double getEvtWeight(string sampleType){
 	else if( sampleType=="W2jets") {evtWeight = W2jets_SF;}
 	else if( sampleType=="W3jets") {evtWeight = W3jets_SF;}
 	else if( sampleType=="W4jets") {evtWeight = W4jets_SF;}
-	else if( sampleType=="DYjets") {evtWeight = DYjets_SF;}
-	else if( sampleType=="TTW") {evtWeight = TTW_SF;}
-	else if( sampleType=="TTZ") {evtWeight = TTZ_SF;}
+	else if( sampleType=="DYjetsM10to50") {evtWeight = DYjetsM10to50_SF;}
+	else if( sampleType=="DYjetsM50") {evtWeight = DYjetsM50_SF;}
+	else if( sampleType=="TTWtoQQ") {evtWeight = TTWtoLNu_SF;}
+	else if( sampleType=="TTWtoLNu") {evtWeight = TTWtoLNu_SF;}
+	else if( sampleType=="TTZtoLL") {evtWeight = TTZtoLL_SF;}
 	else if( sampleType=="ZGamma") {evtWeight = ZGamma_SF;}
 	else if( sampleType=="WGamma") {evtWeight = WGamma_SF;}
 	else if( sampleType=="ST_tW-channel") {evtWeight = ST_tW_SF;}
@@ -238,6 +247,7 @@ double getEvtWeight(string sampleType){
 
 
 
+
 const std::string allowedSampleTypes[53] = {"Data",
 											"Data_SingleMu_b",
 											"Data_SingleMu_c",
@@ -260,7 +270,8 @@ const std::string allowedSampleTypes[53] = {"Data",
 											"W2jets",
 											"W3jets",
 											"W4jets",
-											"DYjets",
+											"DYjetsM10to50",
+											"DYjetsM50",
 											"TTWtoQQ",
 											"TTWtoLNu",
 											"TTZtoLL",
