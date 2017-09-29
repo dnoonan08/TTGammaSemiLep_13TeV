@@ -398,7 +398,7 @@ void Selector::filter_jets(){
 			if (!useDeepCSVbTag){
 				if(tree->jetCSV2BJetTags_->at(jetInd) > btag_cut) bJets.push_back(jetInd);
 			} else {
-				if( (tree->jetDeepCSVTags_b_->at(jetInd) + tree->jetDeepCSVTags_b_->at(jetInd) ) > btag_cut_DeepCSV) bJets.push_back(jetInd);
+				if( (tree->jetDeepCSVTags_b_->at(jetInd) + tree->jetDeepCSVTags_bb_->at(jetInd) ) > btag_cut_DeepCSV) bJets.push_back(jetInd);
 			}				
 		}
 	}
