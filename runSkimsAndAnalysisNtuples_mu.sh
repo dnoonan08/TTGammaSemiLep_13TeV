@@ -140,10 +140,10 @@ echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.r
 AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.root
 
 
-echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/"
-xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/
+echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/V08_00_26_07/"
+xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/V08_00_26_07/
 
-echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/"
-xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/
+echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/V08_00_26_07/"
+xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/V08_00_26_07/
 
 
