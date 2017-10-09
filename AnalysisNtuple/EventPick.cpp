@@ -137,7 +137,16 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 	else { passPresel_mu = false;}
 
 	// Cut on events with ==1 muon, no loose muons, no loose or tight electrons
-	if( passPresel_mu && Muons.size() == Nmu_eq) { if (saveCutflows){cutFlow_mu->Fill(3); cutFlowWeight_mu->Fill(3,weight); } }
+	if( passPresel_mu && Muons.size() == Nmu_eq){
+		if (Nmu_eq==2) { 
+			int mu1 = Muons.at(0); 
+			int mu2 = Muons.at(1);
+			if(tree->muCharge_->at(mu1)*tree->muCharge_->at(mu2) ==1){
+				passPresel_mu = false;
+			}
+		}
+		if (saveCutflows){cutFlow_mu->Fill(3); cutFlowWeight_mu->Fill(3,weight); } 
+	}
 	else { passPresel_mu = false;}
 	if( passPresel_mu && selector->MuonsLoose.size() <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_mu->Fill(4); cutFlowWeight_mu->Fill(4,weight); } }
 	else { passPresel_mu = false;}
@@ -151,7 +160,17 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 	else { passPresel_ele = false; }
 
 	// Cut on events with ==1 muon, no loose muons, no loose or tight electrons
-	if( passPresel_ele && Electrons.size() == Nele_eq) { if (saveCutflows) {cutFlow_ele->Fill(3); cutFlowWeight_ele->Fill(3,weight);}}
+	if( passPresel_ele && Electrons.size() == Nele_eq) { 
+		if (Nele_eq==2) {
+                        int ele1 = Electrons.at(0);
+                        int ele2 = Electrons.at(1);
+                        if((tree->eleCharge_->at(ele1))*(tree->eleCharge_->at(ele2)) == 1){
+                                passPresel_ele = false;
+                        }
+                }
+
+		if (saveCutflows) {cutFlow_ele->Fill(3); cutFlowWeight_ele->Fill(3,weight);}
+	}
 	else { passPresel_ele = false;}
 	if( passPresel_ele && selector->ElectronsLoose.size() <=  NlooseEleVeto_le ) { if (saveCutflows) {cutFlow_ele->Fill(4); cutFlowWeight_ele->Fill(4,weight);}}
 	else { passPresel_ele = false;}

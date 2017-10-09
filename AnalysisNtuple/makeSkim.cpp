@@ -56,7 +56,13 @@ int main(int ac, char** av){
 		evtPick->skimEle = true;
 	} else if (channel=="mu"){
 		evtPick->skimMu = true;
-	} else {
+	} else if (channel=="dimu"){
+		evtPick->skimMu = true;
+		evtPick->Nmu_eq = 2;
+	} else if (channel=="diele"){
+		evtPick->skimEle=true;
+		evtPick->Nele_eq = 2;
+	}else {
 		cout << av[1] << endl;
 		cout << (av[1]=="ele") << endl;
 		cout << (channel=="ele") << endl;
