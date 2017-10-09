@@ -83,6 +83,10 @@ EventTree::EventTree(int nFiles, char** fileNames){
 
 	//chain->SetBranchStatus("eleEta",1);
 	
+ 	eleCharge_ = new vector<int>;
+	chain->SetBranchStatus("eleCharge",1);
+	chain->SetBranchAddress("eleCharge", &eleCharge_);	
+
 	elePt_ = new vector<float>;
 	chain->SetBranchStatus("elePt",1);
 	chain->SetBranchAddress("elePt", &elePt_);
@@ -181,6 +185,13 @@ EventTree::EventTree(int nFiles, char** fileNames){
 
 	// muons
 	// keep some branches in the skim
+	
+	
+	muCharge_ = new vector<int>;
+        chain->SetBranchStatus("muCharge",1);
+        chain->SetBranchAddress("muCharge", &muCharge_);
+	
+	
 	muChi2NDF_ = new vector<float>;
 	chain->SetBranchStatus("muChi2NDF", 1);
 	chain->SetBranchAddress("muChi2NDF",&muChi2NDF_);
