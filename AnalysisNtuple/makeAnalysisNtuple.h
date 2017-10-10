@@ -82,6 +82,8 @@ private :
 	Float_t         _pfMET;
 	Float_t         _pfMETPhi;
 	Float_t         _WtransMass;
+	Float_t 	_DilepMass;
+	Float_t         _DilepDelR;
 	Int_t           _nPho;
 	std::vector<float>   _phoEt;
 	std::vector<float>   _phoEta;
@@ -184,9 +186,11 @@ private :
 	bool  _passPresel_Mu;
 	bool  _passAll_Ele;
 	bool  _passAll_Mu;
+	bool  dileptonsample;
 
 	TLorentzVector jetVector;
 	TLorentzVector lepVector;
+	TLorentzVector lepVector2;
 	TLorentzVector phoVector;
 	TLorentzVector METVector;
 
@@ -243,8 +247,9 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("genMET"                     , &_genMET                      ); 
 	outputTree->Branch("pfMET"                      , &_pfMET                       );
 	outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
-	outputTree->Branch("WtransMass"                   , &_WtransMass                    ); 
-    
+	outputTree->Branch("WtransMass"                 , &_WtransMass                  ); 
+   	outputTree->Branch("DilepMass"                  , &_DilepMass 			);
+	outputTree->Branch("DilepDelR"                  , &_DilepDelR                   );
 	outputTree->Branch("nPho"                       , &_nPho                        ); 
 	outputTree->Branch("phoEt"                      , &_phoEt                       );
 	outputTree->Branch("phoEta"                     , &_phoEta                      ); 
@@ -364,6 +369,8 @@ void makeAnalysisNtuple::InitVariables()
 	_pfMET		     = -9999;
 	_pfMETPhi	     = -9999;
 	_WtransMass      = -9999;
+	_DilepMass	 = -9999;
+	_DilepDelR	 = -9999;
 	_nPho		     = -9999;
 	_nEle		     = -9999;
 	_nMu		     = -9999;

@@ -26,7 +26,7 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 
 bool overlapRemovalTT(EventTree* tree);
 
-
+bool dileptonsample;
 
 
 
@@ -45,6 +45,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		systematicType = sampleType.substr(pos+2,sampleType.length());
 		sampleType = sampleType.substr(0,pos);
 	}
+
     cout << sampleType << "  " << systematicType << endl;
 
 	if (std::end(allowedSampleTypes) == std::find(std::begin(allowedSampleTypes), std::end(allowedSampleTypes), sampleType)){
@@ -109,7 +110,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
 
-
+	dileptonsample = false;
 
 	if( systematicType=="JEC_up")       {jecvar012_g = 2; selector->JECsystLevel=2;}
 	if( systematicType=="JEC_down")     {jecvar012_g = 0; selector->JECsystLevel=0;}
@@ -121,6 +122,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	if( systematicType=="musmear_down") {musmear012_g = 0;}
 	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
 	if( systematicType=="elesmear_down"){elesmear012_g = 0;}
+	if( systematicType=="Dilep")     {dileptonsample =true; evtPick->Nmu_eq=2; evtPick->Nele_eq=2;}
+	std::cout << "Dilepton Sample :" << dileptonsample << std::endl;
 	std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << "  ";
 	std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << endl;
 
@@ -306,11 +309,54 @@ void makeAnalysisNtuple::FillEvent()
 							   tree->muPhi_->at(muInd),
 							   tree->muEn_->at(muInd));
 	}
+	std::cout << "number of muons:" <<_nMu << std::endl;
+	std::cout << "number of electrons:" <<_nEle << std::endl;
+	std::cout<<"dilepton?"<< dileptonsample <<std::endl;
+	
+	if (dileptonsample){
+		if (_nMu==2) {
+		std::cout<<"doing muons"<<std::endl;
 
-	// METVector.SetPtEtaPhiM(tree->pfMET_,
-	// 					   0,
-	// 					   tree->pfMETPhi_,
-	// 					   0);
+		int muInd1 = evtPick->Muons.at(0);
+		int muInd2 = evtPick->Muons.at(1);
+
+		lepVector.SetPtEtaPhiE(tree->muPt_->at(muInd1),
+                                                           tree->muEta_->at(muInd1),
+                                                           tree->muPhi_->at(muInd1),
+                                                           tree->muEn_->at(muInd1));
+		lepVector2.SetPtEtaPhiE(tree->muPt_->at(muInd2),
+                                                           tree->muEta_->at(muInd2),
+                                                           tree->muPhi_->at(muInd2),
+                                                           tree->muEn_->at(muInd2));	
+		_DilepMass = (lepVector+lepVector2).M();
+		_DilepDelR = lepVector.DeltaR(lepVector2);
+		
+		}
+		
+
+	    	if (_nEle==2){
+		std::cout<<"doing electrons"<<std::endl;
+		int eleInd1 = evtPick->Electrons.at(0);
+                int eleInd2 = evtPick->Electrons.at(1);
+
+		lepVector.SetPtEtaPhiE(tree->elePt_->at(eleInd1),
+                                                           tree->eleEta_->at(eleInd1),
+                                                           tree->elePhi_->at(eleInd1),
+                                                           tree->eleEn_->at(eleInd1));
+                lepVector2.SetPtEtaPhiE(tree->elePt_->at(eleInd2),
+                                                           tree->eleEta_->at(eleInd2),
+                                                           tree->elePhi_->at(eleInd2),
+                                                           tree->eleEn_->at(eleInd2));
+		
+		_DilepMass = (lepVector+lepVector2).M();
+
+		_DilepDelR = lepVector.DeltaR(lepVector2);
+ 
+		}
+	}
+	
+		
+		
 
 	_WtransMass = TMath::Sqrt(2*lepVector.Pt()*tree->pfMET_*( 1.0 - TMath::Cos(dR(0.0,lepVector.Phi(),0.0,tree->pfMETPhi_)) ));
 
