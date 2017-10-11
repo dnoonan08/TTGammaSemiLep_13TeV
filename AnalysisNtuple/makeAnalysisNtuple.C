@@ -25,7 +25,7 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 #include "BTagCalibrationStandalone.h"
 
 bool overlapRemovalTT(EventTree* tree);
-
+bool overlapRemovalWZ(EventTree* tree);
 bool dileptonsample;
 
 
@@ -102,11 +102,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
 	bool doOverlapRemoval = false;
+	bool doOverlapRemoval_WZ = false;	
 	bool skipOverlap = false;
 	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton") doOverlapRemoval = true;
 
-
-	if(doOverlapRemoval) std::cout << "########## Will apply overlap removal ###########" << std::endl;
+	if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50") doOverlapRemoval_WZ = true;
+	if(doOverlapRemoval || doOverlapRemoval_WZ) std::cout << "########## Will apply overlap removal ###########" << std::endl;
 
 
 
@@ -199,7 +200,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				continue;
 			}
 		}
-
+		if( isMC && doOverlapRemoval_WZ){
+                        if (overlapRemovalWZ(tree)){
+				continue;
+			}
+		}
 		// //Apply systematics shifts where needed
 		// if( isMC ){
 		// 	jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
@@ -309,13 +314,13 @@ void makeAnalysisNtuple::FillEvent()
 							   tree->muPhi_->at(muInd),
 							   tree->muEn_->at(muInd));
 	}
-	std::cout << "number of muons:" <<_nMu << std::endl;
-	std::cout << "number of electrons:" <<_nEle << std::endl;
-	std::cout<<"dilepton?"<< dileptonsample <<std::endl;
+//	std::cout << "number of muons:" <<_nMu << std::endl;
+//	std::cout << "number of electrons:" <<_nEle << std::endl;
+//	std::cout<<"dilepton?"<< dileptonsample <<std::endl;
 	
 	if (dileptonsample){
 		if (_nMu==2) {
-		std::cout<<"doing muons"<<std::endl;
+//		std::cout<<"doing muons"<<std::endl;
 
 		int muInd1 = evtPick->Muons.at(0);
 		int muInd2 = evtPick->Muons.at(1);
@@ -335,7 +340,7 @@ void makeAnalysisNtuple::FillEvent()
 		
 
 	    	if (_nEle==2){
-		std::cout<<"doing electrons"<<std::endl;
+//		std::cout<<"doing electrons"<<std::endl;
 		int eleInd1 = evtPick->Electrons.at(0);
                 int eleInd2 = evtPick->Electrons.at(1);
 
