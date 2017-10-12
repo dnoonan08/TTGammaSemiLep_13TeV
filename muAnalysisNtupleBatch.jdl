@@ -4,7 +4,7 @@ Executable = runAnalysisNtuples_mu.sh
 should_transfer_files = YES
 WhenTOTransferOutput  = ON_EXIT
 notification = never
-#Transfer_input_files = CMSSW_8_0_26_patch1.tgz
+Transfer_input_files = CMSSW_8_0_26_patch1.tgz
 
 Output = condor/muNtuple_$(cluster)_$(process).stdout
 Error  = condor/muNtuple_$(cluster)_$(process).stderr
@@ -14,16 +14,4 @@ Arguments = $(process)
 #use_x509userproxy = true
 x509userproxy = $ENV(X509_USER_PROXY)
 # important, number of instances (jobs) of script
-#Queue 31
-Arguments = 8
-Queue 1
-Arguments = 9
-Queue 1
-Arguments = 10
-Queue 1
-Arguments = 11
-Queue 1
-Arguments = 12
-Queue 1
-Arguments = 13
-Queue 1
+Queue 44
