@@ -60,6 +60,9 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("isData",1);
 	chain->SetBranchAddress("isData", &isData_);
 
+	chain->SetBranchStatus("genWeight",1);
+	chain->SetBranchAddress("genWeight", &genWeight_);
+
 	chain->SetBranchStatus("nVtx",1);
 	chain->SetBranchAddress("nVtx", &nVtx_);
 

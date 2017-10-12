@@ -73,6 +73,7 @@ private :
 	Float_t         _eleEffWeight_Do;
 
 	Float_t         _evtWeight;
+	Float_t         _lumiWeight;
 
 	Int_t           _nVtx;
 	Int_t           _nGoodVtx;

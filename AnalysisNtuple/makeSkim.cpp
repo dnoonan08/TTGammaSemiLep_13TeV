@@ -93,6 +93,8 @@ int main(int ac, char** av){
 	
 	Long64_t nEntr = tree->GetEntries();
 
+	nEntr = 10000;
+
 	int dumpFreq = 100;
 	if (nEntr >5000)   { dumpFreq = 1000; }
 	if (nEntr >50000)  { dumpFreq = 10000; }

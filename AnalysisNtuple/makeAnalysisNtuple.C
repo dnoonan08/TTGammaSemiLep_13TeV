@@ -160,7 +160,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	// 	jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC);
 	// }
 
-	_evtWeight = getEvtWeight(sampleType);
+	_lumiWeight = getEvtWeight(sampleType);
 
 	_muEffWeight    = 1.;
 	_muEffWeight_Do = 1.;
@@ -285,6 +285,8 @@ void makeAnalysisNtuple::FillEvent()
 	_nGoodVtx	     = tree->nGoodVtx;
 	_isPVGood	     = tree->isPVGood_;
 	_rho		     = tree->rho_;
+
+	_evtWeight       = _lumiWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
 
 	_genMET		     = tree->genMET_;
 	_pfMET		     = tree->pfMET_;

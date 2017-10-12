@@ -24,6 +24,7 @@ public:
 	Long64_t event_;
 	Int_t    lumis_;
 	Bool_t   isData_;
+	Float_t  genWeight_;
 	Float_t  pdf_[7];
 	Float_t  pthat_;
 	Float_t  processID_;
