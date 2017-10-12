@@ -197,7 +197,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 		if( isMC && doOverlapRemoval){
 			if (overlapRemovalTT(tree)){
-				count_overlapTTbar++;				cout << "removing event " << entry << endl;
+	
+				count_overlapTTbar++;			
+			//	cout << "removing event " << entry << endl;
 				continue;
 			}
 		}
