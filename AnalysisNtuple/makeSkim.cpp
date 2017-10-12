@@ -66,7 +66,7 @@ int main(int ac, char** av){
 		cout << av[1] << endl;
 		cout << (av[1]=="ele") << endl;
 		cout << (channel=="ele") << endl;
-		cout << "please specify either ele or mu for the skim channel" << endl;
+		cout << "please specify either ele or mu for the skim channel (or diele/dimu)" << endl;
 		return -1;		
 	}
 
@@ -93,7 +93,12 @@ int main(int ac, char** av){
 	
 	Long64_t nEntr = tree->GetEntries();
 
-	nEntr = 10000;
+	if( outDirName.find("Test") != std::string::npos || outDirName.find("test") != std::string::npos || outDirName.find("TEST") != std::string::npos){
+		std::cout << "-------------------------------------------------------------------------" << std::endl;
+		std::cout << "Since this is a Test (based on output name) only running on 10,000 events" << std::endl;
+		std::cout << "-------------------------------------------------------------------------" << std::endl;
+		nEntr = 10000;
+	}
 
 	int dumpFreq = 100;
 	if (nEntr >5000)   { dumpFreq = 1000; }
