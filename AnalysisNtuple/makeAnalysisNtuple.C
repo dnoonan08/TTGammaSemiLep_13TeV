@@ -187,7 +187,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	if (nEntr >1000000) { dumpFreq = 100000; }
 	if (nEntr >5000000) { dumpFreq = 500000; }
 	if (nEntr >10000000){ dumpFreq = 1000000; }
-	
+	int count_overlapVJets=0;
+	int count_overlapTTbar=0;
 	for(Long64_t entry=0; entry<nEntr; entry++){
 		if(entry%dumpFreq == 0) std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
 
@@ -196,12 +197,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 		if( isMC && doOverlapRemoval){
 			if (overlapRemovalTT(tree)){
-				//				cout << "removing event " << entry << endl;
+				count_overlapTTbar++;				cout << "removing event " << entry << endl;
 				continue;
 			}
 		}
 		if( isMC && doOverlapRemoval_WZ){
                         if (overlapRemovalWZ(tree)){
+				count_overlapVJets++;
 				continue;
 			}
 		}
@@ -256,8 +258,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			outputTree->Fill();
 		}
 	}
-
-
+	if (doOverlapRemoval){
+		std::cout << "Total number of events removed from TTbar:"<< count_overlapVJets <<std::endl;
+	}
+	if(doOverlapRemoval_WZ){
+		 std::cout << "Total number of events removed from W/ZJets:"<< count_overlapVJets <<std::endl;
+	}
+		
 	outputFile->cd();
 	outputTree->Write();
 	outputFile->Close();
