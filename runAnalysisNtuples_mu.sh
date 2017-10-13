@@ -9,8 +9,8 @@ else
 	cd ${_CONDOR_SCRATCH_DIR}
 	echo ${_CONDOR_SCRATCH_DIR}
 
-	echo "xrdcp root://cmseos.fnal.gov//store/user/dnoonan/CMSSW_8_0_26_patch1.tgz ."
-	xrdcp root://cmseos.fnal.gov//store/user/dnoonan/CMSSW_8_0_26_patch1.tgz .
+	echo "xrdcp root://cmseos.fnal.gov//store/user/"${USER}"/CMSSW_8_0_26_patch1.tgz ."
+	xrdcp root://cmseos.fnal.gov//store/user/${USER}/CMSSW_8_0_26_patch1.tgz .
 	echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
 	tar -xzf CMSSW_8_0_26_patch1.tgz
 	cd CMSSW_8_0_26_patch1/src/
@@ -20,10 +20,8 @@ fi
 
 eval `scramv1 runtime -sh`
 
-
-
-inputdir="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_skims/muons/V08_00_26_07/"
-outputdir="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_AnalysisNtuples/muons/V08_00_26_07/"
+inputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_skims/muons/V08_00_26_07/"
+outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07/"
 
 
 files=("TTGamma_SingleLeptFromTbar_" \
@@ -98,7 +96,7 @@ sampleType=("TTGamma_SingleLeptFromTbar " \
 echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root"
 AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root
 
-echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}"
-xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}
+echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/."
+xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/.
 
 

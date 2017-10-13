@@ -29,7 +29,17 @@ int main(int ac, char** av){
 	}
 
 	string sampleType = av[1];
+	string systematicType = "";
 	cout << sampleType << endl;
+
+	size_t pos = sampleType.find("__");
+	if (pos != std::string::npos){
+		systematicType = sampleType.substr(pos+2,sampleType.length());
+		sampleType = sampleType.substr(0,pos);
+	}
+
+    cout << sampleType << "  " << systematicType << endl;
+
 
 	if (std::end(allowedSampleTypes) == std::find(std::begin(allowedSampleTypes), std::end(allowedSampleTypes), sampleType)){
 		cout << "This is not an allowed sample, please specify one from this list (or add to this list in the code):" << endl;
@@ -40,20 +50,19 @@ int main(int ac, char** av){
 	}
 
 
-	// input: dealing with TTree first
-	bool isMC = false;
+	bool isMC = (sampleType.find("Data") == std::string::npos);
 	PUReweight* PUweighter;
-	if (sampleType!="Data") {
+
+	if (isMC) {
 		PUweighter = new PUReweight(ac-3, av+3, PUfilename);
-		isMC = true;
 	}
 
 	bool doOverlapRemoval = false;
+	bool doOverlapRemoval_WZ = false;	
 	bool skipOverlap = false;
 	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO") doOverlapRemoval = true;
-
-	if(doOverlapRemoval) std::cout << "########## Will apply overlap removal ###########" << std::endl;
-
+	if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50") doOverlapRemoval_WZ = true;
+	if(doOverlapRemoval || doOverlapRemoval_WZ) std::cout << "########## Will apply overlap removal ###########" << std::endl;
 
 
 	EventTree* tree = new EventTree(ac-3, av+3);
@@ -68,12 +77,27 @@ int main(int ac, char** av){
 	evtPick->saveCutflows = true;
 
 	selector->looseJetID = false;
-	
-	evtPick->Njet_ge = 4;	
-	evtPick->NBjet_ge = 2;	
+
+	selector->useDeepCSVbTag = true;
+
+	evtPick->Njet_ge = 3;	
+	evtPick->NBjet_ge = 1;	
 
 	//	selector->veto_jet_pho_dR = -1.;
 	//	selector->veto_pho_jet_dR = -1.;
+
+
+	bool dileptonsample = false;
+	if( systematicType=="Dilep")     {
+		dileptonsample =true; 
+		evtPick->Nmu_eq=2; 
+		evtPick->Nele_eq=2;
+		evtPick->Njet_ge = 2;	
+		evtPick->NBjet_ge = 1;	
+	}
+	std::cout << "Dilepton Sample :" << dileptonsample << std::endl;
+
+
 
 	
 	BTagCalibration calib("csvv2", "CSVv2_Moriond17_B_H.csv");
@@ -137,7 +161,7 @@ int main(int ac, char** av){
 		//add in the weights
 		double weight = 1.;
 		if (isMC){
-			weight = _evtWeight;
+			weight = _evtWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);
 			_PUweight    = PUweighter->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
 			weight *= _PUweight;
 
