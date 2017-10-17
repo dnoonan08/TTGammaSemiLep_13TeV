@@ -62,6 +62,14 @@ int main(int ac, char** av){
 	} else if (channel=="diele"){
 		evtPick->skimEle=true;
 		evtPick->Nele_eq = 2;
+	} else if (channel=="qcdele"){
+		evtPick->skimEle=true;
+		evtPick->Nele_eq = 1;
+		selector->QCDselect = true;
+	} else if (channel=="qcdmu"){
+		evtPick->skimEle=true;
+		evtPick->Nele_eq = 1;
+		selector->QCDselect = true;
 	}else {
 		cout << av[1] << endl;
 		cout << (av[1]=="ele") << endl;

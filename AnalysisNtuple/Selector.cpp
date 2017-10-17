@@ -32,6 +32,9 @@ Selector::Selector(){
 	btag_cut_DeepCSV = 0.6324;  
 
 
+	// whether to invert lepton requirements for 
+	QCDselect = false;
+
 	// electrons
 	ele_Pt_cut = 35.0;
 	ele_Eta_cut = 2.1;
@@ -42,10 +45,12 @@ Selector::Selector(){
 	mu_Pt_cut = 30;
 	mu_Eta_tight = 2.4;
 	mu_RelIso_tight = 0.15;
+	mu_QCDRelIso_tight = 0.25;
 
 	mu_PtLoose_cut = 15.0;
 	mu_Eta_loose = 2.4;
 	mu_RelIso_loose = 0.25;
+	mu_QCDRelIso_loose = 0.25;
 	
 	mu_Iso_invert = false;
 	smearJetPt = true;
@@ -295,14 +300,16 @@ void Selector::filter_muons(){
 
 
 		bool passTight = (pt > mu_Pt_cut &&
-				  TMath::Abs(eta) < mu_Eta_tight &&
-				  tightMuonID &&
-				  PFrelIso_corr < mu_RelIso_tight);
+						  TMath::Abs(eta) < mu_Eta_tight &&
+						  tightMuonID &&
+						  ((!QCDselect && PFrelIso_corr < mu_RelIso_tight) ||
+						   (QCDselect && PFrelIso_corr > mu_QCDRelIso_tight))
+						  );
 		bool passLoose = (pt > mu_PtLoose_cut &&
-				  TMath::Abs(eta) < mu_Eta_loose &&
-				  looseMuonID &&
-				  PFrelIso_corr < mu_RelIso_loose);
-
+						  TMath::Abs(eta) < mu_Eta_loose &&
+						  looseMuonID &&
+						  PFrelIso_corr < mu_RelIso_loose);
+		
 		if(passTight){
 		 	Muons.push_back(muInd);
 		}
