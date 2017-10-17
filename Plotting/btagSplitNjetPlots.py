@@ -55,7 +55,7 @@ mcList = {'TTGamma': [kOrange],
           'ZGamma': [kBlue-2],
           'WJets': [kCyan-3],
           'ZJets': [kCyan-5],
-          'QCDMu': [kGreen+3],
+          #'QCDMu': [kGreen+3],
           }
 
 _file = TFile("histograms/mu/testBtaghists.root","read")
@@ -68,7 +68,7 @@ samples = ['TTGamma',
            'WJets',
            'SingleTop', 
            'TTV',	  
-           'QCDMu',	  
+           #'QCDMu',	  
            'DataMu',	  
            ]
 
@@ -78,8 +78,8 @@ histograms = []
 for s in samples:    
     histograms.append(TH1F("jbMult_%s"%s,"jbMult_%s"%s,10,0,10))
 
-    h1 = _file.Get("%s/phoselnjets1Tag_%s"%(s,s))
-    h2 = _file.Get("%s/phoselnjets2Tag_%s"%(s,s))
+    h1 = _file.Get("%s/njets1Tag_%s"%(s,s))
+    h2 = _file.Get("%s/njets2Tag_%s"%(s,s))
     for i in range(4):
         histograms[-1].SetBinContent(i+1,h1.GetBinContent(3+i))
         histograms[-1].SetBinContent(i+6,h2.GetBinContent(3+i))
@@ -137,12 +137,12 @@ legend.AddEntry(histograms[4],'Z+jets'         ,'f')
 legend.AddEntry(histograms[5],'W+jets'         ,'f')
 legend.AddEntry(histograms[6],'Single t'       ,'f')
 legend.AddEntry(histograms[7],'t#bar{t}+V'     ,'f')
-legend.AddEntry(histograms[8],'Multijet'       ,'f')
+#legend.AddEntry(histograms[8],'Multijet'       ,'f')
 
 
 stack = THStack()
 
-stack.Add(histograms[8])
+#stack.Add(histograms[8])
 stack.Add(histograms[7])
 stack.Add(histograms[6])
 stack.Add(histograms[5])
@@ -165,4 +165,5 @@ CMS_lumi.writeExtraText = True
 CMS_lumi.CMS_lumi(canvas, 4, 11)
 legend.Draw()
 
-canvas.SaveAs("JetBjetMult_Phosel.pdf")
+canvas.SaveAs("JetBjetMult_Presel.pdf")
+canvas.SaveAs("JetBjetMult_Presel.png")
