@@ -77,16 +77,18 @@ histograms = []
 
 for s in samples:    
     histograms.append(TH1F("jbMult_%s"%s,"jbMult_%s"%s,10,0,10))
-
-    h1 = _file.Get("%s/njets1Tag_%s"%(s,s))
-    h2 = _file.Get("%s/njets2Tag_%s"%(s,s))
+#    h0 = _file.Get("%s/njets0Tag_%s"%(s,s))
+    h1 = _file.Get("%s/phoselnjets1Tag_%s"%(s,s))
+    h2 = _file.Get("%s/phoselnjets2Tag_%s"%(s,s))
+    #print s, h0.GetBinContent(3)
     for i in range(4):
+#	histograms[-1].SetBinContent(i+1,h0.GetBinContent(3+i))
         histograms[-1].SetBinContent(i+1,h1.GetBinContent(3+i))
         histograms[-1].SetBinContent(i+6,h2.GetBinContent(3+i))
 
-        histograms[-1].SetBinContent(5 ,h1.Integral(7,-1))
-        histograms[-1].SetBinContent(10,h1.Integral(7,-1))
-
+    histograms[-1].SetBinContent(5 ,h1.Integral(7,-1))
+    histograms[-1].SetBinContent(10,h2.Integral(7,-1))
+ #   histograms[-1].SetBinContent(15,h2.Integral(7,-1))
     if not "DataMu" in s:
         histograms[-1].SetFillColor(mcList[s][0])
         histograms[-1].SetLineColor(mcList[s][0])
@@ -96,7 +98,11 @@ for s in samples:
         histograms[-1].SetMarkerSize(h1.GetMarkerSize())
         histograms[-1].SetMarkerStyle(20)
         histograms[-1].SetMarkerColor(kBlack)
-
+ #   histograms[-1].GetXaxis().SetBinLabel(1,"=2j=0b")
+ #   histograms[-1].GetXaxis().SetBinLabel(2,"=3j=0b")
+ #   histograms[-1].GetXaxis().SetBinLabel(3,"=4j=0b")
+ #   histograms[-1].GetXaxis().SetBinLabel(4,"=5j=0b")
+  ##  histograms[-1].GetXaxis().SetBinLabel(5,"#geq6j=0b")
     histograms[-1].GetXaxis().SetBinLabel(1,"=2j=1b")
     histograms[-1].GetXaxis().SetBinLabel(2,"=3j=1b")
     histograms[-1].GetXaxis().SetBinLabel(3,"=4j=1b")
@@ -165,5 +171,5 @@ CMS_lumi.writeExtraText = True
 CMS_lumi.CMS_lumi(canvas, 4, 11)
 legend.Draw()
 
-canvas.SaveAs("JetBjetMult_Presel.pdf")
-canvas.SaveAs("JetBjetMult_Presel.png")
+canvas.SaveAs("JetBjetMult_Phosel.pdf")
+canvas.SaveAs("JetBjetMult_Phosel.png")

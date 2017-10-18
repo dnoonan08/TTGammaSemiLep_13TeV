@@ -7,7 +7,7 @@ gROOT.SetBatch(True)
 
 finalState = "Mu"
 
-nBJets = 1
+#nBJets = 1
 
 # btagWeight = ["1","(1-btagWeight[0])","(btagWeight[2])"]
 
@@ -43,26 +43,33 @@ if not sample in sampleList:
 tree = TChain("AnalysisTree")
 fileList = samples[sample][0]
 for fileName in fileList:
+    
     tree.Add("%s/%s"%(analysisNtupleLocation,fileName))
 
 print sample
 
 print "Number of events:", tree.GetEntries()
 
-
+hist_njets0Tag = TH1F("njets0Tag_%s"%sample,"njets0Tag_%s"%sample,10,0,10)
 hist_njets1Tag = TH1F("njets1Tag_%s"%sample,"njets1Tag_%s"%sample,10,0,10)
 hist_njets2Tag = TH1F("njets2Tag_%s"%sample,"njets2Tag_%s"%sample,10,0,10)
+hist_phoselnjets0Tag = TH1F("phoselnjets0Tag_%s"%sample,"phoselnjets0Tag_%s"%sample,10,0,10)
 hist_phoselnjets1Tag = TH1F("phoselnjets1Tag_%s"%sample,"phoselnjets1Tag_%s"%sample,10,0,10)
 hist_phoselnjets2Tag = TH1F("phoselnjets2Tag_%s"%sample,"phoselnjets2Tag_%s"%sample,10,0,10)
 
 if not "Data" in sample:
+
+    tree.Draw("nJet>>njets0Tag_%s"%sample,      "(passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]")
     tree.Draw("nJet>>njets1Tag_%s"%sample,      "(passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[1]")
     tree.Draw("nJet>>njets2Tag_%s"%sample,      "(passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]")
+    tree.Draw("nJet>>phoselnjets0Tag_%s"%sample,"(phoMediumID && passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]")
     tree.Draw("nJet>>phoselnjets1Tag_%s"%sample,"(phoMediumID && passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[1]")
     tree.Draw("nJet>>phoselnjets2Tag_%s"%sample,"(phoMediumID && passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]")
 else:
+    tree.Draw("nJet>>njets0Tag_%s"%sample,      "(passPresel_Mu && nBJet>=0)")
     tree.Draw("nJet>>njets1Tag_%s"%sample,      "(passPresel_Mu && nBJet==1)")
     tree.Draw("nJet>>njets2Tag_%s"%sample,      "(passPresel_Mu && nBJet>=2)")
+    tree.Draw("nJet>>phoselnjets0Tag_%s"%sample,"(phoMediumID && passPresel_Mu && nBJet>=0)")
     tree.Draw("nJet>>phoselnjets1Tag_%s"%sample,"(phoMediumID && passPresel_Mu && nBJet==1)")
     tree.Draw("nJet>>phoselnjets2Tag_%s"%sample,"(phoMediumID && passPresel_Mu && nBJet>=2)")
     
@@ -90,8 +97,10 @@ outputFile = TFile(outputhistName,"update")
 outputFile.rmdir(sample)
 outputFile.mkdir(sample)
 outputFile.cd(sample)
+hist_njets0Tag.Write()
 hist_njets1Tag.Write()
 hist_njets2Tag.Write()
+hist_phoselnjets0Tag.Write()
 hist_phoselnjets1Tag.Write()
 hist_phoselnjets2Tag.Write()
 
