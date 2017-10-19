@@ -294,10 +294,30 @@ void makeAnalysisNtuple::FillEvent()
 
 	_nPho		     = evtPick->Photons.size();
 	_nEle		     = evtPick->Electrons.size();
+	_nEleLoose           = evtPick->ElectronsLoose.size();
+	_nMuLoose            = evtPick->MuonsLoose.size();
 	_nMu		     = evtPick->Muons.size();
 	_nJet            = evtPick->Jets.size();
 	_nBJet           = evtPick->bJets.size();
 	_nMC             = tree->nMC_;
+	
+
+
+
+	double ht = 0.0;
+        ht += tree->pfMET_;
+        for( int i_jet = 0; i_jet < _nJet; i_jet++)
+                ht += tree->jetPt_->at(i_jet);
+        for( int i_ele = 0; i_ele < _nEle; i_ele++)
+                ht += tree->elePt_->at(i_ele);
+        for(int i_eleloose = 0; i_eleloose < _nEleLoose; i_eleloose++)
+                ht += tree->elePt_->at(i_eleloose);
+        for( int i_mu = 0; i_mu < _nMu; i_mu++)
+                ht += tree->muPt_->at(i_mu);
+        for(int i_muloose = 0; i_muloose < _nMuLoose; i_muloose++)
+                ht += tree->muPt_->at(i_muloose);
+	
+	_HT = ht; 
 
 
 	for (int i_ele = 0; i_ele <_nEle; i_ele++){
@@ -371,7 +391,6 @@ void makeAnalysisNtuple::FillEvent()
 		}
 	}
 	
-		
 		
 
 	_WtransMass = TMath::Sqrt(2*lepVector.Pt()*tree->pfMET_*( 1.0 - TMath::Cos(dR(0.0,lepVector.Phi(),0.0,tree->pfMETPhi_)) ));
@@ -537,7 +556,6 @@ void makeAnalysisNtuple::FillEvent()
 		}
 	}
 }
-
 
 // https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
 double makeAnalysisNtuple::SFtop(double pt){
