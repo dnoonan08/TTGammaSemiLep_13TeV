@@ -67,7 +67,7 @@ int main(int ac, char** av){
 		evtPick->Nele_eq = 1;
 		selector->QCDselect = true;
 	} else if (channel=="qcdmu"){
-		evtPick->skimEle=true;
+		evtPick->skimMu=true;
 		evtPick->Nele_eq = 1;
 		selector->QCDselect = true;
 	}else {
@@ -102,10 +102,18 @@ int main(int ac, char** av){
 	Long64_t nEntr = tree->GetEntries();
 
 	if( outDirName.find("Test") != std::string::npos || outDirName.find("test") != std::string::npos || outDirName.find("TEST") != std::string::npos){
-		std::cout << "-------------------------------------------------------------------------" << std::endl;
-		std::cout << "Since this is a Test (based on output name) only running on 10,000 events" << std::endl;
-		std::cout << "-------------------------------------------------------------------------" << std::endl;
-		nEntr = 10000;
+		if (selector->QCDselect){
+			std::cout << "-------------------------------------------------------------------------" << std::endl;
+			std::cout << "Since this is a Test (based on output name) only running on 100,000 events" << std::endl;
+			std::cout << "-------------------------------------------------------------------------" << std::endl;
+			nEntr = 100000;
+		}
+		else{
+			std::cout << "-------------------------------------------------------------------------" << std::endl;
+			std::cout << "Since this is a Test (based on output name) only running on 10,000 events" << std::endl;
+			std::cout << "-------------------------------------------------------------------------" << std::endl;
+			nEntr = 10000;
+		}
 	}
 
 	int dumpFreq = 100;

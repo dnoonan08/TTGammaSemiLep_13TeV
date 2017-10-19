@@ -55,6 +55,7 @@ EventPick::EventPick(std::string titleIn){
 	SkimNBjet_ge = 1;
 	Nlep_eq = 1;
 
+	ZeroBExclusive = false;
 
 	Npho_ge = 1;
 	NlooseMuVeto_le = 0;
@@ -129,12 +130,13 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 
 	passPresel_mu  = true;
 	passPresel_ele = true;
-
+	//	cout << "-------" << endl;
 	// Cut events that fail ele trigger
 	if( passPresel_mu &&  Pass_trigger_mu) { if (saveCutflows) {cutFlow_mu->Fill(1); cutFlowWeight_mu->Fill(1,weight); } }
 	else { passPresel_mu = false;}
 	if( passPresel_mu && tree->isPVGood_) { if (saveCutflows) {cutFlow_mu->Fill(2); cutFlowWeight_mu->Fill(2,weight); } }
 	else { passPresel_mu = false;}
+	//	cout << 2 << " " <<selector->Muons.size() << "   " << (selector->MuonsLoose.size() <=  NlooseMuVeto_le+0.5) << selector->MuonsLoose.size() << NlooseMuVeto_le << "   " << Jets.size() << "   " << Pass_trigger_mu << "   " << passPresel_mu << endl;
 
 	// Cut on events with ==1 muon, no loose muons, no loose or tight electrons
 	if( passPresel_mu && Muons.size() == Nmu_eq){
@@ -148,10 +150,13 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 		if (saveCutflows){cutFlow_mu->Fill(3); cutFlowWeight_mu->Fill(3,weight); } 
 	}
 	else { passPresel_mu = false;}
+	//	cout << 3 << " " <<selector->Muons.size() << "   " << (selector->MuonsLoose.size() <=  NlooseMuVeto_le+0.5) << selector->MuonsLoose.size() << NlooseMuVeto_le << "   " << Jets.size() << "   " << Pass_trigger_mu << "   " << passPresel_mu << endl;
 	if( passPresel_mu && selector->MuonsLoose.size() <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_mu->Fill(4); cutFlowWeight_mu->Fill(4,weight); } }
 	else { passPresel_mu = false;}
+	///	cout << 4 << " " <<selector->Muons.size() << "   " << (selector->MuonsLoose.size() <=  NlooseMuVeto_le+0.5) << selector->MuonsLoose.size() << NlooseMuVeto_le << "   " << Jets.size() << "   " << Pass_trigger_mu << "   " << passPresel_mu << endl;
 	if( passPresel_mu && (selector->ElectronsLoose.size() + selector->Electrons.size() ) <=  NlooseEleVeto_le ) {if (saveCutflows) {cutFlow_mu->Fill(5); cutFlowWeight_mu->Fill(5,weight);} }
 	else { passPresel_mu = false;}
+
 
 	// Cut events that fail ele trigger
 	if( passPresel_ele &&  Pass_trigger_ele) { if (saveCutflows) {cutFlow_ele->Fill(1); cutFlowWeight_ele->Fill(1,weight);}}
@@ -183,6 +188,7 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 	// split skim into ele and mu
 	if ( (skimEle && passPresel_ele) || (skimMu && passPresel_mu) && Jets.size() >= SkimNjet_ge && bJets.size() >= SkimNBjet_ge ){ passSkim = true; }
 
+	//	cout << " " <<selector->Muons.size() << "   " << (selector->MuonsLoose.size() <=  NlooseMuVeto_le+0.5) << selector->MuonsLoose.size() << NlooseMuVeto_le << "   " << Jets.size()<< "   " << bJets.size() << "   " << Pass_trigger_mu << "   " << passPresel_mu << "   " << skimMu << passSkim  << endl;
 
 
 	// NJet cuts for electrons
@@ -194,9 +200,13 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 	}
 
 	// Nbtag cuts for electrons
-	for (int ibjetCut = 1; ibjetCut <= NBjet_ge; ibjetCut++){
-		if(passPresel_ele && bJets.size() >= ibjetCut ) { if (saveCutflows) {cutFlow_ele->Fill(9+ibjetCut); cutFlowWeight_ele->Fill(9+ibjetCut,weight);}}
-		else passPresel_ele = false;
+	if (!ZeroBExclusive){
+		for (int ibjetCut = 1; ibjetCut <= NBjet_ge; ibjetCut++){
+			if(passPresel_ele && bJets.size() >= ibjetCut ) { if (saveCutflows) {cutFlow_ele->Fill(9+ibjetCut); cutFlowWeight_ele->Fill(9+ibjetCut,weight);}}
+			else passPresel_ele = false;
+		}
+	} else {
+		if(passPresel_ele && bJets.size() !=0) passPresel_ele = false;
 	}
 
 
@@ -224,10 +234,15 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 	}
 
 	// Nbtag cuts for muons
-	for (int ibjetCut = 1; ibjetCut <= NBjet_ge; ibjetCut++){
-		if(passPresel_mu && bJets.size() >= ibjetCut ) { if (saveCutflows) {cutFlow_mu->Fill(9+ibjetCut); cutFlowWeight_mu->Fill(9+ibjetCut,weight);}}
-		else passPresel_mu = false;
+	if (!ZeroBExclusive){
+		for (int ibjetCut = 1; ibjetCut <= NBjet_ge; ibjetCut++){
+			if(passPresel_mu && bJets.size() >= ibjetCut ) { if (saveCutflows) {cutFlow_mu->Fill(9+ibjetCut); cutFlowWeight_mu->Fill(9+ibjetCut,weight);}}
+			else passPresel_mu = false;
+		}
+	} else {
+		if(passPresel_mu && bJets.size() !=0) passPresel_mu = false;
 	}
+
 
 	// MET cut for muons
 	if(passPresel_mu && tree->pfMET_ >= MET_cut) { if (saveCutflows) {cutFlow_mu->Fill(13); cutFlowWeight_mu->Fill(13,weight);}}

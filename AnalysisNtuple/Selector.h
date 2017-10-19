@@ -94,7 +94,8 @@ public:
 	bool   smearJetPt;
 	bool   looseJetID;
 	bool   useDeepCSVbTag;
-	
+	bool   QCDselect;
+
 	// electrons
 	double ele_Pt_cut;
 	double ele_PtLoose_cut;
@@ -150,8 +151,8 @@ private:
 	double phoEffArea03Pho(double phoSCEta);
 	int egammaRegion(double absEta);
 
-	bool passEleTightID(int eleInd);
-	bool passEleLooseID(int eleInd);
+	bool passEleTightID(int eleInd, bool doRelisoCut);
+	bool passEleVetoID(int eleInd, bool doRelisoCut);
 	//	bool passPhoMediumID(int phoInd);
 	bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso);
 };

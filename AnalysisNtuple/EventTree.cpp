@@ -153,6 +153,9 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("eleMissHits",1);
 	chain->SetBranchAddress("eleMissHits", &eleMissHits_);
 
+	eleConvVeto_ = new vector<int>;
+	chain->SetBranchStatus("eleConvVeto",1);
+	chain->SetBranchAddress("eleConvVeto", &eleConvVeto_);
 
 	eleDz_ = new vector<float>;
 	chain->SetBranchStatus("eleDz",1);
@@ -162,12 +165,20 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("eleEoverP",1);
 	chain->SetBranchAddress("eleEoverP", &eleEoverP_);
 
+	eleEoverPInv_ = new vector<float>;
+	chain->SetBranchStatus("eleEoverPInv",1);
+	chain->SetBranchAddress("eleEoverPInv", &eleEoverPInv_);
+
 	// keep this branch in the skim
 	//chain->SetBranchStatus("elePin",1);
 
 	eleSigmaIPhiIPhiFull5x5_ = new vector<float>;
 	chain->SetBranchStatus("eleSigmaIEtaIEtaFull5x5",1);
 	chain->SetBranchAddress("eleSigmaIEtaIEtaFull5x5", &eleSigmaIEtaIEtaFull5x5_);
+
+	eledEtaseedAtVtx_ = new vector<float>;
+	chain->SetBranchStatus("eledEtaseedAtVtx",1);
+	chain->SetBranchAddress("eledEtaseedAtVtx", &eledEtaseedAtVtx_);
 
 	eledEtaAtVtx_ = new vector<float>;
 	chain->SetBranchStatus("eledEtaAtVtx",1);
@@ -184,6 +195,20 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	eleHoverE_ = new vector<float>;
 	chain->SetBranchStatus("eleHoverE",1);
 	chain->SetBranchAddress("eleHoverE", &eleHoverE_);
+
+	elePFClusEcalIso_ = new vector<float>;
+	chain->SetBranchStatus("elePFClusEcalIso",1);
+	chain->SetBranchAddress("elePFClusEcalIso", &elePFClusEcalIso_);
+
+	elePFClusHcalIso_ = new vector<float>;
+	chain->SetBranchStatus("elePFClusHcalIso",1);
+	chain->SetBranchAddress("elePFClusHcalIso", &elePFClusHcalIso_);
+
+	eleDr03TkSumPt_ = new vector<float>;
+	chain->SetBranchStatus("eleDr03TkSumPt",1);
+	chain->SetBranchAddress("eleDr03TkSumPt", &eleDr03TkSumPt_);
+
+
 
 
 	// muons

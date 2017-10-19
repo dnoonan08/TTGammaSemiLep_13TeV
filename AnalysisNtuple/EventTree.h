@@ -171,10 +171,12 @@ public:
 	vector<float>*  eleHoverE_;
 	vector<float>*  eleHoverE12_; 
 	vector<float>*  eleEoverP_;
+	vector<float>*  eleEoverPInv_;
 	vector<float>*  elePin_;
 	vector<float>*  elePout_;
 	vector<float>*  eleTrkMomErr_;
 	vector<float>*  eleBrem_;
+	vector<float>*  eledEtaseedAtVtx_;
 	vector<float>*  eledEtaAtVtx_;
 	vector<float>*  eledPhiAtVtx_;
 	vector<float>*  eleSigmaIEtaIEtaFull5x5_;
@@ -227,6 +229,7 @@ public:
 	vector<float>*  eleModIsoHcal_;
 	vector<float>*  eleChi2NDF_;
 	vector<int>*    eleMissHits_;
+	vector<int>*    eleConvVeto_;
 	vector<float>*  eleConvDist_;
 	vector<float>*  eleConvDcot_;
 	vector<int>*    eleEtaseedAtVtx_;
@@ -264,6 +267,10 @@ public:
 	vector<float>*  elePFChIso04_;
 	vector<float>*  elePFPhoIso04_;
 	vector<float>*  elePFNeuIso04_;
+	vector<float>*  elePFClusEcalIso_;
+	vector<float>*  elePFClusHcalIso_;
+	vector<float>*  eleDr03TkSumPt_;
+
 	// Photon
 	Int_t    nPho_;
 	vector<ULong_t>* phoTrg_;
