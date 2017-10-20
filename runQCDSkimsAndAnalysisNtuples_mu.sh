@@ -135,17 +135,17 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 
 
 
-echo "AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}"
-AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}
+echo "AnalysisNtuple/makeSkim qcdmu ${files[job]}skim.root ${inputfiles[job]}"
+AnalysisNtuple/makeSkim qcdmu ${files[job]}skim.root ${inputfiles[job]}
 
-echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.root"
-AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.root
+echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__QCDcr . ${files[job]}skim.root"
+AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__QCDcr . ${files[job]}skim.root
 
 
-echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/V08_00_26_07/"
-xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/V08_00_26_07/
+echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/qcdmuons/V08_00_26_07/."
+xrdcp -f ${files[job]}skim.root ${outputdir}skims/qcdmuons/V08_00_26_07/.
 
-echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/V08_00_26_07/"
-xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/V08_00_26_07/
+echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/V08_00_26_07/."
+xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/qcdmuons/V08_00_26_07/.
 
 
