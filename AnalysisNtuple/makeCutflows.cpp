@@ -20,7 +20,6 @@ std::string PUfilename_down = "Data_2016BCDGH_Pileup_scaledDown.root";
 #include "elemuSF.h"
 
 bool overlapRemovalTT(EventTree* tree);
-bool overlapRemovalWZ(EventTree* tree);
 double getBtagSF(EventTree *tree, Selector *selector,  string sysType, BTagCalibrationReader reader, int NBjet_ge);
 
 int main(int ac, char** av){
@@ -50,13 +49,11 @@ int main(int ac, char** av){
 	}
 
 	bool doOverlapRemoval = false;
-	bool doOverlapRemoval_WZ = false;	
 	bool skipOverlap = false;
 	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO") doOverlapRemoval = true;
 
-	if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50") doOverlapRemoval_WZ = true;
+	if(doOverlapRemoval) std::cout << "########## Will apply overlap removal ###########" << std::endl;
 
-	if(doOverlapRemoval || doOverlapRemoval_WZ) std::cout << "########## Will apply overlap removal ###########" << std::endl;
 
 
 	EventTree* tree = new EventTree(ac-3, av+3);
@@ -134,11 +131,6 @@ int main(int ac, char** av){
 			}
 		}
 
-		if( isMC && doOverlapRemoval_WZ){
-			if (overlapRemovalWZ(tree)){
-				continue;
-			}
-		}
 		
 		selector->process_objects(tree);
 	   
