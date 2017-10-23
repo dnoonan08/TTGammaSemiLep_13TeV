@@ -32,6 +32,9 @@ Selector::Selector(){
 	btag_cut_DeepCSV = 0.6324;  
 
 
+	// whether to invert lepton requirements for 
+	QCDselect = false;
+
 	// electrons
 	ele_Pt_cut = 35.0;
 	ele_Eta_cut = 2.1;
@@ -68,7 +71,7 @@ void Selector::process_objects(EventTree* inp_tree){
 
 	//	cout << "before selector electrons" << endl;
  	filter_electrons();
-	
+
 	//	cout << "before selector photons" << endl;
 	filter_photons();
 
@@ -224,10 +227,10 @@ void Selector::filter_electrons(){
 
 
 		uint eleID = tree->eleIDbit_->at(eleInd);
-		bool passEleVetoID = (eleID >> 0) & 1;
-		bool passEleLooseID = (eleID >> 1) & 1;
-		bool passEleMediumID = (eleID >> 2) & 1;
-		bool passEleTightID = (eleID >> 3) & 1;
+		bool passVetoID = (eleID >> 0) & 1;
+		bool passLooseID = (eleID >> 1) & 1;
+		bool passMediumID = (eleID >> 2) & 1;
+		bool passTightID = (eleID >> 3) & 1;
 
 		// make sure it doesn't fall within the gap
 		bool passEtaEBEEGap = (absSCEta < 1.4442) || (absSCEta > 1.566);
@@ -238,13 +241,21 @@ void Selector::filter_electrons(){
 			       (absEta > 1.479 && tree->eleD0_->at(eleInd) < 0.1));
 		bool passDz = ((absEta < 1.479 && tree->eleDz_->at(eleInd) < 0.1) ||
 			       (absEta > 1.479 && tree->eleDz_->at(eleInd) < 0.2));
-		
+	   
+		if (QCDselect){
+			passTightID = false;
+			passTightID = passEleTightID(eleInd,false) && 
+				PFrelIso_corr > (absSCEta < 1.47 ? 0.0588 : 0.0571) && 
+				tree->elePFClusEcalIso_->at(eleInd) < (absSCEta < 1.47 ? 0.0032 : 0.040) && 
+				tree->elePFClusHcalIso_->at(eleInd) < (absSCEta < 1.47 ? 0.055 : 0.05) && 
+				tree->eleDr03TkSumPt_->at(eleInd) < (absSCEta < 1.47 ? 0.06 : 0.05);
+		}
 
 
 		bool eleSel = (passEtaEBEEGap &&
 			       absEta < ele_Eta_cut &&
 			       pt > ele_Pt_cut &&
-			       passEleTightID &&
+			       passTightID &&
 			       passD0 &&
 			       passDz);
 
@@ -252,7 +263,7 @@ void Selector::filter_electrons(){
 		bool looseSel = (passEtaEBEEGap &&
 				 absEta < ele_EtaLoose_cut &&
 				 pt > ele_PtLoose_cut &&
-				 passEleVetoID &&
+				 passVetoID &&
 				 passD0 &&
 				 passDz);
 
@@ -295,14 +306,17 @@ void Selector::filter_muons(){
 
 
 		bool passTight = (pt > mu_Pt_cut &&
-				  TMath::Abs(eta) < mu_Eta_tight &&
-				  tightMuonID &&
-				  PFrelIso_corr < mu_RelIso_tight);
-		bool passLoose = (pt > mu_PtLoose_cut &&
-				  TMath::Abs(eta) < mu_Eta_loose &&
-				  looseMuonID &&
-				  PFrelIso_corr < mu_RelIso_loose);
+						  TMath::Abs(eta) < mu_Eta_tight &&
+						  tightMuonID &&
+						  (!QCDselect ? (PFrelIso_corr < mu_RelIso_tight): PFrelIso_corr > mu_RelIso_tight)
+						  );
 
+		bool passLoose = (pt > mu_PtLoose_cut &&
+						  TMath::Abs(eta) < mu_Eta_loose &&
+						  looseMuonID &&
+						  (!QCDselect ? (PFrelIso_corr < mu_RelIso_loose): PFrelIso_corr > mu_RelIso_tight)
+						  );
+		
 		if(passTight){
 		 	Muons.push_back(muInd);
 		}
@@ -441,12 +455,68 @@ double Selector::phoEffArea03Pho(double phoSCEta){
 	return photonEA[egammaRegion(eta)][2];
 }
 
-bool Selector::passEleTightID(int eleInd){
-  return true;
+bool Selector::passEleTightID(int eleInd, bool doRelisoCut){
+
+	double pt = tree->elePt_->at(eleInd);
+    double eta = TMath::Abs(tree->eleSCEta_->at(eleInd));
+
+	double rho = tree->rho_;
+	double ea = electronEA[egammaRegion(eta)];
+
+
+	// EA subtraction
+	double PFrelIso_corr = ( tree->elePFChIso_->at(eleInd) + 
+							 max(0.0, tree->elePFNeuIso_->at(eleInd) + 
+								 tree->elePFPhoIso_->at(eleInd) -
+								 rho*ea
+								 )
+							 ) / pt;
+
+	bool SIEIECut      = (eta < 1.47) ? (tree->eleSigmaIEtaIEtaFull5x5_->at(eleInd) < 0.00998) : (tree->eleSigmaIEtaIEtaFull5x5_->at(eleInd) < 0.0292);
+	bool dEtaCut       = (eta < 1.47) ? (tree->eledEtaseedAtVtx_->at(eleInd)		< 0.00308) : (tree->eledEtaseedAtVtx_->at(eleInd)		 < 0.00605);
+	bool dPhiCut       = (eta < 1.47) ? (tree->eledPhiAtVtx_->at(eleInd)			< 0.0816 ) : (tree->eledPhiAtVtx_->at(eleInd)			 < 0.0394 );
+	bool HoverECut     = (eta < 1.47) ? (tree->eleHoverE_->at(eleInd)			    < 0.0414 ) : (tree->eleHoverE_->at(eleInd)			     < 0.0641 );
+	bool RelIsoCut     = (eta < 1.47) ? (PFrelIso_corr							    < 0.0588 ) : (PFrelIso_corr							     < 0.0571 );
+	bool overEoverPCut = (eta < 1.47) ? (TMath::Abs(tree->eleEoverPInv_->at(eleInd))< 0.0129 ) : (TMath::Abs(tree->eleEoverPInv_->at(eleInd))< 0.0129 );
+	bool MissHitsCut   = (eta < 1.47) ? (tree->eleMissHits_->at(eleInd)             <= 1     ) : (tree->eleMissHits_->at(eleInd)             <= 1     );
+	bool ConvVetoCut   = tree->eleConvVeto_->at(eleInd);
+		
+    bool passTightID = SIEIECut && dEtaCut && dPhiCut && HoverECut && (doRelisoCut ? RelIsoCut : true) && overEoverPCut && MissHitsCut && ConvVetoCut;
+	
+	return true;
+
 }
 
-bool Selector::passEleLooseID(int eleInd){
-  return true;
+bool Selector::passEleVetoID(int eleInd, bool doRelisoCut){
+
+	double pt = tree->elePt_->at(eleInd);
+    double eta = TMath::Abs(tree->eleSCEta_->at(eleInd));
+
+	double rho = tree->rho_;
+	double ea = electronEA[egammaRegion(eta)];
+
+
+	// EA subtraction
+	double PFrelIso_corr = ( tree->elePFChIso_->at(eleInd) + 
+							 max(0.0, tree->elePFNeuIso_->at(eleInd) + 
+								 tree->elePFPhoIso_->at(eleInd) -
+								 rho*ea
+								 )
+							 ) / pt;
+
+	bool SIEIECut      = (eta < 1.47) ? (tree->eleSigmaIEtaIEtaFull5x5_->at(eleInd) < 0.0115 ) : (tree->eleSigmaIEtaIEtaFull5x5_->at(eleInd) < 0.037);
+	bool dEtaCut       = (eta < 1.47) ? (tree->eledEtaseedAtVtx_->at(eleInd)		< 0.00749) : (tree->eledEtaseedAtVtx_->at(eleInd)		 < 0.00895);
+	bool dPhiCut       = (eta < 1.47) ? (tree->eledPhiAtVtx_->at(eleInd)			< 0.228  ) : (tree->eledPhiAtVtx_->at(eleInd)			 < 0.213);
+	bool HoverECut     = (eta < 1.47) ? (tree->eleHoverE_->at(eleInd)			    < 0.356  ) : (tree->eleHoverE_->at(eleInd)			     < 0.211 );
+	bool RelIsoCut     = (eta < 1.47) ? (PFrelIso_corr							    < 0.175  ) : (PFrelIso_corr							     < 0.159 );
+	bool overEoverPCut = (eta < 1.47) ? (TMath::Abs(tree->eleEoverPInv_->at(eleInd))< 0.299  ) : (TMath::Abs(tree->eleEoverPInv_->at(eleInd))< 0.15  );
+	bool MissHitsCut   = (eta < 1.47) ? (tree->eleMissHits_->at(eleInd)             <= 2     ) : (tree->eleMissHits_->at(eleInd)             <= 3     );
+	bool ConvVetoCut   = tree->eleConvVeto_->at(eleInd);
+		
+    bool passTightID = SIEIECut && dEtaCut && dPhiCut && HoverECut && (doRelisoCut ? RelIsoCut : true) && overEoverPCut && MissHitsCut && ConvVetoCut;
+	
+	return true;
+
 }
 
 bool Selector::passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso){

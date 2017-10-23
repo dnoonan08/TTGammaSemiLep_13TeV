@@ -57,6 +57,8 @@ public:
 	int SkimNjet_ge;
 	int SkimNBjet_ge;
 
+	bool ZeroBExclusive;
+
 	int Jet_Pt_cut_1;
 	int Jet_Pt_cut_2;
 	int Jet_Pt_cut_3;	
