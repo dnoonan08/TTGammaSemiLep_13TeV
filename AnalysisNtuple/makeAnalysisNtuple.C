@@ -72,7 +72,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	
 	//	selector->jet_Pt_cut = 40.;
 	evtPick->Njet_ge = 2;	
-	evtPick->NBjet_ge = 1;	
+	evtPick->NBjet_ge = 0;	
 	BTagCalibration calib;
 	if (!selector->useDeepCSVbTag){
 		calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
@@ -190,7 +190,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	int count_overlapVJets=0;
 	int count_overlapTTbar=0;
 	for(Long64_t entry=0; entry<nEntr; entry++){
-		if(entry%dumpFreq == 0) std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
+//	for(Long64_t entry=0; entry<10000; entry++){
+		if(entry%dumpFreq == 0) std::cout << "processing entry " << entry << nEntr << 10000 << std::endl;
 
 		tree->GetEntry(entry);
 		isMC = !(tree->isData_);
@@ -308,14 +309,14 @@ void makeAnalysisNtuple::FillEvent()
         ht += tree->pfMET_;
         for( int i_jet = 0; i_jet < _nJet; i_jet++)
                 ht += tree->jetPt_->at(i_jet);
-        for( int i_ele = 0; i_ele < _nEle; i_ele++)
-                ht += tree->elePt_->at(i_ele);
-        for(int i_eleloose = 0; i_eleloose < _nEleLoose; i_eleloose++)
-                ht += tree->elePt_->at(i_eleloose);
-        for( int i_mu = 0; i_mu < _nMu; i_mu++)
-                ht += tree->muPt_->at(i_mu);
-        for(int i_muloose = 0; i_muloose < _nMuLoose; i_muloose++)
-                ht += tree->muPt_->at(i_muloose);
+       // for( int i_ele = 0; i_ele < _nEle; i_ele++)
+         //       ht += tree->elePt_->at(i_ele);
+        //for(int i_eleloose = 0; i_eleloose < _nEleLoose; i_eleloose++)
+          //      ht += tree->elePt_->at(i_eleloose);
+       // for( int i_mu = 0; i_mu < _nMu; i_mu++)
+         //       ht += tree->muPt_->at(i_mu);
+       // for(int i_muloose = 0; i_muloose < _nMuLoose; i_muloose++)
+         //       ht += tree->muPt_->at(i_muloose);
 	
 	_HT = ht; 
 
@@ -391,7 +392,31 @@ void makeAnalysisNtuple::FillEvent()
 		}
 	}
 	
-		
+	//dipho Mass
+	if (_nPho>1){
+	//	std::cout<<_nPho<<std::endl;
+		int phoInd1 = evtPick->Photons.at(0);
+                int phoInd2 = evtPick->Photons.at(1);
+		phoVector1.SetPtEtaPhiM(tree->phoEt_->at(phoInd1),
+                                                           tree->phoEta_->at(phoInd1),
+                                                           tree->phoPhi_->at(phoInd1),
+                                                           0.0);
+		phoVector2.SetPtEtaPhiM(tree->phoEt_->at(phoInd2),
+                                                           tree->phoEta_->at(phoInd2),
+                                                           tree->phoPhi_->at(phoInd2),
+                                                           0.0);
+
+
+		//std::cout<< tree->phoEt_->at(phoInd1) <<std::endl;
+	//	std::cout<<tree->phoEt_->at(phoInd2) <<std::endl;
+	//	std::cout<< (phoVector1+phoVector2).M()<<std::endl;
+
+		_DiphoMass = (phoVector1+phoVector2).M();
+		}
+
+
+
+	//W transverse mass		
 
 	_WtransMass = TMath::Sqrt(2*lepVector.Pt()*tree->pfMET_*( 1.0 - TMath::Cos(dR(0.0,lepVector.Phi(),0.0,tree->pfMETPhi_)) ));
 
@@ -408,7 +433,7 @@ void makeAnalysisNtuple::FillEvent()
 							   tree->phoEta_->at(phoInd),
 							   tree->phoPhi_->at(phoInd),
 							   0.0);
-
+	//	std::cout << "separate" << phoVector.M()<<std::endl;
 		_phoEt.push_back(tree->phoEt_->at(phoInd));
 		_phoEta.push_back(tree->phoEta_->at(phoInd));
 		_phoSCEta.push_back(tree->phoSCEta_->at(phoInd));
@@ -615,7 +640,7 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 	}
 
 	if(evtPick->bJets.size() == 0) {
-		std::cout << "No bJets" << std::endl;
+	//	std::cout << "No bJets" << std::endl;
 		btagWeights.push_back(1.0);
 		btagWeights.push_back(0.0);
 		btagWeights.push_back(0.0);

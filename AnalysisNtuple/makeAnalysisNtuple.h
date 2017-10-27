@@ -85,6 +85,7 @@ private :
 	Float_t         _WtransMass;
 //	Float_t         _HT;
 	Float_t 	_DilepMass;
+	Float_t 	_DiphoMass;
 	Float_t         _DilepDelR;
 	Int_t           _nPho;
 	std::vector<float>   _phoEt;
@@ -197,6 +198,8 @@ private :
 	TLorentzVector lepVector2;
 	TLorentzVector phoVector;
 	TLorentzVector METVector;
+	TLorentzVector phoVector1;
+	TLorentzVector phoVector2;
 
 
 	void InitVariables();
@@ -252,7 +255,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("pfMET"                      , &_pfMET                       );
 	outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
 	outputTree->Branch("WtransMass"                 , &_WtransMass                  );
-//	outputTree->Branch("HT"                         , &_HT                          ); 
+	outputTree->Branch("DiphoMass"                  , &_DiphoMass                   ); 
    	outputTree->Branch("DilepMass"                  , &_DilepMass 			);
 	outputTree->Branch("DilepDelR"                  , &_DilepDelR                   );
 	outputTree->Branch("nPho"                       , &_nPho                        ); 
@@ -377,6 +380,7 @@ void makeAnalysisNtuple::InitVariables()
 	_HT		 = -9999;
 	_DilepMass	 = -9999;
 	_DilepDelR	 = -9999;
+	_DiphoMass       = -9999;
 	_nPho		     = -9999;
 	_nEle		     = -9999;
 	_nMu		     = -9999;
