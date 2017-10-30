@@ -100,7 +100,12 @@ int main(int ac, char** av){
 
 
 	
-	BTagCalibration calib("csvv2", "CSVv2_Moriond17_B_H.csv");
+	BTagCalibration calib;
+	if (!selector->useDeepCSVbTag){
+		calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
+	} else {
+		calib = BTagCalibration("deepcsv", "DeepCSV_Moriond17_B_H.csv");
+	}
 
 	BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
 								 "central");             // central sys type
@@ -238,6 +243,7 @@ int main(int ac, char** av){
 	
 	return 0;
 }
+
 
 double getBtagSF(EventTree *tree, Selector *selector,  string sysType, BTagCalibrationReader reader, int NBjet_ge){
 	
