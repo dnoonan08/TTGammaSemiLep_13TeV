@@ -72,7 +72,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	
 	//	selector->jet_Pt_cut = 40.;
 	evtPick->Njet_ge = 2;	
-	evtPick->NBjet_ge = 1;	
+	evtPick->NBjet_ge = 0;	
 	BTagCalibration calib;
 	if (!selector->useDeepCSVbTag){
 		calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
