@@ -18,6 +18,7 @@ else
 	cd  TTGammaSemiLep_13TeV/
 	echo "xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/DataPUfiles_2016 ."
 	xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/DataPUfiles_2016 .
+	ls
 fi
 
 eval `scramv1 runtime -sh`
@@ -50,6 +51,17 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "TTZtoLL_" \
 "WGamma_" \
 "ZGamma_" \
+"QCD_Pt20to30_Mu_" \
+"QCD_Pt30to50_Mu_" \
+"QCD_Pt50to80_Mu_" \
+"QCD_Pt80to120_Mu_" \
+"QCD_Pt120to170_Mu_" \
+"QCD_Pt170to300_Mu_" \
+"QCD_Pt300to470_Mu_" \
+"QCD_Pt470to600_Mu_" \
+"QCD_Pt600to800_Mu_" \
+"QCD_Pt800to1000_Mu_" \
+"QCD_Pt1000toInf_Mu_" \
 "Data_SingleMu_b_" \
 "Data_SingleMu_c_" \
 "Data_SingleMu_d_" \
@@ -61,37 +73,48 @@ files=("TTGamma_SingleLeptFromTbar_" \
 
 
 
-sampleType=("TTGamma_SingleLeptFromTbar " \
-"TTGamma_SingleLeptFromT    " \
-"TTGamma_Dilepton           " \
-"TTGamma_Hadronic           " \
-"TTbarPowheg                " \
-"TTbarMadgraph_SingleLeptFromT    " \
-"TTbarMadgraph_SingleLeptFromTbar " \
-"TTbarMadgraph_Dilepton           " \
-"W1jets                     " \
-"W2jets                     " \
-"W3jets                     " \
-"W4jets                     " \
-"DYjetsM10to50              " \
-"DYjetsM50                  " \
-"ST_s-channel               " \
-"ST_t-channel               " \
-"ST_tbar-channel            " \
-"ST_tW-channel              " \
-"ST_tbarW-channel           " \
-"TTWtoQQ                    " \
-"TTWtoLNu                   " \
-"TTZtoLL                    " \
-"WGamma                     " \
-"ZGamma                     " \
-"Data_SingleMu_b            " \
-"Data_SingleMu_c            " \
-"Data_SingleMu_d            " \
-"Data_SingleMu_e            " \
-"Data_SingleMu_f            " \
-"Data_SingleMu_g            " \
-"Data_SingleMu_h            ")
+sampleType=("TTGamma_SingleLeptFromTbar" \
+"TTGamma_SingleLeptFromT" \
+"TTGamma_Dilepton" \
+"TTGamma_Hadronic" \
+"TTbarPowheg" \
+"TTbarMadgraph_SingleLeptFromT" \
+"TTbarMadgraph_SingleLeptFromTbar" \
+"TTbarMadgraph_Dilepton" \
+"W1jets" \
+"W2jets" \
+"W3jets" \
+"W4jets" \
+"DYjetsM10to50" \
+"DYjetsM50" \
+"ST_s-channel" \
+"ST_t-channel" \
+"ST_tbar-channel" \
+"ST_tW-channel" \
+"ST_tbarW-channel" \
+"TTWtoQQ" \
+"TTWtoLNu" \
+"TTZtoLL" \
+"WGamma" \
+"ZGamma" \
+"QCD_Pt20to30_Mu" \
+"QCD_Pt30to50_Mu" \
+"QCD_Pt50to80_Mu" \
+"QCD_Pt80to120_Mu" \
+"QCD_Pt120to170_Mu" \
+"QCD_Pt170to300_Mu" \
+"QCD_Pt300to470_Mu" \
+"QCD_Pt470to600_Mu" \
+"QCD_Pt600to800_Mu" \
+"QCD_Pt800to1000_Mu" \
+"QCD_Pt1000toInf_Mu" \
+"Data_SingleMu_b" \
+"Data_SingleMu_c" \
+"Data_SingleMu_d" \
+"Data_SingleMu_e" \
+"Data_SingleMu_f" \
+"Data_SingleMu_g" \
+"Data_SingleMu_h")
 
 
 

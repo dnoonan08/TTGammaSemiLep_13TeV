@@ -23,8 +23,6 @@ fi
 eval `scramv1 runtime -sh`
 
 
-
-
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_"
 
 
@@ -52,6 +50,17 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "TTZtoLL_" \
 "WGamma_" \
 "ZGamma_" \
+"QCD_Pt20to30_Mu_" \
+"QCD_Pt30to50_Mu_" \
+"QCD_Pt50to80_Mu_" \
+"QCD_Pt80to120_Mu_" \
+"QCD_Pt120to170_Mu_" \
+"QCD_Pt170to300_Mu_" \
+"QCD_Pt300to470_Mu_" \
+"QCD_Pt470to600_Mu_" \
+"QCD_Pt600to800_Mu_" \
+"QCD_Pt800to1000_Mu_" \
+"QCD_Pt1000toInf_Mu_" \
 "Data_SingleMu_b_" \
 "Data_SingleMu_c_" \
 "Data_SingleMu_d_" \
@@ -89,6 +98,17 @@ $GGNtupleGroupEOSMC"TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8
 $GGNtupleGroupEOSMC"TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
 $DannyEOS"ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-20to30_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-30to50_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-50to80_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-80to120_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-120to170_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-170to300_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-300to470_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-470to600_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-600to800_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-800to1000_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSMC"QCD_Pt-1000toInf_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
 $GGNtupleGroupEOSData"job_SingleMu_Run2016B_FebReminiAOD.root" \
 $GGNtupleGroupEOSData"job_SingleMu_Run2016C_FebReminiAOD.root" \
 $GGNtupleGroupEOSData"job_SingleMu_Run2016D_FebReminiAOD.root" \
@@ -125,6 +145,17 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTZtoLL" \
 "WGamma" \
 "ZGamma" \
+"QCD_Pt20to30_Mu" \
+"QCD_Pt30to50_Mu" \
+"QCD_Pt50to80_Mu" \
+"QCD_Pt80to120_Mu" \
+"QCD_Pt120to170_Mu" \
+"QCD_Pt170to300_Mu" \
+"QCD_Pt300to470_Mu" \
+"QCD_Pt470to600_Mu" \
+"QCD_Pt600to800_Mu" \
+"QCD_Pt800to1000_Mu" \
+"QCD_Pt1000toInf_Mu" \
 "Data_SingleMu_b" \
 "Data_SingleMu_c" \
 "Data_SingleMu_d" \
