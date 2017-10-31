@@ -83,7 +83,9 @@ private :
 	Float_t         _pfMET;
 	Float_t         _pfMETPhi;
 	Float_t         _WtransMass;
+//	Float_t         _HT;
 	Float_t 	_DilepMass;
+	Float_t 	_DiphoMass;
 	Float_t         _DilepDelR;
 	Int_t           _nPho;
 	std::vector<float>   _phoEt;
@@ -133,6 +135,7 @@ private :
 	/* std::vector<bool>    _phoMediumIDNoIsoCut;  */
    
 	Int_t           _nEle;
+	Int_t           _nEleLoose;
 
 	std::vector<float>   _elePt;
 	std::vector<float>   _elePhi;
@@ -140,6 +143,7 @@ private :
 	std::vector<float>   _elePFRelIso;
 	
 	Int_t           _nMu;
+	Int_t           _nMuLoose;
 	std::vector<float>   _muPt;
 	std::vector<float>   _muEta;
 	std::vector<float>   _muPhi;
@@ -194,6 +198,8 @@ private :
 	TLorentzVector lepVector2;
 	TLorentzVector phoVector;
 	TLorentzVector METVector;
+	TLorentzVector phoVector1;
+	TLorentzVector phoVector2;
 
 
 	void InitVariables();
@@ -248,7 +254,8 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("genMET"                     , &_genMET                      ); 
 	outputTree->Branch("pfMET"                      , &_pfMET                       );
 	outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
-	outputTree->Branch("WtransMass"                 , &_WtransMass                  ); 
+	outputTree->Branch("WtransMass"                 , &_WtransMass                  );
+	outputTree->Branch("DiphoMass"                  , &_DiphoMass                   ); 
    	outputTree->Branch("DilepMass"                  , &_DilepMass 			);
 	outputTree->Branch("DilepDelR"                  , &_DilepDelR                   );
 	outputTree->Branch("nPho"                       , &_nPho                        ); 
@@ -370,11 +377,15 @@ void makeAnalysisNtuple::InitVariables()
 	_pfMET		     = -9999;
 	_pfMETPhi	     = -9999;
 	_WtransMass      = -9999;
+	_HT		 = -9999;
 	_DilepMass	 = -9999;
 	_DilepDelR	 = -9999;
+	_DiphoMass       = -9999;
 	_nPho		     = -9999;
 	_nEle		     = -9999;
 	_nMu		     = -9999;
+	_nMuLoose 	     = -9999;
+	_nEleLoose           = -9999;
 	_nJet            = -9999;    
 	_nBJet           = -9999;    
 

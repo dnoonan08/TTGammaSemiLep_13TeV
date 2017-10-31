@@ -46,7 +46,48 @@ canvas.SetRightMargin( R/W )
 canvas.SetTopMargin( T/H )
 canvas.SetBottomMargin( B/H )
 canvas.SetTickx(0)
+canvasRatio = TCanvas('c1Ratio','c1Ratio',W,H)
+T = 0.08*H
+B = 0.12*H
+L = 0.12*W
+R = 0.04*W
+canvasRatio.SetFillColor(0)
+canvasRatio.SetBorderMode(0)
+canvasRatio.SetFrameFillStyle(0)
+canvasRatio.SetFrameBorderMode(0)
+canvasRatio.SetLeftMargin( L/W )
+canvasRatio.SetRightMargin( R/W )
+canvasRatio.SetTopMargin( T/H )
+canvasRatio.SetBottomMargin( B/H )
+canvasRatio.SetTickx(0)
+canvasRatio.SetTicky(0)
 
+pad1.SetFillColor(0)
+pad1.SetBorderMode(0)
+pad1.SetFrameFillStyle(0)
+pad1.SetFrameBorderMode(0)
+pad1.SetTickx(0)
+pad1.SetTicky(0)
+
+pad2.SetFillColor(0)
+pad2.SetFillStyle(4000)
+pad2.SetBorderMode(0)
+pad2.SetFrameFillStyle(0)
+pad2.SetFrameBorderMode(0)
+pad2.SetTickx(0)
+pad2.SetTicky(0)
+
+SetOwnership(canvas, False)
+SetOwnership(canvasRatio, False)
+SetOwnership(pad1, False)
+SetOwnership(pad2, False)
+
+canvasRatio.cd()
+pad1.Draw()
+pad2.Draw()
+
+
+canvas.cd()
 mcList = {'TTGamma': [kOrange],
           'TTbar': [kRed+1],
           'TTV': [kRed-7],
@@ -76,17 +117,19 @@ samples = ['TTGamma',
 histograms = []
 
 for s in samples:    
-    histograms.append(TH1F("jbMult_%s"%s,"jbMult_%s"%s,10,0,10))
-
+    histograms.append(TH1F("jbMult_%s"%s,"jbMult_%s"%s,15,0,15))
+    h0 = _file.Get("%s/phoselnjets0Tag_%s"%(s,s))
     h1 = _file.Get("%s/phoselnjets1Tag_%s"%(s,s))
     h2 = _file.Get("%s/phoselnjets2Tag_%s"%(s,s))
+    print s, h0.GetBinContent(3)
     for i in range(4):
-        histograms[-1].SetBinContent(i+1,h1.GetBinContent(3+i))
-        histograms[-1].SetBinContent(i+6,h2.GetBinContent(3+i))
+	histograms[-1].SetBinContent(i+1,h0.GetBinContent(3+i))
+        histograms[-1].SetBinContent(i+6,h1.GetBinContent(3+i))
+        histograms[-1].SetBinContent(i+11,h2.GetBinContent(3+i))
 
-        histograms[-1].SetBinContent(5 ,h1.Integral(7,-1))
-        histograms[-1].SetBinContent(10,h1.Integral(7,-1))
-
+    histograms[-1].SetBinContent(5 ,h0.Integral(7,-1))
+    histograms[-1].SetBinContent(10,h2.Integral(7,-1))
+    histograms[-1].SetBinContent(15,h2.Integral(7,-1))
     if not "DataMu" in s:
         histograms[-1].SetFillColor(mcList[s][0])
         histograms[-1].SetLineColor(mcList[s][0])
@@ -96,17 +139,21 @@ for s in samples:
         histograms[-1].SetMarkerSize(h1.GetMarkerSize())
         histograms[-1].SetMarkerStyle(20)
         histograms[-1].SetMarkerColor(kBlack)
-
-    histograms[-1].GetXaxis().SetBinLabel(1,"=2j=1b")
-    histograms[-1].GetXaxis().SetBinLabel(2,"=3j=1b")
-    histograms[-1].GetXaxis().SetBinLabel(3,"=4j=1b")
-    histograms[-1].GetXaxis().SetBinLabel(4,"=5j=1b")
-    histograms[-1].GetXaxis().SetBinLabel(5,"#geq6j=1b")
-    histograms[-1].GetXaxis().SetBinLabel(6,"=2j#geq2b")
-    histograms[-1].GetXaxis().SetBinLabel(7,"=3j#geq2b")
-    histograms[-1].GetXaxis().SetBinLabel(8,"=4j#geq2b")
-    histograms[-1].GetXaxis().SetBinLabel(9,"=5j#geq2b")
-    histograms[-1].GetXaxis().SetBinLabel(10,"#geq6j#geq2b")
+    histograms[-1].GetXaxis().SetBinLabel(1,"=2j=0b")
+    histograms[-1].GetXaxis().SetBinLabel(2,"=3j=0b")
+    histograms[-1].GetXaxis().SetBinLabel(3,"=4j=0b")
+    histograms[-1].GetXaxis().SetBinLabel(4,"=5j=0b")
+    histograms[-1].GetXaxis().SetBinLabel(5,"#geq6j=0b")
+    histograms[-1].GetXaxis().SetBinLabel(6,"=2j=1b")
+    histograms[-1].GetXaxis().SetBinLabel(7,"=3j=1b")
+    histograms[-1].GetXaxis().SetBinLabel(8,"=4j=1b")
+    histograms[-1].GetXaxis().SetBinLabel(9,"=5j=1b")
+    histograms[-1].GetXaxis().SetBinLabel(10,"#geq6j=1b")
+    histograms[-1].GetXaxis().SetBinLabel(11,"=2j#geq2b")
+    histograms[-1].GetXaxis().SetBinLabel(12,"=3j#geq2b")
+    histograms[-1].GetXaxis().SetBinLabel(13,"=4j#geq2b")
+    histograms[-1].GetXaxis().SetBinLabel(14,"=5j#geq2b")
+    histograms[-1].GetXaxis().SetBinLabel(15,"#geq6j#geq2b")
     histograms[-1].GetXaxis().SetLabelSize(0.04)
 
 legendHeightPer = 0.04
@@ -115,18 +162,6 @@ legend = TLegend(0.71, 1-T/H-0.01 - legendHeightPer*(len(samples)), 1-R/W-0.01, 
 
 legend.SetBorderSize(0)
 legend.SetFillColor(0)
-
-
-
-
-
-
-
-
-
-
-
-
 
 legend.AddEntry(histograms[-1],"data","pe")
 legend.AddEntry(histograms[0],'t#bar{t}+#gamma','f')
@@ -138,6 +173,7 @@ legend.AddEntry(histograms[5],'W+jets'         ,'f')
 legend.AddEntry(histograms[6],'Single t'       ,'f')
 legend.AddEntry(histograms[7],'t#bar{t}+V'     ,'f')
 legend.AddEntry(histograms[8],'Multijet'       ,'f')
+
 
 
 stack = THStack()
@@ -159,10 +195,14 @@ histograms[-1].Draw("e,x0,same")
 
 _channelText = "#mu+jets"
 
+ratio = dataHist.Clone("temp")
+ratio.Divide(stack.GetStack().Last())
+
 CMS_lumi.channelText = _channelText
 CMS_lumi.writeChannelText = True
 CMS_lumi.writeExtraText = True
 CMS_lumi.CMS_lumi(canvas, 4, 11)
 legend.Draw()
-
-canvas.SaveAs("JetBjetMult_Phosel.pdf")
+canvas.SetLogy()
+canvas.SaveAs("JetBjetMult_Phosel_log.pdf")
+canvas.SaveAs("JetBjetMult_Phosel_log.png")

@@ -9,8 +9,13 @@ else
 	cd ${_CONDOR_SCRATCH_DIR}
 	echo ${_CONDOR_SCRATCH_DIR}
 
+#<<<<<<< HEAD
+#	echo "xrdcp root://cmseos.fnal.gov//store/user/troy2012/CMSSW_8_0_26_patch1.tgz ."
+#	xrdcp root://cmseos.fnal.gov//store/user/troy2012/CMSSW_8_0_26_patch1.tgz .
+#=======
 	echo "xrdcp root://cmseos.fnal.gov//store/user/"${USER}"/CMSSW_8_0_26_patch1.tgz ."
 	xrdcp root://cmseos.fnal.gov//store/user/${USER}/CMSSW_8_0_26_patch1.tgz .
+#>>>>>>> upstream/master
 	echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
 	tar -xzf CMSSW_8_0_26_patch1.tgz
 	cd CMSSW_8_0_26_patch1/src/
@@ -23,8 +28,15 @@ fi
 
 eval `scramv1 runtime -sh`
 
+#<<<<<<< HEAD
+
+
+#inputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_skims/muons/V08_00_26_07/"
+#outputdir="root://cmseos.fnal.gov//store/user/troy2012/13TeV_AnalysisNtuples/muons"
+#=======
 inputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_skims/muons/V08_00_26_07/"
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07/"
+#>>>>>>> upstream/master
 
 
 files=("TTGamma_SingleLeptFromTbar_" \
