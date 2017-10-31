@@ -21,13 +21,29 @@ for fileName in fileList:
 nJets  = 2
 nBJets = 0
 
-extraCuts       = "(passPresel_Mu && nJet>=%i && nBJet==%i)*"%(nJets, nBJets)
+extraCuts       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=%i && nBJet==%i)*"%(nJets, nBJets)
+extraCutsPhoton = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=%i && nBJet==%i && phoMediumID)*"%(nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 
-histCR = TH1F("histNjet_QCDcr","histNjet_QCDcr",15,0,15)
+histCR    = TH1F("histNjet_QCDcr","histNjet_QCDcr",15,0,15)
+histCRPho = TH1F("pho_histNjet_QCDcr","pho_histNjet_QCDcr",15,0,15)
 
 tree.Draw("nJet>>histNjet_QCDcr",extraCuts+weights)
+tree.Draw("nJet>>pho_histNjet_QCDcr",extraCutsPhoton+weights)
+outputFile.cd()
+histCR.Write()
+
+extraCuts       = "(passPresel_Mu && muPFRelIso>0.3 && nJet>=%i && nBJet==%i)*"%(nJets, nBJets)
+extraCutsPhoton = "(passPresel_Mu && muPFRelIso>0.3 && nJet>=%i && nBJet==%i && phoMediumID)*"%(nJets, nBJets)
+
+weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
+
+histCR2    = TH1F("histNjet_QCDcr2","histNjet_QCDcr2",15,0,15)
+histCR2Pho = TH1F("pho_histNjet_QCDcr2","pho_histNjet_QCDcr2",15,0,15)
+
+tree.Draw("nJet>>histNjet_QCDcr2",extraCuts+weights)
+tree.Draw("nJet>>pho_histNjet_QCDcr2",extraCutsPhoton+weights)
 outputFile.cd()
 histCR.Write()
 
@@ -42,35 +58,53 @@ for fileName in fileList:
 nJets  = 2
 nBJets = 0
 extraCuts       = "(passPresel_Mu && nJet>=%i && nBJet==%i)*"%(nJets, nBJets)
+extraCutsPhoton = "(passPresel_Mu && nJet>=%i && nBJet==%i && phoMediumID)*"%(nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 hist0 = TH1F("histNjet_0b","histNjet_0b",15,0,15)
+hist0Pho = TH1F("pho_histNjet_0b","pho_histNjet_0b",15,0,15)
 
 tree.Draw("nJet>>histNjet_0b",extraCuts+weights)
+tree.Draw("nJet>>pho_histNjet_0b",extraCutsPhoton+weights)
 outputFile.cd()
 hist0.Write()
 
 nJets  = 2
 nBJets = 1
 extraCuts       = "(passPresel_Mu && nJet>=%i && nBJet==%i)*"%(nJets, nBJets)
+extraCutsPhoton = "(passPresel_Mu && nJet>=%i && nBJet==%i && phoMediumID)*"%(nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 hist1 = TH1F("histNjet_1b","histNjet_1b",15,0,15)
+hist1Pho = TH1F("pho_histNjet_1b","pho_histNjet_1b",15,0,15)
 
 tree.Draw("nJet>>histNjet_1b",extraCuts+weights)
+tree.Draw("nJet>>pho_histNjet_1b",extraCutsPhoton+weights)
 outputFile.cd()
 hist1.Write()
 
 nJets  = 2
 nBJets = 2
 extraCuts       = "(passPresel_Mu && nJet>=%i && nBJet>=%i)*"%(nJets, nBJets)
+extraCutsPhoton = "(passPresel_Mu && nJet>=%i && nBJet>=%i && phoMediumID)*"%(nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 hist2 = TH1F("histNjet_2b","histNjet_2b",15,0,15)
+hist2Pho = TH1F("pho_histNjet_2b","pho_histNjet_2b",15,0,15)
 
 tree.Draw("nJet>>histNjet_2b",extraCuts+weights)
+tree.Draw("nJet>>pho_histNjet_2b",extraCutsPhoton+weights)
 outputFile.cd()
 hist2.Write()
+
+histCRPho.Write()
+hist0Pho.Write()
+hist1Pho.Write()
+hist2Pho.Write()
+
+
+
+
 
 
 hist0_TF = hist0.Clone("histNjet_0b_TF")
@@ -118,3 +152,93 @@ hist_TFCR.SetBinError(3,histCR.GetBinError(1))
 
 hist_TF.Divide(hist_TFCR)
 hist_TF.Write()
+
+
+
+hist_TFPho = TH1F("TransferFactorsPho","TransferFactorsPho",3,0,3)
+hist_TFCRPho = TH1F("TransferFactorsCRPho","TransferFactorsCRPho",3,0,3)
+
+histCRPho.Rebin(15)
+hist0Pho.Rebin(15)
+hist1Pho.Rebin(15)
+hist2Pho.Rebin(15)
+
+hist_TFPho.SetBinContent(1,hist0Pho.GetBinContent(1))
+hist_TFPho.SetBinError(1,hist0Pho.GetBinError(1))
+
+hist_TFPho.SetBinContent(2,hist1Pho.GetBinContent(1))
+hist_TFPho.SetBinError(2,hist1Pho.GetBinError(1))
+
+hist_TFPho.SetBinContent(3,hist2Pho.GetBinContent(1))
+hist_TFPho.SetBinError(3,hist2Pho.GetBinError(1))
+
+hist_TFCRPho.SetBinContent(1,histCRPho.GetBinContent(1))
+hist_TFCRPho.SetBinError(1,histCRPho.GetBinError(1))
+
+hist_TFCRPho.SetBinContent(2,histCRPho.GetBinContent(1))
+hist_TFCRPho.SetBinError(2,histCRPho.GetBinError(1))
+
+hist_TFCRPho.SetBinContent(3,histCRPho.GetBinContent(1))
+hist_TFCRPho.SetBinError(3,histCRPho.GetBinError(1))
+
+hist_TFPho.Divide(hist_TFCRPho)
+hist_TFPho.Write()
+
+
+###################
+
+
+
+hist_TF2 = TH1F("TransferFactors_CR2","TransferFactors_CR2",3,0,3)
+
+histCR2.Rebin(15)
+
+hist_TF2.SetBinContent(1,hist0.GetBinContent(1))
+hist_TF2.SetBinError(1,hist0.GetBinError(1))
+
+hist_TF2.SetBinContent(2,hist1.GetBinContent(1))
+hist_TF2.SetBinError(2,hist1.GetBinError(1))
+
+hist_TF2.SetBinContent(3,hist2.GetBinContent(1))
+hist_TF2.SetBinError(3,hist2.GetBinError(1))
+
+hist_TFCR.SetBinContent(1,histCR2.GetBinContent(1))
+hist_TFCR.SetBinError(1,histCR2.GetBinError(1))
+
+hist_TFCR.SetBinContent(2,histCR2.GetBinContent(1))
+hist_TFCR.SetBinError(2,histCR2.GetBinError(1))
+
+hist_TFCR.SetBinContent(3,histCR2.GetBinContent(1))
+hist_TFCR.SetBinError(3,histCR2.GetBinError(1))
+
+hist_TF2.Divide(hist_TFCR)
+hist_TF2.Write()
+
+
+
+hist_TFPho2 = TH1F("TransferFactorsPho_CR2","TransferFactorsPho_CR2",3,0,3)
+
+histCR2Pho.Rebin(15)
+
+hist_TFPho2.SetBinContent(1,hist0Pho.GetBinContent(1))
+hist_TFPho2.SetBinError(1,hist0Pho.GetBinError(1))
+
+hist_TFPho2.SetBinContent(2,hist1Pho.GetBinContent(1))
+hist_TFPho2.SetBinError(2,hist1Pho.GetBinError(1))
+
+hist_TFPho2.SetBinContent(3,hist2Pho.GetBinContent(1))
+hist_TFPho2.SetBinError(3,hist2Pho.GetBinError(1))
+
+hist_TFCRPho.SetBinContent(1,histCR2Pho.GetBinContent(1))
+hist_TFCRPho.SetBinError(1,histCR2Pho.GetBinError(1))
+
+hist_TFCRPho.SetBinContent(2,histCR2Pho.GetBinContent(1))
+hist_TFCRPho.SetBinError(2,histCR2Pho.GetBinError(1))
+
+hist_TFCRPho.SetBinContent(3,histCR2Pho.GetBinContent(1))
+hist_TFCRPho.SetBinError(3,histCR2Pho.GetBinError(1))
+
+hist_TFPho2.Divide(hist_TFCRPho)
+hist_TFPho2.Write()
+
+

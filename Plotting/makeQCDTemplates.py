@@ -4,10 +4,6 @@ import os
 import sys
 
 
-padRatio = 0.25
-padOverlap = 0.15
-padGap = 0.01
-
 _file  = TFile("histograms/mu/qcdhistsCR.root","update")
 
 isTight = False
@@ -43,11 +39,6 @@ for l in list2:
     hName = "%s_%s_QCD%s"%(split[0],split[1],channel)
     histoList[nameKey] = l.ReadObj().Clone(hName)
     histoList[nameKey].SetNameTitle(hName,hName)
-    # histoList[nameKey].Reset()
-    # histoList[nameKey].SetMarkerStyle(20)
-    # histoList[nameKey].SetLineWidth(1)
-    # histoList[nameKey].SetLineColor(kBlack)
-    # histoList[nameKey].SetMarkerColor(kBlack)
 
 for key in keylist:
 

@@ -61,7 +61,7 @@ preselhistograms = {"jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1], 
                     "muPt"     : ["Muon p_{T} (GeV)"    , "Events", 5, [-1,-1], regionText,  NoLog],
                     "muEta"    : ["Muon #eta"           , "Events", 5, [-1,-1], regionText,  NoLog],
                     "muPhi"    : ["Muon #phi"           , "Events", 5, [-1,-1], regionText,  NoLog],
-                    "Njet"     : ["N Jets"              , "Events", 1, [-1,-1], regionText,  YesLog],
+                    "Njet"     : ["N Jets"              , "Events", 1, [-1,-1], regionText, YesLog],
                     "Nbjet"    : ["N B-Jets"            , "Events", 1, [-1,-1], regionText,  NoLog],
                     "M3"       : ["M_{3} (GeV)"         , "Events", 5, [-1,-1], regionText,  NoLog],
                     "MET"      : ["MET (GeV)  "         , "Events", 5, [-1,-1], regionText,  NoLog],
@@ -121,7 +121,7 @@ stackList = sampleList[:-1]
 stackList.reverse()
 
 
-_channelText = "#mu+jets"
+_channelText = "#mu+jets, QCD-CR, "
 
 CMS_lumi.channelText = _channelText
 CMS_lumi.writeChannelText = True
@@ -203,15 +203,16 @@ pad2.Draw()
 
 canvas.cd()
 
-legList = {'TTGamma': [kAzure+3, 't#bar{t}+#gamma'],
-          'TTJets': [kRed+1, 't#bar{t}+jets'],
-          'TTV': [kRed+1, 't#bar{t}+V'],
-          'Vgamma': [kGray, 'W/Z+#gamma'],
-          'SingleTop': [kMagenta, 'Single t'],
-          'WJets': [kGreen -3, 'W+jets'],
-          'ZJets': [kGreen -3, 'Z+jets'],
-          'QCDMu': [kYellow, 'Multijet'],
-          }
+legendList = {'TTGamma': [kOrange, 't#bar{t}+#gamma'],
+              'TTbar': [kRed+1, 't#bar{t}+jets'],
+              'TTV': [kRed-1, 't#bar{t}+V'],
+              'SingleTop': [kOrange-3, 'Single t'],
+              'WGamma': [kBlue-4, 'W+#gamma'],
+              'ZGamma': [kBlue-2, 'Z+#gamma'],
+              'WJets': [kCyan -3, 'W+jets'],
+              'ZJets': [kCyan -5, 'Z+jets'],
+              'QCDMu': [kYellow, 'Multijet'],
+              }
 
 mcList = {'TTGamma': [kOrange],
           'TTbar': [kRed+1],
@@ -224,12 +225,15 @@ mcList = {'TTGamma': [kOrange],
           'QCDMu': [kYellow],
           }
 
+if useQCDDD:
+    legendList["QCDMu"] = [kGreen+3,'Multijet-DD']
+    mcList["QCDMu"][0] = kGreen+3
 
 legendHeightPer = 0.04
 
-legend = TLegend(0.71, 1-T/H-0.01 - legendHeightPer*(len(legList)+1), 1-R/W-0.01, 1-(T/H)-0.01)
+legend = TLegend(0.71, 1-T/H-0.01 - legendHeightPer*(len(legendList)+1), 1-R/W-0.01, 1-(T/H)-0.01)
 
-legendR = TLegend(0.71, 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*(len(legList)+1), 0.99-(R/W), 0.99-(T/H)/(1.-padRatio+padOverlap))
+legendR = TLegend(0.71, 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*(len(legendList)+1), 0.99-(R/W), 0.99-(T/H)/(1.-padRatio+padOverlap))
 legendR.SetBorderSize(0)
 legendR.SetFillColor(0)
 
@@ -254,8 +258,8 @@ for sample in legList:
     print sample, hist
     hist.SetFillColor(mcList[sample][0])
     hist.SetLineColor(mcList[sample][0])
-    legend.AddEntry(hist,sample,'f')
-    legendR.AddEntry(hist,sample,'f')
+    legend.AddEntry(hist,legendList[sample][1],'f')
+    legendR.AddEntry(hist,legendList[sample][1],'f')
 
 
 TGaxis.SetMaxDigits(3)
@@ -283,7 +287,11 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     #histograms list has flag whether it's log or not
     canvas.SetLogy(plotInfo[-1])
 
-    stack.SetMaximum(1.35*max(dataHist.GetMaximum(),stack.GetMaximum()))
+    if not plotInfo[-1]:
+        stack.SetMaximum(1.35*max(dataHist.GetMaximum(),stack.GetMaximum()))
+    else:
+        stack.SetMaximum(100.*max(dataHist.GetMaximum(),stack.GetMaximum()))
+
     stack.Draw("hist")
     # histograms list has x-axis title
     stack.GetHistogram().GetXaxis().SetTitle(plotInfo[0])
