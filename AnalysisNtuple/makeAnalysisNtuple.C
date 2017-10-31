@@ -309,14 +309,6 @@ void makeAnalysisNtuple::FillEvent()
         ht += tree->pfMET_;
         for( int i_jet = 0; i_jet < _nJet; i_jet++)
                 ht += tree->jetPt_->at(i_jet);
-       // for( int i_ele = 0; i_ele < _nEle; i_ele++)
-         //       ht += tree->elePt_->at(i_ele);
-        //for(int i_eleloose = 0; i_eleloose < _nEleLoose; i_eleloose++)
-          //      ht += tree->elePt_->at(i_eleloose);
-       // for( int i_mu = 0; i_mu < _nMu; i_mu++)
-         //       ht += tree->muPt_->at(i_mu);
-       // for(int i_muloose = 0; i_muloose < _nMuLoose; i_muloose++)
-         //       ht += tree->muPt_->at(i_muloose);
 	
 	_HT = ht; 
 

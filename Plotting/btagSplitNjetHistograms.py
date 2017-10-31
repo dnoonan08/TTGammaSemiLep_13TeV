@@ -22,7 +22,7 @@ finalState = "Mu"
 if finalState=="Mu":
     sampleList[-1] = "DataMu"
     sampleList[-2] = "QCDMu"
-    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07/"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/troy2012/13TeV_AnalysisNtuples/muons/"
     outputhistName = "histograms/mu/testBtaghists.root"
 if finalState=="Ele":
     sampleList[-1] = "DataEle"
