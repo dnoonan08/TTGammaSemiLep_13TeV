@@ -9,21 +9,34 @@ else
 	cd ${_CONDOR_SCRATCH_DIR}
 	echo ${_CONDOR_SCRATCH_DIR}
 
-	echo "xrdcp root://cmseos.fnal.gov//store/user/troy2012/CMSSW_8_0_26_patch1.tgz ."
-	xrdcp root://cmseos.fnal.gov//store/user/troy2012/CMSSW_8_0_26_patch1.tgz .
+#<<<<<<< HEAD
+#	echo "xrdcp root://cmseos.fnal.gov//store/user/troy2012/CMSSW_8_0_26_patch1.tgz ."
+#	xrdcp root://cmseos.fnal.gov//store/user/troy2012/CMSSW_8_0_26_patch1.tgz .
+#=======
+	echo "xrdcp root://cmseos.fnal.gov//store/user/"${USER}"/CMSSW_8_0_26_patch1.tgz ."
+	xrdcp root://cmseos.fnal.gov//store/user/${USER}/CMSSW_8_0_26_patch1.tgz .
+#>>>>>>> upstream/master
 	echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
 	tar -xzf CMSSW_8_0_26_patch1.tgz
 	cd CMSSW_8_0_26_patch1/src/
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
 	cd  TTGammaSemiLep_13TeV/
+	echo "xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/DataPUfiles_2016 ."
+	xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/DataPUfiles_2016 .
+	ls
 fi
 
 eval `scramv1 runtime -sh`
 
+#<<<<<<< HEAD
 
 
+#inputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_skims/muons/V08_00_26_07/"
+#outputdir="root://cmseos.fnal.gov//store/user/troy2012/13TeV_AnalysisNtuples/muons"
+#=======
 inputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_skims/muons/V08_00_26_07/"
-outputdir="root://cmseos.fnal.gov//store/user/troy2012/13TeV_AnalysisNtuples/muons"
+outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07/"
+#>>>>>>> upstream/master
 
 
 files=("TTGamma_SingleLeptFromTbar_" \
@@ -50,6 +63,17 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "TTZtoLL_" \
 "WGamma_" \
 "ZGamma_" \
+"QCD_Pt20to30_Mu_" \
+"QCD_Pt30to50_Mu_" \
+"QCD_Pt50to80_Mu_" \
+"QCD_Pt80to120_Mu_" \
+"QCD_Pt120to170_Mu_" \
+"QCD_Pt170to300_Mu_" \
+"QCD_Pt300to470_Mu_" \
+"QCD_Pt470to600_Mu_" \
+"QCD_Pt600to800_Mu_" \
+"QCD_Pt800to1000_Mu_" \
+"QCD_Pt1000toInf_Mu_" \
 "Data_SingleMu_b_" \
 "Data_SingleMu_c_" \
 "Data_SingleMu_d_" \
@@ -85,6 +109,17 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTZtoLL" \
 "WGamma" \
 "ZGamma" \
+"QCD_Pt20to30_Mu" \
+"QCD_Pt30to50_Mu" \
+"QCD_Pt50to80_Mu" \
+"QCD_Pt80to120_Mu" \
+"QCD_Pt120to170_Mu" \
+"QCD_Pt170to300_Mu" \
+"QCD_Pt300to470_Mu" \
+"QCD_Pt470to600_Mu" \
+"QCD_Pt600to800_Mu" \
+"QCD_Pt800to1000_Mu" \
+"QCD_Pt1000toInf_Mu" \
 "Data_SingleMu_b" \
 "Data_SingleMu_c" \
 "Data_SingleMu_d" \
@@ -98,7 +133,7 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root"
 AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root
 
-echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}"
-xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}
+echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/."
+xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/.
 
 
