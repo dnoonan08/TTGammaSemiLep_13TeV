@@ -171,9 +171,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	_eleEffWeight_Do = 1.;
 
 	Long64_t nEntr = tree->GetEntries();
-	//	for(Long64_t entry=0; entry<100; entry++){
 
-	//	nEntr = 10000;
+
+	nEntr = 10000;
 
 	int dumpFreq = 1;
 	if (nEntr >50)     { dumpFreq = 5; }
@@ -191,8 +191,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	int count_overlapVJets=0;
 	int count_overlapTTbar=0;
 	for(Long64_t entry=0; entry<nEntr; entry++){
-//	for(Long64_t entry=0; entry<10000; entry++){
-		if(entry%dumpFreq == 0) std::cout << "processing entry " << entry << nEntr << 10000 << std::endl;
+		if(entry%dumpFreq == 0) std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
 
 		tree->GetEntry(entry);
 		isMC = !(tree->isData_);
@@ -419,6 +418,7 @@ void makeAnalysisNtuple::FillEvent()
 	int countMediumIDPho = 0;
 	int countTightIDPho = 0;
 
+	int parentPID = -1;
 
 	for (int i_pho = 0; i_pho <_nPho; i_pho++){
 		int phoInd = evtPick->Photons.at(i_pho);
@@ -457,29 +457,24 @@ void makeAnalysisNtuple::FillEvent()
 		_photonIsHadronicPhoton.push_back(isHadronicPhoton);
 		_photonIsHadronicFake.push_back(isHadronicFake);
 
-
-		int parentPID = findPhotonParentage(phoInd, tree);
-		
-		// photon parentage for event categorization
-		// -1 is unmatched photon
-		// 0 is matched, but not top/W/lepton
-		// 1 is top parent
-		// 2 is W parent
-		// 3 is lepton parent
+		parentPID = -999;
 		int parentage = -1;
-		if (parentage!=-999) parentage = 0;
-		if (abs(parentPID)==6) parentage = 1;
-		if (abs(parentPID)==24) parentage = 2;
-		if (abs(parentPID)==11 || abs(parentPID)==13 || abs(parentPID)==15) parentage = 3;
-
+		if (!tree->isData_){
+			parentPID = findPhotonParentage(phoInd, tree);
+			// photon parentage for event categorization
+			// -1 is unmatched photon; 0 is matched, but not top/W/lepton, 1 is top parent, 2 is W parent, 3 is lepton parent,
+			if (abs(parentPID)==6) parentage = 1;
+			else if (abs(parentPID)==24) parentage = 2;
+			else if (abs(parentPID)==11 || abs(parentPID)==13 || abs(parentPID)==15) parentage = 3;
+			else if (parentPID!=-999) parentage = 0;
+		}
 		_photonParentage.push_back(parentage);
+		_photonParentPID.push_back(parentPID);
 		
-
 		_dRPhotonJet.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
 		_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
 		_MPhotonLepton.push_back((phoVector+lepVector).M());
-		_AnglePhotonLepton.push_back(phoVector.Angle(lepVector.Vect()));
-
+		_AnglePhotonLepton.push_back(phoVector.Angle(lepVector.Vect()));		
 
 	}
 
@@ -965,9 +960,8 @@ void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* g
 	// cout << genuine << misIDele << hadronicphoton << hadronicfake << endl;
 }
 
-bool makeAnalysisNtuple::findPhotonParentage(int phoInd, EventTree* tree){
+int makeAnalysisNtuple::findPhotonParentage(int phoInd, EventTree* tree){
 	int mcPhotonInd = -1;
-    
 	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
         // crude matching to get candidates                                                                                                            
 		bool etetamatch = (dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd)) < 0.2 &&
@@ -975,14 +969,11 @@ bool makeAnalysisNtuple::findPhotonParentage(int phoInd, EventTree* tree){
 
         if( etetamatch && mcPhotonInd < 0 && tree->mcPID->at(mcInd) == 22){
             mcPhotonInd = mcInd;
-			break;
+			return tree->mcMomPID->at(mcPhotonInd);
 		}
 	}
 
 	int parentPID = -999;
-	if (mcPhotonInd>=0){
-		parentPID = tree->mcMomPID->at(mcPhotonInd);
-	}
 	return parentPID;
 }
 

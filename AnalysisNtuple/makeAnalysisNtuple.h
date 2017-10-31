@@ -113,6 +113,7 @@ private :
 	std::vector<bool>  _photonIsHadronicFake;
 
 	std::vector<int>   _photonParentage;
+	std::vector<int>   _photonParentPID;
 
 	std::vector<float>   _dRPhotonJet;
 	std::vector<float>   _dRPhotonLepton;
@@ -244,7 +245,7 @@ private :
 	/* double getEleSF(int eleInd, int systLevel); */
 
 	void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
-	bool findPhotonParentage(int phoInd, EventTree* tree);
+	int findPhotonParentage(int phoInd, EventTree* tree);
 
 	vector<bool> passPhoMediumID(int phoInd);
 	vector<bool> passPhoTightID(int phoInd);
@@ -408,6 +409,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("photonIsHadronicFake"        , &_photonIsHadronicFake       );
 
 	outputTree->Branch("photonParentage"        , &_photonParentage       );
+	outputTree->Branch("photonParentPID"        , &_photonParentPID       );
 	
 	outputTree->Branch("_eventCategoryMediumID"      , &_eventCategoryMediumID      );
 	outputTree->Branch("_eventCategoryTightID"       , &_eventCategoryTightID       );
@@ -489,6 +491,7 @@ void makeAnalysisNtuple::InitVariables()
 	_photonIsHadronicPhoton.clear();
 	_photonIsHadronicFake.clear();
 	_photonParentage.clear();
+	_photonParentPID.clear();
 
 	_loosePhoEt.clear();
 	_loosePhoEta.clear();
