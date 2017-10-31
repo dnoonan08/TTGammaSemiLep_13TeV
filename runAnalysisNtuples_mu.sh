@@ -9,8 +9,8 @@ else
 	cd ${_CONDOR_SCRATCH_DIR}
 	echo ${_CONDOR_SCRATCH_DIR}
 
-	echo "xrdcp root://cmseos.fnal.gov//store/user/dnoonan/CMSSW_8_0_26_patch1.tgz ."
-	xrdcp root://cmseos.fnal.gov//store/user/dnoonan/CMSSW_8_0_26_patch1.tgz .
+	echo "xrdcp root://cmseos.fnal.gov//store/user/troy2012/CMSSW_8_0_26_patch1.tgz ."
+	xrdcp root://cmseos.fnal.gov//store/user/troy2012/CMSSW_8_0_26_patch1.tgz .
 	echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
 	tar -xzf CMSSW_8_0_26_patch1.tgz
 	cd CMSSW_8_0_26_patch1/src/
@@ -22,8 +22,8 @@ eval `scramv1 runtime -sh`
 
 
 
-inputdir="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_skims/muons/V08_00_26_07/"
-outputdir="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_AnalysisNtuples/muons/V08_00_26_07/"
+inputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_skims/muons/V08_00_26_07/"
+outputdir="root://cmseos.fnal.gov//store/user/troy2012/13TeV_AnalysisNtuples/muons"
 
 
 files=("TTGamma_SingleLeptFromTbar_" \
@@ -61,37 +61,37 @@ files=("TTGamma_SingleLeptFromTbar_" \
 
 
 
-sampleType=("TTGamma_SingleLeptFromTbar " \
-"TTGamma_SingleLeptFromT    " \
-"TTGamma_Dilepton           " \
-"TTGamma_Hadronic           " \
-"TTbarPowheg                " \
-"TTbarMadgraph_SingleLeptFromT    " \
-"TTbarMadgraph_SingleLeptFromTbar " \
-"TTbarMadgraph_Dilepton           " \
-"W1jets                     " \
-"W2jets                     " \
-"W3jets                     " \
-"W4jets                     " \
-"DYjetsM10to50              " \
-"DYjetsM50                  " \
-"ST_s-channel               " \
-"ST_t-channel               " \
-"ST_tbar-channel            " \
-"ST_tW-channel              " \
-"ST_tbarW-channel           " \
-"TTWtoQQ                    " \
-"TTWtoLNu                   " \
-"TTZtoLL                    " \
-"WGamma                     " \
-"ZGamma                     " \
-"Data_SingleMu_b            " \
-"Data_SingleMu_c            " \
-"Data_SingleMu_d            " \
-"Data_SingleMu_e            " \
-"Data_SingleMu_f            " \
-"Data_SingleMu_g            " \
-"Data_SingleMu_h            ")
+sampleType=("TTGamma_SingleLeptFromTbar" \
+"TTGamma_SingleLeptFromT" \
+"TTGamma_Dilepton" \
+"TTGamma_Hadronic" \
+"TTbarPowheg" \
+"TTbarMadgraph_SingleLeptFromT" \
+"TTbarMadgraph_SingleLeptFromTbar" \
+"TTbarMadgraph_Dilepton" \
+"W1jets" \
+"W2jets" \
+"W3jets" \
+"W4jets" \
+"DYjetsM10to50" \
+"DYjetsM50" \
+"ST_s-channel" \
+"ST_t-channel" \
+"ST_tbar-channel" \
+"ST_tW-channel" \
+"ST_tbarW-channel" \
+"TTWtoQQ" \
+"TTWtoLNu" \
+"TTZtoLL" \
+"WGamma" \
+"ZGamma" \
+"Data_SingleMu_b" \
+"Data_SingleMu_c" \
+"Data_SingleMu_d" \
+"Data_SingleMu_e" \
+"Data_SingleMu_f" \
+"Data_SingleMu_g" \
+"Data_SingleMu_h")
 
 
 
