@@ -112,6 +112,8 @@ private :
 	std::vector<bool>  _photonIsHadronicPhoton;
 	std::vector<bool>  _photonIsHadronicFake;
 
+	std::vector<int>   _photonParentage;
+
 	std::vector<float>   _dRPhotonJet;
 	std::vector<float>   _dRPhotonLepton;
 	std::vector<float>   _MPhotonLepton;
@@ -404,6 +406,8 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("photonIsMisIDEle"            , &_photonIsMisIDEle           );
 	outputTree->Branch("photonIsHadronicPhoton"      , &_photonIsHadronicPhoton     );
 	outputTree->Branch("photonIsHadronicFake"        , &_photonIsHadronicFake       );
+
+	outputTree->Branch("photonParentage"        , &_photonParentage       );
 	
 	outputTree->Branch("_eventCategoryMediumID"      , &_eventCategoryMediumID      );
 	outputTree->Branch("_eventCategoryTightID"       , &_eventCategoryTightID       );
@@ -484,6 +488,7 @@ void makeAnalysisNtuple::InitVariables()
 	_photonIsMisIDEle.clear();
 	_photonIsHadronicPhoton.clear();
 	_photonIsHadronicFake.clear();
+	_photonParentage.clear();
 
 	_loosePhoEt.clear();
 	_loosePhoEta.clear();

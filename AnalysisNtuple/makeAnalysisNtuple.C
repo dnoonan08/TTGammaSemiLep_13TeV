@@ -304,9 +304,6 @@ void makeAnalysisNtuple::FillEvent()
 	_nBJet           = evtPick->bJets.size();
 	_nMC             = tree->nMC_;
 	
-
-
-
 	double ht = 0.0;
         ht += tree->pfMET_;
         for( int i_jet = 0; i_jet < _nJet; i_jet++)
@@ -461,6 +458,22 @@ void makeAnalysisNtuple::FillEvent()
 		_photonIsHadronicFake.push_back(isHadronicFake);
 
 
+		int parentPID = findPhotonParentage(phoInd, tree);
+		
+		// photon parentage for event categorization
+		// -1 is unmatched photon
+		// 0 is matched, but not top/W/lepton
+		// 1 is top parent
+		// 2 is W parent
+		// 3 is lepton parent
+		int parentage = -1;
+		if (parentage!=-999) parentage = 0;
+		if (abs(parentPID)==6) parentage = 1;
+		if (abs(parentPID)==24) parentage = 2;
+		if (abs(parentPID)==11 || abs(parentPID)==13 || abs(parentPID)==15) parentage = 3;
+
+		_photonParentage.push_back(parentage);
+		
 
 		_dRPhotonJet.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
 		_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
