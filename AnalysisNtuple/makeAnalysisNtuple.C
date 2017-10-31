@@ -172,8 +172,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	Long64_t nEntr = tree->GetEntries();
 
-
-	nEntr = 10000;
+	if (sampleType=="Test") nEntr = 10000;
 
 	int dumpFreq = 1;
 	if (nEntr >50)     { dumpFreq = 5; }
