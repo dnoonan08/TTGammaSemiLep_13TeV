@@ -32,6 +32,7 @@ public:
 	std::vector<int> bJets;
 	// indices and selection cuts for photons
 	std::vector<int> Photons;
+	std::vector<int> LoosePhotons;
 	std::vector<int> PhotonsPresel;
 	std::vector<bool> PhoPassChHadIso;
 	std::vector<bool> PhoPassPhoIso;

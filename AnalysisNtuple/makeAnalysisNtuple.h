@@ -105,25 +105,57 @@ private :
 	std::vector<float>   _phoPFRandConeChIsoUnCorr;
 	std::vector<bool>    _phoTightID;
 	std::vector<bool>    _phoMediumID;
-	std::vector<bool>    _phoLooseID;
-	std::vector<bool>    _phoMediumIDFunction; 
-	std::vector<bool>    _phoMediumIDPassHoverE; 
-	std::vector<bool>    _phoMediumIDPassSIEIE; 
-	std::vector<bool>    _phoMediumIDPassChIso; 
-	std::vector<bool>    _phoMediumIDPassNeuIso; 
-	std::vector<bool>    _phoMediumIDPassPhoIso; 
-	std::vector<bool>    _phoTightIDFunction; 
-	std::vector<bool>    _phoTightIDPassHoverE; 
-	std::vector<bool>    _phoTightIDPassSIEIE; 
-	std::vector<bool>    _phoTightIDPassChIso; 
-	std::vector<bool>    _phoTightIDPassNeuIso; 
-	std::vector<bool>    _phoTightIDPassPhoIso; 
 
 
 	std::vector<bool>  _photonIsGenuine;
 	std::vector<bool>  _photonIsMisIDEle;
 	std::vector<bool>  _photonIsHadronicPhoton;
 	std::vector<bool>  _photonIsHadronicFake;
+
+	std::vector<float>   _dRPhotonJet;
+	std::vector<float>   _dRPhotonLepton;
+	std::vector<float>   _MPhotonLepton;
+	std::vector<float>   _AnglePhotonLepton;
+
+
+	Int_t           _nLoosePho;
+	std::vector<float>   _loosePhoEt;
+	std::vector<float>   _loosePhoEta;
+	std::vector<float>   _loosePhoSCEta;
+	std::vector<float>   _loosePhoPhi;
+	std::vector<bool>    _loosePhoIsBarrel;
+	std::vector<float>   _loosePhoHoverE;
+	std::vector<float>   _loosePhoSIEIE;
+	std::vector<float>   _loosePhoPFChIso;
+	std::vector<float>   _loosePhoPFPhoIso;
+	std::vector<float>   _loosePhoPFNeuIso;
+	std::vector<float>   _loosePhoPFRandConeChIso;
+	std::vector<float>   _loosePhoPFChIsoUnCorr;
+	std::vector<float>   _loosePhoPFPhoIsoUnCorr;
+	std::vector<float>   _loosePhoPFNeuIsoUnCorr;
+	std::vector<float>   _loosePhoPFRandConeChIsoUnCorr;
+	std::vector<bool>    _loosePhoTightID;
+	std::vector<bool>    _loosePhoMediumID;
+	std::vector<bool>    _loosePhoLooseID;
+	std::vector<bool>    _loosePhoMediumIDFunction; 
+	std::vector<bool>    _loosePhoMediumIDPassHoverE; 
+	std::vector<bool>    _loosePhoMediumIDPassSIEIE; 
+	std::vector<bool>    _loosePhoMediumIDPassChIso; 
+	std::vector<bool>    _loosePhoMediumIDPassNeuIso; 
+	std::vector<bool>    _loosePhoMediumIDPassPhoIso; 
+	std::vector<bool>    _loosePhoTightIDFunction; 
+	std::vector<bool>    _loosePhoTightIDPassHoverE; 
+	std::vector<bool>    _loosePhoTightIDPassSIEIE; 
+	std::vector<bool>    _loosePhoTightIDPassChIso; 
+	std::vector<bool>    _loosePhoTightIDPassNeuIso; 
+	std::vector<bool>    _loosePhoTightIDPassPhoIso; 
+
+	std::vector<bool>    _loosePhotonIsGenuine;
+	std::vector<bool>    _loosePhotonIsMisIDEle;
+	std::vector<bool>    _loosePhotonIsHadronicPhoton;
+	std::vector<bool>    _loosePhotonIsHadronicFake;
+
+
 
 	int  _eventCategoryMediumID;
 	int  _eventCategoryTightID;
@@ -168,10 +200,6 @@ private :
 	std::vector<float>   _jetGenEta;
 	std::vector<float>   _jetGenPhi;
 
-	std::vector<float>   _dRPhotonJet;
-	std::vector<float>   _dRPhotonLepton;
-	std::vector<float>   _MPhotonLepton;
-	std::vector<float>   _AnglePhotonLepton;
 
 	Int_t                _nMC;
 	std::vector<float>   _mcPt;
@@ -214,6 +242,8 @@ private :
 	/* double getEleSF(int eleInd, int systLevel); */
 
 	void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
+	bool findPhotonParentage(int phoInd, EventTree* tree);
+
 	vector<bool> passPhoMediumID(int phoInd);
 	vector<bool> passPhoTightID(int phoInd);
 	/* bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso); */
@@ -276,22 +306,39 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoPFRandConeChIsoUnCorr"         , &_phoPFRandConeChIsoUnCorr          ); 
 	outputTree->Branch("phoTightID"                 , &_phoTightID                  ); 
 	outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
-	outputTree->Branch("phoLooseID"                 , &_phoLooseID                  ); 
-	outputTree->Branch("phoMediumIDFunction"        , &_phoMediumIDFunction         ); 
-	outputTree->Branch("phoMediumIDPassHoverE"      , &_phoMediumIDPassHoverE       ); 
-	outputTree->Branch("phoMediumIDPassSIEIE"       , &_phoMediumIDPassSIEIE        ); 
-	outputTree->Branch("phoMediumIDPassChIso"       , &_phoMediumIDPassChIso        ); 
-	outputTree->Branch("phoMediumIDPassNeuIso"      , &_phoMediumIDPassNeuIso       ); 
-	outputTree->Branch("phoMediumIDPassPhoIso"      , &_phoMediumIDPassPhoIso       ); 
-	outputTree->Branch("phoTightIDFunction"        , &_phoTightIDFunction         ); 
-	outputTree->Branch("phoTightIDPassHoverE"      , &_phoTightIDPassHoverE       ); 
-	outputTree->Branch("phoTightIDPassSIEIE"       , &_phoTightIDPassSIEIE        ); 
-	outputTree->Branch("phoTightIDPassChIso"       , &_phoTightIDPassChIso        ); 
-	outputTree->Branch("phoTightIDPassNeuIso"      , &_phoTightIDPassNeuIso       ); 
-	outputTree->Branch("phoTightIDPassPhoIso"      , &_phoTightIDPassPhoIso       ); 
-	/* outputTree->Branch("phoMediumIDNoHoverECut"     , &_phoMediumIDNoHoverECut      );  */
-	/* outputTree->Branch("phoMediumIDNoSIEIECut"      , &_phoMediumIDNoSIEIECut       );  */
-	/* outputTree->Branch("phoMediumIDNoIsoCut"        , &_phoMediumIDNoIsoCut         );  */
+
+	outputTree->Branch("nLoosePho"                       , &_nLoosePho                        ); 
+	outputTree->Branch("loosePhoEt"                      , &_loosePhoEt                       );
+	outputTree->Branch("loosePhoEta"                     , &_loosePhoEta                      ); 
+	outputTree->Branch("loosePhoSCEta"                   , &_loosePhoSCEta                    ); 
+	outputTree->Branch("loosePhoPhi"                     , &_loosePhoPhi                      ); 
+	outputTree->Branch("loosePhoIsBarrel"                , &_loosePhoIsBarrel                 ); 
+	outputTree->Branch("loosePhoHoverE"                  , &_loosePhoHoverE                   ); 
+	outputTree->Branch("loosePhoSIEIE"                   , &_loosePhoSIEIE                    ); 
+	outputTree->Branch("loosePhoPFChIso"                 , &_loosePhoPFChIso                  ); 
+	outputTree->Branch("loosePhoPFLoosePhoIso"                , &_loosePhoPFPhoIso                 ); 
+	outputTree->Branch("loosePhoPFNeuIso"                , &_loosePhoPFNeuIso                 ); 
+	outputTree->Branch("loosePhoPFRandConeChIso"         , &_loosePhoPFRandConeChIso          ); 
+	outputTree->Branch("loosePhoPFChIsoUnCorr"                 , &_loosePhoPFChIsoUnCorr                  ); 
+	outputTree->Branch("loosePhoPFPhoIsoUnCorr"                , &_loosePhoPFPhoIsoUnCorr                 ); 
+	outputTree->Branch("loosePhoPFNeuIsoUnCorr"                , &_loosePhoPFNeuIsoUnCorr                 ); 
+	outputTree->Branch("loosePhoPFRandConeChIsoUnCorr"         , &_loosePhoPFRandConeChIsoUnCorr          ); 
+	outputTree->Branch("loosePhoTightID"                 , &_loosePhoTightID                  ); 
+	outputTree->Branch("loosePhoMediumID"                , &_loosePhoMediumID                 ); 
+	outputTree->Branch("loosePhoLooseID"                 , &_loosePhoLooseID                  ); 
+	outputTree->Branch("loosePhoMediumIDFunction"        , &_loosePhoMediumIDFunction         ); 
+	outputTree->Branch("loosePhoMediumIDPassHoverE"      , &_loosePhoMediumIDPassHoverE       ); 
+	outputTree->Branch("loosePhoMediumIDPassSIEIE"       , &_loosePhoMediumIDPassSIEIE        ); 
+	outputTree->Branch("loosePhoMediumIDPassChIso"       , &_loosePhoMediumIDPassChIso        ); 
+	outputTree->Branch("loosePhoMediumIDPassNeuIso"      , &_loosePhoMediumIDPassNeuIso       ); 
+	outputTree->Branch("loosePhoMediumIDPassPhoIso"      , &_loosePhoMediumIDPassPhoIso       ); 
+	outputTree->Branch("loosePhoTightIDFunction"        , &_loosePhoTightIDFunction         ); 
+	outputTree->Branch("loosePhoTightIDPassHoverE"      , &_loosePhoTightIDPassHoverE       ); 
+	outputTree->Branch("loosePhoTightIDPassSIEIE"       , &_loosePhoTightIDPassSIEIE        ); 
+	outputTree->Branch("loosePhoTightIDPassChIso"       , &_loosePhoTightIDPassChIso        ); 
+	outputTree->Branch("loosePhoTightIDPassNeuIso"      , &_loosePhoTightIDPassNeuIso       ); 
+	outputTree->Branch("loosePhoTightIDPassPhoIso"      , &_loosePhoTightIDPassPhoIso       ); 
+
 	
 	outputTree->Branch("nEle"                        , &_nEle                       ); 
 	outputTree->Branch("elePt"                       , &_elePt                      );
@@ -403,11 +450,6 @@ void makeAnalysisNtuple::InitVariables()
 	_btagSF_Up.clear();
 	_btagSF_Do.clear();
 
-	_photonIsGenuine.clear();
-	_photonIsMisIDEle.clear();
-	_photonIsHadronicPhoton.clear();
-	_photonIsHadronicFake.clear();
-
 	_eventCategoryMediumID = -1;
 	_eventCategoryTightID = -1;
 
@@ -438,22 +480,45 @@ void makeAnalysisNtuple::InitVariables()
 	_phoPFRandConeChIsoUnCorr.clear();
 	_phoTightID.clear();
 	_phoMediumID.clear();
-	_phoLooseID.clear();
-	_phoMediumIDFunction.clear(); 
-	_phoMediumIDPassHoverE.clear(); 
-	_phoMediumIDPassSIEIE.clear(); 
-	_phoMediumIDPassChIso.clear(); 
-	_phoMediumIDPassNeuIso.clear(); 
-	_phoMediumIDPassPhoIso.clear(); 
-	_phoTightIDFunction.clear(); 
-	_phoTightIDPassHoverE.clear(); 
-	_phoTightIDPassSIEIE.clear(); 
-	_phoTightIDPassChIso.clear(); 
-	_phoTightIDPassNeuIso.clear(); 
-	_phoTightIDPassPhoIso.clear(); 
-	/* _phoMediumIDNoHoverECut.clear();  */
-	/* _phoMediumIDNoSIEIECut.clear();  */
-	/* _phoMediumIDNoIsoCut.clear();  */
+	_photonIsGenuine.clear();
+	_photonIsMisIDEle.clear();
+	_photonIsHadronicPhoton.clear();
+	_photonIsHadronicFake.clear();
+
+	_loosePhoEt.clear();
+	_loosePhoEta.clear();
+	_loosePhoSCEta.clear();
+	_loosePhoPhi.clear();
+	_loosePhoIsBarrel.clear();
+	_loosePhoHoverE.clear();
+	_loosePhoSIEIE.clear();
+	_loosePhoPFChIso.clear();
+	_loosePhoPFPhoIso.clear();
+	_loosePhoPFNeuIso.clear();
+	_loosePhoPFRandConeChIso.clear();
+	_loosePhoPFChIsoUnCorr.clear();
+	_loosePhoPFPhoIsoUnCorr.clear();
+	_loosePhoPFNeuIsoUnCorr.clear();
+	_loosePhoPFRandConeChIsoUnCorr.clear();
+	_loosePhoTightID.clear();
+	_loosePhoMediumID.clear();
+	_loosePhoLooseID.clear();
+	_loosePhoMediumIDFunction.clear(); 
+	_loosePhoMediumIDPassHoverE.clear(); 
+	_loosePhoMediumIDPassSIEIE.clear(); 
+	_loosePhoMediumIDPassChIso.clear(); 
+	_loosePhoMediumIDPassNeuIso.clear(); 
+	_loosePhoMediumIDPassPhoIso.clear(); 
+	_loosePhoTightIDFunction.clear(); 
+	_loosePhoTightIDPassHoverE.clear(); 
+	_loosePhoTightIDPassSIEIE.clear(); 
+	_loosePhoTightIDPassChIso.clear(); 
+	_loosePhoTightIDPassNeuIso.clear(); 
+	_loosePhoTightIDPassPhoIso.clear(); 
+	_loosePhotonIsGenuine.clear();
+	_loosePhotonIsMisIDEle.clear();
+	_loosePhotonIsHadronicPhoton.clear();
+	_loosePhotonIsHadronicFake.clear();
 
 	_jetPt.clear();
 	_jetEn.clear();

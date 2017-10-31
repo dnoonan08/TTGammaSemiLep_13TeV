@@ -91,6 +91,8 @@ void Selector::clear_vectors(){
 	PhoPassChHadIso.clear();
 	PhoPassPhoIso.clear();
 	PhoPassSih.clear();
+
+	LoosePhotonsPresel.clear();
 	
 	Electrons.clear();
 	ElectronsLoose.clear();
@@ -106,10 +108,7 @@ void Selector::clear_vectors(){
 	PhoNeuHadIso_corr.clear();
 	PhoPhoIso_corr.clear();
 	PhoRandConeChHadIso_corr.clear();
-	// Pho03ChHadSCRIso.clear();
-	// Pho03PhoSCRIso.clear();
-	// Pho03RandPhoIso.clear();
-	// Pho03RandChHadIso.clear();
+
 }
 
 void Selector::filter_photons(){
@@ -161,11 +160,13 @@ void Selector::filter_photons(){
 						  abs(eta) < pho_Eta_cut &&
 						  passEtaOverlap &&
 						  passDR_lep_pho && 
-						  (!pho_applyPhoID || passMediumPhotonID) &&
 						  !hasPixelSeed);
 
-		if(phoPresel){
+		if(phoPresel && passMediumPhotonID){
 			PhotonsPresel.push_back(phoInd);
+		}
+		if(phoPresel){
+			LoosePhotonsPresel.push_back(phoInd);
 		}
 	}
 }
@@ -173,10 +174,8 @@ void Selector::filter_photons(){
 
 void Selector::filter_photons_jetsDR(){
 	if (veto_jet_pho_dR < 0) return;
-	//	cout << tree->event_ << endl;
-	//	cout << "muon Pt/Eta/Phi " << tree->muPt_->at(muInd) << "  " << tree->muEta_->at(muInd) << "  " << tree->muPhi_->at(muInd) << endl;
+
 	for(int i = PhotonsPresel.size()-1; i >= 0; i--){
-	// for(std::vector<int>::const_iterator phoInd = PhotonsPresel.begin(); phoInd != PhotonsPresel.end(); phoInd++) {
 		int phoInd = PhotonsPresel.at(i);
 		double eta = tree->phoEta_->at(phoInd);
 		double et = tree->phoEt_->at(phoInd);
@@ -184,17 +183,33 @@ void Selector::filter_photons_jetsDR(){
 
 		bool passDR_jet_pho = true;
 		double _dr;
-		//loop over selected muons
-		//		cout << "Photon Et/Eta/Phi " << et << "  " << eta << "  " << phi << endl; 
-		for(std::vector<int>::const_iterator jetInd = Jets.begin(); jetInd != Jets.end(); jetInd++) {
 
+		for(std::vector<int>::const_iterator jetInd = Jets.begin(); jetInd != Jets.end(); jetInd++) {
 			_dr = dR(eta, phi, tree->jetEta_->at(*jetInd), tree->jetPhi_->at(*jetInd));
-			//			cout <<"     jet Pt/Eta/Phi/DR " << tree->jetPt_->at(*jetInd) << "  " << tree->jetEta_->at(*jetInd) << "  " << tree->jetPhi_->at(*jetInd) << "  "<<_dr << endl;
 			if (_dr < veto_jet_pho_dR) passDR_jet_pho = false;
 		}
 		if (!passDR_jet_pho){
-			//			cout << "removing Photon" << endl;			
 			PhotonsPresel.erase(PhotonsPresel.begin()+i);
+		}
+	}
+
+
+
+	for(int i = LoosePhotonsPresel.size()-1; i >= 0; i--){
+		int phoInd = LoosePhotonsPresel.at(i);
+		double eta = tree->phoEta_->at(phoInd);
+		double et = tree->phoEt_->at(phoInd);
+		double phi = tree->phoPhi_->at(phoInd);
+
+		bool passDR_jet_pho = true;
+		double _dr;
+
+		for(std::vector<int>::const_iterator jetInd = Jets.begin(); jetInd != Jets.end(); jetInd++) {
+			_dr = dR(eta, phi, tree->jetEta_->at(*jetInd), tree->jetPhi_->at(*jetInd));
+			if (_dr < veto_jet_pho_dR) passDR_jet_pho = false;
+		}
+		if (!passDR_jet_pho){
+			LoosePhotonsPresel.erase(LoosePhotonsPresel.begin()+i);
 		}
 
 	}

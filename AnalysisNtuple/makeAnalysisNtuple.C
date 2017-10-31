@@ -295,6 +295,7 @@ void makeAnalysisNtuple::FillEvent()
 	_pfMETPhi	     = tree->pfMETPhi_;
 
 	_nPho		     = evtPick->Photons.size();
+	_nLoosePho	     = evtPick->LoosePhotons.size();
 	_nEle		     = evtPick->Electrons.size();
 	_nEleLoose           = evtPick->ElectronsLoose.size();
 	_nMuLoose            = evtPick->MuonsLoose.size();
@@ -420,6 +421,8 @@ void makeAnalysisNtuple::FillEvent()
 
 	int countMediumIDPho = 0;
 	int countTightIDPho = 0;
+
+
 	for (int i_pho = 0; i_pho <_nPho; i_pho++){
 		int phoInd = evtPick->Photons.at(i_pho);
 		phoVector.SetPtEtaPhiM(tree->phoEt_->at(phoInd),
@@ -444,28 +447,6 @@ void makeAnalysisNtuple::FillEvent()
 		_phoPFRandConeChIsoUnCorr.push_back( tree->phoPFRandConeChIso_->at(phoInd) );
 		_phoTightID.push_back(tree->phoIDbit_->at(phoInd)>>2&1);
 		_phoMediumID.push_back(tree->phoIDbit_->at(phoInd)>>1&1);
-		_phoLooseID.push_back(tree->phoIDbit_->at(phoInd)>>0&1);
-		vector<bool> phoMediumCuts =  passPhoMediumID(phoInd);
-		_phoMediumIDFunction.push_back(  phoMediumCuts.at(0));
-		_phoMediumIDPassHoverE.push_back(phoMediumCuts.at(1));
-		_phoMediumIDPassSIEIE.push_back( phoMediumCuts.at(2));
-		_phoMediumIDPassChIso.push_back( phoMediumCuts.at(3));
-		_phoMediumIDPassNeuIso.push_back(phoMediumCuts.at(4));
-		_phoMediumIDPassPhoIso.push_back(phoMediumCuts.at(5));
-
-		vector<bool> phoTightCuts =  passPhoTightID(phoInd);
-		_phoTightIDFunction.push_back(  phoTightCuts.at(0));
-		_phoTightIDPassHoverE.push_back(phoTightCuts.at(1));
-		_phoTightIDPassSIEIE.push_back( phoTightCuts.at(2));
-		_phoTightIDPassChIso.push_back( phoTightCuts.at(3));
-		_phoTightIDPassNeuIso.push_back(phoTightCuts.at(4));
-		_phoTightIDPassPhoIso.push_back(phoTightCuts.at(5));
-			
-		// _phoMediumIDFunction.push_back(   passPhoMediumID(phoInd,true,true,true) );
-		// _phoMediumIDNoHoverECut.push_back(passPhoMediumID(phoInd,false,true,true));
-		// _phoMediumIDNoSIEIECut.push_back( passPhoMediumID(phoInd,true,false,true));
-		// _phoMediumIDNoIsoCut.push_back(   passPhoMediumID(phoInd,true,true,false));
-		
 
 
 		bool isGenuine = false;
@@ -480,29 +461,67 @@ void makeAnalysisNtuple::FillEvent()
 		_photonIsHadronicFake.push_back(isHadronicFake);
 
 
-		//		Make the decision on the photon category based on the leading photon that has passed the mediumID
-		if (tree->phoIDbit_->at(phoInd)>>1&1){
-			countMediumIDPho++;
-			if (countMediumIDPho==1){
-				_eventCategoryMediumID = isGenuine + 2 * isMisIDEle + 3*(isHadronicPhoton || isHadronicFake);
-			}
-		}
-
-		//		Make the decision on the photon category based on the leading photon that has passed the tightID
-		if (tree->phoIDbit_->at(phoInd)>>2&1){
-			countTightIDPho++;
-			if (countTightIDPho==1){
-				_eventCategoryTightID = isGenuine + 2 * isMisIDEle + 3*(isHadronicPhoton || isHadronicFake);
-			}
-		}
-
-		
 
 		_dRPhotonJet.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
 		_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
 		_MPhotonLepton.push_back((phoVector+lepVector).M());
 		_AnglePhotonLepton.push_back(phoVector.Angle(lepVector.Vect()));
 
+
+	}
+
+
+	for (int i_pho = 0; i_pho <_nLoosePho; i_pho++){
+		int phoInd = evtPick->LoosePhotons.at(i_pho);
+		phoVector.SetPtEtaPhiM(tree->phoEt_->at(phoInd),
+							   tree->phoEta_->at(phoInd),
+							   tree->phoPhi_->at(phoInd),
+							   0.0);
+
+		_loosePhoEt.push_back(tree->phoEt_->at(phoInd));
+		_loosePhoEta.push_back(tree->phoEta_->at(phoInd));
+		_loosePhoSCEta.push_back(tree->phoSCEta_->at(phoInd));
+		_loosePhoPhi.push_back(tree->phoPhi_->at(phoInd));
+		_loosePhoIsBarrel.push_back( abs(tree->phoSCEta_->at(phoInd))<1.47 );
+		_loosePhoHoverE.push_back(tree->phoHoverE_->at(phoInd));
+		_loosePhoSIEIE.push_back(tree->phoSigmaIEtaIEtaFull5x5_->at(phoInd));
+		_loosePhoPFChIso.push_back( selector->PhoChHadIso_corr.at(phoInd));
+		_loosePhoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
+		_loosePhoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
+		_loosePhoPFRandConeChIso.push_back( selector->PhoRandConeChHadIso_corr.at(phoInd));
+		_loosePhoPFChIsoUnCorr.push_back( tree->phoPFChIso_->at(phoInd));
+		_loosePhoPFNeuIsoUnCorr.push_back(tree->phoPFNeuIso_->at(phoInd));
+		_loosePhoPFPhoIsoUnCorr.push_back(tree->phoPFPhoIso_->at(phoInd));
+		_loosePhoPFRandConeChIsoUnCorr.push_back( tree->phoPFRandConeChIso_->at(phoInd) );
+		_loosePhoTightID.push_back(tree->phoIDbit_->at(phoInd)>>2&1);
+		_loosePhoMediumID.push_back(tree->phoIDbit_->at(phoInd)>>1&1);
+		_loosePhoLooseID.push_back(tree->phoIDbit_->at(phoInd)>>0&1);
+		vector<bool> phoMediumCuts =  passPhoMediumID(phoInd);
+		_loosePhoMediumIDFunction.push_back(  phoMediumCuts.at(0));
+		_loosePhoMediumIDPassHoverE.push_back(phoMediumCuts.at(1));
+		_loosePhoMediumIDPassSIEIE.push_back( phoMediumCuts.at(2));
+		_loosePhoMediumIDPassChIso.push_back( phoMediumCuts.at(3));
+		_loosePhoMediumIDPassNeuIso.push_back(phoMediumCuts.at(4));
+		_loosePhoMediumIDPassPhoIso.push_back(phoMediumCuts.at(5));
+
+		vector<bool> phoTightCuts =  passPhoTightID(phoInd);
+		_loosePhoTightIDFunction.push_back(  phoTightCuts.at(0));
+		_loosePhoTightIDPassHoverE.push_back(phoTightCuts.at(1));
+		_loosePhoTightIDPassSIEIE.push_back( phoTightCuts.at(2));
+		_loosePhoTightIDPassChIso.push_back( phoTightCuts.at(3));
+		_loosePhoTightIDPassNeuIso.push_back(phoTightCuts.at(4));
+		_loosePhoTightIDPassPhoIso.push_back(phoTightCuts.at(5));
+			
+		bool isGenuine = false;
+		bool isMisIDEle = false;
+		bool isHadronicPhoton = false;
+		bool isHadronicFake = false;
+
+		findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+		_loosePhotonIsGenuine.push_back(isGenuine);
+		_loosePhotonIsMisIDEle.push_back(isMisIDEle);
+		_loosePhotonIsHadronicPhoton.push_back(isHadronicPhoton);
+		_loosePhotonIsHadronicFake.push_back(isHadronicFake);
 
 	}
 
@@ -931,6 +950,27 @@ void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* g
 	}
 
 	// cout << genuine << misIDele << hadronicphoton << hadronicfake << endl;
+}
+
+bool makeAnalysisNtuple::findPhotonParentage(int phoInd, EventTree* tree){
+	int mcPhotonInd = -1;
+    
+	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
+        // crude matching to get candidates                                                                                                            
+		bool etetamatch = (dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd)) < 0.2 &&
+                           (fabs(tree->phoEt_->at(phoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd)) < 1.0);
+
+        if( etetamatch && mcPhotonInd < 0 && tree->mcPID->at(mcInd) == 22){
+            mcPhotonInd = mcInd;
+			break;
+		}
+	}
+
+	int parentPID = -999;
+	if (mcPhotonInd>=0){
+		parentPID = tree->mcMomPID->at(mcPhotonInd);
+	}
+	return parentPID;
 }
 
 //This is defined in OverlapRemoval.cpp

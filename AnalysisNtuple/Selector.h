@@ -58,6 +58,7 @@ public:
 	std::vector<bool> PhoPassChHadIso;
 	std::vector<bool> PhoPassPhoIso;
 	std::vector<bool> PhoPassSih;
+	std::vector<int> LoosePhotonsPresel;
 	std::vector<int> Electrons;
 	std::vector<int> ElectronsLoose;
 	std::vector<int> ElectronsMedium;

@@ -111,10 +111,15 @@ void EventPick::process_event(const EventTree* inp_tree, const Selector* inp_sel
 	 //photon cleaning:
 	for(int phoVi = 0; phoVi < selector->PhotonsPresel.size(); phoVi++){
 		bool goodPhoton = true;
-
-
 		if(goodPhoton){
 			Photons.push_back(selector->PhotonsPresel.at(phoVi));
+		}
+	}
+
+	for(int phoVi = 0; phoVi < selector->LoosePhotonsPresel.size(); phoVi++){
+		bool goodPhoton = true;
+		if(goodPhoton){
+			LoosePhotons.push_back(selector->LoosePhotonsPresel.at(phoVi));
 		}
 	}
 
@@ -335,6 +340,7 @@ void EventPick::clear_vectors(){
 	Jets.clear();
 	bJets.clear();
 	Photons.clear();
+	LoosePhotons.clear();
 	PhotonsPresel.clear();
 	PhoPassChHadIso.clear();
 	PhoPassPhoIso.clear();
