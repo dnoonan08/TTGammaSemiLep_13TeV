@@ -173,7 +173,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	Long64_t nEntr = tree->GetEntries();
 
 
-	nEntr = 10000;
+	//nEntr = 10000;
 
 	int dumpFreq = 1;
 	if (nEntr >50)     { dumpFreq = 5; }
@@ -450,13 +450,13 @@ void makeAnalysisNtuple::FillEvent()
 		bool isMisIDEle = false;
 		bool isHadronicPhoton = false;
 		bool isHadronicFake = false;
-
-		findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
-		_photonIsGenuine.push_back(isGenuine);
-		_photonIsMisIDEle.push_back(isMisIDEle);
-		_photonIsHadronicPhoton.push_back(isHadronicPhoton);
-		_photonIsHadronicFake.push_back(isHadronicFake);
-
+		if (!tree->isData_){
+			findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+			_photonIsGenuine.push_back(isGenuine);
+			_photonIsMisIDEle.push_back(isMisIDEle);
+			_photonIsHadronicPhoton.push_back(isHadronicPhoton);
+			_photonIsHadronicFake.push_back(isHadronicFake);
+		}
 		parentPID = -999;
 		int parentage = -1;
 		if (!tree->isData_){
