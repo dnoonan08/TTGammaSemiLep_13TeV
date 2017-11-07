@@ -524,13 +524,13 @@ void makeAnalysisNtuple::FillEvent()
 		bool isMisIDEle = false;
 		bool isHadronicPhoton = false;
 		bool isHadronicFake = false;
-
-		findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
-		_loosePhotonIsGenuine.push_back(isGenuine);
-		_loosePhotonIsMisIDEle.push_back(isMisIDEle);
-		_loosePhotonIsHadronicPhoton.push_back(isHadronicPhoton);
-		_loosePhotonIsHadronicFake.push_back(isHadronicFake);
-
+                if (!tree->isData_){
+			findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+			_loosePhotonIsGenuine.push_back(isGenuine);
+			_loosePhotonIsMisIDEle.push_back(isMisIDEle);
+			_loosePhotonIsHadronicPhoton.push_back(isHadronicPhoton);
+			_loosePhotonIsHadronicFake.push_back(isHadronicFake);
+		}
 	}
 
 
