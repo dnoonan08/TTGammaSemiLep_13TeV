@@ -90,13 +90,13 @@ $GGNtupleGroupEOSMC"TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8
 $GGNtupleGroupEOSMC"TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
 $DannyEOS"ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016B_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016C_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016D_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016E_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016F_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016G_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016H_FebReminiAODv2.root "$GGNtupleGroupEOSData"job_SingleMu_Run2016H_FebReminiAODv3.root")
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016B_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016C_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016D_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016E_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016F_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016G_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016H_FebReminiAODv2.root "$GGNtupleGroupEOSData"job_SingleElectron_Run2016H_FebReminiAODv3.root")
 
 
 
