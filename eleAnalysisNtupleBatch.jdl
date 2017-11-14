@@ -1,10 +1,9 @@
 universe = vanilla
-Executable = runAnalysisNtuples_ele.sh
+Executable = runAnalysisNtuples_ele.sh 
 
 should_transfer_files = YES
 WhenTOTransferOutput  = ON_EXIT
 notification = never
-Transfer_input_files = CMSSW_8_0_26_patch1.tgz
 
 Output = condor/eleNtuple_$(cluster)_$(process).stdout
 Error  = condor/eleNtuple_$(cluster)_$(process).stderr
@@ -14,4 +13,9 @@ Arguments = $(process)
 #use_x509userproxy = true
 x509userproxy = $ENV(X509_USER_PROXY)
 # important, number of instances (jobs) of script
-Queue 44
+Queue 32
+
+###This is an example of how to start at a certain point, 
+###it starts with job 24 (QCD samples in this case) and goes from there
+# Arguments = "24+$(process)"
+# Queue 11
