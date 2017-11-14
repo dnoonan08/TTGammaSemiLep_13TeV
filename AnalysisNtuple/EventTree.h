@@ -978,6 +978,7 @@ public:
 	vector<int>*    AK8JetNCH_;
 	/* vector<float>*  jetHFHAE_; */
 	/* vector<float>*  jetHFEME_; */
+	vector<int>*    jetHadFlvr_;
 	vector<int>*    jetPartonID_;
 	vector<int>*    AK8Jetnconstituents_;
 	vector<float>*  jetpfCombinedMVAV2BJetTags_; // recommended
