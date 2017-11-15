@@ -28,7 +28,8 @@ eval `scramv1 runtime -sh`
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_"
 
 
-files=("TTGamma_SingleLeptFromTbar_" \
+files=("TGJets_" \
+"TTGamma_SingleLeptFromTbar_" \
 "TTGamma_SingleLeptFromT_" \
 "TTGamma_Dilepton_" \
 "TTGamma_Hadronic_" \
@@ -73,7 +74,8 @@ GGNtupleGroupEOSMC="root://cmseos.fnal.gov//store/user/lpcggntuples/ggNtuples/13
 TitasEOS="root://cmseos.fnal.gov//store/user/troy2012/13TeV_ggNTuples/V08_00_26_07/"
 GGNtupleGroupEOSData="root://cmseos.fnal.gov//store/user/lpcggntuples/ggNtuples/13TeV/data/V08_00_26_07/"
 
-inputfiles=($DannyEOS"TTGamma_SingleLeptFromTbar_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
+inputfiles=($DannyEOS"TGJets_TuneCUETP8M1_13TeV_amcatnlo_madspin_pythia8.root" \
+$DannyEOS"TTGamma_SingleLeptFromTbar_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_SingleLeptFromT_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_Dilept_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_Hadronic_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
@@ -116,7 +118,8 @@ $GGNtupleGroupEOSData"job_SingleElectron_Run2016H_FebReminiAODv2.root "$GGNtuple
 
 
 
-sampleType=("TTGamma_SingleLeptFromTbar" \
+sampleType=("TGJets" \
+"TTGamma_SingleLeptFromTbar" \
 "TTGamma_SingleLeptFromT" \
 "TTGamma_Dilepton" \
 "TTGamma_Hadronic" \
