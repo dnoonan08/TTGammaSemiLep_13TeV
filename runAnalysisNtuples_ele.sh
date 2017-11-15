@@ -1,5 +1,4 @@
 #!/bin/bash
-
 job=$1
 
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then 
@@ -11,7 +10,7 @@ else
 
 	echo "xrdcp root://cmseos.fnal.gov//store/user/"${USER}"/CMSSW_8_0_26_patch1.tgz ."
 	xrdcp root://cmseos.fnal.gov//store/user/${USER}/CMSSW_8_0_26_patch1.tgz .
-	echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
+  echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
 	tar -xzf CMSSW_8_0_26_patch1.tgz
 	cd CMSSW_8_0_26_patch1/src/
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -27,8 +26,10 @@ inputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_skims/electron
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07/"
 
 
+
 files=("TTGamma_SingleLeptFromTbar_" \
 "TTGamma_SingleLeptFromT_" \
+"TTGamma_SingleLeptFromTbar_" \
 "TTGamma_Dilepton_" \
 "TTGamma_Hadronic_" \
 "TTbarPowheg_" \
@@ -115,5 +116,4 @@ AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}s
 
 echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/."
 xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/.
-
 
