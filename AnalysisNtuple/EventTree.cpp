@@ -445,6 +445,10 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	// chain->SetBranchStatus("jetCombinedSecondaryVtxMVABJetTags",1);
 	// chain->SetBranchAddress("jetCombinedSecondaryVtxMVABJetTags", &jetCombinedSecondaryVtxMVABJetTags_);
 
+	jetHadFlvr_ = new vector<int>;
+	chain->SetBranchStatus("jetHadFlvr",1);
+	chain->SetBranchAddress("jetHadFlvr", &jetHadFlvr_);
+
 	jetPartonID_ = new vector<int>;
 	chain->SetBranchStatus("jetPartonID",1);
 	chain->SetBranchAddress("jetPartonID", &jetPartonID_);

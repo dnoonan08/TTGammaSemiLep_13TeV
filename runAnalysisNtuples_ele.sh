@@ -8,13 +8,9 @@ else
 	cd ${_CONDOR_SCRATCH_DIR}
 	echo ${_CONDOR_SCRATCH_DIR}
 
-
-
-
 	echo "xrdcp root://cmseos.fnal.gov//store/user/"${USER}"/CMSSW_8_0_26_patch1.tgz ."
 	xrdcp root://cmseos.fnal.gov//store/user/${USER}/CMSSW_8_0_26_patch1.tgz .
-
-	echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
+  echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
 	tar -xzf CMSSW_8_0_26_patch1.tgz
 	cd CMSSW_8_0_26_patch1/src/
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -26,21 +22,20 @@ fi
 
 eval `scramv1 runtime -sh`
 
-
-
-
 inputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_skims/electrons/V08_00_26_07/"
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07/"
-#outputdir="/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/13TeV_skims/electrons/"
 
-files=("TTbarMadgraph_SingleLeptFromT_" \
-"TTbarMadgraph_SingleLeptFromTbar_" \
-"TTbarMadgraph_Dilepton_" \
+
+
+files=("TTGamma_SingleLeptFromTbar_" \
 "TTGamma_SingleLeptFromT_" \
 "TTGamma_SingleLeptFromTbar_" \
 "TTGamma_Dilepton_" \
 "TTGamma_Hadronic_" \
 "TTbarPowheg_" \
+"TTbarMadgraph_SingleLeptFromT_" \
+"TTbarMadgraph_SingleLeptFromTbar_" \
+"TTbarMadgraph_Dilepton_" \
 "W1jets_" \
 "W2jets_" \
 "W3jets_" \
@@ -52,11 +47,18 @@ files=("TTbarMadgraph_SingleLeptFromT_" \
 "ST_tbar-channel_" \
 "ST_tW-channel_" \
 "ST_tbarW-channel_" \
-"TTWtoLNu_" \
 "TTWtoQQ_" \
+"TTWtoLNu_" \
 "TTZtoLL_" \
-"WGamma_"  \
+"WGamma_" \
 "ZGamma_" \
+"QCD_Pt20to30_Ele_" \
+"QCD_Pt30to50_Ele_" \
+"QCD_Pt50to80_Ele_" \
+"QCD_Pt80to120_Ele_" \
+"QCD_Pt120to170_Ele_" \
+"QCD_Pt170to300_Ele_" \
+"QCD_Pt300toInf_Ele_" \
 "Data_SingleEle_b_" \
 "Data_SingleEle_c_" \
 "Data_SingleEle_d_" \
@@ -66,14 +68,16 @@ files=("TTbarMadgraph_SingleLeptFromT_" \
 "Data_SingleEle_h_")
 
 
-sampleType=("TTbarMadgraph_SingleLeptFromT" \
-"TTbarMadgraph_SingleLeptFromTbar" \
-"TTbarMadgraph_Dilepton" \
+
+
+sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTGamma_SingleLeptFromT" \
-"TTGamma_SingleLeptFromTbar" \
 "TTGamma_Dilepton" \
 "TTGamma_Hadronic" \
 "TTbarPowheg" \
+"TTbarMadgraph_SingleLeptFromT" \
+"TTbarMadgraph_SingleLeptFromTbar" \
+"TTbarMadgraph_Dilepton" \
 "W1jets" \
 "W2jets" \
 "W3jets" \
@@ -85,11 +89,18 @@ sampleType=("TTbarMadgraph_SingleLeptFromT" \
 "ST_tbar-channel" \
 "ST_tW-channel" \
 "ST_tbarW-channel" \
-"TTWtoLNu" \
 "TTWtoQQ" \
+"TTWtoLNu" \
 "TTZtoLL" \
 "WGamma" \
 "ZGamma" \
+"QCD_Pt20to30_Ele" \
+"QCD_Pt30to50_Ele" \
+"QCD_Pt50to80_Ele" \
+"QCD_Pt80to120_Ele" \
+"QCD_Pt120to170_Ele" \
+"QCD_Pt170to300_Ele" \
+"QCD_Pt300toInf_Ele" \
 "Data_SingleEle_b" \
 "Data_SingleEle_c" \
 "Data_SingleEle_d" \
@@ -99,8 +110,10 @@ sampleType=("TTbarMadgraph_SingleLeptFromT" \
 "Data_SingleEle_h")
 
 
+
 echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root"
 AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root
 
 echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/."
 xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/.
+

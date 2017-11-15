@@ -172,7 +172,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	Long64_t nEntr = tree->GetEntries();
 
-
+	if (sampleType=="Test") nEntr = 10000;
 	//nEntr = 10000;
 
 	int dumpFreq = 1;
@@ -643,7 +643,7 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 	for(std::vector<int>::const_iterator bjetInd = evtPick->bJets.begin(); bjetInd != evtPick->bJets.end(); bjetInd++){
 		jetpt = tree->jetPt_->at(*bjetInd);
 		jeteta = fabs(tree->jetEta_->at(*bjetInd));
-		jetflavor = abs(tree->jetPartonID_->at(*bjetInd));
+		jetflavor = abs(tree->jetHadFlvr_->at(*bjetInd));
 		
 		if (jetflavor == 5) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_B, jeteta, jetpt); 
 		else if(jetflavor == 4) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
