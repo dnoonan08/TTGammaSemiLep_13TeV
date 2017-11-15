@@ -83,6 +83,11 @@ private :
 	Float_t         _pfMET;
 	Float_t         _pfMETPhi;
 	Float_t         _WtransMass;
+	Float_t         _Mt_blgammaMET;
+	Float_t         _Mt_lgammaMET;
+	Float_t         _Mt_bjj;
+	Float_t         _Mt_jj;
+
 //	Float_t         _HT;
 	Float_t 	_DilepMass;
 	Float_t 	_DiphoMass;
@@ -288,6 +293,12 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("pfMET"                      , &_pfMET                       );
 	outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
 	outputTree->Branch("WtransMass"                 , &_WtransMass                  );
+
+	outputTree->Branch("Mt_blgammaMET"              , &_Mt_blgammaMET               );
+	outputTree->Branch("Mt_lgammaMET"               , &_Mt_lgammaMET                );
+	outputTree->Branch("Mt_bjj"                     , &_Mt_bjj                      );
+	outputTree->Branch("Mt_jj"                      , &_Mt_jj                       );
+
 	outputTree->Branch("DiphoMass"                  , &_DiphoMass                   ); 
    	outputTree->Branch("DilepMass"                  , &_DilepMass 			);
 	outputTree->Branch("DilepDelR"                  , &_DilepDelR                   );
@@ -430,6 +441,12 @@ void makeAnalysisNtuple::InitVariables()
 	_pfMET		     = -9999;
 	_pfMETPhi	     = -9999;
 	_WtransMass      = -9999;
+
+	_Mt_blgammaMET   = -9999;
+	_Mt_lgammaMET    = -9999;
+	_Mt_bjj          = -9999;
+	_Mt_jj           = -9999;
+
 	_HT		 = -9999;
 	_DilepMass	 = -9999;
 	_DilepDelR	 = -9999;
