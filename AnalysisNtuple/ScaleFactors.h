@@ -126,7 +126,7 @@ double QCD_Pt170to300_Ele_xs =   18810.;
 double QCD_Pt300toInf_Ele_xs =    1350.;
 
 
-double TG_SF               = TG_xs * luminosity / totalTG
+double TG_SF               = TG_xs * luminosity / totalTG;
 double TTGamma_hadronic_SF = TTGamma_hadronic_xs * luminosity / totalTTGamma_hadronic;
 double TTGamma_semilept_T_SF = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_T;
 double TTGamma_semilept_Tbar_SF = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_Tbar;
@@ -252,7 +252,7 @@ double getEvtWeight(string sampleType){
 
 
 
-const std::string allowedSampleTypes[60] = {"Data",
+const std::string allowedSampleTypes[100] = {"Data",
 											"Data_SingleMu_b",
 											"Data_SingleMu_c",
 											"Data_SingleMu_d",
