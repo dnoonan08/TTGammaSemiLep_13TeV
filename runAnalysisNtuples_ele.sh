@@ -29,13 +29,13 @@ outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtupl
 
 files=("TTGamma_SingleLeptFromTbar_" \
 "TTGamma_SingleLeptFromT_" \
-"TTGamma_SingleLeptFromTbar_" \
 "TTGamma_Dilepton_" \
 "TTGamma_Hadronic_" \
 "TTbarPowheg_" \
 "TTbarMadgraph_SingleLeptFromT_" \
 "TTbarMadgraph_SingleLeptFromTbar_" \
 "TTbarMadgraph_Dilepton_" \
+"TGJets_" \
 "W1jets_" \
 "W2jets_" \
 "W3jets_" \
@@ -78,6 +78,7 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTbarMadgraph_SingleLeptFromT" \
 "TTbarMadgraph_SingleLeptFromTbar" \
 "TTbarMadgraph_Dilepton" \
+"TGJets" \
 "W1jets" \
 "W2jets" \
 "W3jets" \

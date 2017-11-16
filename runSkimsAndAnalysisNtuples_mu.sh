@@ -34,6 +34,7 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "TTbarMadgraph_SingleLeptFromT_" \
 "TTbarMadgraph_SingleLeptFromTbar_" \
 "TTbarMadgraph_Dilepton_" \
+"TGJets_" \
 "W1jets_" \
 "W2jets_" \
 "W3jets_" \
@@ -82,6 +83,7 @@ $GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_1of4.root "$GGNtupleG
 $DannyEOS"TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$DannyEOS"TGJets_TuneCUETP8M1_13TeV_amcatnlo_madspin_pythia8.root" \
 $GGNtupleGroupEOSMC"W1JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W2JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W3JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
@@ -129,6 +131,7 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTbarMadgraph_SingleLeptFromT" \
 "TTbarMadgraph_SingleLeptFromTbar" \
 "TTbarMadgraph_Dilepton" \
+"TGJets" \
 "W1jets" \
 "W2jets" \
 "W3jets" \
