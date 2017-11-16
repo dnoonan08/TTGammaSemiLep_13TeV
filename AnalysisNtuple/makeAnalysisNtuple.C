@@ -7,6 +7,8 @@
 #include <iostream>
 
 #include"PUReweight.h"
+#include "METzCalculator.h"
+//#include "JetResolution.cpp"
 //#include"JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
 
@@ -335,80 +337,72 @@ void makeAnalysisNtuple::FillEvent()
 							   tree->muEta_->at(muInd),
 							   tree->muPhi_->at(muInd),
 							   tree->muEn_->at(muInd));
+		// lepVector.SetPtEtaPhiM(tree->muPt_->at(muInd),
+		// 					   tree->muEta_->at(muInd),
+		// 					   tree->muPhi_->at(muInd),
+		// 					   0);
 	}
-//	std::cout << "number of muons:" <<_nMu << std::endl;
-//	std::cout << "number of electrons:" <<_nEle << std::endl;
-//	std::cout<<"dilepton?"<< dileptonsample <<std::endl;
 	
 	if (dileptonsample){
 		if (_nMu==2) {
-//		std::cout<<"doing muons"<<std::endl;
 
-		int muInd1 = evtPick->Muons.at(0);
-		int muInd2 = evtPick->Muons.at(1);
+			int muInd1 = evtPick->Muons.at(0);
+			int muInd2 = evtPick->Muons.at(1);
 
-		lepVector.SetPtEtaPhiE(tree->muPt_->at(muInd1),
-                                                           tree->muEta_->at(muInd1),
-                                                           tree->muPhi_->at(muInd1),
-                                                           tree->muEn_->at(muInd1));
-		lepVector2.SetPtEtaPhiE(tree->muPt_->at(muInd2),
-                                                           tree->muEta_->at(muInd2),
-                                                           tree->muPhi_->at(muInd2),
-                                                           tree->muEn_->at(muInd2));	
-		_DilepMass = (lepVector+lepVector2).M();
-		_DilepDelR = lepVector.DeltaR(lepVector2);
-		
+			lepVector.SetPtEtaPhiE(tree->muPt_->at(muInd1),
+								   tree->muEta_->at(muInd1),
+								   tree->muPhi_->at(muInd1),
+								   tree->muEn_->at(muInd1));
+			lepVector2.SetPtEtaPhiE(tree->muPt_->at(muInd2),
+									tree->muEta_->at(muInd2),
+									tree->muPhi_->at(muInd2),
+									tree->muEn_->at(muInd2));	
+			_DilepMass = (lepVector+lepVector2).M();
+			_DilepDelR = lepVector.DeltaR(lepVector2);
+			
 		}
 		
-
-	    	if (_nEle==2){
-//		std::cout<<"doing electrons"<<std::endl;
-		int eleInd1 = evtPick->Electrons.at(0);
-                int eleInd2 = evtPick->Electrons.at(1);
-
-		lepVector.SetPtEtaPhiE(tree->elePt_->at(eleInd1),
-                                                           tree->eleEta_->at(eleInd1),
-                                                           tree->elePhi_->at(eleInd1),
-                                                           tree->eleEn_->at(eleInd1));
-                lepVector2.SetPtEtaPhiE(tree->elePt_->at(eleInd2),
-                                                           tree->eleEta_->at(eleInd2),
-                                                           tree->elePhi_->at(eleInd2),
-                                                           tree->eleEn_->at(eleInd2));
 		
-		_DilepMass = (lepVector+lepVector2).M();
-
-		_DilepDelR = lepVector.DeltaR(lepVector2);
- 
+		if (_nEle==2){
+			//		std::cout<<"doing electrons"<<std::endl;
+			int eleInd1 = evtPick->Electrons.at(0);
+			int eleInd2 = evtPick->Electrons.at(1);
+			
+			lepVector.SetPtEtaPhiE(tree->elePt_->at(eleInd1),
+								   tree->eleEta_->at(eleInd1),
+								   tree->elePhi_->at(eleInd1),
+								   tree->eleEn_->at(eleInd1));
+			lepVector2.SetPtEtaPhiE(tree->elePt_->at(eleInd2),
+									tree->eleEta_->at(eleInd2),
+									tree->elePhi_->at(eleInd2),
+									tree->eleEn_->at(eleInd2));
+			
+			_DilepMass = (lepVector+lepVector2).M();
+			
+			_DilepDelR = lepVector.DeltaR(lepVector2);
+			
 		}
 	}
 	
 	//dipho Mass
 	if (_nPho>1){
-	//	std::cout<<_nPho<<std::endl;
+		//	std::cout<<_nPho<<std::endl;
 		int phoInd1 = evtPick->Photons.at(0);
-                int phoInd2 = evtPick->Photons.at(1);
+		int phoInd2 = evtPick->Photons.at(1);
 		phoVector1.SetPtEtaPhiM(tree->phoEt_->at(phoInd1),
-                                                           tree->phoEta_->at(phoInd1),
-                                                           tree->phoPhi_->at(phoInd1),
-                                                           0.0);
+								tree->phoEta_->at(phoInd1),
+								tree->phoPhi_->at(phoInd1),
+								0.0);
 		phoVector2.SetPtEtaPhiM(tree->phoEt_->at(phoInd2),
-                                                           tree->phoEta_->at(phoInd2),
-                                                           tree->phoPhi_->at(phoInd2),
-                                                           0.0);
-
-
-		//std::cout<< tree->phoEt_->at(phoInd1) <<std::endl;
-	//	std::cout<<tree->phoEt_->at(phoInd2) <<std::endl;
-	//	std::cout<< (phoVector1+phoVector2).M()<<std::endl;
-
+								tree->phoEta_->at(phoInd2),
+								tree->phoPhi_->at(phoInd2),
+								0.0);
+		
+		
 		_DiphoMass = (phoVector1+phoVector2).M();
-		}
-
-
-
-	//W transverse mass		
-
-	_WtransMass = TMath::Sqrt(2*lepVector.Pt()*tree->pfMET_*( 1.0 - TMath::Cos(dR(0.0,lepVector.Phi(),0.0,tree->pfMETPhi_)) ));
+	}
+	
+	
 
 	_passPresel_Ele  = evtPick->passPresel_ele;
 	_passPresel_Mu   = evtPick->passPresel_mu;
@@ -556,7 +550,9 @@ void makeAnalysisNtuple::FillEvent()
 			_jetGenEta.push_back(tree->jetGenEta_->at(jetInd));
 			_jetGenPhi.push_back(tree->jetGenPhi_->at(jetInd));
 		}
-
+		jetVector.SetPtEtaPhiE(tree->jetPt_->at(jetInd), tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->jetEn_->at(jetInd));
+		jetVectors.push_back(jetVector);
+		isBjet.push_back(tree->jetDeepCSVTags_b_->at(jetInd) + tree->jetDeepCSVTags_bb_->at(jetInd) > selector->btag_cut_DeepCSV );
 	}	
 
 	//Compute M3
@@ -587,6 +583,64 @@ void makeAnalysisNtuple::FillEvent()
 			}
 		}
 	}
+
+	//Calculate transverse mass variables
+	//W transverse mass		
+
+	//	_WtransMass = TMath::Sqrt(2*lepVector.Pt()*tree->pfMET_*( 1.0 - TMath::Cos(dR(0.0,lepVector.Phi(),0.0,tree->pfMETPhi_)) ));
+	_WtransMass = TMath::Sqrt(2*lepVector.Pt()*tree->pfMET_*( 1.0 - TMath::Cos( lepVector.DeltaPhi(METVector))));
+
+
+	// // Calculate MET z
+
+	// metZ.SetLepton(lepVector);
+
+	// METVector.SetPtEtaPhiM(tree->pfMET_,
+	// 					   0.,
+	// 					   tree->pfMETPhi_,
+	// 					   0.);
+	
+	// metZ.SetMET(METVector);
+
+	// TLorentzVector tempLep;
+	// tempLep.SetPtEtaPhiM(lepVector.Pt(),
+	// 					 lepVector.Eta(),
+	// 					 lepVector.Phi(),
+	// 					 0.1056);
+
+	// double _met_px = METVector.Px();
+	// double _met_py = METVector.Py();
+
+	// double _met_pz = metZ.Calculate();
+	// double _met_pz_other = metZ.getOther();
+
+
+	std::vector<int> b_ind;
+	std::vector<int> j_ind;
+
+	for (int __j = 0; __j < isBjet.size(); __j++){
+		if (isBjet->at(__j)) b_ind.push_back(__j);
+		else j_ind.push_back(__j)
+	}
+
+	int ind_bl = -1;
+	double lowMass = 999.;
+	// Match leptonic b
+	for (int __j = 0; __j < b_ind.size(); __j++){
+		int ind = b_ind->at(__j);
+		if ((lepVector + jetVectors->at(ind)).M() < lowMass){
+			ind_bl = ind;
+			lowMass = (lepVector + jetVectors->at(ind)).M();
+		}
+	}
+	
+	//Hardest two light jets
+	int ind_j1 = j_ind->at(0);
+	int ind_j2 = j_ind->at(1);
+
+	//Match hadronic b
+	if (b_ind.size()>2)
+
 	if (!tree->isData_){
 		for (int i_mc = 0; i_mc <_nMC; i_mc++){
 			_mcPt.push_back(tree->mcPt->at(i_mc));

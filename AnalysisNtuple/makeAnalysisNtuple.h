@@ -22,6 +22,8 @@
 // Header file for the classes stored in the TTree if any.
 #include "vector"
 
+#include "METzCalculator.h"
+
 // Header file that includes all of the event luminosity scaling
 #include "ScaleFactors.h"
 
@@ -229,6 +231,7 @@ private :
 	bool  _passAll_Mu;
 	bool  dileptonsample;
 
+	METzCalculator metZ;
 	TLorentzVector jetVector;
 	TLorentzVector lepVector;
 	TLorentzVector lepVector2;
@@ -236,7 +239,8 @@ private :
 	TLorentzVector METVector;
 	TLorentzVector phoVector1;
 	TLorentzVector phoVector2;
-
+	std::vector<TLorentzVector> jetVectors;
+	std::vector<bool> isBjet;
 
 	void InitVariables();
 	void FillEvent();
