@@ -2,6 +2,9 @@
 #include <stdlib.h>
 
 
+// Values taken from text file found here:
+//https://github.com/cms-jet/JRDatabase/blob/master/textFiles/Spring16_25nsV10_MC/Spring16_25nsV10_MC_PtResolution_AK4PFchs.txt
+
 double getJetResolution(double pt, double eta, double rho){
 	double p0 = 0.;
 	double p1 = 0.;
