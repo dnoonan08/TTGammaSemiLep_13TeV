@@ -23,6 +23,7 @@
 #include "vector"
 
 #include "METzCalculator.h"
+#include "TopEventCombinatorics.h"
 
 // Header file that includes all of the event luminosity scaling
 #include "ScaleFactors.h"
@@ -87,8 +88,9 @@ private :
 	Float_t         _WtransMass;
 	Float_t         _Mt_blgammaMET;
 	Float_t         _Mt_lgammaMET;
-	Float_t         _Mt_bjj;
-	Float_t         _Mt_jj;
+	Float_t         _M_bjj;
+	Float_t         _M_jj;
+	Bool_t          _MassCuts;
 
 //	Float_t         _HT;
 	Float_t 	_DilepMass;
@@ -235,6 +237,7 @@ private :
 	bool  dileptonsample;
 
 	METzCalculator metZ;
+	TopEventCombinatorics topEvent;
 	TLorentzVector jetVector;
 	TLorentzVector lepVector;
 	TLorentzVector lepVector2;
@@ -242,8 +245,18 @@ private :
 	TLorentzVector METVector;
 	TLorentzVector phoVector1;
 	TLorentzVector phoVector2;
-	std::vector<TLorentzVector> jetVectors;
-	std::vector<bool> isBjet;
+	std::vector<TLorentzVector> ljetVectors;
+	std::vector<TLorentzVector> bjetVectors;
+
+	TLorentzVector bhad;
+	TLorentzVector blep;
+	TLorentzVector Wj1;
+	TLorentzVector Wj2;
+
+	/* std::vector<bool> isBjet; */
+	/* std::vector<int> b_ind; */
+	/* std::vector<int> j_ind; */
+
 
 	void InitVariables();
 	void FillEvent();
@@ -303,11 +316,12 @@ void makeAnalysisNtuple::InitBranches(){
 
 	outputTree->Branch("Mt_blgammaMET"              , &_Mt_blgammaMET               );
 	outputTree->Branch("Mt_lgammaMET"               , &_Mt_lgammaMET                );
-	outputTree->Branch("Mt_bjj"                     , &_Mt_bjj                      );
-	outputTree->Branch("Mt_jj"                      , &_Mt_jj                       );
+	outputTree->Branch("M_bjj"                      , &_M_bjj                       );
+	outputTree->Branch("M_jj"                       , &_M_jj                        );
+	outputTree->Branch("MassCuts"                   , &_MassCuts                    );
 
 	outputTree->Branch("DiphoMass"                  , &_DiphoMass                   ); 
-   	outputTree->Branch("DilepMass"                  , &_DilepMass 			);
+   	outputTree->Branch("DilepMass"                  , &_DilepMass       			);
 	outputTree->Branch("DilepDelR"                  , &_DilepDelR                   );
 	outputTree->Branch("nPho"                       , &_nPho                        ); 
 	outputTree->Branch("phoEt"                      , &_phoEt                       );
@@ -457,8 +471,9 @@ void makeAnalysisNtuple::InitVariables()
 
 	_Mt_blgammaMET   = -9999;
 	_Mt_lgammaMET    = -9999;
-	_Mt_bjj          = -9999;
-	_Mt_jj           = -9999;
+	_M_bjj           = -9999;
+	_M_jj            = -9999;
+	_MassCuts        = false;
 
 	_HT		 = -9999;
 	_DilepMass	 = -9999;
