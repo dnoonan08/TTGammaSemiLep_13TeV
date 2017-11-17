@@ -5,9 +5,11 @@
 #include <TCanvas.h>
 #include <TLorentzVector.h>
 #include <iostream>
+#include <ctime>
 
 #include"PUReweight.h"
 #include "METzCalculator.h"
+#include "TopEventCombinatorics.h"
 //#include "JetResolution.cpp"
 //#include"JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
@@ -29,13 +31,13 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 bool overlapRemovalTT(EventTree* tree);
 bool overlapRemovalWZ(EventTree* tree);
 bool dileptonsample;
-
-
+std::clock_t startClock;
+double duration;
 
 #ifdef makeAnalysisNtuple_cxx
 makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 {
-
+	startClock = clock();
 	tree = new EventTree(ac-3, av+3);
 
 	sampleType = av[1];
@@ -193,7 +195,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	int count_overlapVJets=0;
 	int count_overlapTTbar=0;
 	for(Long64_t entry=0; entry<nEntr; entry++){
-		if(entry%dumpFreq == 0) std::cout << "processing entry " << entry << " out of " << nEntr << std::endl;
+		if(entry%dumpFreq == 0){
+			duration =  ( clock() - startClock ) / (double) CLOCKS_PER_SEC;
+			std::cout << "processing entry " << entry << " out of " << nEntr << " : " << duration << " seconds since last progress" << std::endl;
+			startClock = clock();
+
+		}
 
 		tree->GetEntry(entry);
 		isMC = !(tree->isData_);
@@ -551,8 +558,11 @@ void makeAnalysisNtuple::FillEvent()
 			_jetGenPhi.push_back(tree->jetGenPhi_->at(jetInd));
 		}
 		jetVector.SetPtEtaPhiE(tree->jetPt_->at(jetInd), tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->jetEn_->at(jetInd));
-		jetVectors.push_back(jetVector);
-		isBjet.push_back(tree->jetDeepCSVTags_b_->at(jetInd) + tree->jetDeepCSVTags_bb_->at(jetInd) > selector->btag_cut_DeepCSV );
+		if (tree->jetDeepCSVTags_b_->at(jetInd) + tree->jetDeepCSVTags_bb_->at(jetInd) > selector->btag_cut_DeepCSV){
+			bjetVectors.push_back(jetVector);
+		} else {
+			ljetVectors.push_back(jetVector);
+		}
 	}	
 
 	//Compute M3
@@ -593,54 +603,94 @@ void makeAnalysisNtuple::FillEvent()
 
 	// // Calculate MET z
 
-	// metZ.SetLepton(lepVector);
+	metZ.SetLepton(lepVector);
 
-	// METVector.SetPtEtaPhiM(tree->pfMET_,
-	// 					   0.,
-	// 					   tree->pfMETPhi_,
-	// 					   0.);
+	METVector.SetPtEtaPhiM(tree->pfMET_,
+						   0.,
+						   tree->pfMETPhi_,
+						   0.);
 	
-	// metZ.SetMET(METVector);
+	metZ.SetMET(METVector);
 
-	// TLorentzVector tempLep;
-	// tempLep.SetPtEtaPhiM(lepVector.Pt(),
-	// 					 lepVector.Eta(),
-	// 					 lepVector.Phi(),
-	// 					 0.1056);
+	TLorentzVector tempLep;
+	tempLep.SetPtEtaPhiM(lepVector.Pt(),
+						 lepVector.Eta(),
+						 lepVector.Phi(),
+						 0.1056);
 
-	// double _met_px = METVector.Px();
-	// double _met_py = METVector.Py();
+	double _met_px = METVector.Px();
+	double _met_py = METVector.Py();
 
-	// double _met_pz = metZ.Calculate();
-	// double _met_pz_other = metZ.getOther();
+	double _met_pz = metZ.Calculate();
+	double _met_pz_other = metZ.getOther();
 
 
-	std::vector<int> b_ind;
-	std::vector<int> j_ind;
+	// for (int __j = 0; __j < isBjet.size(); __j++){
+	// 	if (isBjet.at(__j)) b_ind.push_back(__j);
+	// 	else j_ind.push_back(__j);
+	// }
 
-	for (int __j = 0; __j < isBjet.size(); __j++){
-		if (isBjet->at(__j)) b_ind.push_back(__j);
-		else j_ind.push_back(__j)
+
+	// if (b_ind.size()==2 & j_ind.size() >=2){
+	
+	// 	int ind_bl = -1;
+	// 	int ind_bh = -1;
+	// 	double lowMass = 999.;
+	// 	double M_lb1 = (lepVector + jetVectors.at(b_ind.at(0))).M();
+	// 	double M_lb2 = (lepVector + jetVectors.at(b_ind.at(1))).M();
+	// 	if (M_lb1 > M_lb2){
+	// 		ind_bl = b_ind.at(0);
+	// 		ind_bh = b_ind.at(1);
+	// 	} else {
+	// 		ind_bl = b_ind.at(1);
+	// 		ind_bh = b_ind.at(0);
+	// 	}
+
+	
+	// 	//Hardest two light jets
+	// 	int ind_j1 = j_ind.at(0);
+	// 	int ind_j2 = j_ind.at(1);
+	
+	topEvent.SetBJetVector(bjetVectors);
+	topEvent.SetLJetVector(ljetVectors);
+	topEvent.SetLepton(lepVector);
+	topEvent.SetMET(METVector);
+	
+	topEvent.Calculate();
+	if (topEvent.GoodCombination()){
+		bhad = topEvent.getBHad();
+		blep = topEvent.getBLep();
+		Wj1 = topEvent.getJ1();
+		Wj2 = topEvent.getJ2();
+
+		_Mt_blgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (blep + lepVector + phoVector).Pt(),2) + pow( (blep + lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((blep + lepVector + phoVector + METVector ).Pt(),2) );
+		_Mt_lgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (lepVector + phoVector).Pt(),2) + pow( (lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((lepVector + phoVector + METVector ).Pt(),2) );
+		_M_bjj = ( bhad + Wj1 + Wj2 ).M();
+		_M_jj  = ( Wj1 + Wj2 ).M();
+
+
+		// _Mt_blgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (jetVectors.at(ind_bl) + lepVector + phoVector).Pt(),2) + pow( (jetVectors.at(ind_bl) + lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((jetVectors.at(ind_bl) + lepVector + phoVector + METVector ).Pt(),2) );
+		// _Mt_lgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (lepVector + phoVector).Pt(),2) + pow( (lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((lepVector + phoVector + METVector ).Pt(),2) );
+		// _M_bjj = ( jetVectors.at(ind_bh) + jetVectors.at(ind_j1) + jetVectors.at(ind_j2)).M();
+		// _M_jj = ( jetVectors.at(ind_j1) + jetVectors.at(ind_j2)).M();
+
+
+		_MassCuts = ( _Mt_blgammaMET > 180 &&
+					  _Mt_lgammaMET > 90 && 
+					  _M_bjj > 160 && 
+					  _M_bjj < 180 && 
+					  _M_jj > 70 &&
+					  _M_jj < 90 &&
+					  _nPho > 0);
+	
 	}
 
-	int ind_bl = -1;
-	double lowMass = 999.;
-	// Match leptonic b
-	for (int __j = 0; __j < b_ind.size(); __j++){
-		int ind = b_ind->at(__j);
-		if ((lepVector + jetVectors->at(ind)).M() < lowMass){
-			ind_bl = ind;
-			lowMass = (lepVector + jetVectors->at(ind)).M();
-		}
-	}
+	ljetVectors.clear();
+	bjetVectors.clear();
+	// isBjet.clear();
+	// b_ind.clear();
+	// j_ind.clear();
 	
-	//Hardest two light jets
-	int ind_j1 = j_ind->at(0);
-	int ind_j2 = j_ind->at(1);
-
-	//Match hadronic b
-	if (b_ind.size()>2)
-
 	if (!tree->isData_){
 		for (int i_mc = 0; i_mc <_nMC; i_mc++){
 			_mcPt.push_back(tree->mcPt->at(i_mc));
