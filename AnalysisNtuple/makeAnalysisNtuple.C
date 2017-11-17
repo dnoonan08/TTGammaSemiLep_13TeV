@@ -10,7 +10,7 @@
 #include"PUReweight.h"
 #include "METzCalculator.h"
 #include "TopEventCombinatorics.h"
-//#include "JetResolution.cpp"
+#include "JetResolutions.h"
 //#include"JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
 
@@ -30,6 +30,8 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 
 bool overlapRemovalTT(EventTree* tree);
 bool overlapRemovalWZ(EventTree* tree);
+double getJetResolution(double, double, double);
+
 bool dileptonsample;
 std::clock_t startClock;
 double duration;
@@ -563,10 +565,14 @@ void makeAnalysisNtuple::FillEvent()
 			_jetGenPhi.push_back(tree->jetGenPhi_->at(jetInd));
 		}
 		jetVector.SetPtEtaPhiE(tree->jetPt_->at(jetInd), tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->jetEn_->at(jetInd));
+		
+		double resolution = getJetResolution(tree->jetPt_->at(jetInd), tree->jetEta_->at(jetInd), tree->rho_);
 		if (tree->jetDeepCSVTags_b_->at(jetInd) + tree->jetDeepCSVTags_bb_->at(jetInd) > selector->btag_cut_DeepCSV){
 			bjetVectors.push_back(jetVector);
+			bjetResVectors.push_back(resolution);
 		} else {
 			ljetVectors.push_back(jetVector);
+			ljetResVectors.push_back(resolution);
 		}
 	}	
 
@@ -660,6 +666,10 @@ void makeAnalysisNtuple::FillEvent()
 	topEvent.SetLJetVector(ljetVectors);
 	topEvent.SetLepton(lepVector);
 	topEvent.SetMET(METVector);
+
+	topEvent.SetBJetResVector(bjetResVectors);
+	topEvent.SetLJetResVector(ljetResVectors);
+
 	
 	topEvent.Calculate();
 	if (topEvent.GoodCombination()){
@@ -692,6 +702,9 @@ void makeAnalysisNtuple::FillEvent()
 
 	ljetVectors.clear();
 	bjetVectors.clear();
+
+	ljetResVectors.clear();
+	bjetResVectors.clear();
 	// isBjet.clear();
 	// b_ind.clear();
 	// j_ind.clear();

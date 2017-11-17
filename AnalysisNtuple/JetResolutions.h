@@ -1,3 +1,7 @@
+#ifndef JetResolutions_H
+#define JetResolutions_H
+
+
 #include <math.h>
 #include <stdlib.h>
 
@@ -196,3 +200,5 @@ double getJetResolution(double pt, double eta, double rho){
  
 	return sqrt(p0*abs(p0)/(pt*pt)+p1*p1*pow(pt,p3)+p2*p2);
 }
+
+#endif

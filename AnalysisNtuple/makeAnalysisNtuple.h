@@ -248,6 +248,9 @@ private :
 	std::vector<TLorentzVector> ljetVectors;
 	std::vector<TLorentzVector> bjetVectors;
 
+	std::vector<double> ljetResVectors;
+	std::vector<double> bjetResVectors;
+
 	TLorentzVector bhad;
 	TLorentzVector blep;
 	TLorentzVector Wj1;
