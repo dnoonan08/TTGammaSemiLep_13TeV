@@ -1,5 +1,6 @@
 #include "TopEventCombinatorics.h"
 #include "TLorentzVector.h"
+#include <iostream>
 
 double TopEventCombinatorics::topChiSq(TLorentzVector j1, TLorentzVector j2, TLorentzVector bh, TLorentzVector bl, double sigma_j1, double sigma_j2, double sigma_bh, double sigma_bl){
 	
@@ -25,7 +26,7 @@ int TopEventCombinatorics::Calculate(){
 	}
 
 
-	chi2 = 99999.;
+	chi2 = 9.e9;
 	
 	for (int i_b1 = 0; i_b1 < bjets.size(); i_b1++){
 		for (int i_b2 = 0; i_b2 < bjets.size(); i_b2++){
