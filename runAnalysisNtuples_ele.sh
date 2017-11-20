@@ -27,13 +27,13 @@ eval `scramv1 runtime -sh`
 
 
 inputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_skims/electrons/V08_00_26_07/"
-outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07/"
+#outputdir="root://cmseos.fnal.gov//store/user/troy2012/13TeV_AnalysisNtuples/muons/"
+outputdir="root://cmseos.fnal.gov//store/user/troy2012/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07/"
 #outputdir="/uscmst1b_scratch/lpc1/3DayLifetime/dnoonan/13TeV_skims/electrons/"
 
 
 files=("TTGamma_SingleLeptFromTbar_" \
 "TTGamma_SingleLeptFromT_" \
-"TTGamma_SingleLeptFromTbar_" \
 "TTGamma_Dilepton_" \
 "TTGamma_Hadronic_" \
 "TTbarPowheg_" \
