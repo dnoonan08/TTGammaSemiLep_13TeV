@@ -93,6 +93,7 @@ private :
 	std::vector<float>   _phoSCEta;
 	std::vector<float>   _phoPhi;
 	std::vector<bool>    _phoIsBarrel;
+	std::vector<float>   _phoJetDR;
 	std::vector<float>   _phoHoverE;
 	std::vector<float>   _phoSIEIE;
 	std::vector<float>   _phoPFChIso;
@@ -127,6 +128,7 @@ private :
 	std::vector<float>   _loosePhoSCEta;
 	std::vector<float>   _loosePhoPhi;
 	std::vector<bool>    _loosePhoIsBarrel;
+	std::vector<float>   _loosePhoJetDR;
 	std::vector<float>   _loosePhoHoverE;
 	std::vector<float>   _loosePhoSIEIE;
 	std::vector<float>   _loosePhoPFChIso;
@@ -210,6 +212,7 @@ private :
 	std::vector<float>   _mcPhi;
 	std::vector<float>   _mcMass;
 	std::vector<int>     _mcStatus;
+	std::vector<int>     _mcStatusFlag;
 	std::vector<int>     _mcPID;
 	std::vector<int>     _mcMomPID;
 	std::vector<int>     _mcGMomPID;
@@ -297,6 +300,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoSCEta"                   , &_phoSCEta                    ); 
 	outputTree->Branch("phoPhi"                     , &_phoPhi                      ); 
 	outputTree->Branch("phoIsBarrel"                , &_phoIsBarrel                 ); 
+	outputTree->Branch("phoJetDR"                   , &_phoJetDR                    ); 
 	outputTree->Branch("phoHoverE"                  , &_phoHoverE                   ); 
 	outputTree->Branch("phoSIEIE"                   , &_phoSIEIE                    ); 
 	outputTree->Branch("phoPFChIso"                 , &_phoPFChIso                  ); 
@@ -316,6 +320,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("loosePhoSCEta"                   , &_loosePhoSCEta                    ); 
 	outputTree->Branch("loosePhoPhi"                     , &_loosePhoPhi                      ); 
 	outputTree->Branch("loosePhoIsBarrel"                , &_loosePhoIsBarrel                 ); 
+	outputTree->Branch("loosePhoJetDR"                   , &_loosePhoJetDR                    ); 
 	outputTree->Branch("loosePhoHoverE"                  , &_loosePhoHoverE                   ); 
 	outputTree->Branch("loosePhoSIEIE"                   , &_loosePhoSIEIE                    ); 
 	outputTree->Branch("loosePhoPFChIso"                 , &_loosePhoPFChIso                  ); 
@@ -389,6 +394,7 @@ void makeAnalysisNtuple::InitBranches(){
 		outputTree->Branch("mcPhi"	                     , &_mcPhi	                    ); 
 		outputTree->Branch("mcMass"	                     , &_mcMass	                    ); 
 		outputTree->Branch("mcStatus"                    , &_mcStatus                   );
+		outputTree->Branch("mcStatusFlag"                , &_mcStatusFlag               );
 		outputTree->Branch("mcPID"	                     , &_mcPID	                    ); 
 		outputTree->Branch("mcMomPID"                    , &_mcMomPID                   );
 		outputTree->Branch("mcGMomPID"                   , &_mcGMomPID                  );
@@ -477,6 +483,7 @@ void makeAnalysisNtuple::InitVariables()
 	_phoSCEta.clear();
 	_phoPhi.clear();
 	_phoIsBarrel.clear();
+	_phoJetDR.clear();
 	_phoHoverE.clear();
 	_phoSIEIE.clear();
 	_phoPFChIso.clear();
@@ -501,6 +508,7 @@ void makeAnalysisNtuple::InitVariables()
 	_loosePhoSCEta.clear();
 	_loosePhoPhi.clear();
 	_loosePhoIsBarrel.clear();
+	_loosePhoJetDR.clear();
 	_loosePhoHoverE.clear();
 	_loosePhoSIEIE.clear();
 	_loosePhoPFChIso.clear();

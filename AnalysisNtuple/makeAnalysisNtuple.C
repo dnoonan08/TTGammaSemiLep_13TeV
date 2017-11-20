@@ -67,7 +67,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	selector->useDeepCSVbTag = true;
 
 	// selector->veto_pho_jet_dR = -1.; //remove jets which have a photon close to them 
-	// selector->veto_jet_pho_dR = -1.; //remove photons which have a jet close to them (after having removed jets too close to photon from above cut)
+	selector->veto_jet_pho_dR = -1.; //remove photons which have a jet close to them (after having removed jets too close to photon from above cut)
 
 	
 	//	selector->jet_Pt_cut = 40.;
@@ -474,7 +474,10 @@ void makeAnalysisNtuple::FillEvent()
 		_dRPhotonJet.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
 		_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
 		_MPhotonLepton.push_back((phoVector+lepVector).M());
-		_AnglePhotonLepton.push_back(phoVector.Angle(lepVector.Vect()));		
+		_AnglePhotonLepton.push_back(phoVector.Angle(lepVector.Vect()));	
+
+		_phoJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+	
 
 	}
 
@@ -524,13 +527,15 @@ void makeAnalysisNtuple::FillEvent()
 		bool isMisIDEle = false;
 		bool isHadronicPhoton = false;
 		bool isHadronicFake = false;
-                if (!tree->isData_){
+		if (!tree->isData_){
 			findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
 			_loosePhotonIsGenuine.push_back(isGenuine);
 			_loosePhotonIsMisIDEle.push_back(isMisIDEle);
 			_loosePhotonIsHadronicPhoton.push_back(isHadronicPhoton);
 			_loosePhotonIsHadronicFake.push_back(isHadronicFake);
 		}
+		_loosePhoJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+
 	}
 
 
