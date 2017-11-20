@@ -210,6 +210,7 @@ private :
 	std::vector<float>   _mcPhi;
 	std::vector<float>   _mcMass;
 	std::vector<int>     _mcStatus;
+        std::vector<UShort_t> _mcStatusFlag;
 	std::vector<int>     _mcPID;
 	std::vector<int>     _mcMomPID;
 	std::vector<int>     _mcGMomPID;
@@ -389,6 +390,7 @@ void makeAnalysisNtuple::InitBranches(){
 		outputTree->Branch("mcPhi"	                     , &_mcPhi	                    ); 
 		outputTree->Branch("mcMass"	                     , &_mcMass	                    ); 
 		outputTree->Branch("mcStatus"                    , &_mcStatus                   );
+                outputTree->Branch("mcStatusFlag"                    , &_mcStatusFlag                   );
 		outputTree->Branch("mcPID"	                     , &_mcPID	                    ); 
 		outputTree->Branch("mcMomPID"                    , &_mcMomPID                   );
 		outputTree->Branch("mcGMomPID"                   , &_mcGMomPID                  );
@@ -558,6 +560,7 @@ void makeAnalysisNtuple::InitVariables()
 	_mcEta.clear();
 	_mcMass.clear();
 	_mcStatus.clear();
+        _mcStatusFlag.clear();
 	_mcPID.clear();
 	_mcMomPID.clear();
 	_mcGMomPID.clear();
