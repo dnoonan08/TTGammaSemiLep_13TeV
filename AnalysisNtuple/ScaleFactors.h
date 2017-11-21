@@ -185,7 +185,7 @@ double getEvtWeight(string sampleType){
 	double evtWeight = -1.;
 	if( sampleType.substr(0,4)=="Data") {evtWeight = 1.;}
 	else if( sampleType=="Test") {evtWeight = 1.;}
-	else if( sampleType=="TG"){evtWeight = TG_SF;}
+	else if( sampleType=="TGJets"){evtWeight = TG_SF;}
 	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_T_SF;}
@@ -252,7 +252,11 @@ double getEvtWeight(string sampleType){
 
 
 
-const std::string allowedSampleTypes[100] = {"Data",
+//<<<<<<< HEAD
+//const std::string allowedSampleTypes[100] = {"Data",
+//=======
+const std::string allowedSampleTypes[61] = {"Data",
+//>>>>>>> upstream/master
 											"Data_SingleMu_b",
 											"Data_SingleMu_c",
 											"Data_SingleMu_d",

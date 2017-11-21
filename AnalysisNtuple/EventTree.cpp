@@ -639,7 +639,7 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("mcStatus",1);
 	chain->SetBranchAddress("mcStatus", &mcStatus);
 	
-	mcStatusFlag = new vector<int>;
+	mcStatusFlag = new vector<short>;
 	chain->SetBranchStatus("mcStatusFlag",1);
 	chain->SetBranchAddress("mcStatusFlag", &mcStatusFlag);
 	

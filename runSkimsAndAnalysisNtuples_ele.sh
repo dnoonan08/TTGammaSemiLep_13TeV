@@ -28,8 +28,7 @@ eval `scramv1 runtime -sh`
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_"
 
 
-files=("TGJets_" \
-"TTGamma_SingleLeptFromTbar_" \
+files=("TTGamma_SingleLeptFromTbar_" \
 "TTGamma_SingleLeptFromT_" \
 "TTGamma_Dilepton_" \
 "TTGamma_Hadronic_" \
@@ -37,6 +36,7 @@ files=("TGJets_" \
 "TTbarMadgraph_SingleLeptFromT_" \
 "TTbarMadgraph_SingleLeptFromTbar_" \
 "TTbarMadgraph_Dilepton_" \
+"TGJets_" \
 "W1jets_" \
 "W2jets_" \
 "W3jets_" \
@@ -74,8 +74,7 @@ GGNtupleGroupEOSMC="root://cmseos.fnal.gov//store/user/lpcggntuples/ggNtuples/13
 TitasEOS="root://cmseos.fnal.gov//store/user/troy2012/13TeV_ggNTuples/V08_00_26_07/"
 GGNtupleGroupEOSData="root://cmseos.fnal.gov//store/user/lpcggntuples/ggNtuples/13TeV/data/V08_00_26_07/"
 
-inputfiles=($DannyEOS"TGJets_TuneCUETP8M1_13TeV_amcatnlo_madspin_pythia8.root" \
-$DannyEOS"TTGamma_SingleLeptFromTbar_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
+inputfiles=($DannyEOS"TTGamma_SingleLeptFromTbar_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_SingleLeptFromT_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_Dilept_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_Hadronic_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
@@ -83,6 +82,7 @@ $GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_1of4.root "$GGNtupleG
 $DannyEOS"TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$DannyEOS"TGJets_TuneCUETP8M1_13TeV_amcatnlo_madspin_pythia8.root" \
 $GGNtupleGroupEOSMC"W1JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W2JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W3JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
@@ -118,8 +118,7 @@ $GGNtupleGroupEOSData"job_SingleElectron_Run2016H_FebReminiAODv2.root "$GGNtuple
 
 
 
-sampleType=("TGJets" \
-"TTGamma_SingleLeptFromTbar" \
+sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTGamma_SingleLeptFromT" \
 "TTGamma_Dilepton" \
 "TTGamma_Hadronic" \
@@ -127,6 +126,7 @@ sampleType=("TGJets" \
 "TTbarMadgraph_SingleLeptFromT" \
 "TTbarMadgraph_SingleLeptFromTbar" \
 "TTbarMadgraph_Dilepton" \
+"TGJets" \
 "W1jets" \
 "W2jets" \
 "W3jets" \

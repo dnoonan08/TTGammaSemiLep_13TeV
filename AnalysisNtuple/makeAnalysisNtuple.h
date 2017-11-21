@@ -22,6 +22,9 @@
 // Header file for the classes stored in the TTree if any.
 #include "vector"
 
+#include "METzCalculator.h"
+#include "TopEventCombinatorics.h"
+
 // Header file that includes all of the event luminosity scaling
 #include "ScaleFactors.h"
 
@@ -83,6 +86,12 @@ private :
 	Float_t         _pfMET;
 	Float_t         _pfMETPhi;
 	Float_t         _WtransMass;
+	Float_t         _Mt_blgammaMET;
+	Float_t         _Mt_lgammaMET;
+	Float_t         _M_bjj;
+	Float_t         _M_jj;
+	Bool_t          _MassCuts;
+
 //	Float_t         _HT;
 	Float_t 	_DilepMass;
 	Float_t 	_DiphoMass;
@@ -93,6 +102,7 @@ private :
 	std::vector<float>   _phoSCEta;
 	std::vector<float>   _phoPhi;
 	std::vector<bool>    _phoIsBarrel;
+	std::vector<float>   _phoJetDR;
 	std::vector<float>   _phoHoverE;
 	std::vector<float>   _phoSIEIE;
 	std::vector<float>   _phoPFChIso;
@@ -127,6 +137,7 @@ private :
 	std::vector<float>   _loosePhoSCEta;
 	std::vector<float>   _loosePhoPhi;
 	std::vector<bool>    _loosePhoIsBarrel;
+	std::vector<float>   _loosePhoJetDR;
 	std::vector<float>   _loosePhoHoverE;
 	std::vector<float>   _loosePhoSIEIE;
 	std::vector<float>   _loosePhoPFChIso;
@@ -210,6 +221,7 @@ private :
 	std::vector<float>   _mcPhi;
 	std::vector<float>   _mcMass;
 	std::vector<int>     _mcStatus;
+	std::vector<int>     _mcStatusFlag;
 	std::vector<int>     _mcPID;
 	std::vector<int>     _mcMomPID;
 	std::vector<int>     _mcGMomPID;
@@ -224,6 +236,8 @@ private :
 	bool  _passAll_Mu;
 	bool  dileptonsample;
 
+	METzCalculator metZ;
+	TopEventCombinatorics topEvent;
 	TLorentzVector jetVector;
 	TLorentzVector lepVector;
 	TLorentzVector lepVector2;
@@ -231,6 +245,20 @@ private :
 	TLorentzVector METVector;
 	TLorentzVector phoVector1;
 	TLorentzVector phoVector2;
+	std::vector<TLorentzVector> ljetVectors;
+	std::vector<TLorentzVector> bjetVectors;
+
+	std::vector<double> ljetResVectors;
+	std::vector<double> bjetResVectors;
+
+	TLorentzVector bhad;
+	TLorentzVector blep;
+	TLorentzVector Wj1;
+	TLorentzVector Wj2;
+
+	/* std::vector<bool> isBjet; */
+	/* std::vector<int> b_ind; */
+	/* std::vector<int> j_ind; */
 
 
 	void InitVariables();
@@ -288,8 +316,15 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("pfMET"                      , &_pfMET                       );
 	outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
 	outputTree->Branch("WtransMass"                 , &_WtransMass                  );
+
+	outputTree->Branch("Mt_blgammaMET"              , &_Mt_blgammaMET               );
+	outputTree->Branch("Mt_lgammaMET"               , &_Mt_lgammaMET                );
+	outputTree->Branch("M_bjj"                      , &_M_bjj                       );
+	outputTree->Branch("M_jj"                       , &_M_jj                        );
+	outputTree->Branch("MassCuts"                   , &_MassCuts                    );
+
 	outputTree->Branch("DiphoMass"                  , &_DiphoMass                   ); 
-   	outputTree->Branch("DilepMass"                  , &_DilepMass 			);
+   	outputTree->Branch("DilepMass"                  , &_DilepMass       			);
 	outputTree->Branch("DilepDelR"                  , &_DilepDelR                   );
 	outputTree->Branch("nPho"                       , &_nPho                        ); 
 	outputTree->Branch("phoEt"                      , &_phoEt                       );
@@ -297,6 +332,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoSCEta"                   , &_phoSCEta                    ); 
 	outputTree->Branch("phoPhi"                     , &_phoPhi                      ); 
 	outputTree->Branch("phoIsBarrel"                , &_phoIsBarrel                 ); 
+	outputTree->Branch("phoJetDR"                   , &_phoJetDR                    ); 
 	outputTree->Branch("phoHoverE"                  , &_phoHoverE                   ); 
 	outputTree->Branch("phoSIEIE"                   , &_phoSIEIE                    ); 
 	outputTree->Branch("phoPFChIso"                 , &_phoPFChIso                  ); 
@@ -316,6 +352,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("loosePhoSCEta"                   , &_loosePhoSCEta                    ); 
 	outputTree->Branch("loosePhoPhi"                     , &_loosePhoPhi                      ); 
 	outputTree->Branch("loosePhoIsBarrel"                , &_loosePhoIsBarrel                 ); 
+	outputTree->Branch("loosePhoJetDR"                   , &_loosePhoJetDR                    ); 
 	outputTree->Branch("loosePhoHoverE"                  , &_loosePhoHoverE                   ); 
 	outputTree->Branch("loosePhoSIEIE"                   , &_loosePhoSIEIE                    ); 
 	outputTree->Branch("loosePhoPFChIso"                 , &_loosePhoPFChIso                  ); 
@@ -389,6 +426,7 @@ void makeAnalysisNtuple::InitBranches(){
 		outputTree->Branch("mcPhi"	                     , &_mcPhi	                    ); 
 		outputTree->Branch("mcMass"	                     , &_mcMass	                    ); 
 		outputTree->Branch("mcStatus"                    , &_mcStatus                   );
+		outputTree->Branch("mcStatusFlag"                , &_mcStatusFlag               );
 		outputTree->Branch("mcPID"	                     , &_mcPID	                    ); 
 		outputTree->Branch("mcMomPID"                    , &_mcMomPID                   );
 		outputTree->Branch("mcGMomPID"                   , &_mcGMomPID                  );
@@ -433,6 +471,13 @@ void makeAnalysisNtuple::InitVariables()
 	_pfMET		     = -9999;
 	_pfMETPhi	     = -9999;
 	_WtransMass      = -9999;
+
+	_Mt_blgammaMET   = -9999;
+	_Mt_lgammaMET    = -9999;
+	_M_bjj           = -9999;
+	_M_jj            = -9999;
+	_MassCuts        = false;
+
 	_HT		 = -9999;
 	_DilepMass	 = -9999;
 	_DilepDelR	 = -9999;
@@ -477,6 +522,7 @@ void makeAnalysisNtuple::InitVariables()
 	_phoSCEta.clear();
 	_phoPhi.clear();
 	_phoIsBarrel.clear();
+	_phoJetDR.clear();
 	_phoHoverE.clear();
 	_phoSIEIE.clear();
 	_phoPFChIso.clear();
@@ -501,6 +547,7 @@ void makeAnalysisNtuple::InitVariables()
 	_loosePhoSCEta.clear();
 	_loosePhoPhi.clear();
 	_loosePhoIsBarrel.clear();
+	_loosePhoJetDR.clear();
 	_loosePhoHoverE.clear();
 	_loosePhoSIEIE.clear();
 	_loosePhoPFChIso.clear();
@@ -558,6 +605,7 @@ void makeAnalysisNtuple::InitVariables()
 	_mcEta.clear();
 	_mcMass.clear();
 	_mcStatus.clear();
+	_mcStatusFlag.clear();
 	_mcPID.clear();
 	_mcMomPID.clear();
 	_mcGMomPID.clear();
