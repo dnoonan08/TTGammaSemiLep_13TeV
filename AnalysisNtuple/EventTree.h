@@ -89,7 +89,7 @@ public:
 	vector<int>*    mcDecayType;
 	vector<int>*    mcParentage;
 	vector<int>*    mcStatus;
-	vector<int>*    mcStatusFlag;
+	vector<short>*  mcStatusFlag;
 
 	vector<float>* pdfSystWeight_;
 	vector<float>* genScaleSystWeights_;
