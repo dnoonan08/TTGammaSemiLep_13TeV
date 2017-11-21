@@ -426,7 +426,11 @@ void makeAnalysisNtuple::InitBranches(){
 		outputTree->Branch("mcPhi"	                     , &_mcPhi	                    ); 
 		outputTree->Branch("mcMass"	                     , &_mcMass	                    ); 
 		outputTree->Branch("mcStatus"                    , &_mcStatus                   );
+<<<<<<< HEAD
 		outputTree->Branch("mcStatusFlag"                , &_mcStatusFlag               );
+=======
+                outputTree->Branch("mcStatusFlag"                    , &_mcStatusFlag                   );
+>>>>>>> PhotonMatching_test
 		outputTree->Branch("mcPID"	                     , &_mcPID	                    ); 
 		outputTree->Branch("mcMomPID"                    , &_mcMomPID                   );
 		outputTree->Branch("mcGMomPID"                   , &_mcGMomPID                  );
@@ -605,7 +609,11 @@ void makeAnalysisNtuple::InitVariables()
 	_mcEta.clear();
 	_mcMass.clear();
 	_mcStatus.clear();
+<<<<<<< HEAD
 	_mcStatusFlag.clear();
+=======
+        _mcStatusFlag.clear();
+>>>>>>> PhotonMatching_test
 	_mcPID.clear();
 	_mcMomPID.clear();
 	_mcGMomPID.clear();

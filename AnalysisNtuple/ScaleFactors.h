@@ -252,11 +252,9 @@ double getEvtWeight(string sampleType){
 
 
 
+
 //<<<<<<< HEAD
-//const std::string allowedSampleTypes[100] = {"Data",
-//=======
 const std::string allowedSampleTypes[61] = {"Data",
-//>>>>>>> upstream/master
 											"Data_SingleMu_b",
 											"Data_SingleMu_c",
 											"Data_SingleMu_d",
@@ -317,5 +315,5 @@ const std::string allowedSampleTypes[61] = {"Data",
 											"QCD_Pt300toInf_EM",
                       "TGJets",
 											"Test",
-};
+                                                                                        };
 

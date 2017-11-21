@@ -460,7 +460,7 @@ void makeAnalysisNtuple::FillEvent()
 			_photonIsHadronicPhoton.push_back(isHadronicPhoton);
 			_photonIsHadronicFake.push_back(isHadronicFake);
 		}
-		parentPID = -999;
+		parentPID = -888;
 		int parentage = -1;
 		if (!tree->isData_){
 			parentPID = findPhotonParentage(phoInd, tree);
@@ -1058,13 +1058,15 @@ void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* g
 
 	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
 		// crude matching to get candidates
-		bool etetamatch = (dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd)) < 0.2 && 
+		if (tree->mcStatus->at(mcInd) == 1 || tree->mcStatus->at(mcInd) == 71){ 
+			bool etetamatch = (dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd)) < 0.2 && 
 						   (fabs(tree->phoEt_->at(phoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd)) < 1.0);
 		
-		if( etetamatch && mcPhotonInd < 0 && tree->mcPID->at(mcInd) == 22)
-			mcPhotonInd = mcInd; 
-		if( etetamatch && mcEleInd < 0 && abs(tree->mcPID->at(mcInd)) == 11 )
-			mcEleInd = mcInd;
+			if( etetamatch && mcPhotonInd < 0 && tree->mcPID->at(mcInd) == 22)
+				mcPhotonInd = mcInd; 
+			if( etetamatch && mcEleInd < 0 && abs(tree->mcPID->at(mcInd)) == 11 )
+				mcEleInd = mcInd;
+	 }
 	}
 	// cout << "----------" << endl;
 	// cout << mcPhotonInd << " " << mcEleInd << endl;
@@ -1099,7 +1101,7 @@ int makeAnalysisNtuple::findPhotonParentage(int phoInd, EventTree* tree){
 		}
 	}
 
-	int parentPID = -999;
+	int parentPID = -888;
 	return parentPID;
 }
 
@@ -1109,10 +1111,10 @@ double minGenDr(int myInd, const EventTree* tree);
 bool makeAnalysisNtuple::isSignalPhoton(EventTree* tree, int mcInd, int recoPhoInd){
     bool parentagePass = tree->mcParentage->at(mcInd)==2 || tree->mcParentage->at(mcInd)==10 || tree->mcParentage->at(mcInd)==26;
     double dptpt = (tree->phoEt_->at(recoPhoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd);
-    bool dptptPass = dptpt < 0.1;
+    bool dptptPass = dptpt < 0.5; //0.1
     bool drotherPass = minGenDr(mcInd, tree) > 0.2;
-    bool detarecogenPass = fabs(tree->phoEta_->at(recoPhoInd) - tree->mcEta->at(mcInd)) < 0.005;
-    bool drrecogenPass = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(recoPhoInd),tree->phoPhi_->at(recoPhoInd)) < 0.01;
+ //   bool detarecogenPass = fabs(tree->phoEta_->at(recoPhoInd) - tree->mcEta->at(mcInd)) < 0.01;//0.005
+    bool drrecogenPass = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(recoPhoInd),tree->phoPhi_->at(recoPhoInd)) < 0.1; //.01
 	// cout << "-----------------------------------" << endl;
 	// cout << "eventnum "<<tree->event_<<endl;
 	// cout << "recoPhoInd " << recoPhoInd << " mcInd " << mcInd << endl;
@@ -1122,7 +1124,7 @@ bool makeAnalysisNtuple::isSignalPhoton(EventTree* tree, int mcInd, int recoPhoI
 	// cout << "drotherPass " << drotherPass <<endl;
 	// cout << "detarecogenPass " << detarecogenPass << "     " << tree->phoEta_->at(recoPhoInd) << "  " << tree->mcEta->at(mcInd) <<endl;
 	// cout << "drrecogenPass " << drrecogenPass << tree->mcEta->at(mcInd)<< "  " <<tree->mcPhi->at(mcInd)<< "  " <<tree->phoEta_->at(recoPhoInd)<< "  " <<tree->phoPhi_->at(recoPhoInd) << endl;
-    if(parentagePass && dptptPass && drotherPass && detarecogenPass && drrecogenPass) return true;
+    if(parentagePass && dptptPass && drotherPass && drrecogenPass) return true;
     else return false;
 }
 
