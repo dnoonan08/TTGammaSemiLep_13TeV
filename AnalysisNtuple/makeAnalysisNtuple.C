@@ -661,6 +661,7 @@ void makeAnalysisNtuple::FillEvent()
 	// 	//Hardest two light jets
 	// 	int ind_j1 = j_ind.at(0);
 	// 	int ind_j2 = j_ind.at(1);
+
 	
 	topEvent.SetBJetVector(bjetVectors);
 	topEvent.SetLJetVector(ljetVectors);
@@ -669,8 +670,8 @@ void makeAnalysisNtuple::FillEvent()
 
 	topEvent.SetBJetResVector(bjetResVectors);
 	topEvent.SetLJetResVector(ljetResVectors);
+	topEvent.SetIgnoreBtag(true);
 
-	
 	topEvent.Calculate();
 	if (topEvent.GoodCombination()){
 		bhad = topEvent.getBHad();
@@ -708,6 +709,7 @@ void makeAnalysisNtuple::FillEvent()
 	// isBjet.clear();
 	// b_ind.clear();
 	// j_ind.clear();
+
 	
 	if (!tree->isData_){
 		for (int i_mc = 0; i_mc <_nMC; i_mc++){
@@ -716,12 +718,14 @@ void makeAnalysisNtuple::FillEvent()
 			_mcEta.push_back(tree->mcEta->at(i_mc));
 			_mcMass.push_back(tree->mcMass->at(i_mc));
 			_mcStatus.push_back(tree->mcStatus->at(i_mc));
+			_mcStatusFlag.push_back(tree->mcStatusFlag->at(i_mc));
 			_mcPID.push_back(tree->mcPID->at(i_mc));
 			_mcMomPID.push_back(tree->mcMomPID->at(i_mc));
 			_mcGMomPID.push_back(tree->mcGMomPID->at(i_mc));
 			_mcParentage.push_back(tree->mcParentage->at(i_mc));
 		}
 	}
+
 }
 
 // https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting

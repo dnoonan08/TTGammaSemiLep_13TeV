@@ -19,6 +19,8 @@ class TopEventCombinatorics{
 		METerror = 0.2;
 		Leperror = 0.05;
 		useResolutions = true;
+		ignoreBtagInfo = false;
+
 	}
 	
 	void SetMtop(double mTop_){ mTop = mTop_;}
@@ -35,6 +37,7 @@ class TopEventCombinatorics{
 	void SetLeperror(double err){ Leperror = err;}
 
 	void SetUseResolutions(bool useRes_){ useResolutions = useRes_;}
+	void SetIgnoreBtag(bool ignoreBtag_){ ignoreBtagInfo = ignoreBtag_;}
 		
 	TLorentzVector getBHad(){ return bhad; }
 	TLorentzVector getBLep(){ return blep; }
@@ -58,10 +61,20 @@ class TopEventCombinatorics{
 
 	double topChiSq(TLorentzVector j1, TLorentzVector j2, TLorentzVector bh, TLorentzVector bl, double sigma_j1, double sigma_j2, double sigma_bh, double sigma_bl);
 
+	int run4j2b();
+	int run4j1b();
+	int run4j0b();
+	int runWithoutBInfo();
+
+	bool ignoreBtagInfo;
+
 	std::vector<TLorentzVector> bjets;
 	std::vector<TLorentzVector> ljets;
 	TLorentzVector lepton;
 	TLorentzVector met;
+
+	std::vector<TLorentzVector> tempJetVector;
+	std::vector<double> tempJetResVector;
 
 
 	TLorentzVector bhad;

@@ -605,6 +605,7 @@ void makeAnalysisNtuple::InitVariables()
 	_mcEta.clear();
 	_mcMass.clear();
 	_mcStatus.clear();
+	_mcStatusFlag.clear();
 	_mcPID.clear();
 	_mcMomPID.clear();
 	_mcGMomPID.clear();
