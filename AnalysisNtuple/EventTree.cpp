@@ -639,10 +639,9 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("mcStatus",1);
 	chain->SetBranchAddress("mcStatus", &mcStatus);
 	
-	mcStatusFlag = new vector<short>;
-	chain->SetBranchStatus("mcStatusFlag",1);
-	chain->SetBranchAddress("mcStatusFlag", &mcStatusFlag);
-	
+        mcStatusFlag = new vector<UShort_t>;
+        chain->SetBranchStatus("mcStatusFlag",1);
+        chain->SetBranchAddress("mcStatusFlag", &mcStatusFlag);	
 	// // mcMomPt = new vector<float>;
 	// // chain->SetBranchStatus("mcMomPt",1);
 	// // chain->SetBranchAddress("mcMomPt", &mcMomPt);

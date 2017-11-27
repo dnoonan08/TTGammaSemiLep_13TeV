@@ -2,11 +2,16 @@ from ROOT import *
 import sys
 from sampleInformation import *
 import os
-
+from optparse import OptionParser
 gROOT.SetBatch(True)
+parser = OptionParser()
+parser.add_option("-c", "--channel", dest="channel", default="Mu",type='str',
+                     help="Specify which channel Mu or Ele? default is Mu" )
+parser.add_option("-s","--systematic", dest="systematic", default="nominal",type='str',
+                     help="Specify up, down or nominal, default is nominal")
+(options, args) = parser.parse_args()
 
-finalState = "Mu"
-
+finalState = options.channel
 #nBJets = 1
 
 # btagWeight = ["1","(1-btagWeight[0])","(btagWeight[2])"]
@@ -22,12 +27,12 @@ finalState = "Mu"
 if finalState=="Mu":
     sampleList[-1] = "DataMu"
     sampleList[-2] = "QCDMu"
-    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/troy2012/13TeV_AnalysisNtuples/muons/"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07"
     outputhistName = "histograms/mu/testBtaghists.root"
 if finalState=="Ele":
     sampleList[-1] = "DataEle"
     sampleList[-2] = "QCDEle"
-    analysisNtupleLocation = "/uscms_data/d2/dnoonan/13TeV_TTGamma/Ntuples/electrons/"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07"
     outputhistName = "histograms/ele/testBtaghists.root"
 
 
@@ -59,19 +64,19 @@ hist_phoselnjets2Tag = TH1F("phoselnjets2Tag_%s"%sample,"phoselnjets2Tag_%s"%sam
 
 if not "Data" in sample:
 
-    tree.Draw("nJet>>njets0Tag_%s"%sample,      "(passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]")
-    tree.Draw("nJet>>njets1Tag_%s"%sample,      "(passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[1]")
-    tree.Draw("nJet>>njets2Tag_%s"%sample,      "(passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]")
-    tree.Draw("nJet>>phoselnjets0Tag_%s"%sample,"(phoMediumID && passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]")
-    tree.Draw("nJet>>phoselnjets1Tag_%s"%sample,"(phoMediumID && passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[1]")
-    tree.Draw("nJet>>phoselnjets2Tag_%s"%sample,"(phoMediumID && passPresel_Mu)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]")
+    tree.Draw("nJet>>njets0Tag_%s"%sample,      "(passPresel_Ele)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]")
+    tree.Draw("nJet>>njets1Tag_%s"%sample,      "(passPresel_Ele)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[1]")
+    tree.Draw("nJet>>njets2Tag_%s"%sample,      "(passPresel_Ele)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]")
+    tree.Draw("nJet>>phoselnjets0Tag_%s"%sample,"(phoMediumID && passPresel_Ele)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]")
+    tree.Draw("nJet>>phoselnjets1Tag_%s"%sample,"(phoMediumID && passPresel_Ele)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[1]")
+    tree.Draw("nJet>>phoselnjets2Tag_%s"%sample,"(phoMediumID && passPresel_Ele)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]")
 else:
-    tree.Draw("nJet>>njets0Tag_%s"%sample,      "(passPresel_Mu && nBJet>=0)")
-    tree.Draw("nJet>>njets1Tag_%s"%sample,      "(passPresel_Mu && nBJet==1)")
-    tree.Draw("nJet>>njets2Tag_%s"%sample,      "(passPresel_Mu && nBJet>=2)")
-    tree.Draw("nJet>>phoselnjets0Tag_%s"%sample,"(phoMediumID && passPresel_Mu && nBJet>=0)")
-    tree.Draw("nJet>>phoselnjets1Tag_%s"%sample,"(phoMediumID && passPresel_Mu && nBJet==1)")
-    tree.Draw("nJet>>phoselnjets2Tag_%s"%sample,"(phoMediumID && passPresel_Mu && nBJet>=2)")
+    tree.Draw("nJet>>njets0Tag_%s"%sample,      "(passPresel_Ele && nBJet>=0)")
+    tree.Draw("nJet>>njets1Tag_%s"%sample,      "(passPresel_Ele && nBJet==1)")
+    tree.Draw("nJet>>njets2Tag_%s"%sample,      "(passPresel_Ele && nBJet>=2)")
+    tree.Draw("nJet>>phoselnjets0Tag_%s"%sample,"(phoMediumID && passPresel_Ele && nBJet>=0)")
+    tree.Draw("nJet>>phoselnjets1Tag_%s"%sample,"(phoMediumID && passPresel_Ele && nBJet==1)")
+    tree.Draw("nJet>>phoselnjets2Tag_%s"%sample,"(phoMediumID && passPresel_Ele && nBJet>=2)")
     
 
 

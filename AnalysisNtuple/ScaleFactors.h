@@ -14,7 +14,7 @@ double totalTTGamma_semilept_Tbar = 4836134.;
 double totalTTGamma_semilept_T    = 4791766.;
 double totalTTGamma_dilept        = 4907307.;
 
-double totalTG                    = 1556973.;
+double totalTGJets                    = 1556973.;
 
 
 double totalTTbarPowheg           = 77227178.;
@@ -76,7 +76,7 @@ double TTbar_dilepton_xs             =  87.315;
 double TTbar_semilept_xs             =  182.175;
 double TTbar_hadronic_xs             =  831.76-TTbar_dilepton_xs-2*TTbar_semilept_xs;
 
-double TG_xs                =  2.967;
+double TGJets_xs                =  2.967;
 
 double TTGamma_hadronic_xs  =  4.599;
 double TTGamma_semilept_xs  =  4.499/2.;
@@ -126,7 +126,7 @@ double QCD_Pt170to300_Ele_xs =   18810.;
 double QCD_Pt300toInf_Ele_xs =    1350.;
 
 
-double TG_SF               = TG_xs * luminosity / totalTG;
+double TGJets_SF               = TGJets_xs * luminosity / totalTGJets;
 double TTGamma_hadronic_SF = TTGamma_hadronic_xs * luminosity / totalTTGamma_hadronic;
 double TTGamma_semilept_T_SF = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_T;
 double TTGamma_semilept_Tbar_SF = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_Tbar;
@@ -185,8 +185,8 @@ double getEvtWeight(string sampleType){
 	double evtWeight = -1.;
 	if( sampleType.substr(0,4)=="Data") {evtWeight = 1.;}
 	else if( sampleType=="Test") {evtWeight = 1.;}
-	else if( sampleType=="TGJets"){evtWeight = TG_SF;}
-	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
+	else if( sampleType=="TGJets"){evtWeight = TGJets_SF;} 
+        else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_T_SF;}
 	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_SF;}
@@ -242,6 +242,7 @@ double getEvtWeight(string sampleType){
 
 	return evtWeight;
 }
+
 
 
 
@@ -313,5 +314,6 @@ const std::string allowedSampleTypes[61] = {"Data",
 											"QCD_Pt300toInf_EM",
                       "TGJets",
 											"Test",
-};
+                                                                                        };
+
 

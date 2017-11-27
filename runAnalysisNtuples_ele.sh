@@ -120,4 +120,3 @@ AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}s
 
 echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/."
 xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/.
-
