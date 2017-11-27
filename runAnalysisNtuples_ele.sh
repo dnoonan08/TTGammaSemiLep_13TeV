@@ -52,9 +52,8 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "ST_tbarW-channel_" \
 "TTWtoQQ_" \
 "TTWtoLNu_" \
-"TTWtoQQ_" \
 "TTZtoLL_" \
-"WGamma_"  \
+"WGamma_" \
 "ZGamma_" \
 "QCD_Pt20to30_Ele_" \
 "QCD_Pt30to50_Ele_" \
@@ -96,7 +95,6 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "ST_tbarW-channel" \
 "TTWtoQQ" \
 "TTWtoLNu" \
-"TTWtoQQ" \
 "TTZtoLL" \
 "WGamma" \
 "ZGamma" \
@@ -120,10 +118,5 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root"
 AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${inputdir}${files[job]}skim.root
 
-
-
-
 echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/."
 xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}/.
-
-
