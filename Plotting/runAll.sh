@@ -1,10 +1,11 @@
-python $1 $2 TTGamma &
-python $1 $2 TTbar &
-python $1 $2 WJets &
-python $1 $2 ZJets &
-python $1 $2 WGamma &
-python $1 $2 ZGamma &
-python $1 $2 SingleTop &
-python $1 $2 TTV &
-python $1 $2 QCDMu &
-python $1 $2 DataMu &
+python $1 $2 $3 $4 TTGamma &
+python $1 $2 $3 $4 TTbar &
+python $1 $2 $3 $4 TGJets &
+python $1 $2 $3 $4 WJets &
+python $1 $2 $3 $4 ZJets &
+python $1 $2 $3 $4 WGamma &
+python $1 $2 $3 $4 ZGamma &
+python $1 $2 $3 $4 SingleTop &
+python $1 $2 $3 $4 TTV &
+python $1 $2 $3 $4 QCDMu &
+python $1 $2 $3 $4 DataMu &
