@@ -312,7 +312,7 @@ const std::string allowedSampleTypes[61] = {"Data",
 											"QCD_Pt120to170_EM",
 											"QCD_Pt170to300_EM",
 											"QCD_Pt300toInf_EM",
-                      "TGJets",
+											"TGJets",
 											"Test",
                                                                                         };
 

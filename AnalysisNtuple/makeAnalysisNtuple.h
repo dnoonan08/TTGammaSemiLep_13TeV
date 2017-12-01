@@ -356,7 +356,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("loosePhoHoverE"                  , &_loosePhoHoverE                   ); 
 	outputTree->Branch("loosePhoSIEIE"                   , &_loosePhoSIEIE                    ); 
 	outputTree->Branch("loosePhoPFChIso"                 , &_loosePhoPFChIso                  ); 
-	outputTree->Branch("loosePhoPFLoosePhoIso"                , &_loosePhoPFPhoIso                 ); 
+	outputTree->Branch("loosePhoPFPhoIso"                , &_loosePhoPFPhoIso                 ); 
 	outputTree->Branch("loosePhoPFNeuIso"                , &_loosePhoPFNeuIso                 ); 
 	outputTree->Branch("loosePhoPFRandConeChIso"         , &_loosePhoPFRandConeChIso          ); 
 	outputTree->Branch("loosePhoPFChIsoUnCorr"                 , &_loosePhoPFChIsoUnCorr                  ); 
