@@ -13,6 +13,10 @@ parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,ac
                      help="Use 4j2t selection" )
 parser.add_option("--Loose","--loose", dest="isLooseSelection", default=False,action="store_true",
                      help="Use 2j0t selection" )
+parser.add_option("--LooseCR","--looseCR", dest="isLooseCRSelection", default=False,action="store_true",
+		  help="Use 2j exactly 0t control region selection" )
+parser.add_option("--addPlots","--addOnly", dest="onlyAddPlots", default=False,action="store_true",
+                     help="Use only if you want to add a couple of plots to the file, does not remove other plots" )
 
 (options, args) = parser.parse_args()
 
@@ -22,6 +26,7 @@ finalState = options.channel
 sample = options.sample
 isTightSelection = options.isTightSelection
 isLooseSelection = options.isLooseSelection
+isLooseCRSelection = options.isLooseCRSelection
 
 nBJets = -1
 
@@ -38,7 +43,7 @@ if finalState=="Mu":
         extraCuts            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=4)*"
         extraPhotonCuts      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=4 && %s)*"
         outputhistName = "histograms/mu/qcdhistsCR_Tight.root"
-    if isLooseSelection:
+    if isLooseSelection or isLooseCRSelection:
         extraCuts            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2)*"
         extraPhotonCuts      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && %s)*"
         outputhistName = "histograms/mu/qcdhistsCR_Loose.root"
@@ -54,7 +59,7 @@ if finalState=="Ele":
         extraCuts            = "(passPresel_Ele && muPFRelIso<0.3 && nJet>=4)*"
         extraPhotonCuts      = "(passPresel_Ele && muPFRelIso<0.3 && nJet>=4 && %s)*"
         outputhistName = "histograms/ele/qcdhistsCR_Tight.root"
-    if isLooseSelection:
+    if isLooseSelection or isLooseCRSelection:
         extraCuts            = "(passPresel_Ele && muPFRelIso<0.3 && nJet>=2)*"
         extraPhotonCuts      = "(passPresel_Ele && muPFRelIso<0.3 && nJet>=2 && %s)*"
         outputhistName = "histograms/ele/qcdhistsCR_Loose.root"
@@ -86,14 +91,19 @@ print sample
 print "Number of events:", tree.GetEntries()
 
 
-from HistogramListInfo import *
+from HistogramListDict import *
 
 histogramInfo = GetHistogramInfo(extraCuts, extraPhotonCuts, nBJets)
+histogramsToMake = histogramInfo.keys()
+histogramsToMake.sort()
+
 
 
 histograms = []
 
-for h_Info in histogramInfo:
+for hist in histogramsToMake:
+    h_Info = histogramInfo[hist]
+
     if not h_Info[5]: continue
 
     print "filling", h_Info[1], sample

@@ -15,6 +15,14 @@ parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,ac
                      help="Use 4j2t selection" )
 parser.add_option("--Loose","--loose", dest="isLooseSelection", default=False,action="store_true",
                      help="Use 2j0t selection" )
+parser.add_option("--LooseCR","--looseCR", dest="isLooseCRSelection", default=False,action="store_true",
+		  help="Use 2j exactly 0t control region selection" )
+parser.add_option("--addPlots","--addOnly", dest="onlyAddPlots", default=False,action="store_true",
+                     help="Use only if you want to add a couple of plots to the file, does not remove other plots" )
+parser.add_option("--output", dest="outputFileName", default="hists.root",
+                     help="Give the name of the root file for histograms to be saved in (default is hists.root)" )
+parser.add_option("--plot", dest="plotList",action="append",
+                     help="Add plots" )
 
 (options, args) = parser.parse_args()
 
@@ -26,6 +34,10 @@ finalState = options.channel
 sample = options.sample
 isTightSelection = options.isTightSelection
 isLooseSelection = options.isLooseSelection
+isLooseCRSelection = options.isLooseCRSelection
+onlyAddPlots = options.onlyAddPlots
+plotList = options.plotList
+outputFileName = options.outputFileName
 
 print isTightSelection
 print isLooseSelection
@@ -53,7 +65,7 @@ if finalState=="Mu":
     sampleList[-1] = "DataMu"
     sampleList[-2] = "QCDMu"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07"
-    outputhistName = "histograms/mu/hists.root"
+    outputhistName = "histograms/mu/%s"%outputFileName
 
     extraCuts            = "(passPresel_Mu && nJet>=3 && nBJet>=1)*"
     extraPhotonCuts      = "(passPresel_Mu && nJet>=3 && nBJet>=1 && %s)*"
@@ -71,7 +83,7 @@ elif finalState=="Ele":
     sampleList[-1] = "DataEle"
     sampleList[-2] = "QCDEle"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07"
-    outputhistName = "histograms/ele/hists.root"
+    outputhistName = "histograms/ele/%s"%outputFileName
 
     extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet>=1)*"
     extraPhotonCuts      = "(passPresel_Ele && nJet>=3 && nBJet>=1 && %s)*"
@@ -98,13 +110,13 @@ if 'PU' in sys.argv:
 
     Pileup = "PUweight_%s"%(level)
     sys.argv.remove("PU")
-    outputhistName = outputhistName.replace("hists.root","hists_Pileup_%s.root"%(level))
+    outputhistName = outputhistName.replace(".root","Pileup_%s.root"%(level))
 
 if 'MuEff' in sys.argv:
     MuEff = "muEffWeight_%s"%(level)
 
     sys.argv.remove("MuEff")
-    outputhistName = outputhistName.replace("hists.root","hists_MuEff_%s.root"%(level))
+    outputhistName = outputhistName.replace(".root","_MuEff_%s.root"%(level))
 
 
 if 'BTagSF' in sys.argv:
@@ -113,7 +125,7 @@ if 'BTagSF' in sys.argv:
 
 
     sys.argv.remove("BTagSF")
-    outputhistName = outputhistName.replace("hists.root","hists_BTagSF_%s.root"%(level))
+    outputhistName = outputhistName.replace(".root","_BTagSF_%s.root"%(level))
 
 
 
@@ -127,28 +139,59 @@ if isTightSelection:
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]"
     extraCuts = extraCutsTight 
     extraPhotonCuts = extraPhotonCutsTight 
-    outputhistName = outputhistName.replace("hists.root","hists_tight.root")
+    outputhistName = outputhistName.replace(".root","_tight.root")
 
-if "Loose" in sys.argv:
+if isLooseSelection:
     print "Loose Select"
     nJets = 2
     nBJets = 0
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(btagWeight[0])"
     extraCuts = extraCutsLoose
     extraPhotonCuts = extraPhotonCutsLoose
-    outputhistName = outputhistName.replace("hists.root","hists_loose.root")
+    outputhistName = outputhistName.replace(".root","_loose.root")
 
-if "LooseCR" in sys.argv:
+if isLooseCRSelection:
     print "Loose Control Region Select"
     nJets = 2
     nBJets = 0
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*1" #*(btagWeight[2])"
     extraCuts = extraCutsLooseCR
     extraPhotonCuts = extraPhotonCutsLooseCR
-    outputhistName = outputhistName.replace("hists.root","hists_looseCR.root")
+    outputhistName = outputhistName.replace(".root","_looseCR.root")
 
-from HistogramListInfo import *
+from HistogramListDict import *
 histogramInfo = GetHistogramInfo(extraCuts,extraPhotonCuts,nBJets)
+
+
+###This part will make a list of the histograms that need to be produced
+
+if not plotList is None:
+    #gets list of histograms from input options if any given
+    histogramsToMake = plotList
+    ### in this case, we need to check that the histograms are in histogramInfo
+    allHistsDefined = True
+    for hist in histogramsToMake:
+        if not hist in histogramInfo:
+            print "Histogram %s is not defined in HistogramListDict.py"%hist
+            allHistsDefined = False
+    if not allHistsDefined:
+        sys.exit()
+else:
+    ## make all histograms defined in HistogramListDict
+    histogramsToMake = histogramInfo.keys()
+    histogramsToMake.sort()
+
+    # ## make only a subset of histograms
+    # histogramsToMake = ["phosel_PhotonCategory", "presel_nJet"]
+    # ### in this case, we need to check that the histograms are in histogramInfo
+    # allHistsDefined = True
+    # for hist in histogramsToMake:
+    #     if not hist in histogramInfo:
+    #         print "Histogram %s is not defined in HistogramListDict.py"
+    #         allHistsDefined = False
+    # if not allHistsDefined:
+    #     sys.exit()
+
 
 
 histograms=[]
@@ -191,13 +234,11 @@ if sample =="QCD_DD":
     transferFactor = histNjet_2b.Integral(nJets+1,-1)/histNjet_QCDcr.Integral(nJets+1,-1)
     print transferFactor
 
-    for h_Info in histogramInfo:
+    for hist in histogramsToMake:
+        h_Info = histogramInfo[hist]
         if not h_Info[5]: continue
         print "filling", h_Info[1], sample
-        # tempHist = qcd_File.Get("%s_DD/%s_%s"%(dirName,h_Info[1],dirName))
-        # print qcd_File
-        # print "%s_DD/%s_%s"%(dirName,h_Info[1],dirName)
-        # print tempHist
+
         histograms.append(qcd_File.Get("QCD_DD/%s_QCD_DD"%(h_Info[1])))
         histograms[-1].Scale(transferFactor)
 
@@ -216,7 +257,8 @@ if not "QCD_DD" in sample:
 
     print "Number of events:", tree.GetEntries()
 
-    for h_Info in histogramInfo:
+    for hist in histogramsToMake:
+        h_Info = histogramInfo[hist]
         print "filling", h_Info[1], sample
         evtWeight = ""
         histograms.append(TH1F("%s_%s"%(h_Info[1],sample),"%s_%s"%(h_Info[1],sample),h_Info[2][0],h_Info[2][1],h_Info[2][2]))
@@ -234,10 +276,14 @@ if not "QCD_DD" in sample:
 
 
 outputFile = TFile(outputhistName,"update")
-outputFile.rmdir(sample)
-outputFile.mkdir(sample)
+
+if not onlyAddPlots:
+    outputFile.rmdir(sample)
+    outputFile.mkdir(sample)
 outputFile.cd(sample)
 for h in histograms:
+    if onlyAddPlots:
+        gDirectory.Delete("%s;*"%(h.GetName()))
     h.Write()
 
 outputFile.Close()
