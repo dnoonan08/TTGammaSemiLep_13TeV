@@ -2,16 +2,32 @@ from ROOT import *
 import sys
 from sampleInformation import *
 import os
+from optparse import OptionParser
 
 gROOT.SetBatch(True)
 
-sample = "QCDMu"
-finalState = "Mu"
+parser = OptionParser()
+parser.add_option("-c", "--channel", dest="channel", default="Mu",type='str',
+                     help="Specify which channel Mu or Ele? default is Mu" )
+(options, args) = parser.parse_args()
 
-outputFileName = "histograms/mu/qcdTransferFactors.root"
+finalState = options.channel
+if finalState in ["Mu","mu"]:
+    sample = "QCDMu"
+    outputFileName = "histograms/mu/qcdTransferFactors.root"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdmuons/V08_00_26_07"
+    preselCut = "passPresel_Mu"
+elif finalState in ["Ele","ele","e"]:
+    sample = "QCDEle"
+    outputFileName = "histograms/ele/qcdTransferFactors.root"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdelectrons/V08_00_26_07"
+    preselCut = "passPresel_Ele"
+else:
+    print "Unknown final state"
+    sys.exit()
+
 outputFile = TFile(outputFileName,"recreate")
 
-analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdmuons/V08_00_26_07"
 
 tree = TChain("AnalysisTree")
 fileList = samples[sample][0]
@@ -21,8 +37,8 @@ for fileName in fileList:
 nJets  = 2
 nBJets = 0
 
-extraCuts       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=%i && nBJet==%i)*"%(nJets, nBJets)
-extraCutsPhoton = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=%i && nBJet==%i && phoMediumID)*"%(nJets, nBJets)
+extraCuts       = "(%s && muPFRelIso<0.3 && nJet>=%i && nBJet==%i)*"%(preselCut, nJets, nBJets)
+extraCutsPhoton = "(%s && muPFRelIso<0.3 && nJet>=%i && nBJet==%i && phoMediumID)*"%(preselCut, nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 
@@ -34,8 +50,8 @@ tree.Draw("nJet>>pho_histNjet_QCDcr",extraCutsPhoton+weights)
 outputFile.cd()
 histCR.Write()
 
-extraCuts       = "(passPresel_Mu && muPFRelIso>0.3 && nJet>=%i && nBJet==%i)*"%(nJets, nBJets)
-extraCutsPhoton = "(passPresel_Mu && muPFRelIso>0.3 && nJet>=%i && nBJet==%i && phoMediumID)*"%(nJets, nBJets)
+extraCuts       = "(%s && muPFRelIso>0.3 && nJet>=%i && nBJet==%i)*"%(preselCut, nJets, nBJets)
+extraCutsPhoton = "(%s && muPFRelIso>0.3 && nJet>=%i && nBJet==%i && phoMediumID)*"%(preselCut, nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 
@@ -47,8 +63,10 @@ tree.Draw("nJet>>pho_histNjet_QCDcr2",extraCutsPhoton+weights)
 outputFile.cd()
 histCR.Write()
 
-
-analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07"
+if finalState in ["Mu","mu"]:
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07"
+else:
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07"
 
 tree = TChain("AnalysisTree")
 fileList = samples[sample][0]
@@ -57,8 +75,8 @@ for fileName in fileList:
 
 nJets  = 2
 nBJets = 0
-extraCuts       = "(passPresel_Mu && nJet>=%i && nBJet==%i)*"%(nJets, nBJets)
-extraCutsPhoton = "(passPresel_Mu && nJet>=%i && nBJet==%i && phoMediumID)*"%(nJets, nBJets)
+extraCuts       = "(%s && nJet>=%i && nBJet==%i)*"%(preselCut, nJets, nBJets)
+extraCutsPhoton = "(%s && nJet>=%i && nBJet==%i && phoMediumID)*"%(preselCut, nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 hist0 = TH1F("histNjet_0b","histNjet_0b",15,0,15)
@@ -71,8 +89,8 @@ hist0.Write()
 
 nJets  = 2
 nBJets = 1
-extraCuts       = "(passPresel_Mu && nJet>=%i && nBJet==%i)*"%(nJets, nBJets)
-extraCutsPhoton = "(passPresel_Mu && nJet>=%i && nBJet==%i && phoMediumID)*"%(nJets, nBJets)
+extraCuts       = "(%s && nJet>=%i && nBJet==%i)*"%(preselCut, nJets, nBJets)
+extraCutsPhoton = "(%s && nJet>=%i && nBJet==%i && phoMediumID)*"%(preselCut, nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 hist1 = TH1F("histNjet_1b","histNjet_1b",15,0,15)
@@ -85,8 +103,8 @@ hist1.Write()
 
 nJets  = 2
 nBJets = 2
-extraCuts       = "(passPresel_Mu && nJet>=%i && nBJet>=%i)*"%(nJets, nBJets)
-extraCutsPhoton = "(passPresel_Mu && nJet>=%i && nBJet>=%i && phoMediumID)*"%(nJets, nBJets)
+extraCuts       = "(%s && nJet>=%i && nBJet>=%i)*"%(preselCut, nJets, nBJets)
+extraCutsPhoton = "(%s && nJet>=%i && nBJet>=%i && phoMediumID)*"%(preselCut, nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 hist2 = TH1F("histNjet_2b","histNjet_2b",15,0,15)

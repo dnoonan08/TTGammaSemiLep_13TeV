@@ -39,6 +39,7 @@ if finalState=="Ele":
 sample = sys.argv[-1]
 
 if not sample in sampleList:
+    print sample
     print "Sample isn't in list"
     print sampleList
     sys.exit()

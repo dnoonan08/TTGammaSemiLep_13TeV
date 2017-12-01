@@ -1,11 +1,11 @@
-python $1 $2 $3 $4 TTGamma &
-python $1 $2 $3 $4 TTbar &
-python $1 $2 $3 $4 TGJets &
-python $1 $2 $3 $4 WJets &
-python $1 $2 $3 $4 ZJets &
-python $1 $2 $3 $4 WGamma &
-python $1 $2 $3 $4 ZGamma &
-python $1 $2 $3 $4 SingleTop &
-python $1 $2 $3 $4 TTV &
-python $1 $2 $3 $4 QCDMu &
-python $1 $2 $3 $4 DataMu &
+python $argv -s TTGamma &
+python $argv -s TTbar &
+python $argv -s TGJets &
+python $argv -s WJets &
+python $argv -s ZJets &
+python $argv -s WGamma &
+python $argv -s ZGamma &
+python $argv -s SingleTop &
+python $argv -s TTV &
+python $argv -s QCDMu &
+python $argv -s DataMu &

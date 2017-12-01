@@ -8,9 +8,20 @@ padRatio = 0.25
 padOverlap = 0.15
 padGap = 0.01
 parser = OptionParser()
+
 parser.add_option("-c", "--channel", dest="channel", default="Mu",type='str',
-                     help="Specify which channel Mu or Ele? default is Mu" )
+		  help="Specify which channel Mu or Ele? default is Mu" )
+parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,action="store_true",
+		  help="Use 4j2t selection" )
+parser.add_option("--Loose","--loose", dest="isLooseSelection", default=False,action="store_true",
+		  help="Use 2j0t selection" )
+parser.add_option("--LooseCR","--looseCR", dest="isLooseCRSelection", default=False,action="store_true",
+		  help="Use 2j exactly 0t control region selection" )
 (options, args) = parser.parse_args()
+
+isTightSelection = options.isTightSelection
+isLooseSelection = options.isLooseSelection
+isLooseCRSelection = options.isLooseCRSelection
 
 finalState = options.channel
 print "Running on the %s channel"%(finalState)
@@ -18,15 +29,15 @@ if finalState=='Mu':
 	_file  = TFile("histograms/mu/hists.root")
 	plotDirectory = "plots_mu/"
 	regionText = ", N_{j}#geq3, N_{b}#geq1"
-	if 'Tight' in sys.argv:
+	if isTightSelection:
         	plotDirectory = "tightplots_mu/"
         	_file  = TFile("histograms/mu/hists_tight.root")
         	regionText = ", N_{j}#geq4, N_{b}#geq2"
-        if 'Loose' in sys.argv:
+	if isLooseSelection:
         	plotDirectory = "looseplots_mu/"
         	_file  = TFile("histograms/mu/hists_loose.root")
         	regionText = ", N_{j}=2, N_{b}=0"
-        if 'LooseCR' in sys.argv:
+	if isLooseCRSelection:
         	plotDirectory = "looseCRplots_mu/"
         	_file  = TFile("histograms/mu/hists_looseCR.root")
         	regionText = ", N_{j}#geq2, N_{b}#geq0"
@@ -36,15 +47,15 @@ if finalState=="Ele":
         plotDirectory = "plots_ele/"
         regionText = ", N_{j}#geq3, N_{b}#geq1"
 
-	if 'Tight' in sys.argv:
+	if isTightSelection:
     		plotDirectory = "tightplots_ele/"
     		_file  = TFile("histograms/ele/hists_tight.root")
     		regionText = ", N_{j}#geq4, N_{b}#geq2"
-	if 'Loose' in sys.argv:
+	if isLooseSelection:
     		plotDirectory = "looseplots_ele/"
     		_file  = TFile("histograms/ele/hists_loose.root")
     		regionText = ", N_{j}=2, N_{b}=0"
-	if 'LooseCR' in sys.argv:
+	if isLooseCRSelection:
     		plotDirectory = "looseCRplots_ele/"
     		_file  = TFile("histograms/ele/hists_looseCR.root")
     		regionText = ", N_{j}#geq2, N_{b}#geq0"
@@ -187,10 +198,10 @@ if not HasCMSStyle:
 
 ROOT.gROOT.ForceStyle()
 
-sampleList[-2] = "QCDMu"
+sampleList[-2] = "QCD_DD"
 stackList = sampleList[:-1]
 
-stackList.remove("QCDMu")
+# stackList.remove("QCDMu")
 stackList.reverse()
 
 if finalState=="Mu":
@@ -286,7 +297,7 @@ legList = {'TTGamma': [kAzure+3, 't#bar{t}+#gamma'],
           'WJets': [kGreen -3, 'W+jets'],
           'ZJets': [kGreen -3, 'Z+jets'],
           'TGJets'   :[kGray, 't+#gamma'],
-    #      'QCDMu': [kYellow, 'Multijet'],
+          'QCD_DD': [kYellow, 'Multijet'],
           }
 
 mcList = {'TTGamma': [kOrange],
@@ -298,7 +309,7 @@ mcList = {'TTGamma': [kOrange],
           'WJets': [kCyan-3],
           'ZJets': [kCyan-5],
           'TGJets': [kGray],
-     #     'QCDMu': [kGreen+3],
+          'QCD_DD': [kGreen+3],
           }
 
 
@@ -315,15 +326,15 @@ legendR.SetFillColor(0)
 legend.SetBorderSize(0)
 legend.SetFillColor(0)
 
-histName = preselhistograms.keys()[0]
+histName = "jet1Pt"#preselhistograms.keys()[0]
 legList = stackList[:]
 legList.reverse()
 #legList.remove('TGJets')
 #print histName
 print legList
 for sample in legList:
-    print sample, _file
-    print "%s/%s_%s"%(sample,histName,sample)
+    # print sample, _file
+    # print "%s/%s_%s"%(sample,histName,sample)
     hist = _file.Get("%s/presel_%s_%s"%(sample,histName,sample))
 #    hist.Draw()
     hist.SetFillColor(mcList[sample][0])
@@ -349,9 +360,10 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     canvas.ResetDrawn()
     stack = THStack(histName,histName)
     for sample in stackList:
-        print sample, histName
-
-        hist = _file.Get("%s/%s_%s"%(sample,histName,sample)).Clone(sample)
+#        print sample, histName
+        hist = _file.Get("%s/%s_%s"%(sample,histName,sample))
+	if type(hist)==type(TObject()): continue
+	hist = hist.Clone(sample)	
         hist.SetFillColor(mcList[sample][0])
         hist.SetLineColor(mcList[sample][0])
 
