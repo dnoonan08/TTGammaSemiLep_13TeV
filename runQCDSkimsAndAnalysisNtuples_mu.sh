@@ -16,8 +16,10 @@ else
 	cd CMSSW_8_0_26_patch1/src/
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
 	cd  TTGammaSemiLep_13TeV/
-	echo "xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/DataPUfiles_2016 ."
-	xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/DataPUfiles_2016 .
+	echo "xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/DataPUfiles_2016.tgz ."
+    xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/Data_Pileup.tgz .
+    tar -xvf Data_Pileup.tgz
+    sleep 5
 fi
 
 eval `scramv1 runtime -sh`
@@ -34,6 +36,7 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "TTbarMadgraph_SingleLeptFromT_" \
 "TTbarMadgraph_SingleLeptFromTbar_" \
 "TTbarMadgraph_Dilepton_" \
+"TGJets_" \
 "W1jets_" \
 "W2jets_" \
 "W3jets_" \
@@ -82,6 +85,7 @@ $GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_1of4.root "$GGNtupleG
 $DannyEOS"TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$DannyEOS"TGJets_TuneCUETP8M1_13TeV_amcatnlo_madspin_pythia8.root" \
 $GGNtupleGroupEOSMC"W1JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W2JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W3JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
@@ -129,6 +133,7 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTbarMadgraph_SingleLeptFromT" \
 "TTbarMadgraph_SingleLeptFromTbar" \
 "TTbarMadgraph_Dilepton" \
+"TGJets" \
 "W1jets" \
 "W2jets" \
 "W3jets" \
@@ -176,7 +181,7 @@ AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__QCDcr . ${files[job]}skim.
 echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/qcdmuons/V08_00_26_07/."
 xrdcp -f ${files[job]}skim.root ${outputdir}skims/qcdmuons/V08_00_26_07/.
 
-echo "xrdcp -f QCDcr_${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/V08_00_26_07/."
+echo "xrdcp -f QCDcr_${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/qcdmuons/V08_00_26_07/."
 xrdcp -f QCDcr_${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/qcdmuons/V08_00_26_07/.
 
 
