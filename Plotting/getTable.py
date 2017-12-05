@@ -14,7 +14,8 @@ parser.add_option("-c", "--channel", dest="channel", default="Mu",type='str',
 finalState = options.channel
 print "Running on the %s channel"%(finalState)
 if finalState=='Mu':
-        _file  = TFile("histograms/mu/hists.root")
+        _file  = TFile("histograms/mu/testhist.root")
+#        _file  = TFile("histograms/mu/hists.root")
         plotDirectory = "plots_mu/"
         regionText = ", N_{j}#geq3, N_{b}#geq1"
         if 'Tight' in sys.argv:
@@ -31,7 +32,7 @@ if finalState=='Mu':
                 regionText = ", N_{j}#geq2, N_{b}#geq0"
 
 if finalState=="Ele":
-     #   _file  = TFile("histograms/ele/hists1.root")
+	#   _file  = TFile("histograms/ele/hists1.root")
         _file  = TFile("histograms/ele/hists.root")
         plotDirectory = "plots_ele/"
         regionText = ", N_{j}#geq3, N_{b}#geq1"
@@ -57,59 +58,58 @@ list_ = ['TTGamma', 'TTbar', 'TGJets','SingleTop', 'WGamma','ZGamma','WJets', 'Z
 gROOT.SetBatch(True)
 
 yield_ ={'TTGamma':[],
-                 'TTbar':[],
-                 'SingleTop': [],
-                 'WGamma':  [],
-                 'ZGamma': [],
-                 'WJets' : [],
-                 'ZJets' : [],
-                 'TTV': [],
-                 'TGJets': [],
-			}
+	 'TTbar':[],
+	 'SingleTop': [],
+	 'WGamma':  [],
+	 'ZGamma': [],
+	 'WJets' : [],
+	 'ZJets' : [],
+	 'TTV': [],
+	 'TGJets': [],
+	 }
 
 
 err_={'TTGamma':[],
-                 'TTbar':[],
-                 'SingleTop': [],
-                 'WGamma':  [],
-                 'ZGamma': [],
-                 'WJets' : [],
-                 'ZJets' : [],
-                 'TTV': [],
-                 'TGJets': [],
-                        }
+      'TTbar':[],
+      'SingleTop': [],
+      'WGamma':  [],
+      'ZGamma': [],
+      'WJets' : [],
+      'ZJets' : [],
+      'TTV': [],
+      'TGJets': [],
+      }
 
 sum_s= {'TTGamma':[],
-                 'TTbar':[],
-                 'SingleTop': [],
-                 'WGamma':  [],
-                 'ZGamma': [],
-                 'WJets' : [],
-                 'ZJets' : [],
-                 'TTV': [],
-                 'TGJets': [],
-                        }
+	'TTbar':[],
+	'SingleTop': [],
+	'WGamma':  [],
+	'ZGamma': [],
+	'WJets' : [],
+	'ZJets' : [],
+	'TTV': [],
+	'TGJets': [],
+	}
+
 err_s= {'TTGamma':[],
-                 'TTbar':[],
-                 'SingleTop': [],
-                 'WGamma':  [],
-                 'ZGamma': [],
-                 'WJets' : [],
-                 'ZJets' : [],
-                 'TTV': [],
-                 'TGJets': [],
-}
+	'TTbar':[],
+	'SingleTop': [],
+	'WGamma':  [],
+	'ZGamma': [],
+	'WJets' : [],
+	'ZJets' : [],
+	'TTV': [],
+	'TGJets': [],
+	}
+
 hist_= ["phosel_NGenuinePho", "phosel_NMisIDEle","phosel_NHadronicPho","phosel_NHadronicFake"]
 for sample in list_:
-#	print sample
-        for h in hist_:
- #               print _file, ("%s/%s_%s"%(sample,h,sample))
-                hist=_file.Get("%s/%s_%s"%(sample,h,sample))
-  #              print hist.Integral(-1,-1)
+	hist=_file.Get("%s/phosel_PhotonCategory_%s"%(sample,sample))	
+	for i in range(1,5):
                 err = Double(0.0)
                 err_[sample].append(err)            
-        	yield_[sample].append(float(hist.IntegralAndError(-1,-1,err)))
-                
+        	yield_[sample].append(float(hist.IntegralAndError(i,i,err)))
+
 sum_=[]
 total_=0
 totalerr=0.0
@@ -161,44 +161,22 @@ percentage_err.append((HadPho_error/total_)*100)
 percentage_err.append((HadFake_error/total_)*100)
 
 table=''
-table +=  '\\begin{tabular}{c c c c c c c} \n'
+table +=  '\\begin{tabular}{l | c c c c | c r} \n'
 table +=  '\\hline\n'
-table +=  'Sample & GenuinePhoton & MisIDEle & HadronicPho & HadronicFake & Total\\\\ \n'
+table +=  'Sample & GenuinePhoton & MisIDEle & HadronicPho & HadronicFake & Total & Percent \\\\ \n'
 table +=  '\\hline\n'
 for sample in list_:
-	table += '%s & $%.1f \pm %.1f$  & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$   \\\\ \n' % (sample, yield_[sample][0], err_[sample][0], yield_[sample][1], err_[sample][1], yield_[sample][2], err_[sample][2], yield_[sample][3], err_[sample][3], sum_s[sample][0], err_s[sample][0])
+	table += '%s & $%.1f \pm %.1f$  & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f\%%$   \\\\ \n' % (sample, yield_[sample][0], err_[sample][0], yield_[sample][1], err_[sample][1], yield_[sample][2], err_[sample][2], yield_[sample][3], err_[sample][3], sum_s[sample][0], err_s[sample][0],100.*sum_s[sample][0]/total_)
 
 #	total += yield_[sample][0]+yield_[sample][1]+yield_[sample][2]+yield_[sample][3]
 #	totalErr += (err_[sample][0]+err_[sample][1]+err_[sample][2]+err_[sample][3])**0.5
 table += '\\hline \n'
-table += "Totals & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$\\\\ \n" %(genuine_,genuine_error,misID_,misID_error,HadPho_,HadPho_error,HadFake_,HadFake_error, total_, error)
+table += "Totals & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ &\\\\ \n" %(genuine_,genuine_error,misID_,misID_error,HadPho_,HadPho_error,HadFake_,HadFake_error, total_, error)
 table += '\\hline \n'
 table += "Percentage & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ \\\\ \n" % (percentage[0], percentage_err[0],percentage[1], percentage_err[1], percentage[2], percentage_err[2],percentage[3], percentage_err[3])
 table += '\\end{tabular} \n'
 
+table = table.replace("$0.0 \pm 0.0$","---")
 
 print table
 
-sys.exit()
-print " The Number of Photons from different Category and from the different MC"
-print " Samples    GenuinePhoton    MisIDEle    HadronicPho    HadronicFake     Total"
-
-print " TTGamma   ", yield_['TTGamma'][0],   yield_['TTGamma'][1],     yield_['TTGamma'][2],    yield_['TTGamma'][3],    sum_[5]
-
-print " TTbar     ", yield_['TTbar'][0],     yield_['TTbar'][1],       yield_['TTbar'][2],      yield_['TTbar'][3],      sum_[1]
-
-print " SingleTop ", yield_['SingleTop'][0], yield_['SingleTop'][1],   yield_['SingleTop'][2],  yield_['SingleTop'][3],  sum_[0]
-
-print " WGamma    ", yield_['WGamma'][0],    yield_['WGamma'][1],      yield_['WGamma'][2],     yield_['WGamma'][3],     sum_[7]
-
-print " ZGamma    ", yield_['ZGamma'][0],    yield_['ZGamma'][1],      yield_['ZGamma'][2],     yield_['ZGamma'][3],     sum_[6]
-
-print " WJets     ", yield_['WJets'][0],     yield_['WJets'][1],       yield_['WJets'][2],      yield_['WJets'][3],      sum_[3]
-
-print " ZJets     ", yield_['ZJets'][0],     yield_['ZJets'][1],       yield_['ZJets'][2],      yield_['ZJets'][3],      sum_[4]
-
-print " TG        ", yield_['TG'][0],        yield_['TG'][1],          yield_['TG'][2],         yield_['TG'][3],         sum_[8]
-
-print " TTV       ", yield_['TTV'][0],       yield_['TTV'][1],         yield_['TTV'][2],        yield_['TTV'][3],        sum_[2]
-
-print " Total     ", sum2_[0],               sum2_[1],                 sum2_[2],                sum2_[3],                total_
