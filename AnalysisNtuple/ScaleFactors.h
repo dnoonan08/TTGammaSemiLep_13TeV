@@ -222,13 +222,13 @@ double getEvtWeight(string sampleType){
 	else if( sampleType=="QCD_Pt600to800_Mu") {evtWeight = QCD_Pt600to800_Mu_SF;}
 	else if( sampleType=="QCD_Pt800to1000_Mu") {evtWeight = QCD_Pt800to1000_Mu_SF;}
 	else if( sampleType=="QCD_Pt1000toInf_Mu") {evtWeight = QCD_Pt1000toInf_Mu_SF;}
-	else if( sampleType=="QCD_Pt20to30_EM") {evtWeight = QCD_Pt20to30_Ele_SF;}
-	else if( sampleType=="QCD_Pt30to50_EM") {evtWeight = QCD_Pt30to50_Ele_SF;}
-	else if( sampleType=="QCD_Pt50to80_EM") {evtWeight = QCD_Pt50to80_Ele_SF;}
-	else if( sampleType=="QCD_Pt80to120_EM") {evtWeight = QCD_Pt80to120_Ele_SF;}
-	else if( sampleType=="QCD_Pt120to170_EM") {evtWeight = QCD_Pt120to170_Ele_SF;}
-	else if( sampleType=="QCD_Pt170to300_EM") {evtWeight = QCD_Pt170to300_Ele_SF;}
-	else if( sampleType=="QCD_Pt300toInf_EM") {evtWeight = QCD_Pt300toInf_Ele_SF;}
+	else if( sampleType=="QCD_Pt20to30_Ele") {evtWeight = QCD_Pt20to30_Ele_SF;}
+	else if( sampleType=="QCD_Pt30to50_Ele") {evtWeight = QCD_Pt30to50_Ele_SF;}
+	else if( sampleType=="QCD_Pt50to80_Ele") {evtWeight = QCD_Pt50to80_Ele_SF;}
+	else if( sampleType=="QCD_Pt80to120_Ele") {evtWeight = QCD_Pt80to120_Ele_SF;}
+	else if( sampleType=="QCD_Pt120to170_Ele") {evtWeight = QCD_Pt120to170_Ele_SF;}
+	else if( sampleType=="QCD_Pt170to300_Ele") {evtWeight = QCD_Pt170to300_Ele_SF;}
+	else if( sampleType=="QCD_Pt300toInf_Ele") {evtWeight = QCD_Pt300toInf_Ele_SF;}
 	else {
 		cout << "-------------------------------------------------" << endl;
 		cout << "-------------------------------------------------" << endl;
@@ -305,13 +305,13 @@ const std::string allowedSampleTypes[61] = {"Data",
 											"QCD_Pt600to800_Mu",
 											"QCD_Pt800to1000_Mu",
 											"QCD_Pt1000toInf_Mu",
-											"QCD_Pt20to30_EM",
-											"QCD_Pt30to50_EM",
-											"QCD_Pt50to80_EM",
-											"QCD_Pt80to120_EM",
-											"QCD_Pt120to170_EM",
-											"QCD_Pt170to300_EM",
-											"QCD_Pt300toInf_EM",
+											"QCD_Pt20to30_Ele",
+											"QCD_Pt30to50_Ele",
+											"QCD_Pt50to80_Ele",
+											"QCD_Pt80to120_Ele",
+											"QCD_Pt120to170_Ele",
+											"QCD_Pt170to300_Ele",
+											"QCD_Pt300toInf_Ele",
 											"TGJets",
 											"Test",
                                                                                         };
