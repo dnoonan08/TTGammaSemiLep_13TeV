@@ -216,7 +216,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			}
 		}
 		if( isMC && doOverlapRemoval_WZ){
-                        if (overlapRemovalWZ(tree)){
+			if (overlapRemovalWZ(tree)){
 				count_overlapVJets++;
 				continue;
 			}
@@ -453,17 +453,27 @@ void makeAnalysisNtuple::FillEvent()
 		bool isMisIDEle = false;
 		bool isHadronicPhoton = false;
 		bool isHadronicFake = false;
+		int phoGenMatchInd = -1.;
+		
 		if (!tree->isData_){
-			findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+			phoGenMatchInd = findPhotonGenMatch(phoInd, tree);
+
+			_phoGenMatchInd.push_back(phoGenMatchInd);
+
+			findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
 			_photonIsGenuine.push_back(isGenuine);
 			_photonIsMisIDEle.push_back(isMisIDEle);
 			_photonIsHadronicPhoton.push_back(isHadronicPhoton);
 			_photonIsHadronicFake.push_back(isHadronicFake);
 		}
+
+
+
 		parentPID = -888;
 		int parentage = -1;
-		if (!tree->isData_){
-			parentPID = findPhotonParentage(phoInd, tree);
+
+		if (!tree->isData_ && phoGenMatchInd!=-1){
+			parentPID = tree->mcMomPID->at(phoGenMatchInd);
 			// photon parentage for event categorization
 			// -1 is unmatched photon; 0 is matched, but not top/W/lepton, 1 is top parent, 2 is W parent, 3 is lepton parent,
 			if (abs(parentPID)==6) parentage = 1;
@@ -471,6 +481,7 @@ void makeAnalysisNtuple::FillEvent()
 			else if (abs(parentPID)==11 || abs(parentPID)==13 || abs(parentPID)==15) parentage = 3;
 			else if (parentPID!=-999) parentage = 0;
 		}
+
 		_photonParentage.push_back(parentage);
 		_photonParentPID.push_back(parentPID);
 		
@@ -530,8 +541,14 @@ void makeAnalysisNtuple::FillEvent()
 		bool isMisIDEle = false;
 		bool isHadronicPhoton = false;
 		bool isHadronicFake = false;
+		int phoGenMatchInd = -1.;
+
 		if (!tree->isData_){
-			findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+			phoGenMatchInd = findPhotonGenMatch(phoInd, tree);
+
+			_loosePhoGenMatchInd.push_back(phoGenMatchInd);
+
+			findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
 			_loosePhotonIsGenuine.push_back(isGenuine);
 			_loosePhotonIsMisIDEle.push_back(isMisIDEle);
 			_loosePhotonIsHadronicPhoton.push_back(isHadronicPhoton);
@@ -1007,137 +1024,67 @@ vector<bool> makeAnalysisNtuple::passPhoTightID(int phoInd){
 }
 
 
-// void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){
+//This is defined in OverlapRemoval.cpp
+double minGenDr(int myInd, const EventTree* tree);
 
-// 	*genuine        = false;
-// 	*misIDele       = false;
-// 	*hadronicphoton = false;
-// 	*hadronicfake   = false;
 
-// 	int mcPhotonInd = -1;
-// 	int mcEleInd = -1;
-
-// 	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
-
-// 		// crude matching to get candidates
-// 		bool etetamatch = (dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd)) < 0.3 && 
-// 						   (fabs(tree->phoEt_->at(phoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd)) < 1.0);
-		
-// 		if( etetamatch && mcPhotonInd < 0 && tree->mcPID->at(mcInd) == 22)
-// 			if (abs(tree->mcMomPID->at(mcInd)) < 25){
-// 				mcPhotonInd = mcInd; 
-// 			}
-// 		if( etetamatch && mcEleInd < 0 && abs(tree->mcPID->at(mcInd)) == 11 )
-// 			mcEleInd = mcInd;
-// 	}
-// 	// cout << "----------" << endl;
-// 	// cout << mcPhotonInd << " " << mcEleInd << endl;
-
-// 	if(mcPhotonInd >= 0){
-// 		*genuine=true;
-// 	} else{
-// 		if(mcEleInd >= 0 && isGoodElectron(tree, mcEleInd, phoInd)){
-// 			*misIDele = true;
-// 		} else {
-// 			*hadronicfake = true;
-// 		}
-// 	}
-
-// 	// cout << genuine << misIDele << hadronicphoton << hadronicfake << endl;
-// }
-
-void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){
+void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){
 
 	*genuine        = false;
 	*misIDele       = false;
 	*hadronicphoton = false;
 	*hadronicfake   = false;
 
-	int mcPhotonInd = -1;
-	int mcEleInd = -1;
-
-	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
-		// crude matching to get candidates
-		if (tree->mcStatus->at(mcInd) == 1 || tree->mcStatus->at(mcInd) == 71){ 
-			bool etetamatch = (dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd)) < 0.2 && 
-						   (fabs(tree->phoEt_->at(phoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd)) < 1.0);
-		
-			if( etetamatch && mcPhotonInd < 0 && tree->mcPID->at(mcInd) == 22)
-				mcPhotonInd = mcInd; 
-			if( etetamatch && mcEleInd < 0 && abs(tree->mcPID->at(mcInd)) == 11 )
-				mcEleInd = mcInd;
-	 }
+	// If no match, it's hadronic fake
+	if (mcMatchInd== -1) {
+		*hadronicfake = true;
+		return;
 	}
-	// cout << "----------" << endl;
-	// cout << mcPhotonInd << " " << mcEleInd << endl;
 
-	if(mcPhotonInd >= 0){
-		if(isSignalPhoton(tree,mcPhotonInd,phoInd)){
-			*genuine=true;
-		} else {
+	//	mcMatchInd = findPhotonGenMatch(int phoInd, EventTree* tree);
+
+	if (tree->mcPID->at(mcMatchInd) == 22){
+		bool parentagePass = tree->mcParentage->at(mcMatchInd)==2 || tree->mcParentage->at(mcMatchInd)==10 || tree->mcParentage->at(mcMatchInd)==26;
+		bool drotherPass = minGenDr(mcMatchInd, tree) > 0.2;
+		if (parentagePass && drotherPass){ 
+			*genuine = true;
+		}
+		else {
 			*hadronicphoton = true;
 		}
-	} else{
-		if(mcEleInd >= 0 && isGoodElectron(tree, mcEleInd, phoInd)){
-			*misIDele = true;
-		} else {
-			*hadronicfake = true;
-		}
 	}
-
-	// cout << genuine << misIDele << hadronicphoton << hadronicfake << endl;
+	else if ( abs(tree->mcPID->at(mcMatchInd) ) == 11 && tree->mcParentage->at(mcMatchInd)==10 && minGenDr(mcMatchInd, tree) > 0.2 ) {
+		*misIDele = true;
+	} 
+	else {
+		*hadronicfake = true;
+	}
 }
+			
+int makeAnalysisNtuple::findPhotonGenMatch(int phoInd, EventTree* tree){
 
-int makeAnalysisNtuple::findPhotonParentage(int phoInd, EventTree* tree){
-	int mcPhotonInd = -1;
+	double minDR = 999.;
+	int matchInd = -1;
+
 	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
-        // crude matching to get candidates                                                                                                            
-		bool etetamatch = (dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd)) < 0.2 &&
-                           (fabs(tree->phoEt_->at(phoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd)) < 1.0);
-
-        if( etetamatch && mcPhotonInd < 0 && tree->mcPID->at(mcInd) == 22){
-            mcPhotonInd = mcInd;
-			return tree->mcMomPID->at(mcPhotonInd);
+		if (tree->mcStatus->at(mcInd) == 1 || tree->mcStatus->at(mcInd) == 71){ 
+			double dRValue = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd));
+			if (dRValue < minDR){
+				if ( (fabs(tree->phoEt_->at(phoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd)) < 0.5 ){
+					minDR = dRValue;
+					matchInd = mcInd;
+				}
+			}
 		}
 	}
 
-	int parentPID = -888;
-	return parentPID;
+	if (minDR > 0.1){	matchInd = -1.; }  //Only consider matches with dR < 0.1
+
+	return matchInd;
 }
 
-//This is defined in OverlapRemoval.cpp
-double minGenDr(int myInd, const EventTree* tree);
 
-bool makeAnalysisNtuple::isSignalPhoton(EventTree* tree, int mcInd, int recoPhoInd){
-    bool parentagePass = tree->mcParentage->at(mcInd)==2 || tree->mcParentage->at(mcInd)==10 || tree->mcParentage->at(mcInd)==26;
-    double dptpt = (tree->phoEt_->at(recoPhoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd);
-    bool dptptPass = dptpt < 0.5; //0.1
-    bool drotherPass = minGenDr(mcInd, tree) > 0.2;
- //   bool detarecogenPass = fabs(tree->phoEta_->at(recoPhoInd) - tree->mcEta->at(mcInd)) < 0.01;//0.005
-    bool drrecogenPass = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(recoPhoInd),tree->phoPhi_->at(recoPhoInd)) < 0.1; //.01
-	// cout << "-----------------------------------" << endl;
-	// cout << "eventnum "<<tree->event_<<endl;
-	// cout << "recoPhoInd " << recoPhoInd << " mcInd " << mcInd << endl;
-	// cout << "parentagePass " << parentagePass <<endl;
-	// cout << "dptpt " << dptpt <<endl;
-	// cout << "dptptPass " << dptptPass <<endl;
-	// cout << "drotherPass " << drotherPass <<endl;
-	// cout << "detarecogenPass " << detarecogenPass << "     " << tree->phoEta_->at(recoPhoInd) << "  " << tree->mcEta->at(mcInd) <<endl;
-	// cout << "drrecogenPass " << drrecogenPass << tree->mcEta->at(mcInd)<< "  " <<tree->mcPhi->at(mcInd)<< "  " <<tree->phoEta_->at(recoPhoInd)<< "  " <<tree->phoPhi_->at(recoPhoInd) << endl;
-    if(parentagePass && dptptPass && drotherPass && drrecogenPass) return true;
-    else return false;
-}
 
-bool makeAnalysisNtuple::isGoodElectron(EventTree* tree, int mcInd, int recoPhoInd){
-    bool parentagePass = tree->mcParentage->at(mcInd)==10;
-    double dptpt = (tree->phoEt_->at(recoPhoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd);
-    bool dptptPass = dptpt < 0.1;
-    bool drotherPass = minGenDr(mcInd, tree) > 0.2;
-    bool detarecogenPass = fabs(tree->phoEta_->at(recoPhoInd) - tree->mcEta->at(mcInd)) < 0.005;
-    bool drrecogenPass = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(recoPhoInd),tree->phoPhi_->at(recoPhoInd)) < 0.04;
-    if(parentagePass && dptptPass && drotherPass && detarecogenPass && drrecogenPass) return true;
-    else return false;
-}
 
 int makeAnalysisNtuple::minDrIndex(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis){
 	double mindr = 999.0;
