@@ -243,9 +243,9 @@ if sample =="QCD_DD":
         histograms[-1].Scale(transferFactor)
 
 if not "QCD_DD" in sample:
-    if not sample in sampleList:
+    if not sample in samples:
         print "Sample isn't in list"
-        print sampleList
+        print samples.keys()
         sys.exit()
 
     tree = TChain("AnalysisTree")

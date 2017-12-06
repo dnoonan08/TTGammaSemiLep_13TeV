@@ -14,8 +14,8 @@ parser.add_option("-c", "--channel", dest="channel", default="Mu",type='str',
 finalState = options.channel
 print "Running on the %s channel"%(finalState)
 if finalState=='Mu':
-        _file  = TFile("histograms/mu/testhist.root")
-#        _file  = TFile("histograms/mu/hists.root")
+#        _file  = TFile("histograms/mu/testhist.root")
+        _file  = TFile("histograms/mu/hists.root")
         plotDirectory = "plots_mu/"
         regionText = ", N_{j}#geq3, N_{b}#geq1"
         if 'Tight' in sys.argv:
@@ -53,54 +53,66 @@ if finalState=="Ele":
 
 
 
-list_ = ['TTGamma', 'TTbar', 'TGJets','SingleTop', 'WGamma','ZGamma','WJets', 'ZJets', 'TTV']
+list_ = ['TTGamma', 'TTbar', 'TGJets','ST-tW','ST-tch','ST-sch', 'WGamma','ZGamma','WJets', 'ZJets', 'TTV']
 #list_=["ZGamma"]
 gROOT.SetBatch(True)
 
-yield_ ={'TTGamma':[],
-	 'TTbar':[],
-	 'SingleTop': [],
-	 'WGamma':  [],
-	 'ZGamma': [],
-	 'WJets' : [],
-	 'ZJets' : [],
-	 'TTV': [],
-	 'TGJets': [],
-	 }
+yield_ = {}
+err_ = {}
+sum_s = {}
+err_s = {}
+
+for l in list_:
+	yield_[l] = []
+	err_[l] = []
+	sum_s[l] = []
+	err_s[l] = []
+# yield_ ={'TTGamma':[],
+# 	 'TTbar':[],
+# 	 'ST_tW': [],
+# 	 'ST_tch': [],
+# 	 'ST_sch': [],
+# 	 'WGamma':  [],
+# 	 'ZGamma': [],
+# 	 'WJets' : [],
+# 	 'ZJets' : [],
+# 	 'TTV': [],
+# 	 'TGJets': [],
+# 	 }
 
 
-err_={'TTGamma':[],
-      'TTbar':[],
-      'SingleTop': [],
-      'WGamma':  [],
-      'ZGamma': [],
-      'WJets' : [],
-      'ZJets' : [],
-      'TTV': [],
-      'TGJets': [],
-      }
+# err_={'TTGamma':[],
+#       'TTbar':[],
+#       'SingleTop': [],
+#       'WGamma':  [],
+#       'ZGamma': [],
+#       'WJets' : [],
+#       'ZJets' : [],
+#       'TTV': [],
+#       'TGJets': [],
+#       }
 
-sum_s= {'TTGamma':[],
-	'TTbar':[],
-	'SingleTop': [],
-	'WGamma':  [],
-	'ZGamma': [],
-	'WJets' : [],
-	'ZJets' : [],
-	'TTV': [],
-	'TGJets': [],
-	}
+# sum_s= {'TTGamma':[],
+# 	'TTbar':[],
+# 	'SingleTop': [],
+# 	'WGamma':  [],
+# 	'ZGamma': [],
+# 	'WJets' : [],
+# 	'ZJets' : [],
+# 	'TTV': [],
+# 	'TGJets': [],
+# 	}
 
-err_s= {'TTGamma':[],
-	'TTbar':[],
-	'SingleTop': [],
-	'WGamma':  [],
-	'ZGamma': [],
-	'WJets' : [],
-	'ZJets' : [],
-	'TTV': [],
-	'TGJets': [],
-	}
+# err_s= {'TTGamma':[],
+# 	'TTbar':[],
+# 	'SingleTop': [],
+# 	'WGamma':  [],
+# 	'ZGamma': [],
+# 	'WJets' : [],
+# 	'ZJets' : [],
+# 	'TTV': [],
+# 	'TGJets': [],
+# 	}
 
 hist_= ["phosel_NGenuinePho", "phosel_NMisIDEle","phosel_NHadronicPho","phosel_NHadronicFake"]
 for sample in list_:
