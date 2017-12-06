@@ -448,6 +448,9 @@ void makeAnalysisNtuple::FillEvent()
 		_phoTightID.push_back(tree->phoIDbit_->at(phoInd)>>2&1);
 		_phoMediumID.push_back(tree->phoIDbit_->at(phoInd)>>1&1);
 
+		if (_nEle==1 && _nMu==0){
+			_phoMassEGamma.push_back( (phoVector+lepVector).M() );
+		}
 
 		bool isGenuine = false;
 		bool isMisIDEle = false;
@@ -537,6 +540,10 @@ void makeAnalysisNtuple::FillEvent()
 		_loosePhoTightIDPassNeuIso.push_back(phoTightCuts.at(4));
 		_loosePhoTightIDPassPhoIso.push_back(phoTightCuts.at(5));
 			
+		if (_nEle==1 && _nMu==0){
+			_loosePhoMassEGamma.push_back( (phoVector+lepVector).M() );
+		}
+
 		bool isGenuine = false;
 		bool isMisIDEle = false;
 		bool isHadronicPhoton = false;

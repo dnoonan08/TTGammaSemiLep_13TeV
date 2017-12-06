@@ -96,6 +96,8 @@ private :
 	Float_t 	_DilepMass;
 	Float_t 	_DiphoMass;
 	Float_t         _DilepDelR;
+
+
 	Int_t           _nPho;
 	std::vector<float>   _phoEt;
 	std::vector<float>   _phoEta;
@@ -116,6 +118,7 @@ private :
 	std::vector<bool>    _phoTightID;
 	std::vector<bool>    _phoMediumID;
 	std::vector<int>     _phoGenMatchInd;
+	std::vector<float>   _phoMassEGamma;
 
 	std::vector<bool>  _photonIsGenuine;
 	std::vector<bool>  _photonIsMisIDEle;
@@ -152,6 +155,7 @@ private :
 	std::vector<bool>    _loosePhoMediumID;
 	std::vector<bool>    _loosePhoLooseID;
 	std::vector<int>     _loosePhoGenMatchInd;
+	std::vector<float>   _loosePhoMassEGamma;
 
 	std::vector<bool>    _loosePhoMediumIDFunction; 
 	std::vector<bool>    _loosePhoMediumIDPassHoverE; 
@@ -349,6 +353,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoTightID"                 , &_phoTightID                  ); 
 	outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
 	outputTree->Branch("phoGenMatchInd"                , &_phoGenMatchInd                 ); 
+	outputTree->Branch("phoMassEGamma"                 , &_phoMassEGamma                  ); 
 
 
 	outputTree->Branch("nLoosePho"                       , &_nLoosePho                        ); 
@@ -372,6 +377,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("loosePhoMediumID"                , &_loosePhoMediumID                 ); 
 	outputTree->Branch("loosePhoLooseID"                 , &_loosePhoLooseID                  ); 
 	outputTree->Branch("loosePhoGenMatchInd"                 , &_loosePhoGenMatchInd                  ); 
+	outputTree->Branch("loosePhoMassEGamma"                  , &_loosePhoMassEGamma                   ); 
 	
 	outputTree->Branch("loosePhoMediumIDFunction"        , &_loosePhoMediumIDFunction         ); 
 	outputTree->Branch("loosePhoMediumIDPassHoverE"      , &_loosePhoMediumIDPassHoverE       ); 
@@ -543,6 +549,8 @@ void makeAnalysisNtuple::InitVariables()
 	_phoTightID.clear();
 	_phoMediumID.clear();
 	_phoGenMatchInd.clear();
+	_phoMassEGamma.clear();
+
 	_photonIsGenuine.clear();
 	_photonIsMisIDEle.clear();
 	_photonIsHadronicPhoton.clear();
@@ -570,6 +578,7 @@ void makeAnalysisNtuple::InitVariables()
 	_loosePhoMediumID.clear();
 	_loosePhoLooseID.clear();
 	_loosePhoGenMatchInd.clear();
+	_loosePhoMassEGamma.clear();
 	_loosePhoMediumIDFunction.clear(); 
 	_loosePhoMediumIDPassHoverE.clear(); 
 	_loosePhoMediumIDPassSIEIE.clear(); 
