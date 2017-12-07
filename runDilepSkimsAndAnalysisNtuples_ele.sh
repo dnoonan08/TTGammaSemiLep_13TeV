@@ -17,9 +17,9 @@ else
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
 	cd  TTGammaSemiLep_13TeV/
 	echo "xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/DataPUfiles_2016.tgz ."
-	xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/Data_Pileup.tgz .
-	tar -xvf Data_Pileup.tgz
-	sleep 5
+    xrdcp -r root://cmseos.fnal.gov//store/user/dnoonan/Data_Pileup.tgz .
+    tar -xvf Data_Pileup.tgz
+    sleep 5
 fi
 
 eval `scramv1 runtime -sh`
@@ -56,24 +56,21 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "WW_" \
 "WZ_" \
 "ZZ_" \
-"QCD_Pt20to30_Mu_" \
-"QCD_Pt30to50_Mu_" \
-"QCD_Pt50to80_Mu_" \
-"QCD_Pt80to120_Mu_" \
-"QCD_Pt120to170_Mu_" \
-"QCD_Pt170to300_Mu_" \
-"QCD_Pt300to470_Mu_" \
-"QCD_Pt470to600_Mu_" \
-"QCD_Pt600to800_Mu_" \
-"QCD_Pt800to1000_Mu_" \
-"QCD_Pt1000toInf_Mu_" \
-"Data_SingleMu_b_" \
-"Data_SingleMu_c_" \
-"Data_SingleMu_d_" \
-"Data_SingleMu_e_" \
-"Data_SingleMu_f_" \
-"Data_SingleMu_g_" \
-"Data_SingleMu_h_")
+"QCD_Pt20to30_Ele_" \
+"QCD_Pt30to50_Ele_" \
+"QCD_Pt50to80_Ele_" \
+"QCD_Pt80to120_Ele_" \
+"QCD_Pt120to170_Ele_" \
+"QCD_Pt170to300_Ele_" \
+"QCD_Pt300toInf_Ele_" \
+"Data_SingleEle_b_" \
+"Data_SingleEle_c_" \
+"Data_SingleEle_d_" \
+"Data_SingleEle_e_" \
+"Data_SingleEle_f_" \
+"Data_SingleEle_g_" \
+"Data_SingleEle_h_")
+
 
 DannyEOS="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/V08_00_26_07/"
 GGNtupleGroupEOSMC="root://cmseos.fnal.gov//store/user/lpcggntuples/ggNtuples/13TeV/mc/V08_00_26_07/"
@@ -108,24 +105,20 @@ $DannyEOS"ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
 $DannyEOS"WW_TuneCUETP8M1_13TeV-pythia8.root" \
 $DannyEOS"WZ_TuneCUETP8M1_13TeV-pythia8.root" \
 $DannyEOS"ZZ_TuneCUETP8M1_13TeV-pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-20to30_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-30to50_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-50to80_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-80to120_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-120to170_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-170to300_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-300to470_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-470to600_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-600to800_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-800to1000_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSMC"QCD_Pt-1000toInf_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016B_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016C_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016D_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016E_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016F_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016G_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016H_FebReminiAODv2.root "$GGNtupleGroupEOSData"job_SingleMu_Run2016H_FebReminiAODv3.root")
+$DannyEOS"QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$DannyEOS"QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$DannyEOS"QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$DannyEOS"QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$DannyEOS"QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$DannyEOS"QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$DannyEOS"QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016B_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016C_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016D_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016E_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016F_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016G_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016H_FebReminiAODv2.root "$GGNtupleGroupEOSData"job_SingleElectron_Run2016H_FebReminiAODv3.root")
 
 
 
@@ -159,38 +152,34 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "WW" \
 "WZ" \
 "ZZ" \
-"QCD_Pt20to30_Mu" \
-"QCD_Pt30to50_Mu" \
-"QCD_Pt50to80_Mu" \
-"QCD_Pt80to120_Mu" \
-"QCD_Pt120to170_Mu" \
-"QCD_Pt170to300_Mu" \
-"QCD_Pt300to470_Mu" \
-"QCD_Pt470to600_Mu" \
-"QCD_Pt600to800_Mu" \
-"QCD_Pt800to1000_Mu" \
-"QCD_Pt1000toInf_Mu" \
-"Data_SingleMu_b" \
-"Data_SingleMu_c" \
-"Data_SingleMu_d" \
-"Data_SingleMu_e" \
-"Data_SingleMu_f" \
-"Data_SingleMu_g" \
-"Data_SingleMu_h")
+"QCD_Pt20to30_Ele" \
+"QCD_Pt30to50_Ele" \
+"QCD_Pt50to80_Ele" \
+"QCD_Pt80to120_Ele" \
+"QCD_Pt120to170_Ele" \
+"QCD_Pt170to300_Ele" \
+"QCD_Pt300toInf_Ele" \
+"Data_SingleEle_b" \
+"Data_SingleEle_c" \
+"Data_SingleEle_d" \
+"Data_SingleEle_e" \
+"Data_SingleEle_f" \
+"Data_SingleEle_g" \
+"Data_SingleEle_h")
 
 
 
-echo "AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}"
-AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}
+echo "AnalysisNtuple/makeSkim diele ${files[job]}skim.root ${inputfiles[job]}"
+AnalysisNtuple/makeSkim diele ${files[job]}skim.root ${inputfiles[job]}
 
-echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.root"
-AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.root
+echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__Dilep . ${files[job]}skim.root"
+AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__Dilep . ${files[job]}skim.root
 
 
-echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/V08_00_26_07/"
-xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/V08_00_26_07/
+echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/dielectrons/V08_00_26_07/"
+xrdcp -f ${files[job]}skim.root ${outputdir}skims/dielectrons/V08_00_26_07/
 
-echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/V08_00_26_07/"
-xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/V08_00_26_07/
+echo "xrdcp -f Dilep_${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/dielectrons/V08_00_26_07/"
+xrdcp -f Dilep_${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/dielectrons/V08_00_26_07/
 
 

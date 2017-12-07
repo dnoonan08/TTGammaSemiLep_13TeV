@@ -1,13 +1,13 @@
 universe = vanilla
-Executable = runQCDSkimsAndAnalysisNtuples_mu.sh
+Executable = runDilepSkimsAndAnalysisNtuples_mu.sh
 
 should_transfer_files = YES
 WhenTOTransferOutput  = ON_EXIT
 notification = never
 
-Output = condor/muQCDSkim_$(cluster)_$(process).stdout
-Error  = condor/muQCDSkim_$(cluster)_$(process).stderr
-Log    = condor/muQCDSkim_$(cluster)_$(process).condor
+Output = condor/muDilepSkim_$(cluster)_$(process).stdout
+Error  = condor/muDilepSkim_$(cluster)_$(process).stderr
+Log    = condor/muDilepSkim_$(cluster)_$(process).condor
 Requirements          = (OpSys == "LINUX" && (Arch != "DUMMY"))
 Arguments = $(process)
 #use_x509userproxy = true
