@@ -30,6 +30,7 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 
 bool overlapRemovalTT(EventTree* tree);
 bool overlapRemovalWZ(EventTree* tree);
+bool overlapRemoval_Tchannel(EventTree* tree);
 double getJetResolution(double, double, double);
 
 bool dileptonsample;
@@ -109,11 +110,14 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	bool doOverlapRemoval = false;
 	bool doOverlapRemoval_WZ = false;	
+	bool doOverlapRemoval_Tchannel = false;	
 	bool skipOverlap = false;
 	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton") doOverlapRemoval = true;
 
 	if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50") doOverlapRemoval_WZ = true;
-	if(doOverlapRemoval || doOverlapRemoval_WZ) std::cout << "########## Will apply overlap removal ###########" << std::endl;
+
+	if( sampleType == "ST_t-channel" || sampleType == "ST_tbar-channel") doOverlapRemoval_Tchannel = true;
+	if(doOverlapRemoval || doOverlapRemoval_WZ || doOverlapRemoval_Tchannel) std::cout << "########## Will apply overlap removal ###########" << std::endl;
 
 
 
@@ -194,6 +198,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	if (nEntr >1000000) { dumpFreq = 100000; }
 	if (nEntr >5000000) { dumpFreq = 500000; }
 	if (nEntr >10000000){ dumpFreq = 1000000; }
+	int count_overlapTchannel=0;
 	int count_overlapVJets=0;
 	int count_overlapTTbar=0;
 	for(Long64_t entry=0; entry<nEntr; entry++){
@@ -218,6 +223,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		if( isMC && doOverlapRemoval_WZ){
 			if (overlapRemovalWZ(tree)){
 				count_overlapVJets++;
+				continue;
+			}
+		}
+		if( isMC && doOverlapRemoval_Tchannel){
+			if (overlapRemoval_Tchannel(tree)){
+				count_overlapTchannel++;
 				continue;
 			}
 		}
@@ -273,10 +284,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		}
 	}
 	if (doOverlapRemoval){
-		std::cout << "Total number of events removed from TTbar:"<< count_overlapVJets <<std::endl;
+		std::cout << "Total number of events removed from TTbar:"<< count_overlapTTbar <<std::endl;
 	}
 	if(doOverlapRemoval_WZ){
 		 std::cout << "Total number of events removed from W/ZJets:"<< count_overlapVJets <<std::endl;
+	}
+	if(doOverlapRemoval_Tchannel){
+		 std::cout << "Total number of events removed from t-channel:"<< count_overlapTchannel <<std::endl;
 	}
 		
 	outputFile->cd();
