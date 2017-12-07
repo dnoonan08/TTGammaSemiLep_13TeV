@@ -53,6 +53,9 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "TTZtoLL_" \
 "WGamma_" \
 "ZGamma_" \
+"WW_" \
+"WZ_" \
+"ZZ_" \
 "QCD_Pt20to30_Mu_" \
 "QCD_Pt30to50_Mu_" \
 "QCD_Pt50to80_Mu_" \
@@ -102,6 +105,9 @@ $GGNtupleGroupEOSMC"TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8
 $GGNtupleGroupEOSMC"TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
 $DannyEOS"ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
+$DannyEOS"WW_TuneCUETP8M1_13TeV-pythia8.root" \
+$DannyEOS"WZ_TuneCUETP8M1_13TeV-pythia8.root" \
+$DannyEOS"ZZ_TuneCUETP8M1_13TeV-pythia8.root" \
 $GGNtupleGroupEOSMC"QCD_Pt-20to30_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
 $GGNtupleGroupEOSMC"QCD_Pt-30to50_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
 $GGNtupleGroupEOSMC"QCD_Pt-50to80_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
@@ -150,6 +156,9 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTZtoLL" \
 "WGamma" \
 "ZGamma" \
+"WW" \
+"WZ" \
+"ZZ" \
 "QCD_Pt20to30_Mu" \
 "QCD_Pt30to50_Mu" \
 "QCD_Pt50to80_Mu" \

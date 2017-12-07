@@ -55,6 +55,9 @@ files=("TTGamma_SingleLeptFromTbar_" \
 "TTZtoLL_" \
 "WGamma_" \
 "ZGamma_" \
+"WW_" \
+"WZ_" \
+"ZZ_" \
 "QCD_Pt20to30_Ele_" \
 "QCD_Pt30to50_Ele_" \
 "QCD_Pt50to80_Ele_" \
@@ -98,6 +101,9 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTZtoLL" \
 "WGamma" \
 "ZGamma" \
+"WW" \
+"WZ" \
+"ZZ" \
 "QCD_Pt20to30_Ele" \
 "QCD_Pt30to50_Ele" \
 "QCD_Pt50to80_Ele" \
