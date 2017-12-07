@@ -64,6 +64,11 @@ nBJets = 1
 if finalState=="Mu":
     sampleList[-1] = "DataMu"
     sampleList[-2] = "QCDMu"
+
+    if sample=="Data":
+        sample = "DataMu"
+    if sample=="QCD":
+        sample = "QCDMu"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07"
     outputhistName = "histograms/mu/%s"%outputFileName
 
@@ -82,6 +87,10 @@ if finalState=="Mu":
 elif finalState=="Ele":
     sampleList[-1] = "DataEle"
     sampleList[-2] = "QCDEle"
+    if sample=="Data":
+        sample = "DataEle"
+    if sample=="QCD":
+        sample = "QCDEle"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07"
     outputhistName = "histograms/ele/%s"%outputFileName
 

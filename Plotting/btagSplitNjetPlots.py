@@ -124,6 +124,7 @@ mcList = {'TTGamma': [kOrange],
           'ZGamma': [kBlue-2],
           'WJets': [kCyan-3],
           'ZJets': [kCyan-5],
+          'Diboson': [kCyan+4],
           'QCDMu': [kGreen+3],
           }
 if finalState=="Mu":
@@ -138,6 +139,7 @@ if finalState=="Mu":
                    'WJets',
                    'SingleTop',
                    'TTV',
+                   'Diboson',
                    'QCDMu',
                    'DataMu',
                    ]
@@ -155,6 +157,7 @@ if finalState=="Ele":
                    'WJets',
                    'SingleTop', 
                    'TTV',	  	  
+                   'Diboson',
                    'QCDEle',
                    'DataEle',	  
                    ]
@@ -280,7 +283,8 @@ legend2.AddEntry(histograms[5],'Z+jets'         ,'f')
 legend2.AddEntry(histograms[6],'W+jets'         ,'f')
 legend2.AddEntry(histograms[7],'Single t'       ,'f')
 legend2.AddEntry(histograms[8],'t#bar{t}+V'     ,'f')
-legend2.AddEntry(histograms[9],'Multijet'     ,'f')
+legend2.AddEntry(histograms[9],'WW/WZ/ZZ'     ,'f')
+legend2.AddEntry(histograms[10],'Multijet'     ,'f')
 legend2.AddEntry(systLegendEntry, 'Uncert.','f')
 
 
@@ -294,7 +298,8 @@ legendR2.AddEntry(histograms[5],'Z+jets'         ,'f')
 legendR2.AddEntry(histograms[6],'W+jets'         ,'f')
 legendR2.AddEntry(histograms[7],'Single t'       ,'f')
 legendR2.AddEntry(histograms[8],'t#bar{t}+V'     ,'f')
-legendR2.AddEntry(histograms[9],'Multijet'     ,'f')
+legendR2.AddEntry(histograms[9],'WW/WZ/ZZ'     ,'f')
+legendR2.AddEntry(histograms[10],'Multijet'     ,'f')
 legendR2.AddEntry(systLegendEntry, 'Uncert.','f')
 
 

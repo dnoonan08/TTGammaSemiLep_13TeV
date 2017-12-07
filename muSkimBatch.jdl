@@ -13,14 +13,11 @@ Arguments = $(process)
 #use_x509userproxy = true
 x509userproxy = $ENV(X509_USER_PROXY)
 # important, number of instances (jobs) of script
-#Queue 46
+Queue 46
 
 
 ###This is an example of how to start at a certain point, 
 ###it starts with job 24 (QCD samples in this case) and goes from there
-# Arguments = "27+$(process)"
+# Arguments = "28+$(process)"
 # Queue 11
-
-Arguments = "24+$(process)"
-Queue 3
 

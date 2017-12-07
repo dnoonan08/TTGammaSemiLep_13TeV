@@ -15,11 +15,10 @@ Arguments = $(process)
 x509userproxy = $ENV(X509_USER_PROXY)
 
 # important, number of instances (jobs) of script
-#Queue 42
+Queue 42
 
-#Arguments = "27+$(process)"
+#Arguments = "28+$(process)"
 #Queue 7
 
-Arguments = "24+$(process)"
-Queue 3
-
+#Arguments = "25+$(process)"
+#Queue 3

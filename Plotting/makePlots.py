@@ -36,11 +36,11 @@ if finalState=='Mu':
 	if isLooseSelection:
         	plotDirectory = "looseplots_mu/"
         	_file  = TFile("histograms/mu/hists_loose.root")
-        	regionText = ", N_{j}=2, N_{b}=0"
+        	regionText = ", N_{j}=2, N_{b}#geq0"
 	if isLooseCRSelection:
         	plotDirectory = "looseCRplots_mu/"
         	_file  = TFile("histograms/mu/hists_looseCR.root")
-        	regionText = ", N_{j}#geq2, N_{b}#geq0"
+        	regionText = ", N_{j}#geq2, N_{b}=0"
 
 if finalState=="Ele":
 	_file  = TFile("histograms/ele/hists.root")
@@ -54,11 +54,11 @@ if finalState=="Ele":
 	if isLooseSelection:
     		plotDirectory = "looseplots_ele/"
     		_file  = TFile("histograms/ele/hists_loose.root")
-    		regionText = ", N_{j}=2, N_{b}=0"
+    		regionText = ", N_{j}=2, N_{b}#geq0"
 	if isLooseCRSelection:
     		plotDirectory = "looseCRplots_ele/"
     		_file  = TFile("histograms/ele/hists_looseCR.root")
-    		regionText = ", N_{j}#geq2, N_{b}#geq0"
+    		regionText = ", N_{j}#geq2, N_{b}=0"
 
 
 
@@ -172,6 +172,7 @@ phoselhistograms = {"LeadingPhotonEt"                : ["Photon Et (GeV)"       
                     "mcMomPIDHadPho":    ["ParentPID of HadronicPho", "Events", 1, [-1000,600], regionText, YesLog, "Hadronic Photon"],
                     "mcMomPIDHadFake":    ["ParentPID of HadronicFake", "Events", 1, [-1,-1], regionText,  YesLog, "Hadronic Fake"],
                     "RandomCone"     :    ["RandomConeIsolation GeV", "Events", 1, [-1,-1], regionText,  NoLog, " "],
+                    "MassEGamma"     :    ["m_{e,#gamma} GeV", "Events", 1, [-1,-1], regionText,  NoLog, " "],
 		}
 
 
@@ -370,7 +371,6 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
         hist.Rebin(plotInfo[2])
         stack.Add(hist)
     if finalState=='Ele':
-	print "HERE"
    	dataHist = _file.Get("DataEle/%s_DataEle"%(histName))
 	dataHist.Draw()
     elif finalState=='Mu':
@@ -405,6 +405,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     CMS_lumi.channelText = _channelText+plotInfo[4]
     CMS_lumi.CMS_lumi(canvas, 4, 11)
 
+    canvas.Print("%s/%s.pdf"%(plotDirectory,histName))
     canvas.Print("%s/%s.png"%(plotDirectory,histName))
 
     ratio = dataHist.Clone("temp")
@@ -483,22 +484,9 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     canvasRatio.SetLogy(0)
 
 
-
-#for histName in photonhistograms:
-#	print histName
-#	drawHist("phosel_%s"%histName,photonhistograms[histName],plotDirectory,_file)
-
 for histName in preselhistograms:
-    drawHist("presel_%s"%histName,preselhistograms[histName],plotDirectory,_file)
+	drawHist("presel_%s"%histName,preselhistograms[histName],plotDirectory,_file)
 
 for histName in phoselhistograms:
-    
-    drawHist("phosel_%s"%histName,phoselhistograms[histName],plotDirectory,_file)
+        drawHist("phosel_%s"%histName,phoselhistograms[histName],plotDirectory,_file)
 
-
-# _file2  = TFile("histograms/mu/testBtaghists.root")
-
-# drawHist("njets1Tag",      ["NJets", "Events", 1, [-1,10], ", =1 b-tag"    , NoLog], plotDirectory, _file2)
-# drawHist("njets2Tag",      ["NJets", "Events", 1, [-1,10], ", #geq2 b-tags", NoLog], plotDirectory, _file2)
-# drawHist("phoselnjets1Tag",["NJets", "Events", 1, [-1,10], ", =1 b-tag"    , NoLog], plotDirectory, _file2)
-# drawHist("phoselnjets2Tag",["NJets", "Events", 1, [-1,10], ", #geq2 b-tags", NoLog], plotDirectory, _file2)
