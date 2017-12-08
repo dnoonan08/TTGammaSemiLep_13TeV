@@ -4,7 +4,6 @@ Executable = runSkimsAndAnalysisNtuples_ele.sh
 should_transfer_files = YES
 WhenTOTransferOutput  = ON_EXIT
 notification = never
-Transfer_input_files = CMSSW_8_0_26_patch1.tgz
 
 Output = condor/eleSkim_$(cluster)_$(process).stdout
 Error  = condor/eleSkim_$(cluster)_$(process).stderr
@@ -15,8 +14,10 @@ Arguments = $(process)
 x509userproxy = $ENV(X509_USER_PROXY)
 
 # important, number of instances (jobs) of script
-Queue 39
+Queue 42
 
+#Arguments = "28+$(process)"
+#Queue 7
 
-#Arguments = "24+$(process)"
-#Queue 11
+#Arguments = "25+$(process)"
+#Queue 3

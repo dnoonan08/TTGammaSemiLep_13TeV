@@ -96,6 +96,8 @@ private :
 	Float_t 	_DilepMass;
 	Float_t 	_DiphoMass;
 	Float_t         _DilepDelR;
+
+
 	Int_t           _nPho;
 	std::vector<float>   _phoEt;
 	std::vector<float>   _phoEta;
@@ -115,7 +117,8 @@ private :
 	std::vector<float>   _phoPFRandConeChIsoUnCorr;
 	std::vector<bool>    _phoTightID;
 	std::vector<bool>    _phoMediumID;
-
+	std::vector<int>     _phoGenMatchInd;
+	std::vector<float>   _phoMassEGamma;
 
 	std::vector<bool>  _photonIsGenuine;
 	std::vector<bool>  _photonIsMisIDEle;
@@ -151,6 +154,9 @@ private :
 	std::vector<bool>    _loosePhoTightID;
 	std::vector<bool>    _loosePhoMediumID;
 	std::vector<bool>    _loosePhoLooseID;
+	std::vector<int>     _loosePhoGenMatchInd;
+	std::vector<float>   _loosePhoMassEGamma;
+
 	std::vector<bool>    _loosePhoMediumIDFunction; 
 	std::vector<bool>    _loosePhoMediumIDPassHoverE; 
 	std::vector<bool>    _loosePhoMediumIDPassSIEIE; 
@@ -273,7 +279,8 @@ private :
 	/* double getEleSF(int eleInd, int systLevel); */
 
 	void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
-	int findPhotonParentage(int phoInd, EventTree* tree);
+	/* int findPhotonParentage(int phoInd, EventTree* tree); */
+	int findPhotonGenMatch(int phoInd, EventTree* tree);
 
 	vector<bool> passPhoMediumID(int phoInd);
 	vector<bool> passPhoTightID(int phoInd);
@@ -282,8 +289,8 @@ private :
 	int minDrIndex(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
 	double minDr(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
 
-	bool isSignalPhoton(EventTree* tree, int mcInd, int recoPhoInd);
-	bool isGoodElectron(EventTree* tree, int mcInd, int recoPhoInd);
+	/* bool isSignalPhoton(EventTree* tree, int mcInd, int recoPhoInd); */
+	/* bool isGoodElectron(EventTree* tree, int mcInd, int recoPhoInd); */
 
 };
 
@@ -345,6 +352,9 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoPFRandConeChIsoUnCorr"         , &_phoPFRandConeChIsoUnCorr          ); 
 	outputTree->Branch("phoTightID"                 , &_phoTightID                  ); 
 	outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
+	outputTree->Branch("phoGenMatchInd"                , &_phoGenMatchInd                 ); 
+	outputTree->Branch("phoMassEGamma"                 , &_phoMassEGamma                  ); 
+
 
 	outputTree->Branch("nLoosePho"                       , &_nLoosePho                        ); 
 	outputTree->Branch("loosePhoEt"                      , &_loosePhoEt                       );
@@ -366,6 +376,9 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("loosePhoTightID"                 , &_loosePhoTightID                  ); 
 	outputTree->Branch("loosePhoMediumID"                , &_loosePhoMediumID                 ); 
 	outputTree->Branch("loosePhoLooseID"                 , &_loosePhoLooseID                  ); 
+	outputTree->Branch("loosePhoGenMatchInd"                 , &_loosePhoGenMatchInd                  ); 
+	outputTree->Branch("loosePhoMassEGamma"                  , &_loosePhoMassEGamma                   ); 
+	
 	outputTree->Branch("loosePhoMediumIDFunction"        , &_loosePhoMediumIDFunction         ); 
 	outputTree->Branch("loosePhoMediumIDPassHoverE"      , &_loosePhoMediumIDPassHoverE       ); 
 	outputTree->Branch("loosePhoMediumIDPassSIEIE"       , &_loosePhoMediumIDPassSIEIE        ); 
@@ -535,6 +548,9 @@ void makeAnalysisNtuple::InitVariables()
 	_phoPFRandConeChIsoUnCorr.clear();
 	_phoTightID.clear();
 	_phoMediumID.clear();
+	_phoGenMatchInd.clear();
+	_phoMassEGamma.clear();
+
 	_photonIsGenuine.clear();
 	_photonIsMisIDEle.clear();
 	_photonIsHadronicPhoton.clear();
@@ -561,6 +577,8 @@ void makeAnalysisNtuple::InitVariables()
 	_loosePhoTightID.clear();
 	_loosePhoMediumID.clear();
 	_loosePhoLooseID.clear();
+	_loosePhoGenMatchInd.clear();
+	_loosePhoMassEGamma.clear();
 	_loosePhoMediumIDFunction.clear(); 
 	_loosePhoMediumIDPassHoverE.clear(); 
 	_loosePhoMediumIDPassSIEIE.clear(); 

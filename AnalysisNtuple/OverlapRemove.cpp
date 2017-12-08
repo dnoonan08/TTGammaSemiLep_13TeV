@@ -64,3 +64,24 @@ bool overlapRemovalWZ(EventTree* tree){
         return haveOverlap;
 }
 
+
+bool overlapRemoval_Tchannel(EventTree* tree){
+	const double Et_cut = 10;
+	const double Eta_cut = 2.6;
+	bool haveOverlap = false;
+	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
+		if(tree->mcPID->at(mcInd)==22 &&
+		   tree->mcPt->at(mcInd) > Et_cut &&
+		   fabs(tree->mcEta->at(mcInd)) < Eta_cut &&
+		   (tree->mcParentage->at(mcInd)==2 || tree->mcParentage->at(mcInd)==10) ) {
+			// TGJets doesn't include photons from top decay, so if gmom is top continue (don't remove)
+			if (abs(tree->mcGMomPID->at(mcInd))==6){ 
+				continue;
+			}
+			else if(minGenDr(mcInd, tree) > 0.05) {
+				haveOverlap = true;
+			}
+		}
+	}
+	return haveOverlap;
+}

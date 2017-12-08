@@ -5,7 +5,8 @@ python $argv -s WJets &
 python $argv -s ZJets &
 python $argv -s WGamma &
 python $argv -s ZGamma &
+python $argv -s Diboson &
 python $argv -s SingleTop &
 python $argv -s TTV &
-python $argv -s QCDMu &
-python $argv -s DataMu &
+python $argv -s QCD &
+python $argv -s Data &

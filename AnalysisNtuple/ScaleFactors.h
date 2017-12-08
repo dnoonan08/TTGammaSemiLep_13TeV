@@ -39,6 +39,10 @@ double totalTTZtoLL         = 5933898.;
 double totalZGamma           = 14372399.;
 double totalWGamma           = 10231838.;
 
+double totalWW               = 6987017.;
+double totalWZ               = 2995783.;
+double totalZZ               = 998018.;
+
 double totalST_tchannel      = 67225849.;
 double totalST_tbarchannel   = 38810350;
 double totalST_schannel      = 2989123.;
@@ -96,6 +100,10 @@ double TTZtoLL_xs               =  0.2728;
 
 double ZGamma_xs            = 131.3;
 double WGamma_xs            = 585.8;
+
+double WW_xs                = 118.7;
+double WZ_xs                = 47.13;
+double ZZ_xs                = 16.523;
 
 double ST_tW_xs             =  35.85 ;
 double ST_tbarW_xs          =  35.85 ;
@@ -155,6 +163,10 @@ double TTZtoLL_SF = TTZtoLL_xs * luminosity / totalTTZtoLL;
 double ZGamma_SF = ZGamma_xs * luminosity / totalZGamma;
 double WGamma_SF = WGamma_xs * luminosity / totalWGamma;
 
+double WW_SF = WW_xs * luminosity / totalWW;
+double WZ_SF = WZ_xs * luminosity / totalWZ;
+double ZZ_SF = ZZ_xs * luminosity / totalZZ;
+
 double ST_tW_SF       = ST_tW_xs * luminosity / totalST_tW;
 double ST_tbarW_SF    = ST_tbarW_xs * luminosity / totalST_tbarW;
 double ST_tchannel_SF = ST_tchannel_xs * luminosity / totalST_tchannel;
@@ -186,7 +198,7 @@ double getEvtWeight(string sampleType){
 	if( sampleType.substr(0,4)=="Data") {evtWeight = 1.;}
 	else if( sampleType=="Test") {evtWeight = 1.;}
 	else if( sampleType=="TGJets"){evtWeight = TGJets_SF;} 
-        else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
+	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_T_SF;}
 	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_SF;}
@@ -206,6 +218,9 @@ double getEvtWeight(string sampleType){
 	else if( sampleType=="TTZtoLL") {evtWeight = TTZtoLL_SF;}
 	else if( sampleType=="ZGamma") {evtWeight = ZGamma_SF;}
 	else if( sampleType=="WGamma") {evtWeight = WGamma_SF;}
+	else if( sampleType=="WW") {evtWeight = WW_SF;}
+	else if( sampleType=="WZ") {evtWeight = WZ_SF;}
+	else if( sampleType=="ZZ") {evtWeight = ZZ_SF;}
 	else if( sampleType=="ST_tW-channel") {evtWeight = ST_tW_SF;}
 	else if( sampleType=="ST_tbarW-channel") {evtWeight = ST_tbarW_SF;}
 	else if( sampleType=="ST_t-channel") {evtWeight = ST_tchannel_SF;}
@@ -222,13 +237,13 @@ double getEvtWeight(string sampleType){
 	else if( sampleType=="QCD_Pt600to800_Mu") {evtWeight = QCD_Pt600to800_Mu_SF;}
 	else if( sampleType=="QCD_Pt800to1000_Mu") {evtWeight = QCD_Pt800to1000_Mu_SF;}
 	else if( sampleType=="QCD_Pt1000toInf_Mu") {evtWeight = QCD_Pt1000toInf_Mu_SF;}
-	else if( sampleType=="QCD_Pt20to30_EM") {evtWeight = QCD_Pt20to30_Ele_SF;}
-	else if( sampleType=="QCD_Pt30to50_EM") {evtWeight = QCD_Pt30to50_Ele_SF;}
-	else if( sampleType=="QCD_Pt50to80_EM") {evtWeight = QCD_Pt50to80_Ele_SF;}
-	else if( sampleType=="QCD_Pt80to120_EM") {evtWeight = QCD_Pt80to120_Ele_SF;}
-	else if( sampleType=="QCD_Pt120to170_EM") {evtWeight = QCD_Pt120to170_Ele_SF;}
-	else if( sampleType=="QCD_Pt170to300_EM") {evtWeight = QCD_Pt170to300_Ele_SF;}
-	else if( sampleType=="QCD_Pt300toInf_EM") {evtWeight = QCD_Pt300toInf_Ele_SF;}
+	else if( sampleType=="QCD_Pt20to30_Ele") {evtWeight = QCD_Pt20to30_Ele_SF;}
+	else if( sampleType=="QCD_Pt30to50_Ele") {evtWeight = QCD_Pt30to50_Ele_SF;}
+	else if( sampleType=="QCD_Pt50to80_Ele") {evtWeight = QCD_Pt50to80_Ele_SF;}
+	else if( sampleType=="QCD_Pt80to120_Ele") {evtWeight = QCD_Pt80to120_Ele_SF;}
+	else if( sampleType=="QCD_Pt120to170_Ele") {evtWeight = QCD_Pt120to170_Ele_SF;}
+	else if( sampleType=="QCD_Pt170to300_Ele") {evtWeight = QCD_Pt170to300_Ele_SF;}
+	else if( sampleType=="QCD_Pt300toInf_Ele") {evtWeight = QCD_Pt300toInf_Ele_SF;}
 	else {
 		cout << "-------------------------------------------------" << endl;
 		cout << "-------------------------------------------------" << endl;
@@ -253,7 +268,7 @@ double getEvtWeight(string sampleType){
 
 
 
-const std::string allowedSampleTypes[61] = {"Data",
+const std::string allowedSampleTypes[99] = {"Data",
 											"Data_SingleMu_b",
 											"Data_SingleMu_c",
 											"Data_SingleMu_d",
@@ -289,6 +304,9 @@ const std::string allowedSampleTypes[61] = {"Data",
 											"TTZtoLL",
 											"ZGamma",
 											"WGamma",
+											"WW",
+											"WZ",
+											"ZZ",
 											"ST_tW-channel",
 											"ST_tbarW-channel",
 											"ST_t-channel",
@@ -305,13 +323,13 @@ const std::string allowedSampleTypes[61] = {"Data",
 											"QCD_Pt600to800_Mu",
 											"QCD_Pt800to1000_Mu",
 											"QCD_Pt1000toInf_Mu",
-											"QCD_Pt20to30_EM",
-											"QCD_Pt30to50_EM",
-											"QCD_Pt50to80_EM",
-											"QCD_Pt80to120_EM",
-											"QCD_Pt120to170_EM",
-											"QCD_Pt170to300_EM",
-											"QCD_Pt300toInf_EM",
+											"QCD_Pt20to30_Ele",
+											"QCD_Pt30to50_Ele",
+											"QCD_Pt50to80_Ele",
+											"QCD_Pt80to120_Ele",
+											"QCD_Pt120to170_Ele",
+											"QCD_Pt170to300_Ele",
+											"QCD_Pt300toInf_Ele",
 											"TGJets",
 											"Test",
                                                                                         };
