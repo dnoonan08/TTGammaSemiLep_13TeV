@@ -128,7 +128,7 @@ mcList = {'TTGamma': [kOrange],
           'QCDMu': [kGreen+3],
           }
 if finalState=="Mu":
-	_file = TFile("histograms/mu/testBtaghists.root","read")
+	_file = TFile("histograms/mu/JetBjetMultiplicityHists.root","read")
         _qcdInputFile = TFile("histograms/mu/qcdTransferFactors.root","read")
 	samples = ['TTGamma',
                    'TTbar',
@@ -146,7 +146,7 @@ if finalState=="Mu":
 
 
 if finalState=="Ele":
-	_file = TFile("histograms/ele/testBtaghists.root","read")
+	_file = TFile("histograms/ele/JetBjetMultiplicityHists.root","read")
         _qcdInputFile = TFile("histograms/mu/qcdTransferFactors.root","read")
 	samples = ['TTGamma',	  
                    'TTbar',
@@ -177,23 +177,20 @@ for s in samples:
             h1 = _file.Get("%s/phoselnjets1Tag_%s"%(s,s))
             h2 = _file.Get("%s/phoselnjets2Tag_%s"%(s,s))
     else:
-        h0 = _qcdInputFile.Get("histNjet_0b")
-        h1 = _qcdInputFile.Get("histNjet_1b")
-        h2 = _qcdInputFile.Get("histNjet_2b")
+        h0 = _file.Get("QCDMu/njets0Tag_QCD_DD").Clone("histNjet_0b")
+        h1 = _file.Get("QCDMu/njets0Tag_QCD_DD").Clone("histNjet_1b")
+        h2 = _file.Get("QCDMu/njets0Tag_QCD_DD").Clone("histNjet_2b")
         if not runPresel:
-            temph0 = _qcdInputFile.Get("pho_histNjet_0b")
-            temph1 = _qcdInputFile.Get("pho_histNjet_1b")
-            temph2 = _qcdInputFile.Get("pho_histNjet_2b")
-
-            h0.Scale(temph0.Integral()/h0.Integral())
-            h1.Scale(temph1.Integral()/h1.Integral())
-            h2.Scale(temph2.Integral()/h2.Integral())
+            h0 = _file.Get("QCDMu/phoselnjets0Tag_QCD_DD").Clone("pho_histNjet_0b")
+            h1 = _file.Get("QCDMu/phoselnjets0Tag_QCD_DD").Clone("pho_histNjet_1b")
+            h2 = _file.Get("QCDMu/phoselnjets0Tag_QCD_DD").Clone("pho_histNjet_2b")
 
         hTR = _qcdInputFile.Get("TransferFactors")
         h0.Scale(hTR.GetBinContent(1))
         h1.Scale(hTR.GetBinContent(2))
         h2.Scale(hTR.GetBinContent(3))
 
+    print s
     for i in range(4):
         histograms[-1].SetBinContent(i+1,h0.GetBinContent(3+i))
         histograms[-1].SetBinContent(i+6,h1.GetBinContent(3+i))
