@@ -1,5 +1,15 @@
 btagWeightCategory = ["1","(1-btagWeight[0])","(btagWeight[2])","(btagWeight[1])"]
 
+
+def GetHistogramInfo_2Dplot(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraPhotonCuts="(passPresel_Mu && nJet>=3 && nBJet>=1 && %s)*", nBJets=1):
+		  histogramInfo = {"phosel_2DChIsoSIEIE_barrel":["loosePhoPFChIso", "loosePhoSIEIE", "phosel_2DChIsoSIEIE_barrel", [100,0,0.07], [100,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (abs(loosePhoSCEta)<1.47)"), "", True],
+                                  "phosel_2DChIsoSIEIE_endcap":["loosePhoPFChIso", "loosePhoSIEIE", "phosel_2DChIsoSIEIE_endcap", [100,0,0.07], [100,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (abs(loosePhoSCEta)>1.47)"), "", True],
+                                  "phosel_2DdRjetphoChIso":["dRPhotonJet[0]", "loosePhoPFChIso", "phosel_2DdRjetphoChIso", [200,0,5], [100,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso"),"", True], 
+		 		}
+    		  return histogramInfo
+
+
+
 def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraPhotonCuts="(passPresel_Mu && nJet>=3 && nBJet>=1 && %s)*", nBJets=1):
 
     histogramInfo = { "presel_jet1Pt"                         : ["jetPt[0]"  , "presel_jet1Pt"   ,    [1000,0,1000], extraCuts      , "", True],
@@ -78,7 +88,7 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_noCut_ChIso_PromptPhoton"       : ["loosePhoPFChIso" , "phosel_noCut_ChIso_PromptPhoton"   ,        [80,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (loosePhotonIsGenuine||loosePhotonIsMisIDEle)")           , "", False],
                       "phosel_noCut_ChIso_NonPromptPhoton"    : ["loosePhoPFChIso" , "phosel_noCut_ChIso_NonPromptPhoton",        [80,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (loosePhotonIsHadronicPhoton||loosePhotonIsHadronicFake)"), "", False],
                       "phosel_noCut_NeuIso"                   : ["loosePhoPFNeuIso", "phosel_noCut_NeuIso"               ,        [80,0,40], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassPhoIso")                                 , "", True],
-                      "phosel_noCut_PhoIso"                   : ["loosePhoPFPhoIso", "phosel_noCut_PhoIso"               ,      [200,0,100], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso")                                 , "", True],
+                      "phosel_noCut_PhoIso"                   : ["loosePhoPFLoosePhoIso", "phosel_noCut_PhoIso"               ,      [200,0,100], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso")                                 , "", True],
                       "phosel_AntiSIEIE_ChIso"                : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso"            ,        [80,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && !loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso")                               , "", True],
                       "phosel_AntiSIEIE_ChIso_GenuinePho"     : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_GenuinePho" ,        [80,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && !loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsGenuine")       , "", False],
                       "phosel_AntiSIEIE_ChIso_MisIDEle"       : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_MisIDEle"   ,        [80,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && !loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsMisIDEle")      , "", False],
