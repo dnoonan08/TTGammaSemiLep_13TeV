@@ -111,6 +111,9 @@ private :
 	std::vector<float>   _phoPFPhoIso;
 	std::vector<float>   _phoPFNeuIso;
 	std::vector<float>   _phoPFRandConeChIso;
+	std::vector<float>   _phoPFRandConeEta;
+	std::vector<float>   _phoPFRandConePhi;
+	std::vector<float>   _phoPFRandConeJetDR;
 	std::vector<float>   _phoPFChIsoUnCorr;
 	std::vector<float>   _phoPFPhoIsoUnCorr;
 	std::vector<float>   _phoPFNeuIsoUnCorr;
@@ -147,6 +150,9 @@ private :
 	std::vector<float>   _loosePhoPFPhoIso;
 	std::vector<float>   _loosePhoPFNeuIso;
 	std::vector<float>   _loosePhoPFRandConeChIso;
+	std::vector<float>   _loosePhoPFRandConeEta;
+	std::vector<float>   _loosePhoPFRandConePhi;
+	std::vector<float>   _loosePhoPFRandConeJetDR;
 	std::vector<float>   _loosePhoPFChIsoUnCorr;
 	std::vector<float>   _loosePhoPFPhoIsoUnCorr;
 	std::vector<float>   _loosePhoPFNeuIsoUnCorr;
@@ -346,6 +352,9 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoPFPhoIso"                , &_phoPFPhoIso                 ); 
 	outputTree->Branch("phoPFNeuIso"                , &_phoPFNeuIso                 ); 
 	outputTree->Branch("phoPFRandConeChIso"         , &_phoPFRandConeChIso          ); 
+	outputTree->Branch("phoPFRandConeEta"           , &_phoPFRandConeEta            ); 
+	outputTree->Branch("phoPFRandConePhi"           , &_phoPFRandConePhi            ); 
+	outputTree->Branch("phoPFRandConeJetDR"         , &_phoPFRandConeJetDR          ); 
 	outputTree->Branch("phoPFChIsoUnCorr"                 , &_phoPFChIsoUnCorr                  ); 
 	outputTree->Branch("phoPFPhoIsoUnCorr"                , &_phoPFPhoIsoUnCorr                 ); 
 	outputTree->Branch("phoPFNeuIsoUnCorr"                , &_phoPFNeuIsoUnCorr                 ); 
@@ -369,6 +378,9 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("loosePhoPFPhoIso"                , &_loosePhoPFPhoIso                 ); 
 	outputTree->Branch("loosePhoPFNeuIso"                , &_loosePhoPFNeuIso                 ); 
 	outputTree->Branch("loosePhoPFRandConeChIso"         , &_loosePhoPFRandConeChIso          ); 
+	outputTree->Branch("loosePhoPFRandConeEta"           , &_loosePhoPFRandConeEta            ); 
+	outputTree->Branch("loosePhoPFRandConePhi"           , &_loosePhoPFRandConePhi            ); 
+	outputTree->Branch("loosePhoPFRandConeJetDR"         , &_loosePhoPFRandConeJetDR          ); 
 	outputTree->Branch("loosePhoPFChIsoUnCorr"                 , &_loosePhoPFChIsoUnCorr                  ); 
 	outputTree->Branch("loosePhoPFPhoIsoUnCorr"                , &_loosePhoPFPhoIsoUnCorr                 ); 
 	outputTree->Branch("loosePhoPFNeuIsoUnCorr"                , &_loosePhoPFNeuIsoUnCorr                 ); 
@@ -542,6 +554,9 @@ void makeAnalysisNtuple::InitVariables()
 	_phoPFPhoIso.clear();
 	_phoPFNeuIso.clear();
 	_phoPFRandConeChIso.clear();
+	_phoPFRandConeEta.clear();
+	_phoPFRandConePhi.clear();
+	_phoPFRandConeJetDR.clear();
 	_phoPFChIsoUnCorr.clear();
 	_phoPFPhoIsoUnCorr.clear();
 	_phoPFNeuIsoUnCorr.clear();
@@ -570,6 +585,9 @@ void makeAnalysisNtuple::InitVariables()
 	_loosePhoPFPhoIso.clear();
 	_loosePhoPFNeuIso.clear();
 	_loosePhoPFRandConeChIso.clear();
+	_loosePhoPFRandConeEta.clear();
+	_loosePhoPFRandConePhi.clear();
+	_loosePhoPFRandConeJetDR.clear();
 	_loosePhoPFChIsoUnCorr.clear();
 	_loosePhoPFPhoIsoUnCorr.clear();
 	_loosePhoPFNeuIsoUnCorr.clear();

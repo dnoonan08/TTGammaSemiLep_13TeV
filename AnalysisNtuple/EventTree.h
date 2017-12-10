@@ -355,6 +355,7 @@ public:
 	vector<float>*  phoPFPhoIso_;
 	vector<float>*  phoPFNeuIso_;
 	vector<float>*  phoPFRandConeChIso_;
+	vector<float>*  phoPFRandConePhi_;
 //	vector<float>*  phoPFChIsoFrix7_;
 //	vector<float>*  phoPFPhoIso_;
 	vector<float>*  phoSCRNeuIso_;

@@ -562,6 +562,10 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("phoPFRandConeChIso",1);
 	chain->SetBranchAddress("phoPFRandConeChIso", &phoPFRandConeChIso_);
 
+	phoPFRandConePhi_ = new vector<float>;
+	chain->SetBranchStatus("phoPFRandConePhi",1);
+	chain->SetBranchAddress("phoPFRandConePhi", &phoPFRandConePhi_);
+
 	//phoPFPhoIso_ = new vector<float>;
 	//chain->SetBranchStatus("phoPFPhoIso",1);
 	//chain->SetBranchAddress("phoPFPhoIso", &phoPFPhoIsoFrix7_);

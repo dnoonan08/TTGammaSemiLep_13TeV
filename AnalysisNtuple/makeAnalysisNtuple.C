@@ -455,6 +455,11 @@ void makeAnalysisNtuple::FillEvent()
 		_phoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
 		_phoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
 		_phoPFRandConeChIso.push_back( selector->PhoRandConeChHadIso_corr.at(phoInd));
+		if (tree->isData_){
+			_phoPFRandConeEta.push_back( tree->phoEta_->at(phoInd));
+			_phoPFRandConePhi.push_back( tree->phoPFRandConePhi_->at(phoInd));
+			_phoPFRandConeJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPFRandConePhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+		}
 		_phoPFChIsoUnCorr.push_back( tree->phoPFChIso_->at(phoInd));
 		_phoPFNeuIsoUnCorr.push_back(tree->phoPFNeuIso_->at(phoInd));
 		_phoPFPhoIsoUnCorr.push_back(tree->phoPFPhoIso_->at(phoInd));
@@ -531,6 +536,11 @@ void makeAnalysisNtuple::FillEvent()
 		_loosePhoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
 		_loosePhoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
 		_loosePhoPFRandConeChIso.push_back( selector->PhoRandConeChHadIso_corr.at(phoInd));
+		if (tree->isData_){
+			_loosePhoPFRandConeEta.push_back( tree->phoEta_->at(phoInd));
+			_loosePhoPFRandConePhi.push_back( tree->phoPFRandConePhi_->at(phoInd));
+			_loosePhoPFRandConeJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPFRandConePhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+		}
 		_loosePhoPFChIsoUnCorr.push_back( tree->phoPFChIso_->at(phoInd));
 		_loosePhoPFNeuIsoUnCorr.push_back(tree->phoPFNeuIso_->at(phoInd));
 		_loosePhoPFPhoIsoUnCorr.push_back(tree->phoPFPhoIso_->at(phoInd));
