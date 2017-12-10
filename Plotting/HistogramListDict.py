@@ -95,7 +95,17 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_mcMomPIDHadPho"                 : ["photonParentPID"   , "phosel_mcMomPIDHadPho"    ,[2000,-1000,1000], extraPhotonCuts%("phoMediumID && photonIsHadronicPhoton") , "", False],
                       "phosel_mcMomPIDHadFake"                : ["photonParentPID"   , "phosel_mcMomPIDHadFake"   ,[2000,-1000,1000], extraPhotonCuts%("phoMediumID && photonIsHadronicFake")   , "", False],
                       "phosel_PhotonCategory"                 : ["photonIsGenuine[0] + 2*photonIsMisIDEle[0] + 3*photonIsHadronicPhoton[0] + 4*photonIsHadronicFake[0]", "phosel_PhotonCategory", [4,1,5], extraPhotonCuts%("phoMediumID"), "", False],
+                      ################
                       "phosel_MassEGamma"                     : ["phoMassEGamma", "phosel_MassEGamma", [200,0,200], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_Mt_blgammaMET"                  : ["Mt_blgammaMET" , "phosel_Mt_blgammaMET" , [600,0,600], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_Mt_lgammaMET"                   : ["Mt_lgammaMET"  , "phosel_Mt_lgammaMET"  , [600,0,600], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_M_bjj"                          : ["M_bjj"         , "phosel_M_bjj"         , [600,0,600], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_M_jj"                           : ["M_jj"          , "phosel_M_jj"          , [600,0,600], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_MassCuts"                       : ["MassCuts"      , "phosel_MassCuts"      , [2,0,2], extraPhotonCuts%("phoMediumID"), "", True],                  
+                      "presel_DilepMass"                      : ["DilepMass"     , "presel_DilepMass"     , [300,0,300],extraCuts,"",True],
+                      "presel_DilepDelR"                      : ["DilepDelR"     , "presel_DilepDR"       , [100,0,6],extraCuts,"",True],
+                      "phosel_DilepMass"                      : ["DilepMass"     , "phosel_DilepMass"     , [300,0,300],extraPhotonCuts%("phoMediumID"),"",True],
+                      "phosel_DilepDelR"                      : ["DilepDelR"     , "phosel_DilepDR"       , [100,0,6]  ,extraPhotonCuts%("phoMediumID"),"",True],
                       }
     return histogramInfo
 
