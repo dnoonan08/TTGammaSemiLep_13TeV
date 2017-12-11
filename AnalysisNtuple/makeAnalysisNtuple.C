@@ -454,16 +454,29 @@ void makeAnalysisNtuple::FillEvent()
 		_phoPFChIso.push_back( selector->PhoChHadIso_corr.at(phoInd));
 		_phoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
 		_phoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
-		_phoPFRandConeChIso.push_back( selector->PhoRandConeChHadIso_corr.at(phoInd));
+
 		if (tree->isData_){
-			_phoPFRandConeEta.push_back( tree->phoEta_->at(phoInd));
-			_phoPFRandConePhi.push_back( tree->phoPFRandConePhi_->at(phoInd));
-			_phoPFRandConeJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPFRandConePhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+			std::vector<float> randConeIso;
+			std::vector<float> randConeIsoUnCorr;
+			std::vector<float> randConeEta;
+			std::vector<float> randConePhi;
+			std::vector<float> randConeJetDR;
+			for (unsigned int i_randCone = 0; i_randCone < tree->phoPFRandConeChIso_->at(phoInd).size(); i_randCone++){
+				randConeIso.push_back( selector->PhoRandConeChHadIso_corr.at(phoInd).at(i_randCone));
+				randConeIsoUnCorr.push_back( tree->phoPFRandConeChIso_->at(phoInd).at(i_randCone) );
+				randConeEta.push_back( tree->phoEta_->at(phoInd));
+				randConePhi.push_back( tree->phoPFRandConePhi_->at(phoInd).at(i_randCone));
+				randConeJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPFRandConePhi_->at(phoInd).at(i_randCone),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+			}
+			_phoPFRandConeChIso.push_back( randConeIso );
+			_phoPFRandConeChIsoUnCorr.push_back( randConeIsoUnCorr );
+			_phoPFRandConeEta.push_back( randConeEta );
+			_phoPFRandConePhi.push_back( randConePhi );
+			_phoPFRandConeJetDR.push_back( randConeJetDR );
 		}
 		_phoPFChIsoUnCorr.push_back( tree->phoPFChIso_->at(phoInd));
 		_phoPFNeuIsoUnCorr.push_back(tree->phoPFNeuIso_->at(phoInd));
 		_phoPFPhoIsoUnCorr.push_back(tree->phoPFPhoIso_->at(phoInd));
-		_phoPFRandConeChIsoUnCorr.push_back( tree->phoPFRandConeChIso_->at(phoInd) );
 		_phoTightID.push_back(tree->phoIDbit_->at(phoInd)>>2&1);
 		_phoMediumID.push_back(tree->phoIDbit_->at(phoInd)>>1&1);
 
@@ -535,16 +548,30 @@ void makeAnalysisNtuple::FillEvent()
 		_loosePhoPFChIso.push_back( selector->PhoChHadIso_corr.at(phoInd));
 		_loosePhoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
 		_loosePhoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
-		_loosePhoPFRandConeChIso.push_back( selector->PhoRandConeChHadIso_corr.at(phoInd));
+
 		if (tree->isData_){
-			_loosePhoPFRandConeEta.push_back( tree->phoEta_->at(phoInd));
-			_loosePhoPFRandConePhi.push_back( tree->phoPFRandConePhi_->at(phoInd));
-			_loosePhoPFRandConeJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPFRandConePhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+			std::vector<float> randConeIso;
+			std::vector<float> randConeIsoUnCorr;
+			std::vector<float> randConeEta;
+			std::vector<float> randConePhi;
+			std::vector<float> randConeJetDR;
+			for (unsigned int i_randCone = 0; i_randCone < tree->phoPFRandConeChIso_->at(phoInd).size(); i_randCone++){
+				randConeIso.push_back( selector->PhoRandConeChHadIso_corr.at(phoInd).at(i_randCone));
+				randConeIsoUnCorr.push_back( tree->phoPFRandConeChIso_->at(phoInd).at(i_randCone) );
+				randConeEta.push_back( tree->phoEta_->at(phoInd));
+				randConePhi.push_back( tree->phoPFRandConePhi_->at(phoInd).at(i_randCone));
+				randConeJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPFRandConePhi_->at(phoInd).at(i_randCone),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+			}
+			_loosePhoPFRandConeChIso.push_back( randConeIso );
+			_loosePhoPFRandConeChIsoUnCorr.push_back( randConeIsoUnCorr );
+			_loosePhoPFRandConeEta.push_back( randConeEta );
+			_loosePhoPFRandConePhi.push_back( randConePhi );
+			_loosePhoPFRandConeJetDR.push_back( randConeJetDR );
 		}
+
 		_loosePhoPFChIsoUnCorr.push_back( tree->phoPFChIso_->at(phoInd));
 		_loosePhoPFNeuIsoUnCorr.push_back(tree->phoPFNeuIso_->at(phoInd));
 		_loosePhoPFPhoIsoUnCorr.push_back(tree->phoPFPhoIso_->at(phoInd));
-		_loosePhoPFRandConeChIsoUnCorr.push_back( tree->phoPFRandConeChIso_->at(phoInd) );
 		_loosePhoTightID.push_back(tree->phoIDbit_->at(phoInd)>>2&1);
 		_loosePhoMediumID.push_back(tree->phoIDbit_->at(phoInd)>>1&1);
 		_loosePhoLooseID.push_back(tree->phoIDbit_->at(phoInd)>>0&1);
