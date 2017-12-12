@@ -25,17 +25,19 @@ fi
 eval `scramv1 runtime -sh`
 channel="mu"
 channelDir="muons"
-tupleExtraName=""
-
+tupleExtraName1=""
+tupleExtraName2=""
 if [ "$jobType" == "QCD" ] ;	then
 	channel="qcdmu"
 	channelDir="qcdmuons"
-	tupleExtraName="QCDcr_"
+	tupleExtraName1="QCDcr_"
+	tupleExtraName2=""
 fi
 if [ "$jobType" == "Dilep" ] ;	then
 	channel="dimu"
 	channelDir="dimuons"
-	tupleExtraName="Dilep_"
+	tupleExtraName1="Dilep_"
+	tupleExtraName2="__Dilep"
 fi
 
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_"
@@ -153,14 +155,14 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 echo "AnalysisNtuple/makeSkim ${channel} ${sampleType[job]}_skim.root ${inputfiles[job]}"
 AnalysisNtuple/makeSkim ${channel} ${sampleType[job]}_skim.root ${inputfiles[job]}
 
-echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${sampleType[job]}_skim.root"
-AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${sampleType[job]}_skim.root
+echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${sampleType[job]}_skim.root"
+AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${sampleType[job]}_skim.root
 
 
 echo "xrdcp -f ${sampleType[job]}_skim.root ${outputdir}skims/${channelDir}/V08_00_26_07/"
 xrdcp -f ${sampleType[job]}_skim.root ${outputdir}skims/${channelDir}/V08_00_26_07/
 
-echo "xrdcp -f ${tupleExtraName}${sampleType[job]}_AnalysisNtuple.root ${outputdir}AnalysisNtuples/${channelDir}/V08_00_26_07/"
-xrdcp -f ${tupleExtraName}${sampleType[job]}_AnalysisNtuple.root ${outputdir}AnalysisNtuples/${channelDir}/V08_00_26_07/
+echo "xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}AnalysisNtuples/${channelDir}/V08_00_26_07/"
+xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}AnalysisNtuples/${channelDir}/V08_00_26_07/
 
 
