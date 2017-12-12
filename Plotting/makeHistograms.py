@@ -97,8 +97,8 @@ elif finalState=="Ele":
         sample = "DataEle"
     if sample=="QCD":
         sample = "QCDEle"
-    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/dielectrons/V08_00_26_07/"
-    outputhistName = "histograms/ele/dilep%s"%outputFileName
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07/"
+    outputhistName = "histograms/ele/%s"%outputFileName
 
     extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet>=1)*"
     extraPhotonCuts      = "(passPresel_Ele && nJet>=3 && nBJet>=1 && %s)*"
@@ -148,8 +148,8 @@ elif finalState=="DiEle":
         sample = "DataEle"
     if sample=="QCD":
         sample = "QCDEle"
-    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07/Dilep_"
-    outputhistName = "histograms/ele/%s"%outputFileName
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/dielectrons/V08_00_26_07/Dilep_"
+    outputhistName = "histograms/ele/dilep%s"%outputFileName
 
     extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet>=1)*"
     extraPhotonCuts      = "(passPresel_Ele && nJet>=3 && nBJet>=1 && %s)*"
