@@ -90,6 +90,7 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_NHadronicPho"                   : ["nPho"              , "phosel_NHadronicPho"      ,          [2,0,2], extraPhotonCuts%("photonIsHadronicPhoton")                , "", False],
                       "phosel_NHadronicFake"                  : ["nPho"              , "phosel_NHadronicFake"     ,          [2,0,2], extraPhotonCuts%("photonIsHadronicFake")                  , "", False],
                       "phosel_RandomCone"                     : ["phoPFRandConeChIso", "phosel_RandomCone"        ,        [80,0,20], extraPhotonCuts%("phoMediumID")                           , "", False],
+                      "phosel_RandomConeJetDR"                : ["phoPFRandConeJetDR", "phosel_RandomConeJetDR"   ,        [200,0,5], extraPhotonCuts%("phoMediumID")                           , "", False],
                       "phosel_mcMomPIDGenuinePho"             : ["photonParentPID"   , "phosel_mcMomPIDGenuinePho",[2000,-1000,1000], extraPhotonCuts%("phoMediumID && photonIsGenuine")        , "", False],
                       "phosel_mcMomPIDMisIDEle"               : ["photonParentPID"   , "phosel_mcMomPIDMisIDEle"  ,[2000,-1000,1000], extraPhotonCuts%("phoMediumID && photonIsMisIDEle")       , "", False],
                       "phosel_mcMomPIDHadPho"                 : ["photonParentPID"   , "phosel_mcMomPIDHadPho"    ,[2000,-1000,1000], extraPhotonCuts%("phoMediumID && photonIsHadronicPhoton") , "", False],
