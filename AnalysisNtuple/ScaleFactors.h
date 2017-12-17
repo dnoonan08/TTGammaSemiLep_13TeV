@@ -36,8 +36,8 @@ double totalTTWtoQQ         = 833257.;
 double totalTTWtoLNu        = 2160030.;
 double totalTTZtoLL         = 5933898.;
 
-double totalZGamma           = 14372399.;
-double totalWGamma           = 10231838.;
+double totalZGamma           = 2307116. + 14372399.; //ZGTo2LG + ZGTo2LG-ext1
+double totalWGamma           = 5048404. + 10231838. + 12146594.;
 
 double totalWW               = 6987017.;
 double totalWZ               = 2995783.;

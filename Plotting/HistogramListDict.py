@@ -42,6 +42,7 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_dRLeadingHadPhoLepton"          : ["dRPhotonLepton[0]", "phosel_dRLeadingHadPhoLepton"         ,        [120,0,6], extraPhotonCuts%("phoMediumID && photonIsHadronicPhoton"),"", False],
                       "phosel_dRLeadingHadFakeLepton"         : ["dRPhotonLepton[0]", "phosel_dRLeadingHadFakeLepton"        ,        [120,0,6], extraPhotonCuts%("phoMediumID && photonIsHadronicFake"),"", False],
                       "phosel_dRLeadingPhotonLepton"          : ["dRPhotonLepton[0]", "phosel_dRLeadingPhotonLepton"         ,        [120,0,6], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_phoJetDR"                       : ["phoJetDR"         , "phosel_phoJetDR"                      ,        [200,0,5], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_WtransMass"                     : ["WtransMass"    , "phosel_WtransMass"      ,      [80,0,400], extraPhotonCuts%("phoMediumID"), "", True],		
                       "phosel_HT"                             : ["HT"            , "phosel_HT"              ,  [150,120,1500], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_M3"                             : ["M3"            , "phosel_M3"              ,     [300,0,600], extraPhotonCuts%("phoMediumID"), "", True],
