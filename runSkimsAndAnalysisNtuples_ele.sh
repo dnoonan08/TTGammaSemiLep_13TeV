@@ -46,6 +46,7 @@ DannyEOS="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/V08_00_26_0
 GGNtupleGroupEOSMC="root://cmseos.fnal.gov//store/user/lpcggntuples/ggNtuples/13TeV/mc/V08_00_26_07/"
 TitasEOS="root://cmseos.fnal.gov//store/user/troy2012/13TeV_ggNTuples/V08_00_26_07/"
 GGNtupleGroupEOSData="root://cmseos.fnal.gov//store/user/lpcggntuples/ggNtuples/13TeV/data/V08_00_26_07/"
+LPCtop="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_ggNTuples/V08_00_26_07/"
 
 inputfiles=($DannyEOS"TTGamma_SingleLeptFromTbar_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_SingleLeptFromT_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
@@ -70,30 +71,30 @@ $TitasEOS"ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.roo
 $GGNtupleGroupEOSMC"TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8.root" \
 $GGNtupleGroupEOSMC"TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8.root" \
 $GGNtupleGroupEOSMC"TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root" \
-$DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
-$DannyEOS"ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
+$DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-ext1.root "$DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-ext2.root "$DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-ext3.root" \
+$DannyEOS"ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root "$DannyEOS"ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-ext1.root" \
 $DannyEOS"WW_TuneCUETP8M1_13TeV-pythia8.root" \
 $DannyEOS"WZ_TuneCUETP8M1_13TeV-pythia8.root" \
 $DannyEOS"ZZ_TuneCUETP8M1_13TeV-pythia8.root" \
-$DannyEOS"QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
-$DannyEOS"QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
-$DannyEOS"QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
-$DannyEOS"QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
-$DannyEOS"QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
-$DannyEOS"QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
-$DannyEOS"QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$TitasEOS"QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$TitasEOS"QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$TitasEOS"QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$TitasEOS"QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$TitasEOS"QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$TitasEOS"QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
+$TitasEOS"QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8.root" \
 $DannyEOS"GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
-$GGNtupleGroupEOSData"job_SingleElectron_Run2016B_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleElectron_Run2016C_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleElectron_Run2016D_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleElectron_Run2016E_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleElectron_Run2016F_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleElectron_Run2016G_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleElectron_Run2016H_FebReminiAODv2.root "$GGNtupleGroupEOSData"job_SingleElectron_Run2016H_FebReminiAODv3.root")
+$LPCtop"job_SingleElectron_Run2016B_FebReminiAOD.root" \
+$LPCtop"job_SingleElectron_Run2016C_FebReminiAOD.root" \
+$LPCtop"job_SingleElectron_Run2016D_FebReminiAOD.root" \
+$LPCtop"job_SingleElectron_Run2016E_FebReminiAOD.root" \
+$LPCtop"job_SingleElectron_Run2016F_FebReminiAOD.root" \
+$LPCtop"job_SingleElectron_Run2016G_FebReminiAOD.root" \
+$LPCtop"job_SingleElectron_Run2016H_FebReminiAODv2.root "$LPCtop"job_SingleElectron_Run2016H_FebReminiAODv3.root")
 
 
 
