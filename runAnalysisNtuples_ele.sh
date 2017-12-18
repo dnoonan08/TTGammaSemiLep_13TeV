@@ -31,7 +31,7 @@ if [ "$jobType" == "QCD" ] ;	then
 	channel="qcdele"
 	channelDir="qcdelectrons"
 	tupleExtraName1="QCDcr_"
-	tupleExtraName2=""
+	tupleExtraName2="__QCDcr"
 fi
 if [ "$jobType" == "Dilep" ] ;	then
 	channel="diele"
@@ -80,6 +80,11 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "QCD_Pt120to170_Ele" \
 "QCD_Pt170to300_Ele" \
 "QCD_Pt300toInf_Ele" \
+"GJets_HT-40To100" \
+"GJets_HT-100To200" \
+"GJets_HT-200To400" \
+"GJets_HT-400To600" \
+"GJets_HT-600ToInf" \
 "Data_SingleEle_b" \
 "Data_SingleEle_c" \
 "Data_SingleEle_d" \

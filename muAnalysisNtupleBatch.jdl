@@ -9,11 +9,11 @@ Output = condor/muNtuple_$(cluster)_$(process).stdout
 Error  = condor/muNtuple_$(cluster)_$(process).stderr
 Log    = condor/muNtuple_$(cluster)_$(process).condor
 Requirements          = (OpSys == "LINUX" && (Arch != "DUMMY"))
-Arguments = $(process)
+Arguments = "$(process)"
 #use_x509userproxy = true
 x509userproxy = $ENV(X509_USER_PROXY)
 # important, number of instances (jobs) of script
-Queue 46
+Queue 51
 
 ###This is an example of how to start at a certain point, 
 ###it starts with job 27 (QCD samples in this case) and goes from there

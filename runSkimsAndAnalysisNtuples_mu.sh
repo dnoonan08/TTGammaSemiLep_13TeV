@@ -31,7 +31,7 @@ if [ "$jobType" == "QCD" ] ;	then
 	channel="qcdmu"
 	channelDir="qcdmuons"
 	tupleExtraName1="QCDcr_"
-	tupleExtraName2=""
+	tupleExtraName2="__QCDcr"
 fi
 if [ "$jobType" == "Dilep" ] ;	then
 	channel="dimu"

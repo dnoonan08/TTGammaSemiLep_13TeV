@@ -31,7 +31,7 @@ if [ "$jobType" == "QCD" ] ;	then
 	channel="qcdmu"
 	channelDir="qcdmuons"
 	tupleExtraName1="QCDcr_"
-	tupleExtraName2=""
+	tupleExtraName2="__QCDcr"
 fi
 if [ "$jobType" == "Dilep" ] ;	then
 	channel="dimu"
@@ -84,6 +84,11 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "QCD_Pt600to800_Mu" \
 "QCD_Pt800to1000_Mu" \
 "QCD_Pt1000toInf_Mu" \
+"GJets_HT-40To100" \
+"GJets_HT-100To200" \
+"GJets_HT-200To400" \
+"GJets_HT-400To600" \
+"GJets_HT-600ToInf" \
 "Data_SingleEle_b" \
 "Data_SingleEle_c" \
 "Data_SingleEle_d" \
@@ -95,7 +100,7 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 
 
 echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${inputdir}${sampleType[job]}_skim.root"
-#AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${inputdir}${sampleType[job]}_skim.root
+AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${inputdir}${sampleType[job]}_skim.root
 
 echo "xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
-#xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}
+xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}
