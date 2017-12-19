@@ -73,7 +73,7 @@ hist_phoselnjets0Tag = TH1F("phoselnjets0Tag_%s"%sample,"phoselnjets0Tag_%s"%sam
 hist_phoselnjets1Tag = TH1F("phoselnjets1Tag_%s"%sample,"phoselnjets1Tag_%s"%sample,10,0,10)
 hist_phoselnjets2Tag = TH1F("phoselnjets2Tag_%s"%sample,"phoselnjets2Tag_%s"%sample,10,0,10)
 preselCut = "passPresel_Ele"
-QCDcut = "elePFRelIso>0.1"
+QCDcut = "elePFRelIso>0.01"
 if finalState=="Mu":
     preselCut = "passPresel_Mu"
     QCDcut = "muPFRelIso<0.3"
@@ -81,6 +81,7 @@ if finalState=="Mu":
 
 if "QCD" in sample:
     print "Making QCD Data Driven Template"
+
     QCDTemplate = TH1F("njets0Tag_QCD_DD","njets0Tag_QCD_DD",10,0,10)
     PhoselQCDTemplate = TH1F("phoselnjets0Tag_QCD_DD","phoselnjets0Tag_QCD_DD",10,0,10)
     tree = TChain("AnalysisTree")
@@ -94,14 +95,16 @@ if "QCD" in sample:
     tempHist       = TH1F("njets0Tag_temp","njets0Tag_temp",10,0,10)
     PhoseltempHist = TH1F("phoselnjets0Tag_temp","phoselnjets0Tag_temp",10,0,10)
     tree = TChain("AnalysisTree")
+    print sampleList[:]
+    print sampleList[:-2]
     for s in sampleList[:-2]:
-        if s == "Diboson": continue
+#        if s == "Diboson": continue
         fileList = samples[s][0]
         for fileName in fileList:
             tree.Add("%s/QCDcr_%s"%(analysisNtupleLocation,fileName))
 
-    tree.Draw("nJet>>njets0Tag_temp","(%s && %s)"%(preselCut,QCDcut))
-    tree.Draw("nJet>>phoselnjets0Tag_temp","(phoMediumID && %s && %s && nBJet>=0)"%(preselCut,QCDcut))
+    tree.Draw("nJet>>njets0Tag_temp","(%s && %s)*evtWeight*muEffWeight*eleEffWeight*PUweight"%(preselCut,QCDcut))
+    tree.Draw("nJet>>phoselnjets0Tag_temp","(phoMediumID && %s && %s && nBJet>=0)*evtWeight*muEffWeight*eleEffWeight*PUweight"%(preselCut,QCDcut))
 
     QCDTemplate.Add(tempHist,-1)
     PhoselQCDTemplate.Add(PhoseltempHist,-1)

@@ -126,10 +126,14 @@ mcList = {'TTGamma': [kOrange],
           'ZJets': [kCyan-5],
           'Diboson': [kCyan+4],
           'QCDMu': [kGreen+3],
+          'QCDEle': [kGreen+3],
           }
+
+outputDir = ""
 if finalState=="Mu":
 	_file = TFile("histograms/mu/JetBjetMultiplicityHists.root","read")
         _qcdInputFile = TFile("histograms/mu/qcdTransferFactors.root","read")
+        outputDir = "plots_mu"
 	samples = ['TTGamma',
                    'TTbar',
                    'TGJets',
@@ -148,6 +152,7 @@ if finalState=="Mu":
 if finalState=="Ele":
 	_file = TFile("histograms/ele/JetBjetMultiplicityHists.root","read")
         _qcdInputFile = TFile("histograms/mu/qcdTransferFactors.root","read")
+        outputDir = "plots_ele"
 	samples = ['TTGamma',	  
                    'TTbar',
                    'TGJets',	  
@@ -177,13 +182,13 @@ for s in samples:
             h1 = _file.Get("%s/phoselnjets1Tag_%s"%(s,s))
             h2 = _file.Get("%s/phoselnjets2Tag_%s"%(s,s))
     else:
-        h0 = _file.Get("QCDMu/njets0Tag_QCD_DD").Clone("histNjet_0b")
-        h1 = _file.Get("QCDMu/njets0Tag_QCD_DD").Clone("histNjet_1b")
-        h2 = _file.Get("QCDMu/njets0Tag_QCD_DD").Clone("histNjet_2b")
+        h0 = _file.Get("QCD%s/njets0Tag_QCD_DD"%finalState).Clone("histNjet_0b")
+        h1 = _file.Get("QCD%s/njets0Tag_QCD_DD"%finalState).Clone("histNjet_1b")
+        h2 = _file.Get("QCD%s/njets0Tag_QCD_DD"%finalState).Clone("histNjet_2b")
         if not runPresel:
-            h0 = _file.Get("QCDMu/phoselnjets0Tag_QCD_DD").Clone("pho_histNjet_0b")
-            h1 = _file.Get("QCDMu/phoselnjets0Tag_QCD_DD").Clone("pho_histNjet_1b")
-            h2 = _file.Get("QCDMu/phoselnjets0Tag_QCD_DD").Clone("pho_histNjet_2b")
+            h0 = _file.Get("QCD%s/phoselnjets0Tag_QCD_DD"%finalState).Clone("pho_histNjet_0b")
+            h1 = _file.Get("QCD%s/phoselnjets0Tag_QCD_DD"%finalState).Clone("pho_histNjet_1b")
+            h2 = _file.Get("QCD%s/phoselnjets0Tag_QCD_DD"%finalState).Clone("pho_histNjet_2b")
 
         hTR = _qcdInputFile.Get("TransferFactors")
         h0.Scale(hTR.GetBinContent(1))
@@ -246,7 +251,7 @@ systLegendEntry.SetLineWidth(0)
 systLegendEntry.SetFillStyle(3245)
 systLegendEntry.SetMarkerSize(0)
 
-legendHeightPer = 0.05
+legendHeightPer = 0.04
 legendwidth =  1-R/W-0.73
 legendNColumns = 2
 
@@ -270,34 +275,58 @@ legendR1.SetFillColor(0)
 legendR2.SetBorderSize(0)
 legendR2.SetFillColor(0)
 
+
+legendName = ['t#bar{t}+#gamma',
+              't#bar{t}+jets',
+              't+#gamma'  ,
+              'W+#gamma'       ,
+              'Z+#gamma'       ,
+              'Z+jets'         ,
+              'W+jets'         ,
+              'Single t'       ,
+              't#bar{t}+V'     ,
+              'WW/WZ/ZZ'     ,
+              'Multijet'     ]
+              
 legend1.AddEntry(histograms[-1],"Data","pe")
-legend1.AddEntry(histograms[0],'t#bar{t}+#gamma','f')
-legend1.AddEntry(histograms[1],'t#bar{t}+jets'  ,'f')
-legend1.AddEntry(histograms[2],'t+#gamma'  ,'f')
-legend1.AddEntry(histograms[3],'W+#gamma'       ,'f')
-legend1.AddEntry(histograms[4],'Z+#gamma'       ,'f')
-legend2.AddEntry(histograms[5],'Z+jets'         ,'f')
-legend2.AddEntry(histograms[6],'W+jets'         ,'f')
-legend2.AddEntry(histograms[7],'Single t'       ,'f')
-legend2.AddEntry(histograms[8],'t#bar{t}+V'     ,'f')
-legend2.AddEntry(histograms[9],'WW/WZ/ZZ'     ,'f')
-legend2.AddEntry(histograms[10],'Multijet'     ,'f')
+legendR1.AddEntry(histograms[-1],"Data","pe")
+for i in range((1+len(histograms))/2):
+    legend1.AddEntry(histograms[i],legendName[i],'f')
+    legendR1.AddEntry(histograms[i],legendName[i],'f')
+for i in range((1+len(histograms))/2,len(histograms)-1):
+    legend2.AddEntry(histograms[i],legendName[i],'f')
+    legendR2.AddEntry(histograms[i],legendName[i],'f')
+
 legend2.AddEntry(systLegendEntry, 'Uncert.','f')
-
-
-legendR1.AddEntry(histograms[-1], "Data", 'pe')
-legendR1.AddEntry(histograms[0],'t#bar{t}+#gamma','f')
-legendR1.AddEntry(histograms[1],'t#bar{t}+jets'  ,'f')
-legendR1.AddEntry(histograms[2],'t+#gamma'  ,'f')
-legendR1.AddEntry(histograms[3],'W+#gamma'       ,'f')
-legendR1.AddEntry(histograms[4],'Z+#gamma'       ,'f')
-legendR2.AddEntry(histograms[5],'Z+jets'         ,'f')
-legendR2.AddEntry(histograms[6],'W+jets'         ,'f')
-legendR2.AddEntry(histograms[7],'Single t'       ,'f')
-legendR2.AddEntry(histograms[8],'t#bar{t}+V'     ,'f')
-legendR2.AddEntry(histograms[9],'WW/WZ/ZZ'     ,'f')
-legendR2.AddEntry(histograms[10],'Multijet'     ,'f')
 legendR2.AddEntry(systLegendEntry, 'Uncert.','f')
+
+# legend1.AddEntry(histograms[0],'t#bar{t}+#gamma','f')
+# legend1.AddEntry(histograms[1],'t#bar{t}+jets'  ,'f')
+# legend1.AddEntry(histograms[2],'t+#gamma'  ,'f')
+# legend1.AddEntry(histograms[3],'W+#gamma'       ,'f')
+# legend1.AddEntry(histograms[4],'Z+#gamma'       ,'f')
+# legend2.AddEntry(histograms[5],'Z+jets'         ,'f')
+# legend2.AddEntry(histograms[6],'W+jets'         ,'f')
+# legend2.AddEntry(histograms[7],'Single t'       ,'f')
+# legend2.AddEntry(histograms[8],'t#bar{t}+V'     ,'f')
+# legend2.AddEntry(histograms[9],'WW/WZ/ZZ'     ,'f')
+# legend2.AddEntry(histograms[10],'Multijet'     ,'f')
+# legend2.AddEntry(systLegendEntry, 'Uncert.','f')
+
+
+# legendR1.AddEntry(histograms[-1], "Data", 'pe')
+# legendR1.AddEntry(histograms[0],'t#bar{t}+#gamma','f')
+# legendR1.AddEntry(histograms[1],'t#bar{t}+jets'  ,'f')
+# legendR1.AddEntry(histograms[2],'t+#gamma'  ,'f')
+# legendR1.AddEntry(histograms[3],'W+#gamma'       ,'f')
+# legendR1.AddEntry(histograms[4],'Z+#gamma'       ,'f')
+# legendR2.AddEntry(histograms[5],'Z+jets'         ,'f')
+# legendR2.AddEntry(histograms[6],'W+jets'         ,'f')
+# legendR2.AddEntry(histograms[7],'Single t'       ,'f')
+# legendR2.AddEntry(histograms[8],'t#bar{t}+V'     ,'f')
+# legendR2.AddEntry(histograms[9],'WW/WZ/ZZ'     ,'f')
+# legendR2.AddEntry(histograms[10],'Multijet'     ,'f')
+# legendR2.AddEntry(systLegendEntry, 'Uncert.','f')
 
 
 
@@ -347,21 +376,21 @@ CMS_lumi.CMS_lumi(canvas, 4, 11)
 legend1.Draw()
 legend2.Draw()
 if runPresel:
-    canvas.SaveAs("plots/JetBjetMult_Presel.pdf")
-    canvas.SaveAs("plots/JetBjetMult_Presel.png")
+    canvas.SaveAs("%s/JetBjetMult_Presel.pdf"%outputDir)
+    canvas.SaveAs("%s/JetBjetMult_Presel.png"%outputDir)
 else:
-    canvas.SaveAs("plots/JetBjetMult_Phosel.pdf")
-    canvas.SaveAs("plots/JetBjetMult_Phosel.png")
+    canvas.SaveAs("%s/JetBjetMult_Phosel.pdf"%outputDir)
+    canvas.SaveAs("%s/JetBjetMult_Phosel.png"%outputDir)
 canvas.SetLogy(True)
 
 
 stack.SetMaximum(10**(1.2*log10(maxVal)))
 if runPresel:
-    canvas.SaveAs("plots/JetBjetMult_Presel_log.pdf")
-    canvas.SaveAs("plots/JetBjetMult_Presel_log.png")
+    canvas.SaveAs("%s/JetBjetMult_Presel_log.pdf"%outputDir)
+    canvas.SaveAs("%s/JetBjetMult_Presel_log.png"%outputDir)
 else:
-    canvas.SaveAs("plots/JetBjetMult_Phosel_log.pdf")
-    canvas.SaveAs("plots/JetBjetMult_Phosel_log.png")
+    canvas.SaveAs("%s/JetBjetMult_Phosel_log.pdf"%outputDir)
+    canvas.SaveAs("%s/JetBjetMult_Phosel_log.png"%outputDir)
 canvas.SetLogy(False)
 stack.SetMaximum(1.35*maxVal)
 
@@ -421,7 +450,6 @@ elif maxRatio < 1:
 else:
     ratio.GetYaxis().SetRangeUser(2-1.1*maxRatio,1.1*maxRatio)
 
-ratio.GetYaxis().SetRangeUser(0.5,1.5)
 
 ratio.GetYaxis().SetNdivisions(504)
 #ratio.GetXaxis().SetTitle(plotInfo[0])
@@ -448,20 +476,20 @@ CMS_lumi.CMS_lumi(pad1, 4, 11)
 #canvasRatio.RedrawAxis()
 #canvasRatio.SetLogy()
 if runPresel:
-    canvasRatio.SaveAs("plots/JetBjetMult_Presel_ratio.pdf")
-    canvasRatio.SaveAs("plots/JetBjetMult_Presel_ratio.png")
+    canvasRatio.SaveAs("%s/JetBjetMult_Presel_ratio.pdf"%outputDir)
+    canvasRatio.SaveAs("%s/JetBjetMult_Presel_ratio.png"%outputDir)
 else:
-    canvasRatio.SaveAs("plots/JetBjetMult_Phosel_ratio.pdf")
-    canvasRatio.SaveAs("plots/JetBjetMult_Phosel_ratio.png")
+    canvasRatio.SaveAs("%s/JetBjetMult_Phosel_ratio.pdf"%outputDir)
+    canvasRatio.SaveAs("%s/JetBjetMult_Phosel_ratio.png"%outputDir)
 
 stack.SetMaximum(10**(1.5*log10(maxVal)))
 pad1.SetLogy()
 
 if runPresel:
-    canvasRatio.SaveAs("plots/JetBjetMult_Presel_ratio_log.pdf")
-    canvasRatio.SaveAs("plots/JetBjetMult_Presel_ratio_log.png")
+    canvasRatio.SaveAs("%s/JetBjetMult_Presel_ratio_log.pdf"%outputDir)
+    canvasRatio.SaveAs("%s/JetBjetMult_Presel_ratio_log.png"%outputDir)
 else:
-    canvasRatio.SaveAs("plots/JetBjetMult_Phosel_ratio_log.pdf")
-    canvasRatio.SaveAs("plots/JetBjetMult_Phosel_ratio_log.png")
+    canvasRatio.SaveAs("%s/JetBjetMult_Phosel_ratio_log.pdf"%outputDir)
+    canvasRatio.SaveAs("%s/JetBjetMult_Phosel_ratio_log.png"%outputDir)
 
 
