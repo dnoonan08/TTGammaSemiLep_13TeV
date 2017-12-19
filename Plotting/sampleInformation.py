@@ -175,7 +175,7 @@ sampleList = ["TTGamma",
               "ZGamma",
               "Diboson",
               "TTV",
-              "GJets",
+#              "GJets",
               "QCD",
               "Data",
               ]

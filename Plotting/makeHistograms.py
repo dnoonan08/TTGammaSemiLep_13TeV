@@ -48,6 +48,7 @@ print isLooseSelection
 nJets = 3
 nBJets = 1
 
+isQCD = False
 
 #atleast 0, atleast 1, atleast 2, exactly 1, btagWeight[0] = exactly 0
 
@@ -165,6 +166,58 @@ elif finalState=="DiEle":
 
     extraCutsLooseCR3       = "(passPresel_Ele && nJet>=3 && nBJet>=0)*"
     extraPhotonCutsLooseCR3 = "(passPresel_Ele && nJet>=3 && nBJet>=0 && %s)*"
+
+elif finalState=="QCDMu":
+    sampleList[-1] = "DataMu"
+    sampleList[-2] = "QCDMu"
+    if sample=="Data":
+        sample = "DataMu"
+    if sample=="QCD":
+        sample = "QCDMu"
+
+    isQCD = True
+
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdmuons/V08_00_26_07/QCDcr_"
+    outputhistName = "histograms/mu/qcdhistsCR.root"
+
+    nBJets = 0
+    extraCuts            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=3 && nBJet==0)*"
+    extraPhotonCuts      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=3 && nBJet==0 && %s)*"
+
+    extraCutsTight            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=4 && nBJet==0)*"
+    extraPhotonCutsTight      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=4 && nBJet==0 && %s)*"
+
+    extraCutsLoose            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLoose      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+
+    extraCutsLooseCR          = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR    = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+
+elif finalState=="QCDEle":
+    sampleList[-1] = "DataEle"
+    sampleList[-2] = "QCDEle"
+    if sample=="Data":
+        sample = "DataEle"
+    if sample=="QCD":
+        sample = "QCDEle"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdelectrons/V08_00_26_07/QCDcr_"
+    outputhistName = "histograms/ele/qcdhistsCR.root"
+
+    isQCD = True
+
+    nBJets = 0
+
+    extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet==0)*"
+    extraPhotonCuts      = "(passPresel_Ele && nJet>=3 && nBJet==0 && %s)*"
+
+    extraCutsTight            = "(passPresel_Ele && nJet>=4 && nBJet==0)*"
+    extraPhotonCutsTight      = "(passPresel_Ele && nJet>=4 && nBJet==0 && %s)*"
+
+    extraCutsLoose            = "(passPresel_Ele && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLoose      = "(passPresel_Ele && nJet>=2 && nBJet==0 && %s)*"
+
+    extraCutsLooseCR          = "(passPresel_Ele && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR    = "(passPresel_Ele && nJet>=2 && nBJet==0 && %s)*"
 
 else:
     print "Unknown final state, options are Mu and Ele"
@@ -338,6 +391,10 @@ if not "QCD_DD" in sample:
 
     for hist in histogramsToMake:
         h_Info = histogramInfo[hist]
+
+        # skip some histograms which rely on MC truth and can't be done in data or QCD data driven templates
+        if ('Data' in sample or isQCD) and not h_Info[5]: continue
+
         print "filling", h_Info[1], sample
         evtWeight = ""
         histograms.append(TH1F("%s_%s"%(h_Info[1],sample),"%s_%s"%(h_Info[1],sample),h_Info[2][0],h_Info[2][1],h_Info[2][2]))
