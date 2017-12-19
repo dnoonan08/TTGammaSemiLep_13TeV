@@ -268,9 +268,9 @@ void Selector::filter_electrons(){
 			passTightID = false;
 			passTightID = passEleTightID(eleInd,false) && 
 				PFrelIso_corr > (absSCEta < 1.47 ? 0.0588 : 0.0571) && 
-				tree->elePFClusEcalIso_->at(eleInd) < (absSCEta < 1.47 ? 0.032 : 0.040) && 
-				tree->elePFClusHcalIso_->at(eleInd) < (absSCEta < 1.47 ? 0.055 : 0.05) && 
-				tree->eleDr03TkSumPt_->at(eleInd) < (absSCEta < 1.47 ? 0.06 : 0.05);
+				(tree->elePFClusEcalIso_->at(eleInd) / tree->elePt_->at(eleInd) ) < (absSCEta < 1.47 ? 0.032 : 0.040) && 
+				(tree->elePFClusHcalIso_->at(eleInd) / tree->elePt_->at(eleInd) ) < (absSCEta < 1.47 ? 0.055 : 0.05) && 
+				(tree->eleDr03TkSumPt_->at(eleInd)   / tree->elePt_->at(eleInd) ) < (absSCEta < 1.47 ? 0.06 : 0.05);
 		}
 
 
