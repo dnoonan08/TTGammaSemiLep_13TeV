@@ -168,6 +168,7 @@ samples = {"TTGamma"   : [["TTGamma_SingleLeptFromTbar_AnalysisNtuple.root",
 # List that is the same as the keys of samples, but given in the order we want to draw
 sampleList = ["TTGamma",
               "TTbar",
+              "TGJets",
               "SingleTop",
               "WJets",
               "ZJets",
