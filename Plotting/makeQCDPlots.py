@@ -4,13 +4,13 @@ import os
 import sys
 
 
-padRatio = 0.25
+padRatio = 0.3
 padOverlap = 0.15
 padGap = 0.01
 
 _file  = TFile("histograms/mu/qcdhistsCR.root")
 plotDirectory = "qcdplots/"
-regionText = ", N_{j}#geq2, N_{b}=0"
+regionText = ", N_{j}#geq3, N_{b}=0"
 
 isTight = False
 
@@ -63,7 +63,7 @@ preselhistograms = {"jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1], 
                     "muPhi"    : ["Muon #phi"           , "Events", 5, [-1,-1], regionText,  NoLog],
                     "Njet"     : ["N Jets"              , "Events", 1, [-1,-1], regionText, YesLog],
                     "Nbjet"    : ["N B-Jets"            , "Events", 1, [-1,-1], regionText,  NoLog],
-                    "M3"       : ["M_{3} (GeV)"         , "Events", 5, [-1,-1], regionText,  NoLog],
+                    "M3"       : ["M_{3} (GeV)"         , "Events", 10, [-1,-1], regionText,  NoLog],
                     "MET"      : ["MET (GeV)  "         , "Events", 5, [-1,-1], regionText,  NoLog],
                     "METPhi"   : ["MET Phi  "           , "Events", 5, [-1,-1], regionText,  NoLog],
                     # "nVtx"     : ["N Vtx"               , "Events", 1, [-1,-1], regionText,  NoLog],
@@ -74,15 +74,15 @@ preselhistograms = {"jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1], 
 
 
 
-phoselhistograms = {"photonEt"                : ["Photon Et (GeV)"            , "Events", 5, [-1,-1], regionText,  NoLog],     
-                    "photonPhi"               : ["Photon Phi (GeV)"           , "Events", 1, [-1,-1], regionText,  NoLog],    
-                    "photonEta"               : ["Photon Eta (GeV)"           , "Events", 1, [-1,-1], regionText,  NoLog],    
-                    "dRPhotonLepton"          : ["dR(Photon,Lepton)"          , "Events", 1, [-1,-1], regionText,  NoLog],
-                    "dRPhotonJet"             : ["dR(Photon,Jet)"             , "Events", 1, [-1,-1], regionText,  NoLog],   
+phoselhistograms = {"LeadingPhotonEt"                : ["Photon Et (GeV)"            , "Events", 5, [-1,-1], regionText,  NoLog],     
+                    "LeadingPhotonEta"               : ["Photon Eta (GeV)"           , "Events", 1, [-1,-1], regionText,  NoLog],    
+                    "dRLeadingPhotonLepton"          : ["dR(Photon,Lepton)"          , "Events", 1, [-1,-1], regionText,  NoLog],
+                    "dRLeadingPhotonJet"             : ["dR(Photon,Jet)"             , "Events", 1, [-1,-1], regionText,  NoLog],   
                     "M3"                      : ["M_{3} (GeV)"                , "Events", 5, [-1,-1], regionText,  NoLog],   
                     "MET"                     : ["MET (GeV)"                , "Events", 5, [-1,-1], regionText,  NoLog],   
                     "Njet"                    : ["N Jets"                     , "Events", 1, [-1,-1], regionText,  NoLog],
                     "Nbjet"                   : ["N B-Jets"                   , "Events", 1, [-1,-1], regionText,  NoLog],
+                    "noCut_ChIso"             : ["Ch. Had. Iso (GeV)"         , "Events", 1, [-1,-1], regionText,  NoLog],
                     }
 
 
@@ -211,6 +211,8 @@ legendList = {'TTGamma': [kOrange, 't#bar{t}+#gamma'],
               'ZGamma': [kBlue-2, 'Z+#gamma'],
               'WJets': [kCyan -3, 'W+jets'],
               'ZJets': [kCyan -5, 'Z+jets'],
+              'Diboson':[kCyan-7, 'WW/WZ/ZZ'],
+              'TGJets'   :[kGray, 't+#gamma'],
               'QCDMu': [kYellow, 'Multijet'],
               }
 
@@ -222,6 +224,8 @@ mcList = {'TTGamma': [kOrange],
           'ZGamma': [kBlue-2],
           'WJets': [kCyan-3],
           'ZJets': [kCyan-5],
+	  'Diboson':[kCyan-7],
+          'TGJets': [kGray],
           'QCDMu': [kYellow],
           }
 
@@ -252,10 +256,10 @@ legendR.AddEntry(dataHist, "Data", 'pe')
 for sample in legList:
     _dir = sample
     if "QCD" in sample:
-        if useQCDMC: _dir = sample+"_MC"
-        if useQCDDD: _dir = sample+"_DD"
+        continue
+        if useQCDMC: _dir = "QCDMu"
+        if useQCDDD: _dir = "QCD_DD"
     hist = _file.Get("%s/presel_%s_%s"%(_dir,histName,sample))
-    print sample, hist
     hist.SetFillColor(mcList[sample][0])
     hist.SetLineColor(mcList[sample][0])
     legend.AddEntry(hist,legendList[sample][1],'f')
@@ -273,8 +277,9 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 #        print sample
         _dir = sample
         if "QCD" in sample:
-            if useQCDMC: _dir = sample+"_MC"
-            if useQCDDD: _dir = sample+"_DD"
+            continue
+            if useQCDMC: _dir = "QCDMu"
+            if useQCDDD: _dir = "QCD_DD"
         hist = _file.Get("%s/%s_%s"%(_dir,histName,sample)).Clone(sample)
         hist.SetFillColor(mcList[sample][0])
         hist.SetLineColor(mcList[sample][0])
@@ -288,7 +293,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     canvas.SetLogy(plotInfo[-1])
 
     if not plotInfo[-1]:
-        stack.SetMaximum(1.35*max(dataHist.GetMaximum(),stack.GetMaximum()))
+        stack.SetMaximum(1.45*max(dataHist.GetMaximum(),stack.GetMaximum()))
     else:
         stack.SetMaximum(100.*max(dataHist.GetMaximum(),stack.GetMaximum()))
 
@@ -308,8 +313,8 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     canvas.Print("%s/%s.pdf"%(plotDirectory,histName),".pdf")
 
     ratio = dataHist.Clone("temp")
-    ratio.Divide(stack.GetStack().Last())
- 
+    ratio.Add(stack.GetStack().Last(),-1)
+
  
     pad1.Clear()
     pad2.Clear()
@@ -347,10 +352,12 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     ratio.GetXaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
     ratio.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
     ratio.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(padRatio+padOverlap-padGap))
-    ratio.GetYaxis().SetRangeUser(0.75,1.25)
+#    ratio.GetYaxis().SetRangeUser(0.75,1.25)
+    ratio.SetMaximum(1.15*ratio.GetMaximum())
     ratio.GetYaxis().SetNdivisions(504)
     ratio.GetXaxis().SetTitle(plotInfo[0])
-    ratio.GetYaxis().SetTitle("Data/MC")
+    ratio.GetYaxis().SetTitle("#splitline{QCD}{Template}")
+    ratio.GetYaxis().SetTitleOffset(0.4)
 
     pad2.cd()
     ratio.SetMarkerStyle(dataHist.GetMarkerStyle())
@@ -362,9 +369,13 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     oneLine.SetLineColor(kBlack)
     oneLine.SetLineWidth(1)
     oneLine.SetLineStyle(2)
-
-    ratio.Draw('e,x0')
-    oneLine.Draw("same")
+    TGaxis.SetExponentOffset(-0.075, 0.0, "y");
+    ratio.SetFillColor(kGreen+3)
+    ratio.SetLineColor(kGreen+3)
+    ratio.SetMarkerSize(0)
+    
+    ratio.Draw('h')
+#    oneLine.Draw("same")
 
 #    pad2.Update()
     CMS_lumi.CMS_lumi(pad1, 4, 11)
@@ -384,6 +395,8 @@ for histName in preselhistograms:
 for histName in phoselhistograms:
     drawHist("phosel_%s"%histName,phoselhistograms[histName],plotDirectory,_file)
 
+# histName = 'M3'
+# drawHist("presel_%s"%histName,preselhistograms[histName],plotDirectory,_file)
 
 # _file2  = TFile("histograms/mu/testBtaghists.root")
 
