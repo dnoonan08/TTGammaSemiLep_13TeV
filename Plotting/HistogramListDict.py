@@ -2,12 +2,11 @@ btagWeightCategory = ["1","(1-btagWeight[0])","(btagWeight[2])","(btagWeight[1])
 
 
 def GetHistogramInfo_2Dplot(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraPhotonCuts="(passPresel_Mu && nJet>=3 && nBJet>=1 && %s)*", nBJets=1):
-		  histogramInfo = {"phosel_2DChIsoSIEIE_barrel":["loosePhoPFChIso", "loosePhoSIEIE", "phosel_2DChIsoSIEIE_barrel", [100,0,0.07], [100,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (abs(loosePhoSCEta)<1.47)"), "", True],
-                                  "phosel_2DChIsoSIEIE_endcap":["loosePhoPFChIso", "loosePhoSIEIE", "phosel_2DChIsoSIEIE_endcap", [100,0,0.07], [100,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (abs(loosePhoSCEta)>1.47)"), "", True],
-                                  "phosel_2DdRjetphoChIso":["dRPhotonJet[0]", "loosePhoPFChIso", "phosel_2DdRjetphoChIso", [200,0,5], [100,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso"),"", True], 
-		 		}
-    		  return histogramInfo
-
+    histogramInfo = {"phosel_2DChIsoSIEIE_barrel":["loosePhoPFChIso", "loosePhoSIEIE", "phosel_2DChIsoSIEIE_barrel", [100,0,0.07], [100,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (abs(loosePhoSCEta)<1.47)"), "", True],
+                     "phosel_2DChIsoSIEIE_endcap":["loosePhoPFChIso", "loosePhoSIEIE", "phosel_2DChIsoSIEIE_endcap", [100,0,0.07], [100,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (abs(loosePhoSCEta)>1.47)"), "", True],
+                     "phosel_2DdRjetphoChIso":["dRPhotonJet[0]", "loosePhoPFChIso", "phosel_2DdRjetphoChIso", [200,0,5], [100,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso"),"", True], 
+                     }
+    return histogramInfo
 
 
 def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraPhotonCuts="(passPresel_Mu && nJet>=3 && nBJet>=1 && %s)*", nBJets=1):
@@ -23,7 +22,8 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "presel_elePt"                          : ["elePt"     , "presel_elePt"    ,      [600,0,600], extraCuts      , "", True],
                       "presel_eleSCEta"                       : ["eleSCEta"  , "presel_eleSCEta" ,   [100,-2.4,2.4], extraCuts      , "", True],
                       "presel_elePhi"                         : ["elePhi"    , "presel_elePhi"   , [100,-3.15,3.15], extraCuts      , "", True],
-                      "presel_M3"                             : ["M3"        , "presel_M3"       ,      [300,0,600], extraCuts      , "", True],
+                      "presel_M3"                             : ["M3"        , "presel_M3"       ,     [550,50,600], extraCuts      , "", True],
+                      "presel_M3_control"                     : ["M3"        , "presel_M3_control", [550,50,600],extraPhotonCuts%("nPho==0"), "", True],
                       "presel_MET"                            : ["pfMET"     , "presel_MET"      ,      [300,0,600], extraCuts      , "", True],
                       "presel_METPhi"                         : ["pfMETPhi"  , "presel_METPhi"   , [100,-3.15,3.15], extraCuts      , "", True],
                       "presel_nVtx"                           : ["nVtx"      , "presel_nVtx"     ,        [50,0,50], extraCuts      , "", True],
@@ -52,14 +52,15 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_dRLeadingHadPhoLepton"          : ["dRPhotonLepton[0]", "phosel_dRLeadingHadPhoLepton"         ,        [120,0,6], extraPhotonCuts%("phoMediumID && photonIsHadronicPhoton"),"", False],
                       "phosel_dRLeadingHadFakeLepton"         : ["dRPhotonLepton[0]", "phosel_dRLeadingHadFakeLepton"        ,        [120,0,6], extraPhotonCuts%("phoMediumID && photonIsHadronicFake"),"", False],
                       "phosel_dRLeadingPhotonLepton"          : ["dRPhotonLepton[0]", "phosel_dRLeadingPhotonLepton"         ,        [120,0,6], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_phoJetDR"                       : ["phoJetDR"         , "phosel_phoJetDR"                      ,        [200,0,5], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_WtransMass"                     : ["WtransMass"    , "phosel_WtransMass"      ,      [80,0,400], extraPhotonCuts%("phoMediumID"), "", True],		
                       "phosel_HT"                             : ["HT"            , "phosel_HT"              ,  [150,120,1500], extraPhotonCuts%("phoMediumID"), "", True],
-                      "phosel_M3"                             : ["M3"            , "phosel_M3"              ,     [300,0,600], extraPhotonCuts%("phoMediumID"), "", True],
-                      "phosel_M3_GenuinePho"                  : ["M3"            , "phosel_M3_GenuinePho"   ,     [300,0,600], extraPhotonCuts%("phoMediumID && photonIsGenuine")       , "", False],
-                      "phosel_M3_MisIDEle"                    : ["M3"            , "phosel_M3_MisIDEle"     ,     [300,0,600], extraPhotonCuts%("phoMediumID && photonIsMisIDEle")      , "", False],
-                      "phosel_M3_HadronicPho"                 : ["M3"            , "phosel_M3_HadronicPho"  ,     [300,0,600], extraPhotonCuts%("phoMediumID && photonIsHadronicPhoton"), "", False],
-                      "phosel_M3_HadronicFake"                : ["M3"            , "phosel_M3_HadronicFake" ,     [300,0,600], extraPhotonCuts%("phoMediumID && photonIsHadronicFake")  , "", False],
-                      "phosel_MET"                            : ["pfMET"         , "phosel_MET"             ,     [300,0,600], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_M3"                             : ["M3"            , "phosel_M3"              ,    [550,50,600], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_M3_GenuinePho"                  : ["M3"            , "phosel_M3_GenuinePho"   ,    [550,50,600], extraPhotonCuts%("phoMediumID && photonIsGenuine")       , "", False],
+                      "phosel_M3_MisIDEle"                    : ["M3"            , "phosel_M3_MisIDEle"     ,    [550,50,600], extraPhotonCuts%("phoMediumID && photonIsMisIDEle")      , "", False],
+                      "phosel_M3_HadronicPho"                 : ["M3"            , "phosel_M3_HadronicPho"  ,    [550,50,600], extraPhotonCuts%("phoMediumID && photonIsHadronicPhoton"), "", False],
+                      "phosel_M3_HadronicFake"                : ["M3"            , "phosel_M3_HadronicFake" ,    [550,50,600], extraPhotonCuts%("phoMediumID && photonIsHadronicFake")  , "", False],
+                      "phosel_MET"                            : ["pfMET"         , "phosel_MET"             ,    [550,50,600], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_elePt"                          : ["elePt"         , "phosel_elePt"           ,     [600,0,600], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_eleSCEta"                       : ["eleSCEta"      , "phosel_eleSCEta"        ,  [100,-2.4,2.4], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_muPt"                           : ["muPt"          , "phosel_muPt"            ,     [600,0,600], extraPhotonCuts%("phoMediumID"), "", True],
@@ -67,14 +68,14 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_Njet"                           : ["nJet"          , "phosel_Njet"            ,       [15,0,15], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_Nbjet"                          : ["nBJet"         , "phosel_Nbjet"           ,       [10,0,10], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_HoverE"                         : ["phoHoverE"     , "phosel_HoverE"          ,    [100,0.,.04], extraPhotonCuts%("phoMediumID"), "", True],
-                      "phosel_SIEIE"                          : ["phoSIEIE"      , "phosel_SIEIE"           ,    [100,0.,.03], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_SIEIE"                          : ["phoSIEIE"      , "phosel_SIEIE"           ,    [100,0.,.07], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_ChIso"                          : ["phoPFChIso"    , "phosel_ChIso"           ,      [100,0,.5], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_NeuIso"                         : ["phoPFNeuIso"   , "phosel_NeuIso"          ,      [100,0,5.], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_PhoIso"                         : ["phoPFPhoIso"   , "phosel_PhoIso"          ,        [50,0,5], extraPhotonCuts%("phoMediumID"), "", True],
                       ###############
                       "phosel_noCut_HoverE"                   : ["loosePhoHoverE"  , "phosel_noCut_HoverE"               ,      [100,0.,.2], extraPhotonCuts%("loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso"), "", True],
-                      "phosel_noCut_SIEIE_barrel"             : ["loosePhoSIEIE"   , "phosel_noCut_SIEIE_barrel"         ,    [100,0.,.015], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (abs(loosePhoSCEta)<1.47)"),"", True],
-                      "phosel_noCut_SIEIE_endcap"             : ["loosePhoSIEIE"   , "phosel_noCut_SIEIE_endcap"         ,  [100,0.015,.07], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (abs(loosePhoSCEta)>1.47)"),"", True],
+                      "phosel_noCut_SIEIE_barrel"             : ["loosePhoSIEIE"   , "phosel_noCut_SIEIE_barrel"         ,     [100,0.,.07], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (abs(loosePhoSCEta)<1.47)"),"", True],
+                      "phosel_noCut_SIEIE_endcap"             : ["loosePhoSIEIE"   , "phosel_noCut_SIEIE_endcap"         ,     [100,0.,.07], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (abs(loosePhoSCEta)>1.47)"),"", True],
                       "phosel_noCut_SIEIE"                    : ["loosePhoSIEIE"   , "phosel_noCut_SIEIE"                ,     [100,0.,.07], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso"), "", True],
                       "phosel_noCut_SIEIE_GenuinePho"         : ["loosePhoSIEIE"   , "phosel_noCut_SIEIE_GenuinePho"     ,     [100,0.,.07], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsGenuine"), "", False],
                       "phosel_noCut_SIEIE_MisIDEle"           : ["loosePhoSIEIE"   , "phosel_noCut_SIEIE_MisIDEle"       ,     [100,0.,.07], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsMisIDEle"), "", False],
@@ -100,12 +101,23 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_NHadronicPho"                   : ["nPho"              , "phosel_NHadronicPho"      ,          [2,0,2], extraPhotonCuts%("photonIsHadronicPhoton")                , "", False],
                       "phosel_NHadronicFake"                  : ["nPho"              , "phosel_NHadronicFake"     ,          [2,0,2], extraPhotonCuts%("photonIsHadronicFake")                  , "", False],
                       "phosel_RandomCone"                     : ["phoPFRandConeChIso", "phosel_RandomCone"        ,        [80,0,20], extraPhotonCuts%("phoMediumID")                           , "", False],
+                      "phosel_RandomConeJetDR"                : ["phoPFRandConeJetDR", "phosel_RandomConeJetDR"   ,        [200,0,5], extraPhotonCuts%("phoMediumID")                           , "", False],
                       "phosel_mcMomPIDGenuinePho"             : ["photonParentPID"   , "phosel_mcMomPIDGenuinePho",[2000,-1000,1000], extraPhotonCuts%("phoMediumID && photonIsGenuine")        , "", False],
                       "phosel_mcMomPIDMisIDEle"               : ["photonParentPID"   , "phosel_mcMomPIDMisIDEle"  ,[2000,-1000,1000], extraPhotonCuts%("phoMediumID && photonIsMisIDEle")       , "", False],
                       "phosel_mcMomPIDHadPho"                 : ["photonParentPID"   , "phosel_mcMomPIDHadPho"    ,[2000,-1000,1000], extraPhotonCuts%("phoMediumID && photonIsHadronicPhoton") , "", False],
                       "phosel_mcMomPIDHadFake"                : ["photonParentPID"   , "phosel_mcMomPIDHadFake"   ,[2000,-1000,1000], extraPhotonCuts%("phoMediumID && photonIsHadronicFake")   , "", False],
                       "phosel_PhotonCategory"                 : ["photonIsGenuine[0] + 2*photonIsMisIDEle[0] + 3*photonIsHadronicPhoton[0] + 4*photonIsHadronicFake[0]", "phosel_PhotonCategory", [4,1,5], extraPhotonCuts%("phoMediumID"), "", False],
+                      ################
                       "phosel_MassEGamma"                     : ["phoMassEGamma", "phosel_MassEGamma", [200,0,200], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_Mt_blgammaMET"                  : ["Mt_blgammaMET" , "phosel_Mt_blgammaMET" , [600,0,600], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_Mt_lgammaMET"                   : ["Mt_lgammaMET"  , "phosel_Mt_lgammaMET"  , [600,0,600], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_M_bjj"                          : ["M_bjj"         , "phosel_M_bjj"         , [600,0,600], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_M_jj"                           : ["M_jj"          , "phosel_M_jj"          , [600,0,600], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_MassCuts"                       : ["MassCuts"      , "phosel_MassCuts"      , [2,0,2], extraPhotonCuts%("phoMediumID"), "", True],                  
+                      "presel_DilepMass"                      : ["DilepMass"     , "presel_DilepMass"     , [300,0,300],extraCuts,"",True],
+                      "presel_DilepDR"                      : ["DilepDelR"     , "presel_DilepDR"       , [100,0,6],extraCuts,"",True],
+                      "phosel_DilepMass"                      : ["DilepMass"     , "phosel_DilepMass"     , [300,0,300],extraPhotonCuts%("phoMediumID"),"",True],
+                      "phosel_DilepDR"                      : ["DilepDelR"     , "phosel_DilepDR"       , [100,0,6]  ,extraPhotonCuts%("phoMediumID"),"",True],
                       }
     return histogramInfo
 

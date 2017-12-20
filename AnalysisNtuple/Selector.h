@@ -74,7 +74,7 @@ public:
 	std::vector<double> PhoChHadIso_corr;
 	std::vector<double> PhoNeuHadIso_corr;
 	std::vector<double> PhoPhoIso_corr;
-	std::vector<double> PhoRandConeChHadIso_corr;
+	std::vector<std::vector<float>> PhoRandConeChHadIso_corr;
 
 	/* std::vector<double> Pho03ChHadSCRIso; */
 	/* std::vector<double> Pho03PhoSCRIso; */

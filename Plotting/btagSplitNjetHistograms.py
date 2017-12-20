@@ -23,20 +23,30 @@ finalState = options.channel
 
 # extraCuts       = "(passPresel_Mu)*"
 # extraPhotonCuts = "(passPresel_Mu && %s)*"
+sample = sys.argv[-1]
+
 
 if finalState=="Mu":
     sampleList[-1] = "DataMu"
     sampleList[-2] = "QCDMu"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07"
-    outputhistName = "histograms/mu/testBtaghists.root"
+    outputhistName = "histograms/mu/JetBjetMultiplicityHists.root"
+    if sample == "Data": sample = "DataMu"
+    if sample == "QCD": 
+        sample = "QCDMu"
+        analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdmuons/V08_00_26_07"
+
 if finalState=="Ele":
     sampleList[-1] = "DataEle"
     sampleList[-2] = "QCDEle"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07"
-    outputhistName = "histograms/ele/testBtaghists.root"
+    outputhistName = "histograms/ele/JetBjetMultiplicityHists.root"
+    if sample == "Data": sample = "DataEle"
+    if sample == "QCD": 
+        sample = "QCDEle"
+        analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdelectrons/V08_00_26_07"
 
 
-sample = sys.argv[-1]
 
 if not sample in sampleList:
     print sample
@@ -45,12 +55,12 @@ if not sample in sampleList:
     sys.exit()
 
 
-
 tree = TChain("AnalysisTree")
-fileList = samples[sample][0]
-for fileName in fileList:
+if not "QCD" in sample:
+    fileList = samples[sample][0]
+    for fileName in fileList:
     
-    tree.Add("%s/%s"%(analysisNtupleLocation,fileName))
+        tree.Add("%s/%s"%(analysisNtupleLocation,fileName))
 
 print sample
 
@@ -63,10 +73,58 @@ hist_phoselnjets0Tag = TH1F("phoselnjets0Tag_%s"%sample,"phoselnjets0Tag_%s"%sam
 hist_phoselnjets1Tag = TH1F("phoselnjets1Tag_%s"%sample,"phoselnjets1Tag_%s"%sample,10,0,10)
 hist_phoselnjets2Tag = TH1F("phoselnjets2Tag_%s"%sample,"phoselnjets2Tag_%s"%sample,10,0,10)
 preselCut = "passPresel_Ele"
+QCDcut = "elePFRelIso>0.01"
 if finalState=="Mu":
     preselCut = "passPresel_Mu"
+    QCDcut = "muPFRelIso<0.3"
 
-if not "Data" in sample:
+
+if "QCD" in sample:
+    print "Making QCD Data Driven Template"
+
+    QCDTemplate = TH1F("njets0Tag_QCD_DD","njets0Tag_QCD_DD",10,0,10)
+    PhoselQCDTemplate = TH1F("phoselnjets0Tag_QCD_DD","phoselnjets0Tag_QCD_DD",10,0,10)
+    tree = TChain("AnalysisTree")
+    fileList = samples[sampleList[-1]][0]
+    for fileName in fileList:
+        tree.Add("%s/QCDcr_%s"%(analysisNtupleLocation,fileName))
+
+    tree.Draw("nJet>>njets0Tag_QCD_DD","(%s && %s)"%(preselCut,QCDcut))
+    tree.Draw("nJet>>phoselnjets0Tag_QCD_DD","(phoMediumID && %s && %s && nBJet>=0)"%(preselCut,QCDcut))
+
+    tempHist       = TH1F("njets0Tag_temp","njets0Tag_temp",10,0,10)
+    PhoseltempHist = TH1F("phoselnjets0Tag_temp","phoselnjets0Tag_temp",10,0,10)
+    tree = TChain("AnalysisTree")
+    print sampleList[:]
+    print sampleList[:-2]
+    for s in sampleList[:-2]:
+#        if s == "Diboson": continue
+        fileList = samples[s][0]
+        for fileName in fileList:
+            tree.Add("%s/QCDcr_%s"%(analysisNtupleLocation,fileName))
+
+    tree.Draw("nJet>>njets0Tag_temp","(%s && %s)*evtWeight*muEffWeight*eleEffWeight*PUweight"%(preselCut,QCDcut))
+    tree.Draw("nJet>>phoselnjets0Tag_temp","(phoMediumID && %s && %s && nBJet>=0)*evtWeight*muEffWeight*eleEffWeight*PUweight"%(preselCut,QCDcut))
+
+    QCDTemplate.Add(tempHist,-1)
+    PhoselQCDTemplate.Add(PhoseltempHist,-1)
+
+    for i in range(1,11):
+        if QCDTemplate.GetBinContent(i)<0:
+            QCDTemplate.SetBinContent(i,0)
+        if PhoselQCDTemplate.GetBinContent(i)<0:
+            PhoselQCDTemplate.SetBinContent(i,0)
+
+
+    outputFile = TFile(outputhistName,"update")
+    outputFile.rmdir(sample)
+    outputFile.mkdir(sample)
+    outputFile.cd(sample)
+    QCDTemplate.Write()
+    PhoselQCDTemplate.Write()
+    outputFile.Close()
+    sys.exit(0)
+elif not "Data" in sample:
     tree.Draw("nJet>>njets0Tag_%s"%sample,      "(%s)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]"%preselCut)
     tree.Draw("nJet>>njets1Tag_%s"%sample,      "(%s)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[1]"%preselCut)
     tree.Draw("nJet>>njets2Tag_%s"%sample,      "(%s)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]"%preselCut)

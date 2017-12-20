@@ -36,8 +36,8 @@ double totalTTWtoQQ         = 833257.;
 double totalTTWtoLNu        = 2160030.;
 double totalTTZtoLL         = 5933898.;
 
-double totalZGamma           = 14372399.;
-double totalWGamma           = 10231838.;
+double totalZGamma           = 2307116. + 14372399.; //ZGTo2LG + ZGTo2LG-ext1
+double totalWGamma           = 5048404. + 10231838. + 12146594.;
 
 double totalWW               = 6987017.;
 double totalWZ               = 2995783.;
@@ -68,6 +68,11 @@ double totalQCD_Pt120to170_Ele = 35816734.;
 double totalQCD_Pt170to300_Ele = 11539879.;
 double totalQCD_Pt300toInf_Ele =  7373130.;
 
+double totalGJets_HT40to100  = 4467939.;
+double totalGJets_HT100to200 = 5131808.;
+double totalGJets_HT200to400 = 9930766.;
+double totalGJets_HT400to600 = 2529663.;
+double totalGJets_HT600toInf = 2463751.;
 
 
 //////////////////////////
@@ -133,6 +138,13 @@ double QCD_Pt120to170_Ele_xs =   62964.;
 double QCD_Pt170to300_Ele_xs =   18810.;
 double QCD_Pt300toInf_Ele_xs =    1350.;
 
+// GJets cross sections taken from AN2016_471_v6 (SUSY photon + MET analysis)
+double GJets_HT40to100_xs  = 20790.;
+double GJets_HT100to200_xs = 9238.;
+double GJets_HT200to400_xs = 2305.;
+double GJets_HT400to600_xs = 274.4;
+double GJets_HT600toInf_xs = 93.46;
+
 
 double TGJets_SF               = TGJets_xs * luminosity / totalTGJets;
 double TTGamma_hadronic_SF = TTGamma_hadronic_xs * luminosity / totalTTGamma_hadronic;
@@ -192,6 +204,11 @@ double QCD_Pt120to170_Ele_SF = QCD_Pt120to170_Ele_xs * luminosity / totalQCD_Pt1
 double QCD_Pt170to300_Ele_SF = QCD_Pt170to300_Ele_xs * luminosity / totalQCD_Pt170to300_Ele ;
 double QCD_Pt300toInf_Ele_SF = QCD_Pt300toInf_Ele_xs * luminosity / totalQCD_Pt300toInf_Ele ;
 
+double GJets_HT40to100_SF  = GJets_HT40to100_xs  * luminosity / totalGJets_HT40to100  ;
+double GJets_HT100to200_SF = GJets_HT100to200_xs * luminosity / totalGJets_HT100to200 ;
+double GJets_HT200to400_SF = GJets_HT200to400_xs * luminosity / totalGJets_HT200to400 ;
+double GJets_HT400to600_SF = GJets_HT400to600_xs * luminosity / totalGJets_HT400to600 ;
+double GJets_HT600toInf_SF = GJets_HT600toInf_xs * luminosity / totalGJets_HT600toInf ;
 
 double getEvtWeight(string sampleType){
 	double evtWeight = -1.;
@@ -244,6 +261,11 @@ double getEvtWeight(string sampleType){
 	else if( sampleType=="QCD_Pt120to170_Ele") {evtWeight = QCD_Pt120to170_Ele_SF;}
 	else if( sampleType=="QCD_Pt170to300_Ele") {evtWeight = QCD_Pt170to300_Ele_SF;}
 	else if( sampleType=="QCD_Pt300toInf_Ele") {evtWeight = QCD_Pt300toInf_Ele_SF;}
+	else if( sampleType=="GJets_HT-40To100")  {evtWeight = GJets_HT40to100_SF;}
+	else if( sampleType=="GJets_HT-100To200") {evtWeight = GJets_HT100to200_SF;}
+	else if( sampleType=="GJets_HT-200To400") {evtWeight = GJets_HT200to400_SF;}
+	else if( sampleType=="GJets_HT-400To600") {evtWeight = GJets_HT400to600_SF;}
+	else if( sampleType=="GJets_HT-600ToInf") {evtWeight = GJets_HT600toInf_SF;}
 	else {
 		cout << "-------------------------------------------------" << endl;
 		cout << "-------------------------------------------------" << endl;
@@ -330,6 +352,11 @@ const std::string allowedSampleTypes[99] = {"Data",
 											"QCD_Pt120to170_Ele",
 											"QCD_Pt170to300_Ele",
 											"QCD_Pt300toInf_Ele",
+											"GJets_HT-40To100",
+											"GJets_HT-100To200",
+											"GJets_HT-200To400",
+											"GJets_HT-400To600",
+											"GJets_HT-600ToInf",
 											"TGJets",
 											"Test",
                                                                                         };

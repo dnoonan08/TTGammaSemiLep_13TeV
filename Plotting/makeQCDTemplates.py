@@ -42,8 +42,8 @@ if 'CR2' in sys.argv:
 from sampleInformation import *
 
 gROOT.SetBatch(True)
-channel = "Mu"
-_file.rmdir("QCDMu_DD")
+##channel = "Mu"
+_file.rmdir("QCD%s_DD"%finalState)
 
 
 sampleList.pop(-2)
@@ -56,8 +56,8 @@ keylist = _file.GetListOfKeys()
 
 histoList = {}
 
-key = _file.FindKey("DataMu")
-print key
+key = _file.FindKey("Data%s"%finalState)
+#print key
 list2 = key.ReadObj().GetListOfKeys()
 
 for l in list2:
@@ -68,26 +68,31 @@ for l in list2:
     for n in split[1:-1]: nameKey += "_%s"%n
 #    nameKey = "%s_%s"%(split[0],split[1])
     hName = "%s_QCD_DD"%(nameKey)
+    # print hName
+    # print l.GetName()
     histoList[nameKey] = l.ReadObj().Clone(hName)
     histoList[nameKey].SetNameTitle(hName,hName)
 
 for key in keylist:
-    print key
+#    print key
     if "Data" in key.GetName() or "QCD" in key.GetName():
         continue
 
     list2 = key.ReadObj().GetListOfKeys()
-
+#    print list2
     for l in list2:
         name = l.GetName()
         split = name.split('_')
 #        nameKey = "%s_%s"%(split[0],split[1])
         nameKey = split[0]
 #        print split[1:-1]
+#        print name
         for n in split[1:-1]: nameKey += "_%s"%n
         tempHist = l.ReadObj()
+        # print tempHist
+        # print nameKey, key.GetName()
         histoList[nameKey].Add(tempHist,-1)
-
+        print nameKey, l.GetName(), histoList[nameKey].Integral()
 
 _file.rmdir("QCD_DD")
 _file.mkdir("QCD_DD")

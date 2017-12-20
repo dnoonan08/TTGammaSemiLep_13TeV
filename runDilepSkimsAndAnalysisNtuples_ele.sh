@@ -176,10 +176,10 @@ echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__Dilep . ${files[job]
 AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__Dilep . ${files[job]}skim.root
 
 
-echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/dielectrons/V08_00_26_07/"
-xrdcp -f ${files[job]}skim.root ${outputdir}skims/dielectrons/V08_00_26_07/
+echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/dielectrons/V08_00_26_07/."
+xrdcp -f ${files[job]}skim.root ${outputdir}skims/dielectrons/V08_00_26_07/.
 
-echo "xrdcp -f Dilep_${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/dielectrons/V08_00_26_07/"
-xrdcp -f Dilep_${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/dielectrons/V08_00_26_07/
+echo "xrdcp -f Dilep_${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/dielectrons/V08_00_26_07/."
+xrdcp -f Dilep_${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/dielectrons/V08_00_26_07/.
 
 

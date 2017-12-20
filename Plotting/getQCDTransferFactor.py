@@ -17,11 +17,13 @@ if finalState in ["Mu","mu"]:
     outputFileName = "histograms/mu/qcdTransferFactors.root"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdmuons/V08_00_26_07"
     preselCut = "passPresel_Mu"
+    qcdRelIsoCut = "muPFRelIso>0.3 && "
 elif finalState in ["Ele","ele","e"]:
     sample = "QCDEle"
     outputFileName = "histograms/ele/qcdTransferFactors.root"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdelectrons/V08_00_26_07"
     preselCut = "passPresel_Ele"
+    qcdRelIsoCut = ""
 else:
     print "Unknown final state"
     sys.exit()
@@ -37,8 +39,8 @@ for fileName in fileList:
 nJets  = 2
 nBJets = 0
 
-extraCuts       = "(%s && muPFRelIso<0.3 && nJet>=%i && nBJet==%i)*"%(preselCut, nJets, nBJets)
-extraCutsPhoton = "(%s && muPFRelIso<0.3 && nJet>=%i && nBJet==%i && phoMediumID)*"%(preselCut, nJets, nBJets)
+extraCuts       = "(%s && %s nJet>=%i && nBJet==%i)*"%(preselCut, qcdRelIsoCut, nJets, nBJets)
+extraCutsPhoton = "(%s && %s nJet>=%i && nBJet==%i && phoMediumID)*"%(preselCut, qcdRelIsoCut, nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 
@@ -50,8 +52,8 @@ tree.Draw("nJet>>pho_histNjet_QCDcr",extraCutsPhoton+weights)
 outputFile.cd()
 histCR.Write()
 
-extraCuts       = "(%s && muPFRelIso>0.3 && nJet>=%i && nBJet==%i)*"%(preselCut, nJets, nBJets)
-extraCutsPhoton = "(%s && muPFRelIso>0.3 && nJet>=%i && nBJet==%i && phoMediumID)*"%(preselCut, nJets, nBJets)
+extraCuts       = "(%s && %s nJet>=%i && nBJet==%i)*"%(preselCut, qcdRelIsoCut, nJets, nBJets)
+extraCutsPhoton = "(%s && %s nJet>=%i && nBJet==%i && phoMediumID)*"%(preselCut, qcdRelIsoCut, nJets, nBJets)
 
 weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[%i]"%nBJets
 
@@ -70,6 +72,10 @@ else:
 
 tree = TChain("AnalysisTree")
 fileList = samples[sample][0]
+for fileName in fileList:
+    tree.Add("%s/%s"%(analysisNtupleLocation,fileName))
+
+fileList = samples["GJets"][0]
 for fileName in fileList:
     tree.Add("%s/%s"%(analysisNtupleLocation,fileName))
 

@@ -8,5 +8,6 @@ python $argv -s ZGamma &
 python $argv -s Diboson &
 python $argv -s SingleTop &
 python $argv -s TTV &
+python $argv -s GJets &
 python $argv -s QCD &
 python $argv -s Data &

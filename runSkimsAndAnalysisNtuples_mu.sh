@@ -1,6 +1,7 @@
 #!/bin/bash
 
 job=$1
+jobType=$2
 
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then 
 	echo "Running Interactively" ; 
@@ -8,7 +9,6 @@ else
 	echo "Running In Batch"
 	cd ${_CONDOR_SCRATCH_DIR}
 	echo ${_CONDOR_SCRATCH_DIR}
-
 	echo "xrdcp root://cmseos.fnal.gov//store/user/"${USER}"/CMSSW_8_0_26_patch1.tgz ."
 	xrdcp root://cmseos.fnal.gov//store/user/${USER}/CMSSW_8_0_26_patch1.tgz .
 	echo "tar -xvf CMSSW_8_0_26_patch1.tgz"
@@ -23,62 +23,30 @@ else
 fi
 
 eval `scramv1 runtime -sh`
-
+channel="mu"
+channelDir="muons"
+tupleExtraName1=""
+tupleExtraName2=""
+if [ "$jobType" == "QCD" ] ;	then
+	channel="qcdmu"
+	channelDir="qcdmuons"
+	tupleExtraName1="QCDcr_"
+	tupleExtraName2="__QCDcr"
+fi
+if [ "$jobType" == "Dilep" ] ;	then
+	channel="dimu"
+	channelDir="dimuons"
+	tupleExtraName1="Dilep_"
+	tupleExtraName2="__Dilep"
+fi
 
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_"
-
-
-files=("TTGamma_SingleLeptFromTbar_" \
-"TTGamma_SingleLeptFromT_" \
-"TTGamma_Dilepton_" \
-"TTGamma_Hadronic_" \
-"TTbarPowheg_" \
-"TTbarMadgraph_SingleLeptFromT_" \
-"TTbarMadgraph_SingleLeptFromTbar_" \
-"TTbarMadgraph_Dilepton_" \
-"TGJets_" \
-"W1jets_" \
-"W2jets_" \
-"W3jets_" \
-"W4jets_" \
-"DYjetsM10to50_" \
-"DYjetsM50_" \
-"ST_s-channel_" \
-"ST_t-channel_" \
-"ST_tbar-channel_" \
-"ST_tW-channel_" \
-"ST_tbarW-channel_" \
-"TTWtoQQ_" \
-"TTWtoLNu_" \
-"TTZtoLL_" \
-"WGamma_" \
-"ZGamma_" \
-"WW_" \
-"WZ_" \
-"ZZ_" \
-"QCD_Pt20to30_Mu_" \
-"QCD_Pt30to50_Mu_" \
-"QCD_Pt50to80_Mu_" \
-"QCD_Pt80to120_Mu_" \
-"QCD_Pt120to170_Mu_" \
-"QCD_Pt170to300_Mu_" \
-"QCD_Pt300to470_Mu_" \
-"QCD_Pt470to600_Mu_" \
-"QCD_Pt600to800_Mu_" \
-"QCD_Pt800to1000_Mu_" \
-"QCD_Pt1000toInf_Mu_" \
-"Data_SingleMu_b_" \
-"Data_SingleMu_c_" \
-"Data_SingleMu_d_" \
-"Data_SingleMu_e_" \
-"Data_SingleMu_f_" \
-"Data_SingleMu_g_" \
-"Data_SingleMu_h_")
 
 DannyEOS="root://cmseos.fnal.gov//store/user/dnoonan/13TeV_ggNTuples/V08_00_26_07/"
 GGNtupleGroupEOSMC="root://cmseos.fnal.gov//store/user/lpcggntuples/ggNtuples/13TeV/mc/V08_00_26_07/"
 TitasEOS="root://cmseos.fnal.gov//store/user/troy2012/13TeV_ggNTuples/V08_00_26_07/"
 GGNtupleGroupEOSData="root://cmseos.fnal.gov//store/user/lpcggntuples/ggNtuples/13TeV/data/V08_00_26_07/"
+LPCtop="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_ggNTuples/V08_00_26_07/"
 
 inputfiles=($DannyEOS"TTGamma_SingleLeptFromTbar_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_SingleLeptFromT_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
@@ -103,8 +71,8 @@ $TitasEOS"ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.roo
 $GGNtupleGroupEOSMC"TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8.root" \
 $GGNtupleGroupEOSMC"TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8.root" \
 $GGNtupleGroupEOSMC"TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root" \
-$DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
-$DannyEOS"ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root" \
+$DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-ext1.root "$DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-ext2.root "$DannyEOS"WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-ext3.root" \
+$DannyEOS"ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root "$DannyEOS"ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-ext1.root" \
 $DannyEOS"WW_TuneCUETP8M1_13TeV-pythia8.root" \
 $DannyEOS"WZ_TuneCUETP8M1_13TeV-pythia8.root" \
 $DannyEOS"ZZ_TuneCUETP8M1_13TeV-pythia8.root" \
@@ -119,17 +87,18 @@ $GGNtupleGroupEOSMC"QCD_Pt-470to600_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.roo
 $GGNtupleGroupEOSMC"QCD_Pt-600to800_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
 $GGNtupleGroupEOSMC"QCD_Pt-800to1000_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
 $GGNtupleGroupEOSMC"QCD_Pt-1000toInf_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016B_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016C_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016D_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016E_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016F_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016G_FebReminiAOD.root" \
-$GGNtupleGroupEOSData"job_SingleMu_Run2016H_FebReminiAODv2.root "$GGNtupleGroupEOSData"job_SingleMu_Run2016H_FebReminiAODv3.root")
-
-
-
-
+$DannyEOS"GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$DannyEOS"GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$DannyEOS"GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$DannyEOS"GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$DannyEOS"GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$LPCtop"job_SingleMu_Run2016B_FebReminiAOD.root" \
+$LPCtop"job_SingleMu_Run2016C_FebReminiAOD.root" \
+$LPCtop"job_SingleMu_Run2016D_FebReminiAOD.root" \
+$LPCtop"job_SingleMu_Run2016E_FebReminiAOD.root" \
+$LPCtop"job_SingleMu_Run2016F_FebReminiAOD.root" \
+$LPCtop"job_SingleMu_Run2016G_FebReminiAOD.root" \
+$LPCtop"job_SingleMu_Run2016H_FebReminiAODv2.root "$LPCtop"job_SingleMu_Run2016H_FebReminiAODv3.root")
 
 sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTGamma_SingleLeptFromT" \
@@ -170,6 +139,11 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "QCD_Pt600to800_Mu" \
 "QCD_Pt800to1000_Mu" \
 "QCD_Pt1000toInf_Mu" \
+"GJets_HT-40To100" \
+"GJets_HT-100To200" \
+"GJets_HT-200To400" \
+"GJets_HT-400To600" \
+"GJets_HT-600ToInf" \
 "Data_SingleMu_b" \
 "Data_SingleMu_c" \
 "Data_SingleMu_d" \
@@ -179,18 +153,17 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "Data_SingleMu_h")
 
 
+echo "AnalysisNtuple/makeSkim ${channel} ${sampleType[job]}_skim.root ${inputfiles[job]}"
+AnalysisNtuple/makeSkim ${channel} ${sampleType[job]}_skim.root ${inputfiles[job]}
 
-echo "AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}"
-AnalysisNtuple/makeSkim mu ${files[job]}skim.root ${inputfiles[job]}
-
-echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.root"
-AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]} . ${files[job]}skim.root
+echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${sampleType[job]}_skim.root"
+AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${sampleType[job]}_skim.root
 
 
-echo "xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/V08_00_26_07/"
-xrdcp -f ${files[job]}skim.root ${outputdir}skims/muons/V08_00_26_07/
+echo "xrdcp -f ${sampleType[job]}_skim.root ${outputdir}skims/${channelDir}/V08_00_26_07/"
+xrdcp -f ${sampleType[job]}_skim.root ${outputdir}skims/${channelDir}/V08_00_26_07/
 
-echo "xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/V08_00_26_07/"
-xrdcp -f ${files[job]}AnalysisNtuple.root ${outputdir}AnalysisNtuples/muons/V08_00_26_07/
+echo "xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}AnalysisNtuples/${channelDir}/V08_00_26_07/"
+xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}AnalysisNtuples/${channelDir}/V08_00_26_07/
 
 

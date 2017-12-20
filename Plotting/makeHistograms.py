@@ -17,6 +17,8 @@ parser.add_option("--Loose","--loose", dest="isLooseSelection", default=False,ac
                      help="Use 2j0t selection" )
 parser.add_option("--LooseCR","--looseCR", dest="isLooseCRSelection", default=False,action="store_true",
 		  help="Use 2j exactly 0t control region selection" )
+parser.add_option("--LooseCR3","--looseCR3", dest="isLooseCR3Selection", default=False,action="store_true",
+		  help="Use 3j exactly 0t control region selection" )
 parser.add_option("--addPlots","--addOnly", dest="onlyAddPlots", default=False,action="store_true",
                      help="Use only if you want to add a couple of plots to the file, does not remove other plots" )
 parser.add_option("--output", dest="outputFileName", default="hists.root",
@@ -35,6 +37,7 @@ sample = options.sample
 isTightSelection = options.isTightSelection
 isLooseSelection = options.isLooseSelection
 isLooseCRSelection = options.isLooseCRSelection
+isLooseCR3Selection = options.isLooseCR3Selection
 onlyAddPlots = options.onlyAddPlots
 plotList = options.plotList
 outputFileName = options.outputFileName
@@ -45,6 +48,7 @@ print isLooseSelection
 nJets = 3
 nBJets = 1
 
+isQCD = False
 
 #atleast 0, atleast 1, atleast 2, exactly 1, btagWeight[0] = exactly 0
 
@@ -69,7 +73,7 @@ if finalState=="Mu":
         sample = "DataMu"
     if sample=="QCD":
         sample = "QCDMu"
-    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07/"
     outputhistName = "histograms/mu/%s"%outputFileName
 
     extraCuts            = "(passPresel_Mu && nJet>=3 && nBJet>=1)*"
@@ -84,6 +88,9 @@ if finalState=="Mu":
     extraCutsLooseCR       = "(passPresel_Mu && nJet>=2 && nBJet>=0)*"
     extraPhotonCutsLooseCR = "(passPresel_Mu && nJet>=2 && nBJet>=0 && %s)*"
 
+    extraCutsLooseCR3       = "(passPresel_Mu && nJet>=3 && nBJet>=0)*"
+    extraPhotonCutsLooseCR3 = "(passPresel_Mu && nJet>=3 && nBJet>=0 && %s)*"
+
 elif finalState=="Ele":
     sampleList[-1] = "DataEle"
     sampleList[-2] = "QCDEle"
@@ -91,7 +98,7 @@ elif finalState=="Ele":
         sample = "DataEle"
     if sample=="QCD":
         sample = "QCDEle"
-    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07/"
     outputhistName = "histograms/ele/%s"%outputFileName
 
     extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet>=1)*"
@@ -105,6 +112,113 @@ elif finalState=="Ele":
 
     extraCutsLooseCR       = "(passPresel_Ele && nJet>=2 && nBJet>=0)*"
     extraPhotonCutsLooseCR = "(passPresel_Ele && nJet>=2 && nBJet>=0 && %s)*"
+
+    extraCutsLooseCR3       = "(passPresel_Ele && nJet>=3 && nBJet>=0)*"
+    extraPhotonCutsLooseCR3 = "(passPresel_Ele && nJet>=3 && nBJet>=0 && %s)*"
+
+elif finalState=="DiMu":
+    sampleList[-1] = "DataMu"
+    sampleList[-2] = "QCDMu"
+
+    if sample=="Data":
+        sample = "DataMu"
+    if sample=="QCD":
+        sample = "QCDMu"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/dimuons/V08_00_26_07/Dilep_"
+    outputhistName = "histograms/mu/dilep%s"%outputFileName
+
+    extraCuts            = "(passPresel_Mu && nJet>=3 && nBJet>=1)*"
+    extraPhotonCuts      = "(passPresel_Mu && nJet>=3 && nBJet>=1 && %s)*"
+
+    extraCutsTight       = "(passPresel_Mu && nJet>=4 && nBJet>=2)*"
+    extraPhotonCutsTight = "(passPresel_Mu && nJet>=4 && nBJet>=2 && %s)*"
+
+    extraCutsLoose       = "(passPresel_Mu && nJet==2 && nBJet==0)*"
+    extraPhotonCutsLoose = "(passPresel_Mu && nJet==2 && nBJet==0 && %s)*"
+
+    extraCutsLooseCR       = "(passPresel_Mu && nJet>=2 && nBJet>=0)*"
+    extraPhotonCutsLooseCR = "(passPresel_Mu && nJet>=2 && nBJet>=0 && %s)*"
+
+    extraCutsLooseCR3       = "(passPresel_Mu && nJet>=3 && nBJet>=0)*"
+    extraPhotonCutsLooseCR3 = "(passPresel_Mu && nJet>=3 && nBJet>=0 && %s)*"
+
+elif finalState=="DiEle":
+    sampleList[-1] = "DataEle"
+    sampleList[-2] = "QCDEle"
+    if sample=="Data":
+        sample = "DataEle"
+    if sample=="QCD":
+        sample = "QCDEle"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/dielectrons/V08_00_26_07/Dilep_"
+    outputhistName = "histograms/ele/dilep%s"%outputFileName
+
+    extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet>=1)*"
+    extraPhotonCuts      = "(passPresel_Ele && nJet>=3 && nBJet>=1 && %s)*"
+
+    extraCutsTight       = "(passPresel_Ele && nJet>=4 && nBJet>=2)*"
+    extraPhotonCutsTight = "(passPresel_Ele && nJet>=4 && nBJet>=2 && %s)*"
+
+    extraCutsLoose       = "(passPresel_Ele && nJet==2 && nBJet==0)*"
+    extraPhotonCutsLoose = "(passPresel_Ele && nJet==2 && nBJet==0 && %s)*"
+
+    extraCutsLooseCR       = "(passPresel_Ele && nJet>=2 && nBJet>=0)*"
+    extraPhotonCutsLooseCR = "(passPresel_Ele && nJet>=2 && nBJet>=0 && %s)*"
+
+    extraCutsLooseCR3       = "(passPresel_Ele && nJet>=3 && nBJet>=0)*"
+    extraPhotonCutsLooseCR3 = "(passPresel_Ele && nJet>=3 && nBJet>=0 && %s)*"
+
+elif finalState=="QCDMu":
+    sampleList[-1] = "DataMu"
+    sampleList[-2] = "QCDMu"
+    if sample=="Data":
+        sample = "DataMu"
+    if sample=="QCD":
+        sample = "QCDMu"
+
+    isQCD = True
+
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdmuons/V08_00_26_07/QCDcr_"
+    outputhistName = "histograms/mu/qcdhistsCR.root"
+
+    nBJets = 0
+    extraCuts            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=3 && nBJet==0)*"
+    extraPhotonCuts      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=3 && nBJet==0 && %s)*"
+
+    extraCutsTight            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=4 && nBJet==0)*"
+    extraPhotonCutsTight      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=4 && nBJet==0 && %s)*"
+
+    extraCutsLoose            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLoose      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+
+    extraCutsLooseCR          = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR    = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+
+elif finalState=="QCDEle":
+    sampleList[-1] = "DataEle"
+    sampleList[-2] = "QCDEle"
+    if sample=="Data":
+        sample = "DataEle"
+    if sample=="QCD":
+        sample = "QCDEle"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdelectrons/V08_00_26_07/QCDcr_"
+    outputhistName = "histograms/ele/qcdhistsCR.root"
+
+    isQCD = True
+
+    nBJets = 0
+
+    extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet==0)*"
+    extraPhotonCuts      = "(passPresel_Ele && nJet>=3 && nBJet==0 && %s)*"
+
+    extraCutsTight            = "(passPresel_Ele && nJet>=4 && nBJet==0)*"
+    extraPhotonCutsTight      = "(passPresel_Ele && nJet>=4 && nBJet==0 && %s)*"
+
+    extraCutsLoose            = "(passPresel_Ele && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLoose      = "(passPresel_Ele && nJet>=2 && nBJet==0 && %s)*"
+
+    extraCutsLooseCR          = "(passPresel_Ele && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR    = "(passPresel_Ele && nJet>=2 && nBJet==0 && %s)*"
+
 else:
     print "Unknown final state, options are Mu and Ele"
     sys.exit()
@@ -167,6 +281,15 @@ if isLooseCRSelection:
     extraCuts = extraCutsLooseCR
     extraPhotonCuts = extraPhotonCutsLooseCR
     outputhistName = outputhistName.replace(".root","_looseCR.root")
+
+if isLooseCR3Selection:
+    print "Loose Control Region Select"
+    nJets = 3
+    nBJets = 0
+    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*1" #*(btagWeight[2])"
+    extraCuts = extraCutsLooseCR3
+    extraPhotonCuts = extraPhotonCutsLooseCR3
+    outputhistName = outputhistName.replace(".root","_looseCR3.root")
 
 from HistogramListDict import *
 histogramInfo = GetHistogramInfo(extraCuts,extraPhotonCuts,nBJets)
@@ -260,7 +383,7 @@ if not "QCD_DD" in sample:
     tree = TChain("AnalysisTree")
     fileList = samples[sample][0]
     for fileName in fileList:
-        tree.Add("%s/%s"%(analysisNtupleLocation,fileName))
+        tree.Add("%s%s"%(analysisNtupleLocation,fileName))
 
     print sample
 
@@ -268,6 +391,10 @@ if not "QCD_DD" in sample:
 
     for hist in histogramsToMake:
         h_Info = histogramInfo[hist]
+
+        # skip some histograms which rely on MC truth and can't be done in data or QCD data driven templates
+        if ('Data' in sample or isQCD) and not h_Info[5]: continue
+
         print "filling", h_Info[1], sample
         evtWeight = ""
         histograms.append(TH1F("%s_%s"%(h_Info[1],sample),"%s_%s"%(h_Info[1],sample),h_Info[2][0],h_Info[2][1],h_Info[2][2]))

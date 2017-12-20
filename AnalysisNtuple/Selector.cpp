@@ -129,12 +129,19 @@ void Selector::filter_photons(){
 		double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_->at(phoInd) - phoEffArea03ChHad(SCeta)*tree->rho_);
 		double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_->at(phoInd) - phoEffArea03NeuHad(SCeta)*tree->rho_);
 		double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_->at(phoInd) - phoEffArea03Pho(SCeta)*tree->rho_);
-		double rhoCorrPFRandConeChIso  = max(0.0, tree->phoPFRandConeChIso_->at(phoInd) - phoEffArea03ChHad(SCeta)*tree->rho_);
 
 		PhoChHadIso_corr.push_back(rhoCorrPFChIso);
 		PhoNeuHadIso_corr.push_back(rhoCorrPFNeuIso);
 		PhoPhoIso_corr.push_back(rhoCorrPFPhoIso);
-		PhoRandConeChHadIso_corr.push_back(rhoCorrPFRandConeChIso);
+
+		if (tree->isData_){
+			vector<float> correctedRandConeIso;
+			for (unsigned int i = 0; i < tree->phoPFRandConeChIso_->at(phoInd).size(); i++){
+				double rhoCorrPFRandConeChIso  = max(0.0, tree->phoPFRandConeChIso_->at(phoInd).at(i) - phoEffArea03ChHad(SCeta)*tree->rho_);
+				correctedRandConeIso.push_back(rhoCorrPFRandConeChIso);
+			}
+			PhoRandConeChHadIso_corr.push_back(correctedRandConeIso);
+		}
 
 		bool passDR_lep_pho = true;
 
@@ -261,9 +268,9 @@ void Selector::filter_electrons(){
 			passTightID = false;
 			passTightID = passEleTightID(eleInd,false) && 
 				PFrelIso_corr > (absSCEta < 1.47 ? 0.0588 : 0.0571) && 
-				tree->elePFClusEcalIso_->at(eleInd) < (absSCEta < 1.47 ? 0.0032 : 0.040) && 
-				tree->elePFClusHcalIso_->at(eleInd) < (absSCEta < 1.47 ? 0.055 : 0.05) && 
-				tree->eleDr03TkSumPt_->at(eleInd) < (absSCEta < 1.47 ? 0.06 : 0.05);
+				(tree->elePFClusEcalIso_->at(eleInd) / tree->elePt_->at(eleInd) ) < (absSCEta < 1.47 ? 0.032 : 0.040) && 
+				(tree->elePFClusHcalIso_->at(eleInd) / tree->elePt_->at(eleInd) ) < (absSCEta < 1.47 ? 0.055 : 0.05) && 
+				(tree->eleDr03TkSumPt_->at(eleInd)   / tree->elePt_->at(eleInd) ) < (absSCEta < 1.47 ? 0.06 : 0.05);
 		}
 
 
