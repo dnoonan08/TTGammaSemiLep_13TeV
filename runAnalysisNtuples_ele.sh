@@ -40,10 +40,47 @@ if [ "$jobType" == "Dilep" ] ;	then
 	tupleExtraName2="__Dilep"
 fi
 
+systematic=false
+if [ "$jobType" == "JEC" ] ;	then
+	channel="mu"
+	channelDir="muons"
+	tupleExtraName1="JEC"
+	systematic=true
+fi
+if [ "$jobType" == "JER" ] ;	then
+	channel="mu"
+	channelDir="muons"
+	tupleExtraName1="JER"
+	systematic=true
+fi
+if [ "$jobType" == "pho" ] ;	then
+	channel="mu"
+	channelDir="muons"
+	tupleExtraName1="pho"
+	systematic=true
+fi
+if [ "$jobType" == "elesmear" ] ;	then
+	channel="mu"
+	channelDir="muons"
+	tupleExtraName1="pho"
+	systematic=true
+fi
+if [ "$jobType" == "musmear" ] ;	then
+	channel="mu"
+	channelDir="muons"
+	tupleExtraName1="pho"
+	systematic=true
+fi
+
+
+
 
 inputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_skims/${channelDir}/V08_00_26_07/"
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/${channelDir}/V08_00_26_07/."
 
+if [ "$systematic" = true ] ; then
+	outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/."
+fi
 
 sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTGamma_SingleLeptFromT" \
@@ -54,6 +91,8 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTbarMadgraph_SingleLeptFromTbar" \
 "TTbarMadgraph_Dilepton" \
 "TGJets" \
+"TTGJets" \
+"TTbarMadgraph" \
 "W1jets" \
 "W2jets" \
 "W3jets" \
@@ -94,9 +133,24 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "Data_SingleEle_h")
 
 
+if [ "$systematic" = false ] ; then
+	echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${inputdir}${sampleType[job]}_skim.root"
+	AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${inputdir}${sampleType[job]}_skim.root
 
-echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${inputdir}${sampleType[job]}_skim.root"
-AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}${tupleExtraName2} . ${inputdir}${sampleType[job]}_skim.root
+	echo "xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
+	xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}
+fi
 
-echo "xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
-xrdcp -f ${tupleExtraName1}${sampleType[job]}_AnalysisNtuple.root ${outputdir}
+if [ "$systematic" = true ] ; then
+	echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_up . ${inputdir}${sampleType[job]}_skim.root"
+	AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_up . ${inputdir}${sampleType[job]}_skim.root
+
+	echo "xrdcp -f ${tupleExtraName1}_up_${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
+	xrdcp -f ${tupleExtraName1}_up_${sampleType[job]}_AnalysisNtuple.root ${outputdir}
+
+	echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_down . ${inputdir}${sampleType[job]}_skim.root"
+	AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_down . ${inputdir}${sampleType[job]}_skim.root
+
+	echo "xrdcp -f ${tupleExtraName1}_down_${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
+	xrdcp -f ${tupleExtraName1}_down_${sampleType[job]}_AnalysisNtuple.root ${outputdir}
+fi
