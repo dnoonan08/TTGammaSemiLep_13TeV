@@ -57,6 +57,8 @@ $DannyEOS"TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"TGJets_TuneCUETP8M1_13TeV_amcatnlo_madspin_pythia8.root" \
+$DannyEOS"TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8-ext1.root" \
+$DannyEOS"TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W1JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W2JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W3JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
@@ -110,6 +112,8 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTbarMadgraph_SingleLeptFromTbar" \
 "TTbarMadgraph_Dilepton" \
 "TGJets" \
+"TTGJets" \
+"TTbarMadgraph" \
 "W1jets" \
 "W2jets" \
 "W3jets" \

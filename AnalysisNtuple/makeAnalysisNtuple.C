@@ -112,7 +112,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	bool doOverlapRemoval_WZ = false;	
 	bool doOverlapRemoval_Tchannel = false;	
 	bool skipOverlap = false;
-	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton") doOverlapRemoval = true;
+	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
 
 	if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50") doOverlapRemoval_WZ = true;
 
