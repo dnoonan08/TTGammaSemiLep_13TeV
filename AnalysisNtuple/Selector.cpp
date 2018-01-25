@@ -363,13 +363,18 @@ void Selector::filter_jets(){
 			tJet.SetPtEtaPhiE(tree->jetPt_->at(jetInd),tree->jetEta_->at(jetInd),tree->jetPhi_->at(jetInd),tree->jetEn_->at(jetInd));
 			tMET += tJet;
 			double JECUnc = tree->jetJECUnc_->at(jetInd);
+			double corrFactor = tree->jetPt_->at(jetInd)/tree->jetRawPt_->at(jetInd);
 			if (JECsystLevel==0){
-				tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd)*(1-JECUnc);
-				tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd)*(1-JECUnc);
+				tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd) - tree->jetRawPt_->at(jetInd)*JECUnc;
+				tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd) - (tree->jetEn_->at(jetInd)/corrFactor) *JECUnc; // missing jetRawEn, so use jetEn/corrFactor
+				// tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd)*(1-JECUnc);
+				// tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd)*(1-JECUnc);
 			}
 			if (JECsystLevel==2){
-				tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd)*(1+JECUnc);
-				tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd)*(1+JECUnc);
+				tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd) + tree->jetRawPt_->at(jetInd)*JECUnc;
+				tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd) + (tree->jetEn_->at(jetInd)/corrFactor) *JECUnc;
+				// tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd)*(1+JECUnc);
+				// tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd)*(1+JECUnc);
 			}
 			tJet.SetPtEtaPhiE(tree->jetPt_->at(jetInd),tree->jetEta_->at(jetInd),tree->jetPhi_->at(jetInd),tree->jetEn_->at(jetInd));
 			tMET -= tJet;
