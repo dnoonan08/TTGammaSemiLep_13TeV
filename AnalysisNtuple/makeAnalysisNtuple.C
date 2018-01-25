@@ -122,9 +122,21 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
 	dileptonsample = false;
-
-	if( systematicType=="JEC_up")       {jecvar012_g = 2; selector->JECsystLevel=2;}
-	if( systematicType=="JEC_down")     {jecvar012_g = 0; selector->JECsystLevel=0;}
+	string JECsystLevel = "";
+	if( systematicType.substr(0,3)=="JEC" ){
+		int pos = systematicType.find("_");
+		JECsystLevel = systematicType.substr(3,pos-3);
+		if (std::end(allowedJECUncertainties) == std::find(std::begin(allowedJECUncertainties), std::end(allowedJECUncertainties), JECsystLevel)){
+			cout << "The JEC systematic source, " << JECsystLevel << ", is not in the list of allowed sources (found in JEC/UncertaintySourcesList.h" << endl;
+			cout << "Exiting" << endl;
+			return;
+		}
+		if (systematicType.substr(pos+1,2)=="up"){ jecvar012_g = 2; }
+		if (systematicType.substr(pos+1,2)=="do"){ jecvar012_g = 0; }
+	}
+		
+	// if( systematicType=="JEC_up")       {jecvar012_g = 2; selector->JECsystLevel=2;}
+	// if( systematicType=="JEC_down")     {jecvar012_g = 0; selector->JECsystLevel=0;}
 	if( systematicType=="JER_up")       {jervar012_g = 2; selector->JERsystLevel=2;}
 	if( systematicType=="JER_down")     {jervar012_g = 0; selector->JERsystLevel=0;}
 	if( systematicType=="pho_up")       {phosmear012_g = 2;}
@@ -168,7 +180,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	JECvariation* jecvar;
 	if (isMC) {
-		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC);
+		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, "Total");//SubTotalAbsolute");
 	}
 
 	_lumiWeight = getEvtWeight(sampleType);
@@ -182,7 +194,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	Long64_t nEntr = tree->GetEntries();
 
-	if (sampleType=="Test") nEntr = 1000;
+	if (sampleType=="Test") nEntr = 10000;
 	//nEntr = 10000;
 
 	int dumpFreq = 1;
@@ -234,15 +246,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		}
 		// //		Apply systematics shifts where needed
 		if( isMC ){
-			cout << tree->event_ << endl;
-			for (int _j = 0; _j < tree->nJet_; _j++){
-				cout << _j << "   " << tree->jetPt_->at(_j) << endl;
-			}
 			jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
-			cout << "-------" << endl;
-			for (int _j = 0; _j < tree->nJet_; _j++){
-				cout << _j << "   " << tree->jetPt_->at(_j) << endl;
-			}
 		}
 
 

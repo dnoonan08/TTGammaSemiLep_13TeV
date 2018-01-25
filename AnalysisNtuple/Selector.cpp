@@ -383,7 +383,6 @@ void Selector::filter_jets(){
 		if (!tree->isData_ && JERsystLevel==1) {jetSmear = tree->jetP4Smear_->at(jetInd);}
 		if (!tree->isData_ && JERsystLevel==0) {jetSmear = tree->jetP4SmearDo_->at(jetInd);}
 		if (!tree->isData_ && JERsystLevel==2) {jetSmear = tree->jetP4SmearUp_->at(jetInd);}
-		cout << jetInd << "   " << pt <<  "    "  << pt*jetSmear << endl;
 		if (smearJetPt){
 			pt = pt*jetSmear;
 			jetEn = jetSmear*jetEn;

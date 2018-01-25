@@ -5,10 +5,10 @@
 #include<iostream>
 
 
-JECvariation::JECvariation(std::string inputPrefix, bool isMC){
+JECvariation::JECvariation(std::string inputPrefix, bool isMC, string systematicLevel){
 	if( isMC ){
 		std::cout << inputPrefix+"_MC_Uncertainty_AK4PFchs.txt" << std::endl;
-		jecUnc = new JetCorrectionUncertainty((inputPrefix+"_MC_Uncertainty_AK4PFchs.txt").c_str());
+		jecUnc = new JetCorrectionUncertainty(*(new JetCorrectorParameters((inputPrefix+"_MC_UncertaintySources_AK4PFchs.txt").c_str(),systematicLevel)));
 		ResJetPar = new JetCorrectorParameters((inputPrefix+"_MC_L2L3Residual_AK4PFchs.txt").c_str());
 		L3JetPar  = new JetCorrectorParameters((inputPrefix+"_MC_L3Absolute_AK4PFchs.txt").c_str());
 		L2JetPar  = new JetCorrectorParameters((inputPrefix+"_MC_L2Relative_AK4PFchs.txt").c_str());
