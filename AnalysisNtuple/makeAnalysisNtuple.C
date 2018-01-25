@@ -11,7 +11,7 @@
 #include "METzCalculator.h"
 #include "TopEventCombinatorics.h"
 #include "JetResolutions.h"
-//#include"JEC/JECvariation.h"
+#include"JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
 
 #include "elemuSF.h"
@@ -166,10 +166,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	isMC = !(tree->isData_);
 	std::cout << "isMC: " << isMC << endl;
 
-	// JECvariation* jecvar;
-	// if (isMC) {
-	// 	jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC);
-	// }
+	JECvariation* jecvar;
+	if (isMC) {
+		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC);
+	}
 
 	_lumiWeight = getEvtWeight(sampleType);
 
@@ -182,7 +182,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	Long64_t nEntr = tree->GetEntries();
 
-	if (sampleType=="Test") nEntr = 10000;
+	if (sampleType=="Test") nEntr = 1000;
 	//nEntr = 10000;
 
 	int dumpFreq = 1;
@@ -232,11 +232,18 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				continue;
 			}
 		}
-		// //Apply systematics shifts where needed
-		// if( isMC ){
-		// 	jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
-
-		// }
+		// //		Apply systematics shifts where needed
+		if( isMC ){
+			cout << tree->event_ << endl;
+			for (int _j = 0; _j < tree->nJet_; _j++){
+				cout << _j << "   " << tree->jetPt_->at(_j) << endl;
+			}
+			jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
+			cout << "-------" << endl;
+			for (int _j = 0; _j < tree->nJet_; _j++){
+				cout << _j << "   " << tree->jetPt_->at(_j) << endl;
+			}
+		}
 
 
 		selector->process_objects(tree);
@@ -505,15 +512,17 @@ void makeAnalysisNtuple::FillEvent()
 
 
 		parentPID = -888;
+		int gparentPID = -888;
 		int parentage = -1;
 
 		if (!tree->isData_ && phoGenMatchInd!=-1){
 			parentPID = tree->mcMomPID->at(phoGenMatchInd);
+			gparentPID = tree->mcGMomPID->at(phoGenMatchInd);
 			// photon parentage for event categorization
-			// -1 is unmatched photon; 0 is matched, but not top/W/lepton, 1 is top parent, 2 is W parent, 3 is lepton parent,
-			if (abs(parentPID)==6) parentage = 1;
-			else if (abs(parentPID)==24) parentage = 2;
-			else if (abs(parentPID)==11 || abs(parentPID)==13 || abs(parentPID)==15) parentage = 3;
+			// -1 is unmatched photon; 0 is matched, but not top/W/lepton, 1 is top parent or ISR parent, 2 is W parent, 3 is lepton parent,
+			if (abs(parentPID)==22 || abs(parentPID)<6 && gparentPID==-999) parentage = 1;
+			else if (abs(parentPID)==6) parentage = 2;
+			else if (abs(parentPID)==24 || abs(parentPID)==11 || abs(parentPID)==13 || abs(parentPID)==15) parentage = 3;
 			else if (parentPID!=-999) parentage = 0;
 		}
 
