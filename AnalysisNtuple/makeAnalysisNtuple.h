@@ -83,6 +83,7 @@ private :
 	Bool_t          _isPVGood;
 	Float_t         _rho;
 	Float_t         _genMET;
+	Float_t         _genScaleSystWeights;
 	Float_t         _pfMET;
 	Float_t         _pfMETPhi;
 	Float_t         _WtransMass;
@@ -326,6 +327,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("isPVGood"                   , &_isPVGood                    ); 
 	outputTree->Branch("rho"                        , &_rho                         ); 
 	outputTree->Branch("genMET"                     , &_genMET                      ); 
+	outputTree->Branch("genScaleSystWeights"        , &_genScaleSystWeights         );
 	outputTree->Branch("pfMET"                      , &_pfMET                       );
 	outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
 	outputTree->Branch("WtransMass"                 , &_WtransMass                  );
@@ -493,6 +495,7 @@ void makeAnalysisNtuple::InitVariables()
 	_isPVGood	     = false;
 	_rho		     = -9999;
 	_genMET		     = -9999;
+	_genScaleSystWeights = -9999;
 	_pfMET		     = -9999;
 	_pfMETPhi	     = -9999;
 	_WtransMass      = -9999;

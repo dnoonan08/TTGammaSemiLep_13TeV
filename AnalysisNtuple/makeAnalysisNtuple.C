@@ -313,7 +313,7 @@ void makeAnalysisNtuple::FillEvent()
 	_rho		     = tree->rho_;
 
 	_evtWeight       = _lumiWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
-
+	_genScaleSystWeights = tree->genScaleSystWeights_;
 	_genMET		     = tree->genMET_;
 	_pfMET		     = tree->pfMET_;
 	_pfMETPhi	     = tree->pfMETPhi_;
