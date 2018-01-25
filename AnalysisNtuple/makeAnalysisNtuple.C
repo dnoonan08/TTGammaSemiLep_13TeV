@@ -313,7 +313,7 @@ void makeAnalysisNtuple::FillEvent()
 	_rho		     = tree->rho_;
 
 	_evtWeight       = _lumiWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
-	_genScaleSystWeights = tree->genScaleSystWeights_;
+	
 	_genMET		     = tree->genMET_;
 	_pfMET		     = tree->pfMET_;
 	_pfMETPhi	     = tree->pfMETPhi_;
@@ -787,6 +787,11 @@ void makeAnalysisNtuple::FillEvent()
 
 	
 	if (!tree->isData_){
+		for (int i=0;i<9;i++){
+			 _genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
+		}
+
+			
 		for (int i_mc = 0; i_mc <_nMC; i_mc++){
 			_mcPt.push_back(tree->mcPt->at(i_mc));
 			_mcPhi.push_back(tree->mcPhi->at(i_mc));
@@ -798,6 +803,10 @@ void makeAnalysisNtuple::FillEvent()
 			_mcMomPID.push_back(tree->mcMomPID->at(i_mc));
 			_mcGMomPID.push_back(tree->mcGMomPID->at(i_mc));
 			_mcParentage.push_back(tree->mcParentage->at(i_mc));
+		//	_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i_mc));
+		//	std::cout<<i_mc<<std::endl;
+		//	std::cout<<"the value is"<<tree->genScaleSystWeights_->at(i_mc)<<std::endl;
+			
 		}
 	}
 

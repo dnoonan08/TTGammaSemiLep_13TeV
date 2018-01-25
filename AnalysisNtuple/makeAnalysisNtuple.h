@@ -83,7 +83,7 @@ private :
 	Bool_t          _isPVGood;
 	Float_t         _rho;
 	Float_t         _genMET;
-	Float_t         _genScaleSystWeights;
+        
 	Float_t         _pfMET;
 	Float_t         _pfMETPhi;
 	Float_t         _WtransMass;
@@ -239,7 +239,7 @@ private :
 	std::vector<int>     _mcMomPID;
 	std::vector<int>     _mcGMomPID;
 	std::vector<int>     _mcParentage;
-
+	std::vector<float>   _genScaleSystWeights;
 	double               _M3;
 	double               _HT;
 	
@@ -458,6 +458,7 @@ void makeAnalysisNtuple::InitBranches(){
 		outputTree->Branch("mcMomPID"                    , &_mcMomPID                   );
 		outputTree->Branch("mcGMomPID"                   , &_mcGMomPID                  );
 		outputTree->Branch("mcParentage"                 , &_mcParentage                );
+		outputTree->Branch("genScaleSystWeights"        , &_genScaleSystWeights         );
 	}
 
     outputTree->Branch("M3"                          , &_M3                         ); 
@@ -495,7 +496,7 @@ void makeAnalysisNtuple::InitVariables()
 	_isPVGood	     = false;
 	_rho		     = -9999;
 	_genMET		     = -9999;
-	_genScaleSystWeights = -9999;
+	//_genScaleSystWeights = -9999;
 	_pfMET		     = -9999;
 	_pfMETPhi	     = -9999;
 	_WtransMass      = -9999;
@@ -638,7 +639,8 @@ void makeAnalysisNtuple::InitVariables()
 	_dRPhotonLepton.clear();
 	_MPhotonLepton.clear();
 	_AnglePhotonLepton.clear();
-
+	
+	_genScaleSystWeights.clear();
 	_mcPt.clear();
 	_mcPhi.clear();
 	_mcEta.clear();
