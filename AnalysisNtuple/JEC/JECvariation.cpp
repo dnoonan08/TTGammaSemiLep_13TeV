@@ -35,7 +35,7 @@ JECvariation::~JECvariation(){
 
 
 void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
-	if(scaleDownNormUp012 == 1) return;
+	//	if(scaleDownNormUp012 == 1) return;
 	//bool JECapplied false; 
 
 	TLorentzVector tMET;
@@ -65,7 +65,7 @@ void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
 		double unc = jecUnc->getUncertainty(true);
 		//std::cout << "unc " << unc << std::endl;
 		if(scaleDownNormUp012==0) correction-=unc;
-		if(scaleDownNormUp012==1) continue;
+		//		if(scaleDownNormUp012==1) continue;
 		if(scaleDownNormUp012==2) correction+=unc;
 		
 		tree->jetPt_->at(jetInd) = tree->jetRawPt_->at(jetInd) * correction;
