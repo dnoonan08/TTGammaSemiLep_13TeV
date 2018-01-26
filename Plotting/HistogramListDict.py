@@ -114,7 +114,11 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_AntiSIEIE_ChIso_MisIDEle"       : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_MisIDEle"   ,        [80,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && !loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsMisIDEle")      , "", False],
                       "phosel_AntiSIEIE_ChIso_HadPho"         : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_HadPho"     ,        [80,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && !loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsHadronicPhoton"), "", False],
                       "phosel_AntiSIEIE_ChIso_HadFake"        : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_HadFake"    ,       [200,0,50], extraPhotonCuts%("loosePhoMediumIDPassHoverE && !loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsHadronicFake")  , "", False],
-                      #################
+                      "phosel_AntiSIEIE_ChIso_barrel"        : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_barrel"    ,       [200,0,50], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.015 && loosePhoSIEIE<0.55) && (abs(loosePhoSCEta)<1.47) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsHadronicFake")  , "", False],
+                      "phosel_AntiSIEIE_ChIso_endcap"        : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_endcap"    ,       [200,0,50], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.031 && loosePhoSIEIE<0.55) && (abs(loosePhoSCEta)>1.47) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsHadronicFake")  , "", False],
+
+
+			#################
                       "phosel_NGenuinePho"                    : ["nPho"              , "phosel_NGenuinePho"       ,          [2,0,2], extraPhotonCuts%("photonIsGenuine")                       , "", False],
                       "phosel_NMisIDEle"                      : ["nPho"              , "phosel_NMisIDEle"         ,          [2,0,2], extraPhotonCuts%("photonIsMisIDEle")                      , "", False],
                       "phosel_NHadronicPho"                   : ["nPho"              , "phosel_NHadronicPho"      ,          [2,0,2], extraPhotonCuts%("photonIsHadronicPhoton")                , "", False],
