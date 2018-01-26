@@ -14,12 +14,12 @@ x509userproxy = $ENV(X509_USER_PROXY)
 # important, number of instances (jobs) of script
 
 Arguments = "$(process)"
-Queue 49
+Queue 50
 
 ###This is an example of how to start at a certain point, 
 ###it starts with job 27 (QCD samples in this case) and goes from there
-# Arguments = "27+$(process)"
-# Queue 7
+#Arguments = "11+$(process)"
+#Queue 1
 
 
 ####This section can be used to submit analysis ntuple jobs for systematic uncertainties

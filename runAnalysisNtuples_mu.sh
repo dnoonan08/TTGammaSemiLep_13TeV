@@ -93,6 +93,7 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TGJets" \
 "TTGJets" \
 "TTbarMadgraph" \
+"WjetsInclusive" \
 "W1jets" \
 "W2jets" \
 "W3jets" \

@@ -28,6 +28,8 @@ double totalTTbarMadgraph_Dilepton            = 6094300.;
 
 double totalTTbarMadgraph         = 10139697.;
 
+double totalWjetsInclusive   = 14571460. + 43770073. + 45924073. + 40616144. + 45738743. + 44952030.;
+
 double totalW1jets           = 45366416.;
 double totalW2jets           = 30318880.;
 double totalW3jets           = 39268750.;
@@ -83,13 +85,13 @@ double totalGJets_HT600toInf = 2463751.;
 // Cross Sections Used  //
 //////////////////////////
 
-double TTbar_xs             =  831.76;
+double TTbar_xs             =  831.76;  //ttbar NNLO (http://inspirehep.net/search?p=find+eprint+1112.5675)
 
 double TTbar_dilepton_xs             =  87.315;
 double TTbar_semilept_xs             =  182.175;
 double TTbar_hadronic_xs             =  831.76-TTbar_dilepton_xs-2*TTbar_semilept_xs;
 
-double TTGJets_xs               =  3.697;
+double TTGJets_xs               =  3.697; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#TT_X
 
 double TGJets_xs                =  2.967;
 
@@ -97,24 +99,26 @@ double TTGamma_hadronic_xs  =  4.599;
 double TTGamma_semilept_xs  =  4.499/2.;
 double TTGamma_dilept_xs    =  0.899;
 
+double WjetsInclusive_xs    = 61526.7; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#W_jets
+
 double W1jets_xs            =  9493.0;
 double W2jets_xs            =  3120.0;
 double W3jets_xs            =  942.3;
 double W4jets_xs            =  524.2;
 
-double DYjetsM50_xs         =  5765.4; 
-double DYjetsM10to50_xs     =  18610.; 
+double DYjetsM50_xs         =  5765.4; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
+double DYjetsM10to50_xs     =  18610.; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 
-double TTWtoQQ_xs               =  0.40620;
-double TTWtoLNu_xs              =  0.2043;
-double TTZtoLL_xs               =  0.2728;
+double TTWtoQQ_xs               =  0.40620; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
+double TTWtoLNu_xs              =  0.2043; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
+double TTZtoLL_xs               =  0.2728;  //????? https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns lists it as 0.2529
 
-double ZGamma_xs            = 131.3;
-double WGamma_xs            = 585.8;
+double ZGamma_xs            = 131.3; // ?????? https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns lists it as 117.864
+double WGamma_xs            = 585.8; // ?????? https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns lists it as 489
 
 double WW_xs                = 118.7;
 double WZ_xs                = 47.13;
-double ZZ_xs                = 16.523;
+double ZZ_xs                = 16.523;  //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 
 double ST_tW_xs             =  35.85 ;
 double ST_tbarW_xs          =  35.85 ;
@@ -167,6 +171,7 @@ double TTbarMadgraph_SingleLeptFromT_SF = TTbar_semilept_xs * luminosity / total
 double TTbarMadgraph_SingleLeptFromTbar_SF = TTbar_semilept_xs * luminosity / totalTTbarMadgraph_SingleLeptFromTbar;
 double TTbarMadgraph_Dilepton_SF = TTbar_dilepton_xs * luminosity / totalTTbarMadgraph_Dilepton;
 
+double WjetsInclusive_SF = WjetsInclusive_xs * luminosity / totalWjetsInclusive;
 
 double W1jets_SF = W1jets_xs * luminosity / totalW1jets;
 double W2jets_SF = W2jets_xs * luminosity / totalW2jets;
@@ -234,6 +239,7 @@ double getEvtWeight(string sampleType){
 	else if( sampleType=="TTbarMadgraph_Dilepton") {evtWeight = TTbarMadgraph_Dilepton_SF;}
 	else if( sampleType=="TTbarMadgraph_SingleLeptFromT") {evtWeight = TTbarMadgraph_SingleLeptFromT_SF;}
 	else if( sampleType=="TTbarMadgraph_SingleLeptFromTbar") {evtWeight = TTbarMadgraph_SingleLeptFromTbar_SF;}
+	else if( sampleType=="WjetsInclusive") {evtWeight = WjetsInclusive_SF;}
 	else if( sampleType=="W1jets") {evtWeight = W1jets_SF;}
 	else if( sampleType=="W2jets") {evtWeight = W2jets_SF;}
 	else if( sampleType=="W3jets") {evtWeight = W3jets_SF;}
@@ -325,7 +331,7 @@ const std::string allowedSampleTypes[99] = {"Data",
 											"TTbarMadgraph_SingleLeptFromTbar",
 											"TTbarMadgraph_SingleLeptFromT",
 											"TTbarMadgraph_Dilepton",
-											"Wjets",
+											"WjetsInclusive",
 											"W1jets",
 											"W2jets",
 											"W3jets",
