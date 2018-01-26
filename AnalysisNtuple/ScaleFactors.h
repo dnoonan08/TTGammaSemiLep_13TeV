@@ -14,6 +14,8 @@ double totalTTGamma_semilept_Tbar = 4836134.;
 double totalTTGamma_semilept_T    = 4791766.;
 double totalTTGamma_dilept        = 4907307.;
 
+double totalTTGJets               = 9884993.;
+
 double totalTGJets                    = 1556973.;
 
 
@@ -23,6 +25,10 @@ double totalTTbarMCatNLO          = 77227178.;
 double totalTTbarMadgraph_SingleLeptFromT     = 11956689.;
 double totalTTbarMadgraph_SingleLeptFromTbar  = 11943716.;
 double totalTTbarMadgraph_Dilepton            = 6094300.;
+
+double totalTTbarMadgraph         = 10139697.;
+
+double totalWjetsInclusive   = 14571460. + 43770073. + 45924073. + 40616144. + 45738743. + 44952030.;
 
 double totalW1jets           = 45366416.;
 double totalW2jets           = 30318880.;
@@ -79,11 +85,13 @@ double totalGJets_HT600toInf = 2463751.;
 // Cross Sections Used  //
 //////////////////////////
 
-double TTbar_xs             =  831.76;
+double TTbar_xs             =  831.76;  //ttbar NNLO (http://inspirehep.net/search?p=find+eprint+1112.5675)
 
 double TTbar_dilepton_xs             =  87.315;
 double TTbar_semilept_xs             =  182.175;
 double TTbar_hadronic_xs             =  831.76-TTbar_dilepton_xs-2*TTbar_semilept_xs;
+
+double TTGJets_xs               =  3.697; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#TT_X
 
 double TGJets_xs                =  2.967;
 
@@ -91,24 +99,26 @@ double TTGamma_hadronic_xs  =  4.599;
 double TTGamma_semilept_xs  =  4.499/2.;
 double TTGamma_dilept_xs    =  0.899;
 
+double WjetsInclusive_xs    = 61526.7; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#W_jets
+
 double W1jets_xs            =  9493.0;
 double W2jets_xs            =  3120.0;
 double W3jets_xs            =  942.3;
 double W4jets_xs            =  524.2;
 
-double DYjetsM50_xs         =  5765.4; 
-double DYjetsM10to50_xs     =  18610.; 
+double DYjetsM50_xs         =  5765.4; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
+double DYjetsM10to50_xs     =  18610.; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 
-double TTWtoQQ_xs               =  0.40620;
-double TTWtoLNu_xs              =  0.2043;
-double TTZtoLL_xs               =  0.2728;
+double TTWtoQQ_xs               =  0.40620; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
+double TTWtoLNu_xs              =  0.2043; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
+double TTZtoLL_xs               =  0.2728;  //????? https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns lists it as 0.2529
 
-double ZGamma_xs            = 131.3;
-double WGamma_xs            = 585.8;
+double ZGamma_xs            = 131.3; // ?????? https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns lists it as 117.864
+double WGamma_xs            = 585.8; // ?????? https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns lists it as 489
 
 double WW_xs                = 118.7;
 double WZ_xs                = 47.13;
-double ZZ_xs                = 16.523;
+double ZZ_xs                = 16.523;  //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 
 double ST_tW_xs             =  35.85 ;
 double ST_tbarW_xs          =  35.85 ;
@@ -145,6 +155,7 @@ double GJets_HT200to400_xs = 2305.;
 double GJets_HT400to600_xs = 274.4;
 double GJets_HT600toInf_xs = 93.46;
 
+double TTGJets_SF               = TTGJets_xs * luminosity / totalTTGJets;
 
 double TGJets_SF               = TGJets_xs * luminosity / totalTGJets;
 double TTGamma_hadronic_SF = TTGamma_hadronic_xs * luminosity / totalTTGamma_hadronic;
@@ -154,11 +165,13 @@ double TTGamma_dilept_SF   = TTGamma_dilept_xs * luminosity / totalTTGamma_dilep
 
 double TTbarPowheg_SF = TTbar_xs * luminosity / totalTTbarPowheg;
 double TTbarMCatNLO_SF = TTbar_xs * luminosity / totalTTbarMCatNLO;
+double TTbarMadgraph_SF = TTbar_xs * luminosity / totalTTbarMadgraph;
 
 double TTbarMadgraph_SingleLeptFromT_SF = TTbar_semilept_xs * luminosity / totalTTbarMadgraph_SingleLeptFromT;
 double TTbarMadgraph_SingleLeptFromTbar_SF = TTbar_semilept_xs * luminosity / totalTTbarMadgraph_SingleLeptFromTbar;
 double TTbarMadgraph_Dilepton_SF = TTbar_dilepton_xs * luminosity / totalTTbarMadgraph_Dilepton;
 
+double WjetsInclusive_SF = WjetsInclusive_xs * luminosity / totalWjetsInclusive;
 
 double W1jets_SF = W1jets_xs * luminosity / totalW1jets;
 double W2jets_SF = W2jets_xs * luminosity / totalW2jets;
@@ -215,15 +228,18 @@ double getEvtWeight(string sampleType){
 	if( sampleType.substr(0,4)=="Data") {evtWeight = 1.;}
 	else if( sampleType=="Test") {evtWeight = 1.;}
 	else if( sampleType=="TGJets"){evtWeight = TGJets_SF;} 
+	else if( sampleType=="TTGJets"){evtWeight = TTGJets_SF;} 
 	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_Tbar_SF;}
 	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_T_SF;}
 	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_SF;}
 	else if( sampleType=="TTbarPowheg") {evtWeight = TTbarPowheg_SF;}
 	else if( sampleType=="TTbarMCatNLO") {evtWeight = TTbarMCatNLO_SF;}
+	else if( sampleType=="TTbarMadgraph") {evtWeight = TTbarMadgraph_SF;}
 	else if( sampleType=="TTbarMadgraph_Dilepton") {evtWeight = TTbarMadgraph_Dilepton_SF;}
 	else if( sampleType=="TTbarMadgraph_SingleLeptFromT") {evtWeight = TTbarMadgraph_SingleLeptFromT_SF;}
 	else if( sampleType=="TTbarMadgraph_SingleLeptFromTbar") {evtWeight = TTbarMadgraph_SingleLeptFromTbar_SF;}
+	else if( sampleType=="WjetsInclusive") {evtWeight = WjetsInclusive_SF;}
 	else if( sampleType=="W1jets") {evtWeight = W1jets_SF;}
 	else if( sampleType=="W2jets") {evtWeight = W2jets_SF;}
 	else if( sampleType=="W3jets") {evtWeight = W3jets_SF;}
@@ -311,10 +327,11 @@ const std::string allowedSampleTypes[99] = {"Data",
 											"TTGamma_Dilepton",
 											"TTbarPowheg",
 											"TTbarMCatNLO",
+											"TTbarMadgraph",
 											"TTbarMadgraph_SingleLeptFromTbar",
 											"TTbarMadgraph_SingleLeptFromT",
 											"TTbarMadgraph_Dilepton",
-											"Wjets",
+											"WjetsInclusive",
 											"W1jets",
 											"W2jets",
 											"W3jets",
@@ -358,6 +375,7 @@ const std::string allowedSampleTypes[99] = {"Data",
 											"GJets_HT-400To600",
 											"GJets_HT-600ToInf",
 											"TGJets",
+											"TTGJets",
 											"Test",
                                                                                         };
 

@@ -28,6 +28,9 @@
 // Header file that includes all of the event luminosity scaling
 #include "ScaleFactors.h"
 
+
+#include "JEC/UncertaintySourcesList.h"
+
 class makeAnalysisNtuple {
 public :
 
@@ -46,6 +49,9 @@ private :
 
 	string sampleType;
 	string systematicType;
+
+
+	bool getGenScaleWeights;
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 

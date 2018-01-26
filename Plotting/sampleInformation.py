@@ -12,6 +12,12 @@ samples = {"TTGamma"   : [["TTGamma_SingleLeptFromTbar_AnalysisNtuple.root",
                           "t#bar{t}+#gamma",
                           isMC
                           ],
+           "TTGJets"   : [["TTGJets_AnalysisNtuple.root",
+                           ],
+                          kAzure+7,
+                          "t#bar{t}+#gamma",
+                          isMC
+                          ],
            "TTbar"     : [["TTbarPowheg_AnalysisNtuple.root",
                            ],
                           kRed,

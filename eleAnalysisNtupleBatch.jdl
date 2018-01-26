@@ -9,15 +9,32 @@ Output = condor/eleNtuple_$(cluster)_$(process).stdout
 Error  = condor/eleNtuple_$(cluster)_$(process).stderr
 Log    = condor/eleNtuple_$(cluster)_$(process).condor
 Requirements          = (OpSys == "LINUX" && (Arch != "DUMMY"))
-Arguments = "$(process)"
 #use_x509userproxy = true
 x509userproxy = $ENV(X509_USER_PROXY)
 # important, number of instances (jobs) of script
 
-Queue 47
+Arguments = "$(process)"
+Queue 50
 
 ###This is an example of how to start at a certain point, 
 ###it starts with job 27 (QCD samples in this case) and goes from there
-# Arguments = "27+$(process)"
-# Queue 7
+#Arguments = "11+$(process)"
+#Queue 1
 
+
+####This section can be used to submit analysis ntuple jobs for systematic uncertainties
+#Arguments = "$(process) JEC"
+#Queue 49
+#
+#Arguments = "$(process) JER"
+#Queue 49
+#
+#Arguments = "$(process) pho"
+#Queue 49
+#
+#Arguments = "$(process) elesmear"
+#Queue 49
+#
+#Arguments = "$(process) musmear"
+#Queue 49
+#

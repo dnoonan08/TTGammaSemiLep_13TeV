@@ -21,11 +21,15 @@ parser.add_option("-s","--systematic", dest="systematic", default="nominal",type
                      help="Specify up, down or nominal, default is nominal")
 parser.add_option("--Presel","--presel","--runPresel", dest="runPresel", default=False,action="store_true",
                      help="Specify whether to run presel")
+parser.add_option("--no0","--nozero","--noZero", dest="useZero", default=True,action="store_false",
+                     help="Specify whether to plot the 0b bins")
 (options, args) = parser.parse_args()
 
 finalState = options.channel
 
 runPresel = options.runPresel
+
+useZero = options.useZero
 
 TGaxis.SetMaxDigits(3)
 
@@ -171,7 +175,10 @@ if finalState=="Ele":
 histograms = []
 
 for s in samples:    
-    histograms.append(TH1F("jbMult_%s"%s,"jbMult_%s"%s,15,0,15))
+    if useZero:
+        histograms.append(TH1F("jbMult_%s"%s,"jbMult_%s"%s,15,0,15))
+    else:
+        histograms.append(TH1F("jbMult_%s"%s,"jbMult_%s"%s,10,0,10))
     if not "QCD" in s:
         if runPresel:
             h0 = _file.Get("%s/njets0Tag_%s"%(s,s))
@@ -197,27 +204,43 @@ for s in samples:
 
     print s
     for i in range(4):
-        histograms[-1].SetBinContent(i+1,h0.GetBinContent(3+i))
-        histograms[-1].SetBinContent(i+6,h1.GetBinContent(3+i))
-        histograms[-1].SetBinContent(i+11,h2.GetBinContent(3+i))
+        if useZero:
+            histograms[-1].SetBinContent(i+1,h0.GetBinContent(3+i))
+            histograms[-1].SetBinContent(i+6,h1.GetBinContent(3+i))
+            histograms[-1].SetBinContent(i+11,h2.GetBinContent(3+i))
+            
+            histograms[-1].SetBinError(i+1,h0.GetBinError(3+i))
+            histograms[-1].SetBinError(i+6,h1.GetBinError(3+i))
+            histograms[-1].SetBinError(i+11,h2.GetBinError(3+i))
+        else:
+            histograms[-1].SetBinContent(i+1,h1.GetBinContent(3+i))
+            histograms[-1].SetBinContent(i+6,h2.GetBinContent(3+i))
 
-        histograms[-1].SetBinError(i+1,h0.GetBinError(3+i))
-        histograms[-1].SetBinError(i+6,h1.GetBinError(3+i))
-        histograms[-1].SetBinError(i+11,h2.GetBinError(3+i))
+            histograms[-1].SetBinError(i+1,h1.GetBinError(3+i))
+            histograms[-1].SetBinError(i+6,h2.GetBinError(3+i))
 
     errorVal = Double(0)
-    integral = h0.IntegralAndError(7,-1,errorVal)
-    histograms[-1].SetBinContent(5 ,integral)
-    histograms[-1].SetBinError(5 ,errorVal)
-
-    integral = h1.IntegralAndError(7,-1,errorVal)
-    histograms[-1].SetBinContent(10 ,integral)
-    histograms[-1].SetBinError(10 ,errorVal)
-
-    integral = h2.IntegralAndError(7,-1,errorVal)
-    histograms[-1].SetBinContent(15 ,integral)
-    histograms[-1].SetBinError(15 ,errorVal)
-
+    if useZero:
+        integral = h0.IntegralAndError(7,-1,errorVal)
+        histograms[-1].SetBinContent(5 ,integral)
+        histograms[-1].SetBinError(5 ,errorVal)
+        
+        integral = h1.IntegralAndError(7,-1,errorVal)
+        histograms[-1].SetBinContent(10 ,integral)
+        histograms[-1].SetBinError(10 ,errorVal)
+        
+        integral = h2.IntegralAndError(7,-1,errorVal)
+        histograms[-1].SetBinContent(15 ,integral)
+        histograms[-1].SetBinError(15 ,errorVal)
+    else:
+        integral = h1.IntegralAndError(7,-1,errorVal)
+        histograms[-1].SetBinContent(5 ,integral)
+        histograms[-1].SetBinError(5 ,errorVal)
+        
+        integral = h2.IntegralAndError(7,-1,errorVal)
+        histograms[-1].SetBinContent(10 ,integral)
+        histograms[-1].SetBinError(10 ,errorVal)
+        
     if not "Data" in s:
         histograms[-1].SetFillColor(mcList[s][0])
         histograms[-1].SetLineColor(mcList[s][0])
@@ -227,21 +250,34 @@ for s in samples:
         histograms[-1].SetMarkerSize(h1.GetMarkerSize())
         histograms[-1].SetMarkerStyle(20)
         histograms[-1].SetMarkerColor(kBlack)
-    histograms[-1].GetXaxis().SetBinLabel(1,"=2j=0b")
-    histograms[-1].GetXaxis().SetBinLabel(2,"=3j=0b")
-    histograms[-1].GetXaxis().SetBinLabel(3,"=4j=0b")
-    histograms[-1].GetXaxis().SetBinLabel(4,"=5j=0b")
-    histograms[-1].GetXaxis().SetBinLabel(5,"#geq6j=0b")
-    histograms[-1].GetXaxis().SetBinLabel(6,"=2j=1b")
-    histograms[-1].GetXaxis().SetBinLabel(7,"=3j=1b")
-    histograms[-1].GetXaxis().SetBinLabel(8,"=4j=1b")
-    histograms[-1].GetXaxis().SetBinLabel(9,"=5j=1b")
-    histograms[-1].GetXaxis().SetBinLabel(10,"#geq6j=1b")
-    histograms[-1].GetXaxis().SetBinLabel(11,"=2j#geq2b")
-    histograms[-1].GetXaxis().SetBinLabel(12,"=3j#geq2b")
-    histograms[-1].GetXaxis().SetBinLabel(13,"=4j#geq2b")
-    histograms[-1].GetXaxis().SetBinLabel(14,"=5j#geq2b")
-    histograms[-1].GetXaxis().SetBinLabel(15,"#geq6j#geq2b")
+    if useZero:
+        histograms[-1].GetXaxis().SetBinLabel(1,"=2j=0b")
+        histograms[-1].GetXaxis().SetBinLabel(2,"=3j=0b")
+        histograms[-1].GetXaxis().SetBinLabel(3,"=4j=0b")
+        histograms[-1].GetXaxis().SetBinLabel(4,"=5j=0b")
+        histograms[-1].GetXaxis().SetBinLabel(5,"#geq6j=0b")
+        histograms[-1].GetXaxis().SetBinLabel(6,"=2j=1b")
+        histograms[-1].GetXaxis().SetBinLabel(7,"=3j=1b")
+        histograms[-1].GetXaxis().SetBinLabel(8,"=4j=1b")
+        histograms[-1].GetXaxis().SetBinLabel(9,"=5j=1b")
+        histograms[-1].GetXaxis().SetBinLabel(10,"#geq6j=1b")
+        histograms[-1].GetXaxis().SetBinLabel(11,"=2j#geq2b")
+        histograms[-1].GetXaxis().SetBinLabel(12,"=3j#geq2b")
+        histograms[-1].GetXaxis().SetBinLabel(13,"=4j#geq2b")
+        histograms[-1].GetXaxis().SetBinLabel(14,"=5j#geq2b")
+        histograms[-1].GetXaxis().SetBinLabel(15,"#geq6j#geq2b")
+    else:
+        histograms[-1].GetXaxis().SetBinLabel(1,"=2j=1b")
+        histograms[-1].GetXaxis().SetBinLabel(2,"=3j=1b")
+        histograms[-1].GetXaxis().SetBinLabel(3,"=4j=1b")
+        histograms[-1].GetXaxis().SetBinLabel(4,"=5j=1b")
+        histograms[-1].GetXaxis().SetBinLabel(5,"#geq6j=1b")
+        histograms[-1].GetXaxis().SetBinLabel(6,"=2j#geq2b")
+        histograms[-1].GetXaxis().SetBinLabel(7,"=3j#geq2b")
+        histograms[-1].GetXaxis().SetBinLabel(8,"=4j#geq2b")
+        histograms[-1].GetXaxis().SetBinLabel(9,"=5j#geq2b")
+        histograms[-1].GetXaxis().SetBinLabel(10,"#geq6j#geq2b")
+        
     histograms[-1].GetXaxis().SetLabelSize(0.07)
 
 

@@ -11,7 +11,7 @@
 #include "METzCalculator.h"
 #include "TopEventCombinatorics.h"
 #include "JetResolutions.h"
-//#include"JEC/JECvariation.h"
+#include"JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
 
 #include "elemuSF.h"
@@ -107,12 +107,16 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				BTagEntry::FLAV_UDSG,    // btag flavour
 				"incl");               // measurement type
 
+	getGenScaleWeights = false;
+	if( sampleType.substr(0,5)=="TTbar" || sampleType.substr(0,7)=="TTGamma"){
+		getGenScaleWeights = true;
+	}
 
 	bool doOverlapRemoval = false;
 	bool doOverlapRemoval_WZ = false;	
 	bool doOverlapRemoval_Tchannel = false;	
 	bool skipOverlap = false;
-	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton") doOverlapRemoval = true;
+	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
 
 	if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50") doOverlapRemoval_WZ = true;
 
@@ -122,9 +126,21 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
 	dileptonsample = false;
-
-	if( systematicType=="JEC_up")       {jecvar012_g = 2; selector->JECsystLevel=2;}
-	if( systematicType=="JEC_down")     {jecvar012_g = 0; selector->JECsystLevel=0;}
+	string JECsystLevel = "";
+	if( systematicType.substr(0,3)=="JEC" ){
+		int pos = systematicType.find("_");
+		JECsystLevel = systematicType.substr(3,pos-3);
+		if (std::end(allowedJECUncertainties) == std::find(std::begin(allowedJECUncertainties), std::end(allowedJECUncertainties), JECsystLevel)){
+			cout << "The JEC systematic source, " << JECsystLevel << ", is not in the list of allowed sources (found in JEC/UncertaintySourcesList.h" << endl;
+			cout << "Exiting" << endl;
+			return;
+		}
+		if (systematicType.substr(pos+1,2)=="up"){ jecvar012_g = 2; }
+		if (systematicType.substr(pos+1,2)=="do"){ jecvar012_g = 0; }
+	}
+		
+	// if( systematicType=="JEC_up")       {jecvar012_g = 2; selector->JECsystLevel=2;}
+	// if( systematicType=="JEC_down")     {jecvar012_g = 0; selector->JECsystLevel=0;}
 	if( systematicType=="JER_up")       {jervar012_g = 2; selector->JERsystLevel=2;}
 	if( systematicType=="JER_down")     {jervar012_g = 0; selector->JERsystLevel=0;}
 	if( systematicType=="pho_up")       {phosmear012_g = 2;}
@@ -166,10 +182,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	isMC = !(tree->isData_);
 	std::cout << "isMC: " << isMC << endl;
 
-	// JECvariation* jecvar;
-	// if (isMC) {
-	// 	jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC);
-	// }
+	JECvariation* jecvar;
+	if (isMC) {
+		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, "Total");//SubTotalAbsolute");
+	}
 
 	_lumiWeight = getEvtWeight(sampleType);
 
@@ -232,11 +248,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				continue;
 			}
 		}
-		// //Apply systematics shifts where needed
-		// if( isMC ){
-		// 	jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
-
-		// }
+		// //		Apply systematics shifts where needed
+		if( isMC ){
+			jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
+		}
 
 
 		selector->process_objects(tree);
@@ -505,15 +520,17 @@ void makeAnalysisNtuple::FillEvent()
 
 
 		parentPID = -888;
+		int gparentPID = -888;
 		int parentage = -1;
 
 		if (!tree->isData_ && phoGenMatchInd!=-1){
 			parentPID = tree->mcMomPID->at(phoGenMatchInd);
+			gparentPID = tree->mcGMomPID->at(phoGenMatchInd);
 			// photon parentage for event categorization
-			// -1 is unmatched photon; 0 is matched, but not top/W/lepton, 1 is top parent, 2 is W parent, 3 is lepton parent,
-			if (abs(parentPID)==6) parentage = 1;
-			else if (abs(parentPID)==24) parentage = 2;
-			else if (abs(parentPID)==11 || abs(parentPID)==13 || abs(parentPID)==15) parentage = 3;
+			// -1 is unmatched photon; 0 is matched, but not top/W/lepton, 1 is top parent or ISR parent, 2 is W parent, 3 is lepton parent,
+			if (abs(parentPID)==22 || abs(parentPID)<6 && gparentPID==-999) parentage = 1;
+			else if (abs(parentPID)==6) parentage = 2;
+			else if (abs(parentPID)==24 || abs(parentPID)==11 || abs(parentPID)==13 || abs(parentPID)==15) parentage = 3;
 			else if (parentPID!=-999) parentage = 0;
 		}
 
@@ -786,9 +803,14 @@ void makeAnalysisNtuple::FillEvent()
 	// j_ind.clear();
 
 	
-	if (!tree->isData_){
+	if (!tree->isData_){		
 		for (int i=0;i<9;i++){
-			 _genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
+			if (getGenScaleWeights){
+				_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
+			}
+			else{
+				_genScaleSystWeights.push_back(1.);
+			}
 		}
 
 			
@@ -803,10 +825,6 @@ void makeAnalysisNtuple::FillEvent()
 			_mcMomPID.push_back(tree->mcMomPID->at(i_mc));
 			_mcGMomPID.push_back(tree->mcGMomPID->at(i_mc));
 			_mcParentage.push_back(tree->mcParentage->at(i_mc));
-		//	_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i_mc));
-		//	std::cout<<i_mc<<std::endl;
-		//	std::cout<<"the value is"<<tree->genScaleSystWeights_->at(i_mc)<<std::endl;
-			
 		}
 	}
 
@@ -870,11 +888,6 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 	}
 
 	if(evtPick->bJets.size() == 0) {
-//<<<<<<< HEAD
-	//	std::cout << "No bJets" << std::endl;
-//=======
-		//		std::cout << "No bJets" << std::endl;
-//>>>>>>> upstream/master
 		btagWeights.push_back(1.0);
 		btagWeights.push_back(0.0);
 		btagWeights.push_back(0.0);
