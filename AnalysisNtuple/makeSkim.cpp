@@ -68,7 +68,15 @@ int main(int ac, char** av){
 		selector->QCDselect = true;
 	} else if (channel=="qcdmu"){
 		evtPick->skimMu=true;
-		evtPick->Nele_eq = 1;
+		evtPick->Nmu_eq = 1;
+		selector->QCDselect = true;
+	}else if (channel=="qcdDimu"){
+		evtPick->skimMu=true;
+		evtPick->Nele_eq = 2;
+		selector->QCDselect = true;
+	}else if (channel=="qcdDiele"){
+		evtPick->skimEle=true;
+		evtPick->Nele_eq = 2;
 		selector->QCDselect = true;
 	}else {
 		cout << av[1] << endl;
