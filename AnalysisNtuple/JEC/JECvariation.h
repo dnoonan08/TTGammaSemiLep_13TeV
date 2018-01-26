@@ -26,7 +26,7 @@ public:
       	//: mDefinitions(fDefinitions),mRecords(fRecords) { valid_ = true;}
 
 
-	JECvariation(std::string inputPrefix, bool isMC);
+	JECvariation(std::string inputPrefix, bool isMC, string systematicLevel);
         ~JECvariation();
 
         void applyJEC(EventTree* tree, int scaleDownNormUp012);

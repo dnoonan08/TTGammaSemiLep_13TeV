@@ -352,33 +352,28 @@ void Selector::filter_muons(){
 void Selector::filter_jets(){
 	TLorentzVector tMET;
 
-	if (JECsystLevel==0 || JECsystLevel==2){
-		tMET.SetPtEtaPhiM(tree->pfMET_,0.0,tree->pfMETPhi_,0.0);
-	}
+	// if (JECsystLevel==0 || JECsystLevel==2){
+	// 	tMET.SetPtEtaPhiM(tree->pfMET_,0.0,tree->pfMETPhi_,0.0);
+	// }
 
 	for(int jetInd = 0; jetInd < tree->nJet_; ++jetInd){
 
-		if (JECsystLevel==0 || JECsystLevel==2){
-			TLorentzVector tJet;
-			tJet.SetPtEtaPhiE(tree->jetPt_->at(jetInd),tree->jetEta_->at(jetInd),tree->jetPhi_->at(jetInd),tree->jetEn_->at(jetInd));
-			tMET += tJet;
-			double JECUnc = tree->jetJECUnc_->at(jetInd);
-			double corrFactor = tree->jetPt_->at(jetInd)/tree->jetRawPt_->at(jetInd);
-			if (JECsystLevel==0){
-				tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd) - tree->jetRawPt_->at(jetInd)*JECUnc;
-				tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd) - (tree->jetEn_->at(jetInd)/corrFactor) *JECUnc; // missing jetRawEn, so use jetEn/corrFactor
-				// tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd)*(1-JECUnc);
-				// tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd)*(1-JECUnc);
-			}
-			if (JECsystLevel==2){
-				tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd) + tree->jetRawPt_->at(jetInd)*JECUnc;
-				tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd) + (tree->jetEn_->at(jetInd)/corrFactor) *JECUnc;
-				// tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd)*(1+JECUnc);
-				// tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd)*(1+JECUnc);
-			}
-			tJet.SetPtEtaPhiE(tree->jetPt_->at(jetInd),tree->jetEta_->at(jetInd),tree->jetPhi_->at(jetInd),tree->jetEn_->at(jetInd));
-			tMET -= tJet;
-		}
+		// if (JECsystLevel==0 || JECsystLevel==2){
+		// 	TLorentzVector tJet;
+		// 	tJet.SetPtEtaPhiE(tree->jetPt_->at(jetInd),tree->jetEta_->at(jetInd),tree->jetPhi_->at(jetInd),tree->jetEn_->at(jetInd));
+		// 	tMET += tJet;
+		// 	double JECUnc = tree->jetJECUnc_->at(jetInd);
+		// 	if (JECsystLevel==0){
+		// 		tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd)*(1-JECUnc);
+		// 		tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd)*(1-JECUnc);
+		// 	}
+		// 	if (JECsystLevel==2){
+		// 		tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd)*(1+JECUnc);
+		// 		tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd)*(1+JECUnc);
+		// 	}
+		// 	tJet.SetPtEtaPhiE(tree->jetPt_->at(jetInd),tree->jetEta_->at(jetInd),tree->jetPhi_->at(jetInd),tree->jetEn_->at(jetInd));
+		// 	tMET -= tJet;
+		// }
 
 		double jetSmear = 1.;
 		double pt = tree->jetPt_->at(jetInd);
@@ -388,7 +383,6 @@ void Selector::filter_jets(){
 		if (!tree->isData_ && JERsystLevel==1) {jetSmear = tree->jetP4Smear_->at(jetInd);}
 		if (!tree->isData_ && JERsystLevel==0) {jetSmear = tree->jetP4SmearDo_->at(jetInd);}
 		if (!tree->isData_ && JERsystLevel==2) {jetSmear = tree->jetP4SmearUp_->at(jetInd);}
-
 		if (smearJetPt){
 			pt = pt*jetSmear;
 			jetEn = jetSmear*jetEn;
@@ -444,11 +438,11 @@ void Selector::filter_jets(){
 		}
 	}
 
-	// Update the MET for JEC changes
-	if (JECsystLevel==0 || JECsystLevel==2){
-		tree->pfMET_ = float(tMET.Pt());
-		tree->pfMETPhi_ = float(tMET.Phi());
-	}
+	// // Update the MET for JEC changes
+	// if (JECsystLevel==0 || JECsystLevel==2){
+	// 	tree->pfMET_ = float(tMET.Pt());
+	// 	tree->pfMETPhi_ = float(tMET.Phi());
+	// }
 }
 
 

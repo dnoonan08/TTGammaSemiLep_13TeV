@@ -5,10 +5,10 @@
 #include<iostream>
 
 
-JECvariation::JECvariation(std::string inputPrefix, bool isMC){
+JECvariation::JECvariation(std::string inputPrefix, bool isMC, string systematicLevel){
 	if( isMC ){
 		std::cout << inputPrefix+"_MC_Uncertainty_AK4PFchs.txt" << std::endl;
-		jecUnc = new JetCorrectionUncertainty((inputPrefix+"_MC_Uncertainty_AK4PFchs.txt").c_str());
+		jecUnc = new JetCorrectionUncertainty(*(new JetCorrectorParameters((inputPrefix+"_MC_UncertaintySources_AK4PFchs.txt").c_str(),systematicLevel)));
 		ResJetPar = new JetCorrectorParameters((inputPrefix+"_MC_L2L3Residual_AK4PFchs.txt").c_str());
 		L3JetPar  = new JetCorrectorParameters((inputPrefix+"_MC_L3Absolute_AK4PFchs.txt").c_str());
 		L2JetPar  = new JetCorrectorParameters((inputPrefix+"_MC_L2Relative_AK4PFchs.txt").c_str());
@@ -35,7 +35,7 @@ JECvariation::~JECvariation(){
 
 
 void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
-	if(scaleDownNormUp012 == 1) return;
+	//	if(scaleDownNormUp012 == 1) return;
 	//bool JECapplied false; 
 
 	TLorentzVector tMET;
@@ -65,7 +65,7 @@ void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
 		double unc = jecUnc->getUncertainty(true);
 		//std::cout << "unc " << unc << std::endl;
 		if(scaleDownNormUp012==0) correction-=unc;
-		if(scaleDownNormUp012==1) continue;
+		//		if(scaleDownNormUp012==1) continue;
 		if(scaleDownNormUp012==2) correction+=unc;
 		
 		tree->jetPt_->at(jetInd) = tree->jetRawPt_->at(jetInd) * correction;

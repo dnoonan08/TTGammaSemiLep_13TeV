@@ -28,6 +28,9 @@
 // Header file that includes all of the event luminosity scaling
 #include "ScaleFactors.h"
 
+
+#include "JEC/UncertaintySourcesList.h"
+
 class makeAnalysisNtuple {
 public :
 
