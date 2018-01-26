@@ -50,6 +50,9 @@ private :
 	string sampleType;
 	string systematicType;
 
+
+	bool getGenScaleWeights;
+
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types

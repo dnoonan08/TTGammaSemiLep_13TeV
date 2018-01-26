@@ -107,6 +107,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				BTagEntry::FLAV_UDSG,    // btag flavour
 				"incl");               // measurement type
 
+	getGenScaleWeights = false;
+	if( sampleType.substr(0,5)=="TTbar" || sampleType.substr(0,7)=="TTGamma"){
+		getGenScaleWeights = true;
+	}
 
 	bool doOverlapRemoval = false;
 	bool doOverlapRemoval_WZ = false;	
@@ -799,9 +803,14 @@ void makeAnalysisNtuple::FillEvent()
 	// j_ind.clear();
 
 	
-	if (!tree->isData_){
+	if (!tree->isData_){		
 		for (int i=0;i<9;i++){
-			 _genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
+			if (getGenScaleWeights){
+				_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
+			}
+			else{
+				_genScaleSystWeights.push_back(1.);
+			}
 		}
 
 			
@@ -816,10 +825,6 @@ void makeAnalysisNtuple::FillEvent()
 			_mcMomPID.push_back(tree->mcMomPID->at(i_mc));
 			_mcGMomPID.push_back(tree->mcGMomPID->at(i_mc));
 			_mcParentage.push_back(tree->mcParentage->at(i_mc));
-		//	_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i_mc));
-		//	std::cout<<i_mc<<std::endl;
-		//	std::cout<<"the value is"<<tree->genScaleSystWeights_->at(i_mc)<<std::endl;
-			
 		}
 	}
 
@@ -883,11 +888,6 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 	}
 
 	if(evtPick->bJets.size() == 0) {
-//<<<<<<< HEAD
-	//	std::cout << "No bJets" << std::endl;
-//=======
-		//		std::cout << "No bJets" << std::endl;
-//>>>>>>> upstream/master
 		btagWeights.push_back(1.0);
 		btagWeights.push_back(0.0);
 		btagWeights.push_back(0.0);
