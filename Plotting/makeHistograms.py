@@ -23,7 +23,7 @@ parser.add_option("--LooseCR3e0","--looseCR3e0", dest="isLooseCR3e0Selection",de
 		  help="Use 3j exactly 0t control region selection" )
 parser.add_option("--addPlots","--addOnly", dest="onlyAddPlots", default=False,action="store_true",
                      help="Use only if you want to add a couple of plots to the file, does not remove other plots" )
-parser.add_option("--output", dest="outputFileName", default="hists.root",
+parser.add_option("--output", dest="outputFileName", default="hists",
                      help="Give the name of the root file for histograms to be saved in (default is hists.root)" )
 parser.add_option("--plot", dest="plotList",action="append",
                      help="Add plots" )
@@ -72,25 +72,25 @@ if finalState=="Mu":
     if 'JEC' in sys.argv:
 	if  level=="up":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JEC_up_"
-            outputhistName = "histograms/mu/histsJEC_up.root"
+            outputhistName = "histograms/mu/histsJEC_up"
     	if level=="down":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JEC_down_"
-            outputhistName = "histograms/mu/histsJEC_down.root"
+            outputhistName = "histograms/mu/histsJEC_down"
     if 'JER' in sys.argv: 
         if  level=="up":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JER_up_"
-            outputhistName = "histograms/mu/histsJER_up.root"
+            outputhistName = "histograms/mu/histsJER_up"
         if level=="down":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JER_down_"
-            outputhistName = "histograms/mu/histsJER_down.root"
+            outputhistName = "histograms/mu/histsJER_down"
 
     if 'pho' in sys.argv: 
         if  level=="up":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/pho_up_"
-            outputhistName = "histograms/mu/histspho_up.root"
+            outputhistName = "histograms/mu/histspho_up"
         if level=="down":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/pho_down_"
-            outputhistName = "histograms/mu/histspho_down.root"
+            outputhistName = "histograms/mu/histspho_down"
 
     extraCuts            = "(passPresel_Mu && nJet>=3 && nBJet>=1)*"
     extraPhotonCuts      = "(passPresel_Mu && nJet>=3 && nBJet>=1 && %s)*"
@@ -122,25 +122,25 @@ elif finalState=="Ele":
     if 'JEC' in sys.argv:
         if level=="up":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JEC_up_"
-            outputhistName = "histograms/ele/histsJEC_up.root"
+            outputhistName = "histograms/ele/histsJEC_up"
         if level=="down":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JEC_down_"
-            outputhistName = "histograms/ele/histsJEC_down.root"
+            outputhistName = "histograms/ele/histsJEC_down"
     if 'JER' in sys.argv:
         if level=="up":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JER_up_"
-            outputhistName = "histograms/ele/histsJER_up.root"
+            outputhistName = "histograms/ele/histsJER_up"
         if level=="down":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JER_down_"
-            outputhistName = "histograms/ele/histsJER_down.root"
+            outputhistName = "histograms/ele/histsJER_down"
 
     if 'pho' in sys.argv:
         if level=="up":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/pho_up_"
-            outputhistName = "histograms/ele/histspho_up.root"
+            outputhistName = "histograms/ele/histspho_up"
         if level=="down":
             analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/pho_down_"
-            outputhistName = "histograms/ele/histspho_down.root"
+            outputhistName = "histograms/ele/histspho_down"
 
     extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet>=1)*"
     extraPhotonCuts      = "(passPresel_Ele && nJet>=3 && nBJet>=1 && %s)*"
@@ -222,7 +222,7 @@ elif finalState=="QCDMu":
     isQCD = True
 
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdmuons/V08_00_26_07/QCDcr_"
-    outputhistName = "histograms/mu/qcdhistsCR.root"
+    outputhistName = "histograms/mu/qcdhistsCR"
 
     nBJets = 0
     extraCuts            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=3 && nBJet==0)*"
@@ -252,7 +252,7 @@ elif finalState=="QCDMu2":
     isQCD = True
 
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdmuons/V08_00_26_07/QCDcr_"
-    outputhistName = "histograms/mu/qcdhistsCR2.root"
+    outputhistName = "histograms/mu/qcdhistsCR2"
 
     nBJets = 0
     extraCuts            = "(passPresel_Mu && muPFRelIso>0.3 && nJet>=3 && nBJet==0)*"
@@ -275,7 +275,7 @@ elif finalState=="QCDEle":
     if sample=="QCD":
         sample = "QCDEle"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdelectrons/V08_00_26_07/QCDcr_"
-    outputhistName = "histograms/ele/qcdhistsCR.root"
+    outputhistName = "histograms/ele/qcdhistsCR"
 
     isQCD = True
 
@@ -308,13 +308,13 @@ if 'PU' in sys.argv:
 
     Pileup = "PUweight_%s"%(level)
     sys.argv.remove("PU")
-    outputhistName = outputhistName.replace(".root","Pileup_%s.root"%(level))
+    outputhistName = outputhistName + "Pileup_%s"%(level)
 
 if 'MuEff' in sys.argv:
     MuEff = "muEffWeight_%s"%(level)
 
     sys.argv.remove("MuEff")
-    outputhistName = outputhistName.replace(".root","MuEff_%s.root"%(level))
+    outputhistName = outputhistName + "MuEff_%s"%(level)
 
 
 if 'BTagSF' in sys.argv:
@@ -323,7 +323,7 @@ if 'BTagSF' in sys.argv:
 
 
     sys.argv.remove("BTagSF")
-    outputhistName = outputhistName.replace(".root","BTagSF_%s.root"%(level))
+    outputhistName = outputhistName + "BTagSF_%s"%(level)
 
 weights = "%s*%s*%s*eleEffWeight*%s"%(evtWeight,Pileup,MuEff,btagWeightCategory[nBJets])
 
@@ -334,7 +334,7 @@ if isTightSelection:
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]"
     extraCuts = extraCutsTight 
     extraPhotonCuts = extraPhotonCutsTight 
-    outputhistName = outputhistName.replace(".root","_tight.root")
+    outputhistName = outputhistName + "_tight"
 
 if isLooseCR2g0Selection:
     print "Loose Select"
@@ -343,7 +343,7 @@ if isLooseCR2g0Selection:
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight"
     extraCuts = extraCutsLooseCR2g0
     extraPhotonCuts = extraPhotonCutsLooseCR2g0
-    outputhistName = outputhistName.replace(".root","_looseCR2g0.root")
+    outputhistName = outputhistName  +"_looseCR2g0"
 
 if isLooseCR2e0Selection:
     print "Loose Control Region Select"
@@ -354,7 +354,7 @@ if isLooseCR2e0Selection:
 #    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight"
     extraCuts = extraCutsLooseCR2e0
     extraPhotonCuts = extraPhotonCutsLooseCR2e0
-    outputhistName = outputhistName.replace(".root","_looseCR2e0.root")
+    outputhistName = outputhistName + "_looseCR2e0"
 
 if isLooseCR2g1Selection:
     print "Loose Control Region1 Select"
@@ -363,7 +363,7 @@ if isLooseCR2g1Selection:
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(1-btagWeight[0])"
     extraCuts = extraCutsLooseCR2g1
     extraPhotonCuts = extraPhotonCutsLooseCR2g1
-    outputhistName = outputhistName.replace(".root","_looseCR2g1.root")
+    outputhistName = outputhistName + "_looseCR2g1"
 
 
 if isLooseCR3e0Selection:
@@ -373,7 +373,7 @@ if isLooseCR3e0Selection:
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(btagWeight[0])"
     extraCuts = extraCutsLooseCR3e0
     extraPhotonCuts = extraPhotonCutsLooseCR3e0
-    outputhistName = outputhistName.replace(".root","_looseCR3e0.root")
+    outputhistName = outputhistName + "_looseCR3e0"
 
 from HistogramListDict import *
 histogramInfo = GetHistogramInfo(extraCuts,extraPhotonCuts,nBJets)
@@ -447,20 +447,20 @@ histograms=[]
 if sample =="QCD_DD":
     if finalState=="Mu":
         if isTightSelection:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR_Tight.root","read")
+            qcd_File    = TFile("histograms/mu/qcdhistsCR_Tight/QCD_DD.root","read")
         elif isLooseSelection:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR_Loose.root","read")
+            qcd_File    = TFile("histograms/mu/qcdhistsCR_Loose/QCD_DD.root","read")
         else:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR.root","read")
+            qcd_File    = TFile("histograms/mu/qcdhistsCR/QCD_DD.root","read")
         qcd_TF_File = TFile("histograms/mu/qcdTransferFactors.root","read")
         dirName = "QCDMu"
     if finalState=="Ele":
         if isTightSelection:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR_Tight.root","read")
+            qcd_File    = TFile("histograms/ele/qcdhistsCR_Tight/QCD_DD.root","read")
         elif isLooseSelection:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR_Loose.root","read")
+            qcd_File    = TFile("histograms/ele/qcdhistsCR_Loose/QCD_DD.root","read")
         else:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR.root","read")
+            qcd_File    = TFile("histograms/ele/qcdhistsCR/QCD_DD.root","read")
         qcd_TF_File = TFile("histograms/ele/qcdTransferFactors.root","read")
         dirName = "QCDEle"
 
@@ -525,14 +525,17 @@ if not "QCD_DD" in sample:
             evtWeight= evtWeight[:-1]
         tree.Draw("%s>>%s_%s"%(h_Info[0],h_Info[1],sample),evtWeight)
 
+if not os.path.exists(outputhistName):
+    os.makedirs(outputhistName)
 
-outputFile = TFile(outputhistName,"update")
+outputFile = TFile("%s/%s.root"%(outputhistName,sample),"update")
 
-if not onlyAddPlots:
-    outputFile.rmdir(sample)
-    outputFile.mkdir(sample)
-outputFile.cd(sample)
+# if not onlyAddPlots:
+#     outputFile.rmdir(sample)
+#     outputFile.mkdir(sample)
+# outputFile.cd(sample)
 for h in histograms:
+    outputFile.Delete("%s;*"%h.GetName())
     if onlyAddPlots:
         gDirectory.Delete("%s;*"%(h.GetName()))
     h.Write()

@@ -43,12 +43,14 @@ inputFile = options.inputFile
 finalState = options.channel
 print "Running on the %s channel"%(finalState)
 if finalState=='Mu':
-	_file  = TFile("histograms/mu/hists.root")
+	_fileDir = "histograms/mu/hists"
+#	_file  = TFile("histograms/mu/hists.root")
 	plotDirectory = "plots_mu/"
 	regionText = ", N_{j}#geq3, N_{b}#geq1"
 	channel = 'mu'
 if finalState=="Ele":
-	_file  = TFile("histograms/ele/hists.root")
+	_fileDir = "histograms/ele/hists"
+#	_file  = TFile("histograms/ele/hists.root")
         plotDirectory = "plots_ele/"
         regionText = ", N_{j}#geq3, N_{b}#geq1"
 	channel = 'ele'
@@ -57,28 +59,34 @@ if finalState=="Ele":
 
 if isTightSelection:
 	plotDirectory = "tightplots_%s/"%channel
-	_file  = TFile("histograms/%s/hists_tight.root"%channel)
+	_fileDir = "histograms/%s/hists_tight/"%channel
+#	_file  = TFile("histograms/%s/hists_tight.root"%channel)
 	regionText = ", N_{j}#geq4, N_{b}#geq2"
 if isLooseCR2g0Selection:
 	plotDirectory = "looseplots_%s_CR2g0/"%channel
-	_file  = TFile("histograms/%s/hists_looseCR2g0.root"%channel)
+	_fileDir = "histograms/%s/hists_looseCR2g0/"%channel
+#	_file  = TFile("histograms/%s/hists_looseCR2g0.root"%channel)
 	regionText = ", N_{j}=2, N_{b}#geq0"
 if isLooseCR2g1Selection:
 	plotDirectory = "looseplots_%s_CR2g1/"%channel
-	_file  = TFile("histograms/%s/hists_looseCR2g1.root"%channel)
-	regionText = ", N_{j}=2, N_{b}#geq0"
+	_fileDir = "histograms/%s/hists_looseCR2g1/"%channel
+#	_file  = TFile("histograms/%s/hists_looseCR2g1.root"%channel)
+	regionText = ", N_{j}=2, N_{b}#geq1"
 if isLooseCR2e0Selection:
-	plotDirectory = "looseCRplots_%s_CR2e0/"%channel
-	_file  = TFile("histograms/%s/hists_looseCR2e0.root"%channel)
+	plotDirectory = "looseplots_%s_CR2e0/"%channel
+	_fileDir = "histograms/%s/hists_looseCR2e0"%channel
+#	_file  = TFile("histograms/%s/hists_looseCR2e0.root"%channel)
 	regionText = ", N_{j}#geq2, N_{b}=0"
 if isLooseCR3e0Selection:
 	plotDirectory = "looseCRplots_%s_CR3e0/"%channel
-	_file  = TFile("histograms/%s/hists_looseCR3e0.root"%channel)
-	regionText = ", N_{j}#geq2, N_{b}=0"
+	_fileDir = "histograms/%s/hists_looseCR3e0"%channel
+#	_file  = TFile("histograms/%s/hists_looseCR3e0.root"%channel)
+	regionText = ", N_{j}#geq3, N_{b}=0"
 
 
 if not inputFile is None:
-	_file  = TFile("histograms/%s/%s"%(channel,inputFile))
+	_fileDir = "histograms/%s/%s"%(channel,inputFile)
+#	_file  = TFile("histograms/%s/%s"%(channel,inputFile))
 	if not _file.IsOpen():
 		print "Unable to open file"
 		sys.exit()
@@ -331,35 +339,37 @@ pad2.Draw()
 
 canvas.cd()
 
-legList = {'TTGamma': [kAzure+3, 't#bar{t}+#gamma'],
-          'TTJets': [kRed+1, 't#bar{t}+jets'],
-          'TTV': [kRed+1, 't#bar{t}+V'],
-          'Vgamma': [kGray, 'W/Z+#gamma'],
-          'SingleTop': [kMagenta, 'Single t'],
-          'WJets': [kGreen -3, 'W+jets'],
-          'ZJets': [kGreen -3, 'Z+jets'],
-	  'Diboson':[kCyan-7, 'WW/WZ/ZZ'],
-          'TGJets'   :[kGray, 't+#gamma'],
-          'QCD_DD': [kYellow, 'Multijet'],
-          }
+# legList = {'TTGamma': [kAzure+3, 't#bar{t}+#gamma'],
+#           'TTJets': [kRed+1, 't#bar{t}+jets'],
+#           'TTV': [kRed+1, 't#bar{t}+V'],
+#           'Vgamma': [kGray, 'W/Z+#gamma'],
+#           'SingleTop': [kMagenta, 'Single t'],
+#           'WJets': [kGreen -3, 'W+jets'],
+#           'ZJets': [kGreen -3, 'Z+jets'],
+# 	  'Diboson':[kCyan-7, 'WW/WZ/ZZ'],
+#           'TGJets'   :[kGray, 't+#gamma'],
+#           'QCD_DD': [kYellow, 'Multijet'],
+#           }
 
-mcList = {'TTGamma': [kOrange],
-          'TTbar': [kRed+1],
-          'TTV': [kRed-7],
-          'SingleTop': [kOrange-3],
-          'WGamma': [kBlue-4],
-          'ZGamma': [kBlue-2],
-          'WJets': [kCyan-3],
-          'ZJets': [kCyan-5],
-	  'Diboson':[kCyan-7],
-          'TGJets': [kGray],
-          'QCD_DD': [kGreen+3],
-          'QCDMu': [kGreen+3],
-          'GJets': [kGreen+1],
-          }
+# mcList = {'TTGamma': [kOrange],
+#           'TTbar': [kRed+1],
+#           'TTV': [kRed-7],
+#           'SingleTop': [kOrange-3],
+#           'WGamma': [kBlue-4],
+#           'ZGamma': [kBlue-2],
+#           'WJets': [kCyan-3],
+#           'ZJets': [kCyan-5],
+# 	  'Diboson':[kCyan-7],
+#           'TGJets': [kGray],
+#           'QCD_DD': [kGreen+3],
+#           'QCDMu': [kGreen+3],
+#           'GJets': [kGreen+1],
+#           }
 
 
 legendHeightPer = 0.04
+legList = stackList[:]
+legList.reverse()
 
 legend = TLegend(0.71, 1-T/H-0.01 - legendHeightPer*(len(legList)+1), 1-R/W-0.01, 1-(T/H)-0.01)
 
@@ -372,25 +382,32 @@ legendR.SetFillColor(0)
 legend.SetBorderSize(0)
 legend.SetFillColor(0)
 
-histName = plotList[0]
-legList = stackList[:]
-legList.reverse()
-#legList.remove('TGJets')
-#print histName
-print legList
-for sample in legList:
-    # print sample, _file
-    # print "%s/%s_%s"%(sample,histName,sample)
-    hist = _file.Get("%s/%s_%s"%(sample,histName,sample))
-#    hist.Draw()
-    hist.SetFillColor(mcList[sample][0])
-    hist.SetLineColor(mcList[sample][0])
-    legend.AddEntry(hist,sample,'f')
-    legendR.AddEntry(hist,sample,'f')
+_file = {}
+for sample in stackList:
+	_file[sample] = TFile("%s/%s.root"%(_fileDir,sample),"read")
+
 if finalState=='Ele':
-    dataHist = _file.Get("DataEle/presel_%s_DataEle"%(histName))
+	sample = "DataEle"
+	_file[sample] = TFile("%s/%s.root"%(_fileDir,sample),"read")
+if finalState=='Mu':
+	sample = "DataMu"
+	_file[sample] = TFile("%s/%s.root"%(_fileDir,sample),"read")
+
+histName = plotList[0]
+#print legList
+for sample in legList:
+    print sample, _file[sample]
+    # print "%s/%s_%s"%(sample,histName,sample)
+    hist = _file[sample].Get("%s_%s"%(histName,sample))
+    print hist, "%s_%s"%(histName,sample)
+    hist.SetFillColor(samples[sample][1])
+    hist.SetLineColor(samples[sample][1])
+    legend.AddEntry(hist,samples[sample][2],'f')
+    legendR.AddEntry(hist,samples[sample][2],'f')
+if finalState=='Ele':
+    dataHist = _file["DataEle"].Get("presel_%s_DataEle"%(histName))
 elif finalState=='Mu':
-    dataHist = _file.Get("DataMu/presel_%s_DataMu"%(histName))
+    dataHist = _file["DataMu"].Get("presel_%s_DataMu"%(histName))
 legend.AddEntry(dataHist, "Data", 'pe')
 legendR.AddEntry(dataHist, "Data", 'pe')
 
@@ -406,20 +423,21 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     stack = THStack(histName,histName)
     for sample in stackList:
 #        print sample, histName
-        hist = _file.Get("%s/%s_%s"%(sample,histName,sample))
+        hist = _file[sample].Get("%s_%s"%(histName,sample))
+#        hist = _file[sample].Get("%s/%s_%s"%(sample,histName,sample))
 	if type(hist)==type(TObject()): continue
 	hist = hist.Clone(sample)	
-        hist.SetFillColor(mcList[sample][0])
-        hist.SetLineColor(mcList[sample][0])
+        hist.SetFillColor(samples[sample][1])
+        hist.SetLineColor(samples[sample][1])
 
         hist.Rebin(plotInfo[2])
 
         stack.Add(hist)
     if finalState=='Ele':
-   	dataHist = _file.Get("DataEle/%s_DataEle"%(histName))
+   	dataHist = _file["DataEle"].Get("%s_DataEle"%(histName))
 #	dataHist.Draw()
     elif finalState=='Mu':
-	dataHist = _file.Get("DataMu/%s_DataMu"%(histName))
+	dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
     noData = False
     if type(dataHist)==type(TObject()): noData = True
     if not noData:
