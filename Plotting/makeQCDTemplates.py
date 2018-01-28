@@ -10,6 +10,8 @@ parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,ac
                      help="Use 4j2t selection" )
 parser.add_option("--Loose","--loose", dest="isLooseSelection", default=False,action="store_true",
                      help="Use 2j0t selection" )
+parser.add_option("-f","--file",dest="fileName",default="histograms/mu/qcdhistsCR.root",
+                     help="histogram file")
 
 (options, args) = parser.parse_args()
 
@@ -17,26 +19,28 @@ finalState = options.channel
 isTightSelection = options.isTightSelection
 isLooseSelection = options.isLooseSelection
 
-if finalState=="Mu":
-    if isTightSelection:
-        _file  = TFile("histograms/mu/qcdhistsCR_Tight.root","update")
-    elif isTightSelection:
-        _file  = TFile("histograms/mu/qcdhistsCR_Loose.root","update")
-    else:
-        _file  = TFile("histograms/mu/qcdhistsCR.root","update")
+_file = TFile(options.fileName,"update")
 
-if finalState=="Ele":
-    if isTightSelection:
-        _file  = TFile("histograms/ele/qcdhistsCR_Tight.root","update")
-    elif isTightSelection:
-        _file  = TFile("histograms/ele/qcdhistsCR_Loose.root","update")
-    else:
-        _file  = TFile("histograms/ele/qcdhistsCR.root","update")
+# if finalState=="Mu":
+#     if isTightSelection:
+#         _file  = TFile("histograms/mu/qcdhistsCR_Tight.root","update")
+#     elif isTightSelection:
+#         _file  = TFile("histograms/mu/qcdhistsCR_Loose.root","update")
+#     else:
+#         _file  = TFile("histograms/mu/qcdhistsCR.root","update")
+
+# if finalState=="Ele":
+#     if isTightSelection:
+#         _file  = TFile("histograms/ele/qcdhistsCR_Tight.root","update")
+#     elif isTightSelection:
+#         _file  = TFile("histograms/ele/qcdhistsCR_Loose.root","update")
+#     else:
+#         _file  = TFile("histograms/ele/qcdhistsCR.root","update")
 
 
 
-if 'CR2' in sys.argv:
-    _file  = TFile("histograms/mu/qcdhistsCR2.root","update")
+# if 'CR2' in sys.argv:
+#     _file  = TFile("histograms/mu/qcdhistsCR2.root","update")
 
 
 from sampleInformation import *

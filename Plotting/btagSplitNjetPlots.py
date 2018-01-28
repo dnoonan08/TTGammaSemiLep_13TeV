@@ -202,7 +202,7 @@ for s in samples:
         h1.Scale(hTR.GetBinContent(2))
         h2.Scale(hTR.GetBinContent(3))
 
-    print s
+#    print s
     for i in range(4):
         if useZero:
             histograms[-1].SetBinContent(i+1,h0.GetBinContent(3+i))
@@ -218,6 +218,7 @@ for s in samples:
 
             histograms[-1].SetBinError(i+1,h1.GetBinError(3+i))
             histograms[-1].SetBinError(i+6,h2.GetBinError(3+i))
+
 
     errorVal = Double(0)
     if useZero:
@@ -371,18 +372,6 @@ stack = THStack()
 
 for i in range(len(samples)-1):
     stack.Add(histograms[len(samples)-2-i])
-
-# stack.Add(histograms[9])
-# stack.Add(histograms[8])
-# stack.Add(histograms[7])
-# stack.Add(histograms[6])
-# stack.Add(histograms[5])
-# stack.Add(histograms[4])
-# stack.Add(histograms[3])
-# stack.Add(histograms[2])
-# stack.Add(histograms[1])
-# stack.Add(histograms[0])
-
 
 stack.Draw("hist")
 

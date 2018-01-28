@@ -13,13 +13,13 @@ parser.add_option("--syst", "--systematic", dest="systematic", default="nominal"
 		     help="Specify up, down or nominal, default is nominal")
 parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,action="store_true",
                      help="Use 4j2t selection" )
-parser.add_option("--Loose","--loose", dest="isLooseSelection", default=False,action="store_true",
-                     help="Use 2j0t selection" )
-parser.add_option("--LooseCR","--looseCR", dest="isLooseCRSelection",default=False,action="store_true",
+parser.add_option("--LooseCR2e0","--looseCR2e0", dest="isLooseCR2e0Selection",default=False,action="store_true",
 		  help="Use 2j exactly 0t control region selection" )
-parser.add_option("--LooseCR1","--looseCR1", dest="isLooseCR1Selection",default=False,action="store_true",
-                  help="Use 2j atleast 1t control region selection")
-parser.add_option("--LooseCR3","--looseCR3", dest="isLooseCR3Selection",default=False,action="store_true",
+parser.add_option("--LooseCR2g0","--looseCR2g0", dest="isLooseCR2g0Selection",default=False,action="store_true",
+		  help="Use 2j at least 0t control region selection" )
+parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection",default=False,action="store_true",
+                  help="Use 2j at least 1t control region selection")
+parser.add_option("--LooseCR3e0","--looseCR3e0", dest="isLooseCR3e0Selection",default=False,action="store_true",
 		  help="Use 3j exactly 0t control region selection" )
 parser.add_option("--addPlots","--addOnly", dest="onlyAddPlots", default=False,action="store_true",
                      help="Use only if you want to add a couple of plots to the file, does not remove other plots" )
@@ -27,6 +27,10 @@ parser.add_option("--output", dest="outputFileName", default="hists.root",
                      help="Give the name of the root file for histograms to be saved in (default is hists.root)" )
 parser.add_option("--plot", dest="plotList",action="append",
                      help="Add plots" )
+parser.add_option("--allPlots","--AllPlots", dest="makeAllPlots",action="store_true",default=False,
+                     help="Make full list of plots in histogramDict" )
+parser.add_option("--MegammaPlots","--megammaPlots", dest="makeEGammaPlots",action="store_true",default=False,
+                     help="Make only plots for e-gamma mass fits" )
 
 (options, args) = parser.parse_args()
 
@@ -37,16 +41,15 @@ gROOT.SetBatch(True)
 finalState = options.channel
 sample = options.sample
 isTightSelection = options.isTightSelection
-isLooseSelection = options.isLooseSelection
-isLooseCRSelection = options.isLooseCRSelection
-isLooseCR3Selection = options.isLooseCR3Selection
-isLooseCR1Selection = options.isLooseCR1Selection
+isLooseCR2e0Selection = options.isLooseCR2e0Selection
+isLooseCR2g0Selection = options.isLooseCR2g0Selection
+isLooseCR2g1Selection = options.isLooseCR2g1Selection
+isLooseCR3e0Selection = options.isLooseCR3e0Selection
 onlyAddPlots = options.onlyAddPlots
-plotList = options.plotList
 outputFileName = options.outputFileName
 
-print isTightSelection
-print isLooseCR3Selection
+makeAllPlots = options.makeAllPlots
+makeEGammaPlots = options.makeEGammaPlots
 
 nJets = 3
 nBJets = 1
@@ -68,26 +71,26 @@ if finalState=="Mu":
     outputhistName = "histograms/mu/%s"%outputFileName
     if 'JEC' in sys.argv:
 	if  level=="up":
-        	analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JEC_up_"
-        	outputhistName = "histograms/mu/histsJEC_up.root"
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JEC_up_"
+            outputhistName = "histograms/mu/histsJEC_up.root"
     	if level=="down":
-		analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JEC_down_"
-		outputhistName = "histograms/mu/histsJEC_down.root"
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JEC_down_"
+            outputhistName = "histograms/mu/histsJEC_down.root"
     if 'JER' in sys.argv: 
         if  level=="up":
-                analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JER_up_"
-                outputhistName = "histograms/mu/histsJER_up.root"
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JER_up_"
+            outputhistName = "histograms/mu/histsJER_up.root"
         if level=="down":
-                analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JER_down_"
-                outputhistName = "histograms/mu/histsJER_down.root"
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JER_down_"
+            outputhistName = "histograms/mu/histsJER_down.root"
 
     if 'pho' in sys.argv: 
         if  level=="up":
-                analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/pho_up_"
-                outputhistName = "histograms/mu/histspho_up.root"
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/pho_up_"
+            outputhistName = "histograms/mu/histspho_up.root"
         if level=="down":
-                analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/pho_down_"
-                outputhistName = "histograms/mu/histspho_down.root"
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/pho_down_"
+            outputhistName = "histograms/mu/histspho_down.root"
 
     extraCuts            = "(passPresel_Mu && nJet>=3 && nBJet>=1)*"
     extraPhotonCuts      = "(passPresel_Mu && nJet>=3 && nBJet>=1 && %s)*"
@@ -95,14 +98,17 @@ if finalState=="Mu":
     extraCutsTight       = "(passPresel_Mu && nJet>=4 && nBJet>=2)*"
     extraPhotonCutsTight = "(passPresel_Mu && nJet>=4 && nBJet>=2 && %s)*"
 
-    extraCutsLoose       = "(passPresel_Mu && nJet==2 && nBJet==0)*"
-    extraPhotonCutsLoose = "(passPresel_Mu && nJet==2 && nBJet==0 && %s)*"
+    extraCutsLooseCR2g0       = "(passPresel_Mu && nJet==2)*"
+    extraPhotonCutsLooseCR2g0 = "(passPresel_Mu && nJet==2 && %s)*"
 
-    extraCutsLooseCR       = "(passPresel_Mu && nJet>=2 && nBJet>=0)*"
-    extraPhotonCutsLooseCR = "(passPresel_Mu && nJet>=2 && nBJet>=0 && %s)*"
+    extraCutsLooseCR2g1       = "(passPresel_Mu && nJet==2 && nBJet>=1)*"
+    extraPhotonCutsLooseCR2g1 = "(passPresel_Mu && nJet==2 && nBJet>=1 && %s)*"
 
-    extraCutsLooseCR3       = "(passPresel_Mu && nJet>=3 && nBJet==0)*"
-    extraPhotonCutsLooseCR3 = "(passPresel_Mu && nJet>=3 && nBJet==0 && %s)*"
+    extraCutsLooseCR2e0       = "(passPresel_Mu && nJet>=2)*"
+    extraPhotonCutsLooseCR2e0 = "(passPresel_Mu && nJet>=2 && %s)*"
+
+    extraCutsLooseCR3e0       = "(passPresel_Mu && nJet>=3)*"
+    extraPhotonCutsLooseCR3e0 = "(passPresel_Mu && nJet>=3 && %s)*"
 
 elif finalState=="Ele":
     sampleList[-1] = "DataEle"
@@ -114,27 +120,27 @@ elif finalState=="Ele":
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07/"
     outputhistName = "histograms/ele/%s"%outputFileName
     if 'JEC' in sys.argv:
-        if  level=="up":
-                analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JEC_up_"
-                outputhistName = "histograms/ele/histsJEC_up.root"
+        if level=="up":
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JEC_up_"
+            outputhistName = "histograms/ele/histsJEC_up.root"
         if level=="down":
-                analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JEC_down_"
-                outputhistName = "histograms/ele/histsJEC_down.root"
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JEC_down_"
+            outputhistName = "histograms/ele/histsJEC_down.root"
     if 'JER' in sys.argv:
-        if  level=="up":
-                analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JER_up_"
-                outputhistName = "histograms/ele/histsJER_up.root"
+        if level=="up":
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JER_up_"
+            outputhistName = "histograms/ele/histsJER_up.root"
         if level=="down":
-                analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JER_down_"
-                outputhistName = "histograms/ele/histsJER_down.root"
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JER_down_"
+            outputhistName = "histograms/ele/histsJER_down.root"
 
     if 'pho' in sys.argv:
-        if  level=="up":
-                analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/pho_up_"
-                outputhistName = "histograms/ele/histspho_up.root"
+        if level=="up":
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/pho_up_"
+            outputhistName = "histograms/ele/histspho_up.root"
         if level=="down":
-                analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/pho_down_"
-                outputhistName = "histograms/ele/histspho_down.root"
+            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/pho_down_"
+            outputhistName = "histograms/ele/histspho_down.root"
 
     extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet>=1)*"
     extraPhotonCuts      = "(passPresel_Ele && nJet>=3 && nBJet>=1 && %s)*"
@@ -142,17 +148,17 @@ elif finalState=="Ele":
     extraCutsTight       = "(passPresel_Ele && nJet>=4 && nBJet>=2)*"
     extraPhotonCutsTight = "(passPresel_Ele && nJet>=4 && nBJet>=2 && %s)*"
 
-    extraCutsLoose       = "(passPresel_Ele && nJet==2 && nBJet==0)*"
-    extraPhotonCutsLoose = "(passPresel_Ele && nJet==2 && nBJet==0 && %s)*"
+    extraCutsLooseCR2g0       = "(passPresel_Ele && nJet==2)*"
+    extraPhotonCutsLooseCR2g0 = "(passPresel_Ele && nJet==2 && %s)*"
 
-    extraCutsLooseCR       = "(passPresel_Ele && nJet>=2 && nBJet>=0)*"
-    extraPhotonCutsLooseCR = "(passPresel_Ele && nJet>=2 && nBJet>=0 && %s)*"
-    
-    extraCutsLooseCR1       = "(passPresel_Ele && nJet>=2 && nBJet>=1)*"
-    extraPhotonCutsLooseCR1 = "(passPresel_Ele && nJet>=2 && nBJet>=1 && %s)*" 
+    extraCutsLooseCR2g1       = "(passPresel_Ele && nJet==2 && nBJet>=1)*"
+    extraPhotonCutsLooseCR2g1 = "(passPresel_Ele && nJet==2 && nBJet>=1 && %s)*"
 
-    extraCutsLooseCR3       = "(passPresel_Ele && nJet>=3 && nBJet==0)*"
-    extraPhotonCutsLooseCR3 = "(passPresel_Ele && nJet>=3 && nBJet==0 && %s)*"
+    extraCutsLooseCR2e0       = "(passPresel_Ele && nJet>=2)*"
+    extraPhotonCutsLooseCR2e0 = "(passPresel_Ele && nJet>=2 && %s)*"
+
+    extraCutsLooseCR3e0       = "(passPresel_Ele && nJet>=3)*"
+    extraPhotonCutsLooseCR3e0 = "(passPresel_Ele && nJet>=3 && %s)*"
 
 elif finalState=="DiMu":
     sampleList[-1] = "DataMu"
@@ -171,14 +177,14 @@ elif finalState=="DiMu":
     extraCutsTight       = "(passPresel_Mu && nJet>=4 && nBJet>=2)*"
     extraPhotonCutsTight = "(passPresel_Mu && nJet>=4 && nBJet>=2 && %s)*"
 
-    extraCutsLoose       = "(passPresel_Mu && nJet==2 && nBJet==0)*"
-    extraPhotonCutsLoose = "(passPresel_Mu && nJet==2 && nBJet==0 && %s)*"
+    extraCutsLooseCR2e0       = "(passPresel_Mu && nJet==2)*"
+    extraPhotonCutsLooseCR2e0 = "(passPresel_Mu && nJet==2 && %s)*"
 
-    extraCutsLooseCR       = "(passPresel_Mu && nJet>=2 && nBJet>=0)*"
-    extraPhotonCutsLooseCR = "(passPresel_Mu && nJet>=2 && nBJet>=0 && %s)*"
+    extraCutsLooseCR2g0       = "(passPresel_Mu && nJet>=2)*"
+    extraPhotonCutsLooseCR2g0 = "(passPresel_Mu && nJet>=2 && %s)*"
 
-    extraCutsLooseCR3       = "(passPresel_Mu && nJet>=3 && nBJet>=0)*"
-    extraPhotonCutsLooseCR3 = "(passPresel_Mu && nJet>=3 && nBJet>=0 && %s)*"
+    extraCutsLooseCR3g0       = "(passPresel_Mu && nJet>=3 && nBJet>=0)*"
+    extraPhotonCutsLooseCR3g0 = "(passPresel_Mu && nJet>=3 && nBJet>=0 && %s)*"
 
 elif finalState=="DiEle":
     sampleList[-1] = "DataEle"
@@ -196,14 +202,14 @@ elif finalState=="DiEle":
     extraCutsTight       = "(passPresel_Ele && nJet>=4 && nBJet>=2)*"
     extraPhotonCutsTight = "(passPresel_Ele && nJet>=4 && nBJet>=2 && %s)*"
 
-    extraCutsLoose       = "(passPresel_Ele && nJet==2 && nBJet==0)*"
-    extraPhotonCutsLoose = "(passPresel_Ele && nJet==2 && nBJet==0 && %s)*"
+    extraCutsLooseCR2e0       = "(passPresel_Ele && nJet==2)*"
+    extraPhotonCutsLooseCR2e0 = "(passPresel_Ele && nJet==2 && %s)*"
 
-    extraCutsLooseCR       = "(passPresel_Ele && nJet>=2 && nBJet>=0)*"
-    extraPhotonCutsLooseCR = "(passPresel_Ele && nJet>=2 && nBJet>=0 && %s)*"
+    extraCutsLooseCR2g0       = "(passPresel_Ele && nJet>=2)*"
+    extraPhotonCutsLooseCR2g0 = "(passPresel_Ele && nJet>=2 && %s)*"
 
-    extraCutsLooseCR3       = "(passPresel_Ele && nJet>=3 && nBJet>=0)*"
-    extraPhotonCutsLooseCR3 = "(passPresel_Ele && nJet>=3 && nBJet>=0 && %s)*"
+    extraCutsLooseCR3g0       = "(passPresel_Ele && nJet>=3)*"
+    extraPhotonCutsLooseCR3g0 = "(passPresel_Ele && nJet>=3 && %s)*"
 
 elif finalState=="QCDMu":
     sampleList[-1] = "DataMu"
@@ -225,11 +231,15 @@ elif finalState=="QCDMu":
     extraCutsTight            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=4 && nBJet==0)*"
     extraPhotonCutsTight      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=4 && nBJet==0 && %s)*"
 
-    extraCutsLoose            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
-    extraPhotonCutsLoose      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+    extraCutsLooseCR2e0            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR2e0      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
 
-    extraCutsLooseCR          = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
-    extraPhotonCutsLooseCR    = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+    extraCutsLooseCRCR2g0          = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCRCR2g0    = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+
+    extraCutsLooseCR3e0            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR3e0      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+
 
 elif finalState=="QCDMu2":
     sampleList[-1] = "DataMu"
@@ -315,18 +325,6 @@ if 'BTagSF' in sys.argv:
     sys.argv.remove("BTagSF")
     outputhistName = outputhistName.replace(".root","BTagSF_%s.root"%(level))
 
-if 'lumi' in sys.argv:
-	if level=='up':
-		evtWeight="evtWeight*1.025"
-                sys.argv.remove("lumi")
-		outputhistName = outputhistName.replace(".root","lumi_%s.root"%(level))
-        elif level=='down':
-		evtWeight="evtWeight*0.975"
-		sys.argv.remove("lumi")
-		outputhistName = outputhistName.replace(".root","lumi_%s.root"%(level))
-
-
-
 weights = "%s*%s*%s*eleEffWeight*%s"%(evtWeight,Pileup,MuEff,btagWeightCategory[nBJets])
 
 if isTightSelection:
@@ -338,81 +336,107 @@ if isTightSelection:
     extraPhotonCuts = extraPhotonCutsTight 
     outputhistName = outputhistName.replace(".root","_tight.root")
 
-if isLooseSelection:
+if isLooseCR2g0Selection:
     print "Loose Select"
     nJets = 2
     nBJets = 0
-    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(btagWeight[0])"
-    extraCuts = extraCutsLoose
-    extraPhotonCuts = extraPhotonCutsLoose
-    outputhistName = outputhistName.replace(".root","_loose.root")
+    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight"
+    extraCuts = extraCutsLooseCR2g0
+    extraPhotonCuts = extraPhotonCutsLooseCR2g0
+    outputhistName = outputhistName.replace(".root","_looseCR2g0.root")
 
-if isLooseCRSelection:
+if isLooseCR2e0Selection:
     print "Loose Control Region Select"
     nJets = 2
     nBJets = 0
-    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*1"
-    extraCuts = extraCutsLooseCR
-    extraPhotonCuts = extraPhotonCutsLooseCR
-    outputhistName = outputhistName.replace(".root","_looseCR.root")
+    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]"
+    #CHANGED
+#    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight"
+    extraCuts = extraCutsLooseCR2e0
+    extraPhotonCuts = extraPhotonCutsLooseCR2e0
+    outputhistName = outputhistName.replace(".root","_looseCR2e0.root")
 
-if isLooseCR1Selection:
+if isLooseCR2g1Selection:
     print "Loose Control Region1 Select"
     nJets = 2
     nBJets = 1
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(1-btagWeight[0])"
-    extraCuts = extraCutsLooseCR1
-    extraPhotonCuts = extraPhotonCutsLooseCR1
-    outputhistName = outputhistName.replace(".root","_looseCR1.root")
+    extraCuts = extraCutsLooseCR2g1
+    extraPhotonCuts = extraPhotonCutsLooseCR2g1
+    outputhistName = outputhistName.replace(".root","_looseCR2g1.root")
 
 
-if isLooseCR3Selection:
+if isLooseCR3e0Selection:
     print "Loose Control Region Select"
     nJets = 3
     nBJets = 0
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(btagWeight[0])"
-    extraCuts = extraCutsLooseCR3
-    extraPhotonCuts = extraPhotonCutsLooseCR3
-    outputhistName = outputhistName.replace(".root","_looseCR3.root")
+    extraCuts = extraCutsLooseCR3e0
+    extraPhotonCuts = extraPhotonCutsLooseCR3e0
+    outputhistName = outputhistName.replace(".root","_looseCR3e0.root")
 
 from HistogramListDict import *
-#histogramInfo = GetHistogramInfo(extraCuts,extraPhotonCuts,nBJets)
-histogramInfo = GetHistforfits(extraCuts,extraPhotonCuts,nBJets)
-if isLooseCR1Selection:
-	histogramInfo = GetHistforZGamma(extraCuts,extraPhotonCuts,nBJets)
-
-if isLooseCR3Selection:
-	 histogramInfo = GetHistforZGamma(extraCuts,extraPhotonCuts,nBJets)
+histogramInfo = GetHistogramInfo(extraCuts,extraPhotonCuts,nBJets)
+#histogramInfo = GetHistforfits(extraCuts,extraPhotonCuts,nBJets)
 
 
-###This part will make a list of the histograms that need to be produced
+plotList = options.plotList
+if plotList is None:
+    if makeAllPlots:
+        plotList = histogramInfo.keys()
+        print "Making full list of plots"
+    elif makeEGammaPlots:
+        plotList = ["phosel_MassEGamma","phosel_MassEGammaMisIDEle","phosel_MassEGammaOthers"]
+        print "Making only plots for e-gamma fits"
+    else:
+        plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
+        print "Making only plots for simultaneous fits"
 
-if not plotList is None:
-    #gets list of histograms from input options if any given
-    histogramsToMake = plotList
-    ### in this case, we need to check that the histograms are in histogramInfo
-    allHistsDefined = True
-    for hist in histogramsToMake:
-        if not hist in histogramInfo:
-            print "Histogram %s is not defined in HistogramListDict.py"%hist
-            allHistsDefined = False
-    if not allHistsDefined:
-        sys.exit()
-else:
-    ## make all histograms defined in HistogramListDict
-    histogramsToMake = histogramInfo.keys()
-    histogramsToMake.sort()
+plotList.sort()
+print '-----'
+print "Making the following plots:"
+for p in plotList: print "%s,"%p,
+print
+print '-----'
 
-    # ## make only a subset of histograms
-    # histogramsToMake = ["phosel_PhotonCategory", "presel_nJet"]
-    # ### in this case, we need to check that the histograms are in histogramInfo
-    # allHistsDefined = True
-    # for hist in histogramsToMake:
-    #     if not hist in histogramInfo:
-    #         print "Histogram %s is not defined in HistogramListDict.py"
-    #         allHistsDefined = False
-    # if not allHistsDefined:
-    #     sys.exit()
+histogramsToMake = plotList
+
+allHistsDefined = True
+for hist in histogramsToMake:
+    if not hist in histogramInfo:
+        print "Histogram %s is not defined in HistogramListDict.py"%hist
+        allHistsDefined = False
+if not allHistsDefined:
+    sys.exit()
+
+# ###This part will make a list of the histograms that need to be produced
+# plotList = options.plotList
+# if not plotList is None:
+#     #gets list of histograms from input options if any given
+#     histogramsToMake = plotList
+#     ### in this case, we need to check that the histograms are in histogramInfo
+#     allHistsDefined = True
+#     for hist in histogramsToMake:
+#         if not hist in histogramInfo:
+#             print "Histogram %s is not defined in HistogramListDict.py"%hist
+#             allHistsDefined = False
+#     if not allHistsDefined:
+#         sys.exit()
+# else:
+#     ## make all histograms defined in HistogramListDict
+#     histogramsToMake = histogramInfo.keys()
+#     histogramsToMake.sort()
+
+#     # ## make only a subset of histograms
+#     # histogramsToMake = ["phosel_PhotonCategory", "presel_nJet"]
+#     # ### in this case, we need to check that the histograms are in histogramInfo
+#     # allHistsDefined = True
+#     # for hist in histogramsToMake:
+#     #     if not hist in histogramInfo:
+#     #         print "Histogram %s is not defined in HistogramListDict.py"
+#     #         allHistsDefined = False
+#     # if not allHistsDefined:
+#     #     sys.exit()
 
 
 
@@ -494,7 +518,8 @@ if not "QCD_DD" in sample:
             evtWeight = h_Info[4]
 
         if "Data" in sample:
-            evtWeight = h_Info[3]
+            evtWeight = "%s%s"%(h_Info[3],weights)
+        #     evtWeight = h_Info[3]
 
         if evtWeight[-1]=="*":
             evtWeight= evtWeight[:-1]

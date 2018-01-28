@@ -13,18 +13,32 @@ parser.add_option("-c", "--channel", dest="channel", default="Mu",type='str',
 		  help="Specify which channel Mu or Ele? default is Mu" )
 parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,action="store_true",
 		  help="Use 4j2t selection" )
-parser.add_option("--Loose","--loose", dest="isLooseSelection", default=False,action="store_true",
-		  help="Use 2j0t selection" )
-parser.add_option("--LooseCR","--looseCR", dest="isLooseCRSelection", default=False,action="store_true",
+parser.add_option("--LooseCR2e0","--looseCR2e0", dest="isLooseCR2e0Selection", default=False,action="store_true",
 		  help="Use 2j exactly 0t control region selection" )
+parser.add_option("--LooseCR3e0","--looseCR3e0", dest="isLooseCR3e0Selection", default=False,action="store_true",
+		  help="Use 3j exactly 0t control region selection" )
+parser.add_option("--LooseCR2g0","--looseCR2g0", dest="isLooseCR2g0Selection", default=False,action="store_true",
+		  help="Use 2j at least 0t control region selection" )
+parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection", default=False,action="store_true",
+		  help="Use 2j at least 1t control region selection" )
 parser.add_option("--plot", dest="plotList",action="append",
-                     help="Add plots" )
+		  help="Add plots" )
+parser.add_option("--file",dest="inputFile",default=None,
+		  help="Specify specific input file")
+
 (options, args) = parser.parse_args()
 
 isTightSelection = options.isTightSelection
-isLooseSelection = options.isLooseSelection
-isLooseCRSelection = options.isLooseCRSelection
+isLooseCR2e0Selection = options.isLooseCR2e0Selection
+isLooseCR2g0Selection = options.isLooseCR2g0Selection
+isLooseCR2g1Selection = options.isLooseCR2g1Selection
+isLooseCR3e0Selection = options.isLooseCR3e0Selection
 plotList = options.plotList
+
+inputFile = options.inputFile
+
+
+
 
 finalState = options.channel
 print "Running on the %s channel"%(finalState)
@@ -32,37 +46,45 @@ if finalState=='Mu':
 	_file  = TFile("histograms/mu/hists.root")
 	plotDirectory = "plots_mu/"
 	regionText = ", N_{j}#geq3, N_{b}#geq1"
-	if isTightSelection:
-        	plotDirectory = "tightplots_mu/"
-        	_file  = TFile("histograms/mu/hists_tight.root")
-        	regionText = ", N_{j}#geq4, N_{b}#geq2"
-	if isLooseSelection:
-        	plotDirectory = "looseplots_mu/"
-        	_file  = TFile("histograms/mu/hists_loose.root")
-        	regionText = ", N_{j}=2, N_{b}#geq0"
-	if isLooseCRSelection:
-        	plotDirectory = "looseCRplots_mu/"
-        	_file  = TFile("histograms/mu/hists_looseCR.root")
-        	regionText = ", N_{j}#geq2, N_{b}=0"
-
+	channel = 'mu'
 if finalState=="Ele":
 	_file  = TFile("histograms/ele/hists.root")
         plotDirectory = "plots_ele/"
         regionText = ", N_{j}#geq3, N_{b}#geq1"
+	channel = 'ele'
 
-	if isTightSelection:
-    		plotDirectory = "tightplots_ele/"
-    		_file  = TFile("histograms/ele/hists_tight.root")
-    		regionText = ", N_{j}#geq4, N_{b}#geq2"
-	if isLooseSelection:
-    		plotDirectory = "looseplots_ele/"
-    		_file  = TFile("histograms/ele/hists_loose.root")
-    		regionText = ", N_{j}=2, N_{b}#geq0"
-	if isLooseCRSelection:
-    		plotDirectory = "looseCRplots_ele/"
-    		_file  = TFile("histograms/ele/hists_looseCR.root")
-    		regionText = ", N_{j}#geq2, N_{b}=0"
 
+
+if isTightSelection:
+	plotDirectory = "tightplots_%s/"%channel
+	_file  = TFile("histograms/%s/hists_tight.root"%channel)
+	regionText = ", N_{j}#geq4, N_{b}#geq2"
+if isLooseCR2g0Selection:
+	plotDirectory = "looseplots_%s_CR2g0/"%channel
+	_file  = TFile("histograms/%s/hists_looseCR2g0.root"%channel)
+	regionText = ", N_{j}=2, N_{b}#geq0"
+if isLooseCR2g1Selection:
+	plotDirectory = "looseplots_%s_CR2g1/"%channel
+	_file  = TFile("histograms/%s/hists_looseCR2g1.root"%channel)
+	regionText = ", N_{j}=2, N_{b}#geq0"
+if isLooseCR2e0Selection:
+	plotDirectory = "looseCRplots_%s_CR2e0/"%channel
+	_file  = TFile("histograms/%s/hists_looseCR2e0.root"%channel)
+	regionText = ", N_{j}#geq2, N_{b}=0"
+if isLooseCR3e0Selection:
+	plotDirectory = "looseCRplots_%s_CR3e0/"%channel
+	_file  = TFile("histograms/%s/hists_looseCR3e0.root"%channel)
+	regionText = ", N_{j}#geq2, N_{b}=0"
+
+
+if not inputFile is None:
+	_file  = TFile("histograms/%s/%s"%(channel,inputFile))
+	if not _file.IsOpen():
+		print "Unable to open file"
+		sys.exit()
+
+if not os.path.exists(plotDirectory):
+	os.mkdir(plotDirectory)
 
 
 from sampleInformation import *
@@ -126,9 +148,9 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_HT"                      : ["H_{T} (GeV)"                ,"Events/9",  1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_MET"                     : ["MET (GeV)  "                , "Events/2", 5, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_M3"                      : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, " "],   
-	      "phosel_M3_GenuinePho"           : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, "Genuine Photon"],   
+	      "phosel_M3_GenuinePhoton"           : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, "Genuine Photon"],   
 	      "phosel_M3_MisIDEle"             : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, "MisIDEle"],
-	      "phosel_M3_HadronicPho"          : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, "Hadronic Photon"],
+	      "phosel_M3_HadronicPhoton"          : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, "Hadronic Photon"],
 	      "phosel_M3_HadronicFake"         : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, "Hadronic Fake"],
 	      "phosel_muEta"                   : ["Muon #eta"                  , "Events/0.05", 5, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_muPt"    		       : ["Muon p_{T} (GeV) "          , "Events", 5, [-1,-1], regionText,  NoLog, " "],
@@ -176,6 +198,21 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      }
 
 
+if plotList is None:
+	plotList = histograms.keys()
+	plotList.sort()
+if not plotList is None:
+	allHistsDefined = True
+	for hist in plotList:
+		if not hist in histograms:
+			print "Histogram %s plotting information not defined" % hist
+			allHistsDefined = False
+	if not allHistsDefined:
+		sys.exit()
+
+
+
+
 import CMS_lumi
 
 from Style import *
@@ -199,9 +236,11 @@ if not HasCMSStyle:
 
 ROOT.gROOT.ForceStyle()
 
-sampleList[-2] = "QCD_DD"
+#sampleList[-2] = "QCD_DD"
+sampleList[-2] = "QCDMu"
 stackList = sampleList[:-1]
 
+#stackList.remove("QCD_DD")
 # stackList.remove("QCDMu")
 stackList.reverse()
 
@@ -213,6 +252,8 @@ elif finalState=="Ele":
 CMS_lumi.channelText = _channelText
 CMS_lumi.writeChannelText = True
 CMS_lumi.writeExtraText = True
+
+
 
 
 H = 600;
@@ -313,6 +354,8 @@ mcList = {'TTGamma': [kOrange],
 	  'Diboson':[kCyan-7],
           'TGJets': [kGray],
           'QCD_DD': [kGreen+3],
+          'QCDMu': [kGreen+3],
+          'GJets': [kGreen+1],
           }
 
 
@@ -329,7 +372,7 @@ legendR.SetFillColor(0)
 legend.SetBorderSize(0)
 legend.SetFillColor(0)
 
-histName = "jet1Pt"#preselhistograms.keys()[0]
+histName = plotList[0]
 legList = stackList[:]
 legList.reverse()
 #legList.remove('TGJets')
@@ -338,7 +381,7 @@ print legList
 for sample in legList:
     # print sample, _file
     # print "%s/%s_%s"%(sample,histName,sample)
-    hist = _file.Get("%s/presel_%s_%s"%(sample,histName,sample))
+    hist = _file.Get("%s/%s_%s"%(sample,histName,sample))
 #    hist.Draw()
     hist.SetFillColor(mcList[sample][0])
     hist.SetLineColor(mcList[sample][0])
@@ -353,12 +396,11 @@ legendR.AddEntry(dataHist, "Data", 'pe')
 
 
 
-
 TGaxis.SetMaxDigits(3)
 #stackList.remove('TGJets')
 def drawHist(histName,plotInfo, plotDirectory, _file):
     print "start drawing"
-    
+
     canvas.cd()
     canvas.ResetDrawn()
     stack = THStack(histName,histName)
@@ -371,6 +413,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
         hist.SetLineColor(mcList[sample][0])
 
         hist.Rebin(plotInfo[2])
+
         stack.Add(hist)
     if finalState=='Ele':
    	dataHist = _file.Get("DataEle/%s_DataEle"%(histName))
@@ -381,14 +424,19 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     if type(dataHist)==type(TObject()): noData = True
     if not noData:
 	    dataHist.Rebin(plotInfo[2])
-    
-    #sys.exit()
+
+    oneLine = TF1("oneline","1",-9e9,9e9)
+    oneLine.SetLineColor(kBlack)
+    oneLine.SetLineWidth(1)
+    oneLine.SetLineStyle(2)
+	
     _text = TPaveText(0.47,.75,0.55,0.85,"NDC")
-    _text.AddText(plotInfo[6])
     _text.SetTextColor(kBlack)
     _text.SetFillColor(0)
     _text.SetTextSize(0.05)
     _text.SetTextFont(42)
+    _text.AddText(plotInfo[6])
+
     #histograms list has flag whether it's log or not
     canvas.SetLogy(plotInfo[5])
     #canvas.SetLogy()
@@ -398,6 +446,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	stack.SetMaximum(1.35*stack.GetMaximum())
     stack.Draw('hist')
     _text.Draw("same")
+
     #histograms list has x-axis title
     stack.GetHistogram().GetXaxis().SetTitle(plotInfo[0])
     stack.GetHistogram().GetYaxis().SetTitle(plotInfo[1])
@@ -408,8 +457,10 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 
     if not noData:
 	dataHist.Draw("e,X0,same")
+
     legend.Draw("same")
-  
+
+
     
     #_text.Draw()
     CMS_lumi.channelText = _channelText+plotInfo[4]
@@ -453,6 +504,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	stack.GetYaxis().SetTitle(plotInfo[1])
 	dataHist.Draw('E,X0,SAME')
 	legendR.Draw()
+
 	_text = TPaveText(0.47,.75,0.55,0.85,"NDC")
 	_text.AddText(plotInfo[6])
 	_text.SetTextColor(kBlack)
@@ -468,49 +520,40 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	ratio.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
 	ratio.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(padRatio+padOverlap-padGap))
 	ratio.GetYaxis().SetRangeUser(0.5,1.5)
+
+	# maxRatio = ratio.GetMaximum()
+	# if maxRatio > 1.8:
+	# 	ratio.GetYaxis().SetRangeUser(0,round(0.5+maxRatio))
+	# elif maxRatio < 1:
+	# 	ratio.GetYaxis().SetRangeUser(0,1.2)
+	# else:
+	# 	ratio.GetYaxis().SetRangeUser(2-1.1*maxRatio,1.1*maxRatio)
+
 	ratio.GetYaxis().SetNdivisions(504)
 	ratio.GetXaxis().SetTitle(plotInfo[0])
 	ratio.GetYaxis().SetTitle("Data/MC")
-	
+	CMS_lumi.CMS_lumi(pad1, 4, 11)
+
 	pad2.cd()
+
 	ratio.SetMarkerStyle(dataHist.GetMarkerStyle())
 	ratio.SetMarkerSize(dataHist.GetMarkerSize())
 	ratio.SetLineColor(dataHist.GetLineColor())
 	ratio.SetLineWidth(dataHist.GetLineWidth())
-	
-	oneLine = TF1("oneline","1",-9e9,9e9)
-	oneLine.SetLineColor(kBlack)
-	oneLine.SetLineWidth(1)
-	oneLine.SetLineStyle(2)
-	
 	ratio.Draw('e,x0')
-	oneLine.Draw("same")
 
+	oneLine.Draw("same")
 	#    pad2.Update()
-	CMS_lumi.CMS_lumi(pad1, 4, 11)
 	canvasRatio.Update()
 	canvasRatio.RedrawAxis()
 	canvasRatio.SaveAs("%s/%s_ratio.pdf"%(plotDirectory,histName))
 	canvasRatio.SaveAs("%s/%s_ratio.png"%(plotDirectory,histName))
 	canvasRatio.SetLogy(0)
 
-histogramList = histograms.keys()
-histogramList.sort()
 
-if not plotList is None:
-	histogramList = plotList
-	allHistsDefined = True
-	print plotList
-	print histogramList
-	for hist in histogramList:
-		print hist
-		if not hist in histograms:
-			print "Histogram %s plotting information not defined" % hist
-			allHistsDefined = False
-	if not allHistsDefined:
-		sys.exit()
+print pad1, pad2
 
-for histName in histogramList:
+for histName in plotList:
 	drawHist(histName,histograms[histName],plotDirectory,_file)
 
 # for histName in phoselhistograms:
