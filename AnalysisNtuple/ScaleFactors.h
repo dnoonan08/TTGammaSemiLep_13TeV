@@ -94,9 +94,9 @@ double TTGJets_xs               =  3.697; //https://twiki.cern.ch/twiki/bin/view
 
 double TGJets_xs                =  2.967;
 
-double TTGamma_hadronic_xs  =  4.599;
-double TTGamma_semilept_xs  =  4.499/2.;
-double TTGamma_dilept_xs    =  0.899;
+double TTGamma_hadronic_xs  =  3.482;   //4.599;
+double TTGamma_semilept_xs  =  5.017/2.;//4.499/2.;
+double TTGamma_dilept_xs    =  1.679;   //0.899;
 
 double WjetsInclusive_xs    = 61526.7; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#W_jets
 
