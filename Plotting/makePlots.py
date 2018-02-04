@@ -4,8 +4,13 @@ import os
 import sys
 from optparse import OptionParser
 
+from numpy import log10
+from array import array
+
+
 padRatio = 0.25
 padOverlap = 0.15
+
 padGap = 0.01
 parser = OptionParser()
 
@@ -23,8 +28,16 @@ parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection", d
 		  help="Use 2j at least 1t control region selection" )
 parser.add_option("--plot", dest="plotList",action="append",
 		  help="Add plots" )
+parser.add_option("--morePlots","--MorePlots",dest="makeMorePlots",action="store_true",default=False,
+                     help="Make larger list of kinematic distributions" )
+parser.add_option("--allPlots","--allPlots",dest="makeAllPlots",action="store_true",default=False,
+                     help="Make plots of all distributions" )
 parser.add_option("--file",dest="inputFile",default=None,
 		  help="Specify specific input file")
+parser.add_option("--useQCDMC","--qcdMC",dest="useQCDMC", default=False, action="store_true",
+		  help="")
+parser.add_option("--noQCD",dest="noQCD", default=False, action="store_true",
+		  help="")
 
 (options, args) = parser.parse_args()
 
@@ -36,21 +49,30 @@ isLooseCR3e0Selection = options.isLooseCR3e0Selection
 plotList = options.plotList
 
 inputFile = options.inputFile
+useQCDMC = options.useQCDMC
+noQCD = options.noQCD
+makeMorePlots = options.makeMorePlots
+makeAllPlots = options.makeAllPlots
 
-
+if plotList is None:
+	if makeMorePlots:
+		plotList = ["presel_Njet","presel_Nbjet","phosel_Njet","phosel_Nbjet","presel_jet1Pt","presel_jet2Pt","presel_jet3Pt","phosel_LeadingPhotonEt","phosel_LeadingPhotonEta","phosel_dRLeadingPhotonJet","phosel_dRLeadingPhotonLepton","presel_WtransMass","phosel_WtransMass","presel_MET","phosel_MET"]
+	elif makeAllPlots:
+		plotList = histograms.keys()
+		plotList.sort()
+	else:
+		plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
 
 
 finalState = options.channel
 print "Running on the %s channel"%(finalState)
 if finalState=='Mu':
 	_fileDir = "histograms/mu/hists"
-#	_file  = TFile("histograms/mu/hists.root")
 	plotDirectory = "plots_mu/"
 	regionText = ", N_{j}#geq3, N_{b}#geq1"
 	channel = 'mu'
 if finalState=="Ele":
 	_fileDir = "histograms/ele/hists"
-#	_file  = TFile("histograms/ele/hists.root")
         plotDirectory = "plots_ele/"
         regionText = ", N_{j}#geq3, N_{b}#geq1"
 	channel = 'ele'
@@ -60,33 +82,26 @@ if finalState=="Ele":
 if isTightSelection:
 	plotDirectory = "tightplots_%s/"%channel
 	_fileDir = "histograms/%s/hists_tight/"%channel
-#	_file  = TFile("histograms/%s/hists_tight.root"%channel)
 	regionText = ", N_{j}#geq4, N_{b}#geq2"
 if isLooseCR2g0Selection:
 	plotDirectory = "looseplots_%s_CR2g0/"%channel
 	_fileDir = "histograms/%s/hists_looseCR2g0/"%channel
-#	_file  = TFile("histograms/%s/hists_looseCR2g0.root"%channel)
 	regionText = ", N_{j}=2, N_{b}#geq0"
 if isLooseCR2g1Selection:
 	plotDirectory = "looseplots_%s_CR2g1/"%channel
 	_fileDir = "histograms/%s/hists_looseCR2g1/"%channel
-#	_file  = TFile("histograms/%s/hists_looseCR2g1.root"%channel)
 	regionText = ", N_{j}=2, N_{b}#geq1"
 if isLooseCR2e0Selection:
 	plotDirectory = "looseplots_%s_CR2e0/"%channel
 	_fileDir = "histograms/%s/hists_looseCR2e0"%channel
-#	_file  = TFile("histograms/%s/hists_looseCR2e0.root"%channel)
 	regionText = ", N_{j}#geq2, N_{b}=0"
 if isLooseCR3e0Selection:
 	plotDirectory = "looseCRplots_%s_CR3e0/"%channel
 	_fileDir = "histograms/%s/hists_looseCR3e0"%channel
-#	_file  = TFile("histograms/%s/hists_looseCR3e0.root"%channel)
 	regionText = ", N_{j}#geq3, N_{b}=0"
-
 
 if not inputFile is None:
 	_fileDir = "histograms/%s/%s"%(channel,inputFile)
-#	_file  = TFile("histograms/%s/%s"%(channel,inputFile))
 	if not _file.IsOpen():
 		print "Unable to open file"
 		sys.exit()
@@ -94,19 +109,12 @@ if not inputFile is None:
 if not os.path.exists(plotDirectory):
 	os.mkdir(plotDirectory)
 
-
 from sampleInformation import *
 
 gROOT.SetBatch(True)
 
-
-
-
 YesLog = True
 NoLog=False
-
-
-
 
 # Histogram Information:
 # [X-axis title, 
@@ -144,44 +152,45 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_dRLeadingPhotonLepton"          : ["dR(LeadingPhoton,Lepton)" , "Events/0.025", 2, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_dRLeadingPromptPhotonLepton"    : ["dR(LeadingPhoton,Lepton)" , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "Prompt Photon"],
 	      "phosel_dRLeadingNonPromptPhotonLepton" : ["dR(LeadingPhoton,Lepton)" , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "NonPrompt Photon"],
-	      "phosel_dRLeadingPhotonJet"             : ["dR(LeadingPhoton,Jet)"    , "Events/0.025", 2, [-1,-1], regionText,  NoLog, " "],  
-	      "phosel_dRLeadingPromptPhotonJet"       : ["dR(LeadingPhoton,Jet)"    , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "Prompt Photon"],
-	      "phosel_dRLeadingNonPromptPhotonJet"    : ["dR(LeadingPhoton,Jet)"    , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "NonPrompt Photon"],
-	      "phosel_dRLeadingGenuinePhotonLepton"   : ["dR(LeadingPhoton,Jet)"    , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "Genuine"],
-	      "phosel_dRLeadingMisIDEleLepton"        : ["dR(LeadingPhoton,Jet)"    , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "MisIDEle"],
-	      "phosel_dRLeadingHadPhoLepton"          : ["dR(LeadingPhoton,Jet)"    , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "Hadronic Photon"],
-	      "phosel_dRLeadingHadFakeLepton"         : ["dR(LeadingPhoton,Jet)"    , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "Hadronic Fake"],
-	      "phosel_WtransMass"              : ["W transverse mass GeV "        , "Events/5", 1, [-1,-1], regionText,  NoLog, " "],
+	      "phosel_dRLeadingPhotonJet"             : ["dR(LeadingPhoton,Jet)" , "Events/0.025", 2, [-1,-1], regionText,  NoLog, " "],  
+	      "phosel_dRLeadingPromptPhotonJet"       : ["dR(LeadingPhoton,Jet)" , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "Prompt Photon"],
+	      "phosel_dRLeadingNonPromptPhotonJet"    : ["dR(LeadingPhoton,Jet)" , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "NonPrompt Photon"],
+	      "phosel_dRLeadingGenuinePhotonLepton"   : ["dR(LeadingPhoton,Jet)" , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "Genuine"],
+	      "phosel_dRLeadingMisIDEleLepton"        : ["dR(LeadingPhoton,Jet)" , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "MisIDEle"],
+	      "phosel_dRLeadingHadPhoLepton"          : ["dR(LeadingPhoton,Jet)" , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "Hadronic Photon"],
+	      "phosel_dRLeadingHadFakeLepton"         : ["dR(LeadingPhoton,Jet)" , "Events/0.025", 2, [-1,-1], regionText,  NoLog, "Hadronic Fake"],
+	      "phosel_WtransMass"              : ["W transverse mass GeV "        , "Events/5 GeV", 5, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_Nphotons"                : ["Number of Photons "            , "Events", 1, [-1,-1], regionText,  YesLog, " "],
 	      "phosel_HT"                      : ["H_{T} (GeV)"                ,"Events/9",  1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_MET"                     : ["MET (GeV)  "                , "Events/2", 5, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_M3"                      : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, " "],   
-	      "phosel_M3_GenuinePhoton"           : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, "Genuine Photon"],   
-	      "phosel_M3_MisIDEle"             : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, "MisIDEle"],
-	      "phosel_M3_HadronicPhoton"          : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, "Hadronic Photon"],
-	      "phosel_M3_HadronicFake"         : ["M_{3} (GeV)"                , "Events/2", 5, [-1,-1], regionText,  NoLog, "Hadronic Fake"],
+	      "phosel_M3"                      : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, " "],   
+	      "phosel_M3_GenuinePhoton"        : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "Genuine Photon"],   
+	      "phosel_M3_MisIDEle"             : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "MisIDEle"],
+	      "phosel_M3_HadronicPhoton"       : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "Hadronic Photon"],
+	      "phosel_M3_HadronicFake"         : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "Hadronic Fake"],
 	      "phosel_muEta"                   : ["Muon #eta"                  , "Events/0.05", 5, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_muPt"    		       : ["Muon p_{T} (GeV) "          , "Events", 5, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_elePt"                   : ["Electron p_{T} (GeV)", "Events", 5, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_eleSCEta"                : ["Electron SC#eta"       , "Events/0.05", 5, [-1,-1], regionText,  NoLog, " "],
+	      "phosel_elePt"                   : ["Electron p_{T} (GeV)"       , "Events", 5, [-1,-1], regionText,  NoLog, " "],
+	      "phosel_eleSCEta"                : ["Electron SC#eta"            , "Events/0.05", 5, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_Njet"                    : ["N Jets"                     , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_Nbjet"                   : ["N B-Jets"                   , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_HoverE"                  : ["H over E"                   , "Events/0.0004", 1, [-1,-1], regionText, YesLog, " "],
 	      "phosel_SIEIE"                   : ["Sigma Ieta Ieta"            , "Events/0.0003", 1, [-1,-1], regionText, YesLog, " "],
 	      "phosel_ChIso"                   : ["Charged Hadron Iso (GeV)"   , "Events/0.005", 1, [-1,-1], regionText, YesLog, " "],
 	      "phosel_NeuIso"                  : ["Neutral Hadron Iso (GeV)"   , "Events/0.05", 1, [-1,-1], regionText, YesLog, " "],
-	      "phosel_nVtx"     : ["N Vtx nominal"               , "Events", 1, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_nVtxup"   : ["N Vtx up"               , "Events", 1, [-1,-1], regionText,  NoLog, " "],
+	      "phosel_nVtx"     : ["N Vtx nominal"            , "Events", 1, [-1,-1], regionText,  NoLog, " "],
+	      "phosel_nVtxup"   : ["N Vtx up"                 , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_nVtxdo"   : ["N Vtx down"               , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_nVtxNoPU" : ["N Vtx noPU"               , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_PhoIso"                  : ["Photon Iso (GeV)"           , "Events/0.1", 1, [-1,-1], regionText, YesLog, " "],
 	      "phosel_noCut_HoverE"            : ["H over E"                   , "Events/0.002", 1, [-1,-1], regionText, YesLog, " "],
 	      "phosel_noCut_SIEIE"             : ["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog, " "],
-	      "phosel_noCut_SIEIE_GenuinePho"  :["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog, "Genuine Photon"],
-	      "phosel_noCut_SIEIE_MisIDEle"  :["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog,"MisIDEle"],
-	      "phosel_noCut_SIEIE_HadPho"    :["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog, "Hadronic Photon"],
-	      "phosel_noCut_SIEIE_HadFake"    :["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog, "Hadronic Fake"],
-	      "phosel_noCut_ChIso"             : ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, NoLog, " "],
+	      "phosel_noCut_SIEIE_GenuinePho"  : ["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog, "Genuine Photon"],
+	      "phosel_noCut_SIEIE_MisIDEle"    : ["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog,"MisIDEle"],
+	      "phosel_noCut_SIEIE_HadPho"      : ["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog, "Hadronic Photon"],
+	      "phosel_noCut_SIEIE_HadFake"     : ["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog, "Hadronic Fake"],
+#	      "phosel_noCut_ChIso"             : ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, NoLog, " "],
+	      "phosel_noCut_ChIso"             : ["Charged Hadron Iso (GeV)"   , "Events", [0.,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, YesLog, " "],
 	      "phosel_noCut_ChIso_GenuinePhoton": ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "Genuine Photon"],
 	      "phosel_noCut_ChIso_MisIDEle"    : ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "MisIDEle"],
 	      "phosel_noCut_ChIso_HadronicPhoton": ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "Hadronic Photon"],
@@ -193,22 +202,20 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_AntiSIEIE_ChIso"         : ["Charged Hadron Iso (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog, " "],
 	      "phosel_AntiSIEIE_ChIso_GenuinePho": ["Charged Hadron Iso (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog, "Genuine Photon"],
 	      "phosel_AntiSIEIE_ChIso_MisIDEle": ["Charged Hadron Iso (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog, "MisIDEle"],    
-	      "phosel_AntiSIEIE_ChIso_HadPho": ["Charged Hadron Iso (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog,"Hadronic Photon"],       
-	      "phosel_AntiSIEIE_ChIso_HadFake": ["Charged Hadron Iso HadFake (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog, "Hadronic Fake"], 
+	      "phosel_AntiSIEIE_ChIso_HadPho"  : ["Charged Hadron Iso (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog,"Hadronic Photon"],       
+	      "phosel_AntiSIEIE_ChIso_HadFake" : ["Charged Hadron Iso HadFake (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog, "Hadronic Fake"],
 	      "phosel_noCut_SIEIE_endcap"      : ["Sigma Ieta Ieta"            , "Events/0.0006", 1, [-1,1], regionText,  NoLog, "Endcap"],
 	      "phosel_noCut_SIEIE_barrel"      : ["Sigma Ieta Ieta"            , "Events/0.0002", 1, [-1,-1], regionText,  NoLog, "Barrel"],
-	      "phosel_mcMomPIDGenuinePho" :["ParentPID of GenuinePho", "Events", 1, [-25,25], regionText,  YesLog, "GenuinePhoton"],
-	      "phosel_mcMomPIDMisIDEle"  :["ParentPID of MisIDEle", "Events", 1, [-1,-1], regionText,  YesLog, "MisIDEle"],
-	      "phosel_mcMomPIDHadPho":    ["ParentPID of HadronicPho", "Events", 1, [-1000,600], regionText, YesLog, "Hadronic Photon"],
-	      "phosel_mcMomPIDHadFake":    ["ParentPID of HadronicFake", "Events", 1, [-1,-1], regionText,  YesLog, "Hadronic Fake"],
-	      "phosel_RandomCone"     :    ["RandomConeIsolation GeV", "Events", 1, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_MassEGamma"     :    ["m_{e,#gamma} GeV", "Events", 1, [-1,-1], regionText,  NoLog, " "],
+	      "phosel_mcMomPIDGenuinePho"      : ["ParentPID of GenuinePho"  , "Events", 1, [-25,25], regionText,  YesLog, "GenuinePhoton"],
+	      "phosel_mcMomPIDMisIDEle"        : ["ParentPID of MisIDEle"    , "Events", 1, [-1,-1], regionText,  YesLog, "MisIDEle"],
+	      "phosel_mcMomPIDHadPho"          : ["ParentPID of HadronicPho" , "Events", 1, [-1000,600], regionText, YesLog, "Hadronic Photon"],
+	      "phosel_mcMomPIDHadFake"         : ["ParentPID of HadronicFake", "Events", 1, [-1,-1], regionText,  YesLog, "Hadronic Fake"],
+	      "phosel_RandomCone"              : ["RandomConeIsolation GeV"  , "Events", 1, [-1,-1], regionText,  NoLog, " "],
+	      "phosel_MassEGamma"              : ["m_{e,#gamma} GeV"         , "Events", 1, [-1,-1], regionText,  NoLog, " "],
+	      "phosel_MassLepGamma"            : ["m_{lepton,#gamma} GeV"    , "Events", 5, [-1,-1], regionText,  NoLog, " "],
 	      }
 
 
-if plotList is None:
-	plotList = histograms.keys()
-	plotList.sort()
 if not plotList is None:
 	allHistsDefined = True
 	for hist in plotList:
@@ -244,12 +251,19 @@ if not HasCMSStyle:
 
 ROOT.gROOT.ForceStyle()
 
-#sampleList[-2] = "QCD_DD"
-sampleList[-2] = "QCDMu"
-stackList = sampleList[:-1]
 
-#stackList.remove("QCD_DD")
-# stackList.remove("QCDMu")
+if useQCDMC:
+	sampleList[-2] = "QCDMu"
+	stackList = sampleList[:-1]
+elif noQCD:
+	stackList = sampleList[:-3]
+else:
+	sampleList[-2] = "QCD_DD"
+	stackList = sampleList[:-1]
+	stackList.remove("GJets")
+	samples["QCD_DD"] = [[],kGreen+3,"Multijet",isMC]
+
+
 stackList.reverse()
 
 if finalState=="Mu":
@@ -267,104 +281,19 @@ CMS_lumi.writeExtraText = True
 H = 600;
 W = 800;
 
-canvas = TCanvas('c1','c1',W,H)
 
 # references for T, B, L, R                                                                                                             
 T = 0.08*H
 B = 0.12*H
 L = 0.12*W
 R = 0.1*W
-canvas.SetFillColor(0)
-canvas.SetBorderMode(0)
-canvas.SetFrameFillStyle(0)
-canvas.SetFrameBorderMode(0)
-canvas.SetLeftMargin( L/W )
-canvas.SetRightMargin( R/W )
-canvas.SetTopMargin( T/H )
-canvas.SetBottomMargin( B/H )
-canvas.SetTickx(0)
 
 
-canvasRatio = TCanvas('c1Ratio','c1Ratio',W,H)
-# references for T, B, L, R                                                                                                             
-T = 0.08*H
-B = 0.12*H
-L = 0.12*W
-R = 0.1*W
-canvasRatio.SetFillColor(0)
-canvasRatio.SetBorderMode(0)
-canvasRatio.SetFrameFillStyle(0)
-canvasRatio.SetFrameBorderMode(0)
-canvasRatio.SetLeftMargin( L/W )
-canvasRatio.SetRightMargin( R/W )
-canvasRatio.SetTopMargin( T/H )
-canvasRatio.SetBottomMargin( B/H )
-canvasRatio.SetTickx(0)
-canvasRatio.SetTicky(0)
-pad1 = TPad("p1","p1",0,padRatio-padOverlap,1,1)
-pad2 = TPad("p2","p2",0,0,1,padRatio+padOverlap)
-pad1.SetLeftMargin( L/W )
-pad1.SetRightMargin( R/W )
-pad1.SetTopMargin( T/H/(1-padRatio+padOverlap) )
-pad1.SetBottomMargin( (padOverlap+padGap)/(1-padRatio+padOverlap) )
-pad2.SetLeftMargin( L/W )
-pad2.SetRightMargin( R/W )
-pad2.SetTopMargin( (padOverlap)/(padRatio+padOverlap) )
-pad2.SetBottomMargin( B/H/(padRatio+padOverlap) )
+# SetOwnership(canvas, False)
+# SetOwnership(canvasRatio, False)
+# SetOwnership(pad1, False)
+# SetOwnership(pad2, False)
 
-pad1.SetFillColor(0)
-pad1.SetBorderMode(0)
-pad1.SetFrameFillStyle(0)
-pad1.SetFrameBorderMode(0)
-pad1.SetTickx(0)
-pad1.SetTicky(0)
-
-pad2.SetFillColor(0)
-pad2.SetFillStyle(4000)
-pad2.SetBorderMode(0)
-pad2.SetFrameFillStyle(0)
-pad2.SetFrameBorderMode(0)
-pad2.SetTickx(0)
-pad2.SetTicky(0)
-
-SetOwnership(canvas, False)
-SetOwnership(canvasRatio, False)
-SetOwnership(pad1, False)
-SetOwnership(pad2, False)
-
-canvasRatio.cd()
-pad1.Draw()
-pad2.Draw()
-
-
-canvas.cd()
-
-# legList = {'TTGamma': [kAzure+3, 't#bar{t}+#gamma'],
-#           'TTJets': [kRed+1, 't#bar{t}+jets'],
-#           'TTV': [kRed+1, 't#bar{t}+V'],
-#           'Vgamma': [kGray, 'W/Z+#gamma'],
-#           'SingleTop': [kMagenta, 'Single t'],
-#           'WJets': [kGreen -3, 'W+jets'],
-#           'ZJets': [kGreen -3, 'Z+jets'],
-# 	  'Diboson':[kCyan-7, 'WW/WZ/ZZ'],
-#           'TGJets'   :[kGray, 't+#gamma'],
-#           'QCD_DD': [kYellow, 'Multijet'],
-#           }
-
-# mcList = {'TTGamma': [kOrange],
-#           'TTbar': [kRed+1],
-#           'TTV': [kRed-7],
-#           'SingleTop': [kOrange-3],
-#           'WGamma': [kBlue-4],
-#           'ZGamma': [kBlue-2],
-#           'WJets': [kCyan-3],
-#           'ZJets': [kCyan-5],
-# 	  'Diboson':[kCyan-7],
-#           'TGJets': [kGray],
-#           'QCD_DD': [kGreen+3],
-#           'QCDMu': [kGreen+3],
-#           'GJets': [kGreen+1],
-#           }
 
 
 legendHeightPer = 0.04
@@ -373,7 +302,13 @@ legList.reverse()
 
 legend = TLegend(0.71, 1-T/H-0.01 - legendHeightPer*(len(legList)+1), 1-R/W-0.01, 1-(T/H)-0.01)
 
-legendR = TLegend(0.71, 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*(len(legList)+1), 0.99-(R/W), 0.99-(T/H)/(1.-padRatio+padOverlap))
+#legendR = TLegend(0.71, 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*(len(legList)+1), 0.99-(R/W), 0.99-(T/H)/(1.-padRatio+padOverlap))
+
+
+legendR = TLegend(2*0.71 - (0.99-(R/W)) , 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*round((len(legList)+1)/2.), 0.99-(R/W), 0.99-(T/H)/(1.-padRatio+padOverlap))
+
+legendR.SetNColumns(2)
+
 legendR.SetBorderSize(0)
 legendR.SetFillColor(0)
 
@@ -394,33 +329,126 @@ if finalState=='Mu':
 	_file[sample] = TFile("%s/%s.root"%(_fileDir,sample),"read")
 
 histName = plotList[0]
-#print legList
+
+if finalState=='Ele':
+    dataHist = _file["DataEle"].Get("%s_DataEle"%(histName))
+elif finalState=='Mu':
+    dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
+
+legend.AddEntry(dataHist, "Data", 'pe')
+legendR.AddEntry(dataHist, "Data", 'pe')
+
 for sample in legList:
-    print sample, _file[sample]
+#    print sample, _file[sample]
     # print "%s/%s_%s"%(sample,histName,sample)
     hist = _file[sample].Get("%s_%s"%(histName,sample))
     print hist, "%s_%s"%(histName,sample)
     hist.SetFillColor(samples[sample][1])
     hist.SetLineColor(samples[sample][1])
     legend.AddEntry(hist,samples[sample][2],'f')
-    legendR.AddEntry(hist,samples[sample][2],'f')
-if finalState=='Ele':
-    dataHist = _file["DataEle"].Get("presel_%s_DataEle"%(histName))
-elif finalState=='Mu':
-    dataHist = _file["DataMu"].Get("presel_%s_DataMu"%(histName))
-legend.AddEntry(dataHist, "Data", 'pe')
-legendR.AddEntry(dataHist, "Data", 'pe')
+
+    #legendR.AddEntry(hist,samples[sample][2],'f')
+
+
+X = int(len(legList)/2)
+sample = legList[X]
+hist = _file[sample].Get("%s_%s"%(histName,sample))
+hist.SetFillColor(samples[sample][1])
+hist.SetLineColor(samples[sample][1])
+legendR.AddEntry(hist,samples[sample][2],'f')
+
+for i in range(X):
+	sample = legList[i]
+	hist = _file[sample].Get("%s_%s"%(histName,sample))
+	hist.SetFillColor(samples[sample][1])
+	hist.SetLineColor(samples[sample][1])
+	legendR.AddEntry(hist,samples[sample][2],'f')
+
+	if X+i+1 < len(legList): 
+		sample = legList[i+X+1]
+		hist = _file[sample].Get("%s_%s"%(histName,sample))
+		hist.SetFillColor(samples[sample][1])
+		hist.SetLineColor(samples[sample][1])
+		legendR.AddEntry(hist,samples[sample][2],'f')
 
 
 
 TGaxis.SetMaxDigits(3)
-#stackList.remove('TGJets')
+
 def drawHist(histName,plotInfo, plotDirectory, _file):
     print "start drawing"
+
+
+    canvas = TCanvas('c1','c1',W,H)
+    canvas.SetFillColor(0)
+    canvas.SetBorderMode(0)
+    canvas.SetFrameFillStyle(0)
+    canvas.SetFrameBorderMode(0)
+    canvas.SetLeftMargin( L/W )
+    canvas.SetRightMargin( R/W )
+    canvas.SetTopMargin( T/H )
+    canvas.SetBottomMargin( B/H )
+    canvas.SetTickx(0)
+
+
+    canvasRatio = TCanvas('c1Ratio','c1Ratio',W,H)
+    canvasRatio.SetFillColor(0)
+    canvasRatio.SetBorderMode(0)
+    canvasRatio.SetFrameFillStyle(0)
+    canvasRatio.SetFrameBorderMode(0)
+    canvasRatio.SetLeftMargin( L/W )
+    canvasRatio.SetRightMargin( R/W )
+    canvasRatio.SetTopMargin( T/H )
+    canvasRatio.SetBottomMargin( B/H )
+    canvasRatio.SetTickx(0)
+    canvasRatio.SetTicky(0)
+    canvasRatio.Draw()
+    canvasRatio.cd()
+
+    pad1 = TPad("zxc_p1","zxc_p1",0,padRatio-padOverlap,1,1)
+    pad2 = TPad("qwe_p2","qwe_p2",0,0,1,padRatio+padOverlap)
+    pad1.SetLeftMargin( L/W )
+    pad1.SetRightMargin( R/W )
+    pad1.SetTopMargin( T/H/(1-padRatio+padOverlap) )
+    pad1.SetBottomMargin( (padOverlap+padGap)/(1-padRatio+padOverlap) )
+    pad2.SetLeftMargin( L/W )
+    pad2.SetRightMargin( R/W )
+    pad2.SetTopMargin( (padOverlap)/(padRatio+padOverlap) )
+    pad2.SetBottomMargin( B/H/(padRatio+padOverlap) )
+
+    pad1.SetFillColor(0)
+    pad1.SetBorderMode(0)
+    pad1.SetFrameFillStyle(0)
+    pad1.SetFrameBorderMode(0)
+    pad1.SetTickx(0)
+    pad1.SetTicky(0)
+
+    pad2.SetFillColor(0)
+    pad2.SetFillStyle(4000)
+    pad2.SetBorderMode(0)
+    pad2.SetFrameFillStyle(0)
+    pad2.SetFrameBorderMode(0)
+    pad2.SetTickx(0)
+    pad2.SetTicky(0)
+
+
+    canvasRatio.cd()
+    pad1.Draw()
+    pad2.Draw()
+
+
+    canvas.cd()
+
+
+
+
+
+
 
     canvas.cd()
     canvas.ResetDrawn()
     stack = THStack(histName,histName)
+    SetOwnership(stack,True)
     for sample in stackList:
 #        print sample, histName
         hist = _file[sample].Get("%s_%s"%(histName,sample))
@@ -430,7 +458,11 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
         hist.SetFillColor(samples[sample][1])
         hist.SetLineColor(samples[sample][1])
 
-        hist.Rebin(plotInfo[2])
+	if type(plotInfo[2]) is type(list()):
+		hist = hist.Rebin(len(plotInfo[2])-1,"",array('d',plotInfo[2]))
+	else:
+		hist.Rebin(plotInfo[2])
+	
 
         stack.Add(hist)
     if finalState=='Ele':
@@ -441,14 +473,18 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     noData = False
     if type(dataHist)==type(TObject()): noData = True
     if not noData:
-	    dataHist.Rebin(plotInfo[2])
+	    if type(plotInfo[2]) is type(list()):	
+		    dataHist = dataHist.Rebin(len(plotInfo[2])-1,"",array('d',plotInfo[2]))
+	    else:
+		    dataHist.Rebin(plotInfo[2])
+#	    dataHist.Rebin(plotInfo[2])
 
     oneLine = TF1("oneline","1",-9e9,9e9)
     oneLine.SetLineColor(kBlack)
     oneLine.SetLineWidth(1)
     oneLine.SetLineStyle(2)
 	
-    _text = TPaveText(0.47,.75,0.55,0.85,"NDC")
+    _text = TPaveText(0.42,.75,0.5,0.85,"NDC")
     _text.SetTextColor(kBlack)
     _text.SetFillColor(0)
     _text.SetTextSize(0.05)
@@ -458,10 +494,28 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     #histograms list has flag whether it's log or not
     canvas.SetLogy(plotInfo[5])
     #canvas.SetLogy()
-    if not noData:
-        stack.SetMaximum(1.35*max(dataHist.GetMaximum(),stack.GetMaximum()))
+    maxVal = stack.GetMaximum()
+    if not noData: 
+	    maxVal = max(dataHist.GetMaximum(),maxVal)
+    
+    minVal = 1
+    if plotInfo[5]:
+	    minVal = max(stack.GetStack()[0].GetMinimum(),1)
+	    stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
+#	    stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(stack.GetMinimum())))
+	    print minVal
+	    stack.SetMinimum(minVal)
+	    # print stack.GetStack()[0]
+	    # print stack.GetStack()[0].GetName()
+	    # print stack.GetStack()[0].GetMinimum()
     else:
-	stack.SetMaximum(1.35*stack.GetMaximum())
+	    stack.SetMaximum(1.5*maxVal)
+	    stack.SetMinimum(minVal)
+
+    # if not noData:
+    #     stack.SetMaximum(1.35*max(dataHist.GetMaximum(),stack.GetMaximum()))
+    # else:
+    # 	stack.SetMaximum(1.35*stack.GetMaximum())
     stack.Draw('hist')
     _text.Draw("same")
 
@@ -479,7 +533,6 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     legend.Draw("same")
 
 
-    
     #_text.Draw()
     CMS_lumi.channelText = _channelText+plotInfo[4]
     CMS_lumi.CMS_lumi(canvas, 4, 11)
@@ -491,29 +544,30 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
         ratio = dataHist.Clone("temp")
 	ratio.Divide(stack.GetStack().Last())
     
-    
-	pad1.Clear()
-	pad2.Clear()
+	# pad1.Clear()
+	# pad2.Clear()
 
 	canvasRatio.cd()
 	canvasRatio.ResetDrawn()
+	canvasRatio.Draw()
+	canvasRatio.cd()
 
-	pad1.Clear()
-	pad2.Clear()
-
+	pad1.Draw()
+	pad2.Draw()
 
 	pad1.cd()
 
 	pad1.SetLogy(plotInfo[5])
 	stack.Draw('HIST')
-	#    pad1.Update()
+	pad1.Update()
 	y2 = pad1.GetY2()
+
 	
-	stack.SetMinimum(1)
+#	stack.SetMinimum(1)
 	#    pad1.Update()
 	stack.GetXaxis().SetTitle('')
 	stack.GetYaxis().SetTitle(dataHist.GetYaxis().GetTitle())
-	
+
 	stack.SetTitle('')
 	stack.GetXaxis().SetLabelSize(0)
 	stack.GetYaxis().SetLabelSize(gStyle.GetLabelSize()/(1.-padRatio+padOverlap))
@@ -523,7 +577,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	dataHist.Draw('E,X0,SAME')
 	legendR.Draw()
 
-	_text = TPaveText(0.47,.75,0.55,0.85,"NDC")
+	_text = TPaveText(0.42,.75,0.5,0.85,"NDC")
 	_text.AddText(plotInfo[6])
 	_text.SetTextColor(kBlack)
 	_text.SetFillColor(0)
@@ -537,16 +591,19 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	ratio.GetXaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
 	ratio.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
 	ratio.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(padRatio+padOverlap-padGap))
-	ratio.GetYaxis().SetRangeUser(0.5,1.5)
+#	ratio.GetYaxis().SetRangeUser(0.5,1.5)
 
-	# maxRatio = ratio.GetMaximum()
-	# if maxRatio > 1.8:
-	# 	ratio.GetYaxis().SetRangeUser(0,round(0.5+maxRatio))
-	# elif maxRatio < 1:
-	# 	ratio.GetYaxis().SetRangeUser(0,1.2)
-	# else:
-	# 	ratio.GetYaxis().SetRangeUser(2-1.1*maxRatio,1.1*maxRatio)
-
+	maxRatio = ratio.GetMaximum()
+	minRatio = ratio.GetMinimum()
+	if maxRatio > 1.8:
+		ratio.GetYaxis().SetRangeUser(0,round(0.5+maxRatio))
+	elif maxRatio < 1:
+		ratio.GetYaxis().SetRangeUser(0,1.2)
+	elif maxRatio-1 < 1-minRatio:
+		ratio.GetYaxis().SetRangeUser((1-(1-minRatio)*1.2),1.1*maxRatio)		
+	else:
+		ratio.GetYaxis().SetRangeUser(2-1.1*maxRatio,1.1*maxRatio)
+		
 	ratio.GetYaxis().SetNdivisions(504)
 	ratio.GetXaxis().SetTitle(plotInfo[0])
 	ratio.GetYaxis().SetTitle("Data/MC")
@@ -568,8 +625,9 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	canvasRatio.SaveAs("%s/%s_ratio.png"%(plotDirectory,histName))
 	canvasRatio.SetLogy(0)
 
-
-print pad1, pad2
+    canvas.Close()
+    canvasRatio.Close()
+    
 
 for histName in plotList:
 	drawHist(histName,histograms[histName],plotDirectory,_file)

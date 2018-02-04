@@ -29,6 +29,8 @@ parser.add_option("--plot", dest="plotList",action="append",
                      help="Add plots" )
 parser.add_option("--allPlots","--AllPlots", dest="makeAllPlots",action="store_true",default=False,
                      help="Make full list of plots in histogramDict" )
+parser.add_option("--morePlots","--MorePlots","--makeMorePlots", dest="makeMorePlots",action="store_true",default=False,
+                     help="Make larger list of plots in histogramDict (mostly object kinematics)" )
 parser.add_option("--MegammaPlots","--megammaPlots", dest="makeEGammaPlots",action="store_true",default=False,
                      help="Make only plots for e-gamma mass fits" )
 
@@ -49,12 +51,20 @@ onlyAddPlots = options.onlyAddPlots
 outputFileName = options.outputFileName
 
 makeAllPlots = options.makeAllPlots
+makeMorePlots = options.makeMorePlots
 makeEGammaPlots = options.makeEGammaPlots
 
 nJets = 3
 nBJets = 1
 
 isQCD = False
+
+
+Pileup ="PUweight"
+MuEff = "muEffWeight"
+evtWeight ="evtWeight"
+btagWeightCategory = ["1","(1-btagWeight[0])","(btagWeight[2])","(btagWeight[1])"]
+
 
 #atleast 0, atleast 1, atleast 2, exactly 1, btagWeight[0] = exactly 0
 
@@ -225,20 +235,24 @@ elif finalState=="QCDMu":
     outputhistName = "histograms/mu/qcdhistsCR"
 
     nBJets = 0
+
     extraCuts            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=3 && nBJet==0)*"
     extraPhotonCuts      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=3 && nBJet==0 && %s)*"
 
     extraCutsTight            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=4 && nBJet==0)*"
     extraPhotonCutsTight      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=4 && nBJet==0 && %s)*"
 
-    extraCutsLooseCR2e0            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
-    extraPhotonCutsLooseCR2e0      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+    extraCutsLooseCR2e0       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR2e0 = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
 
-    extraCutsLooseCRCR2g0          = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
-    extraPhotonCutsLooseCRCR2g0    = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+    extraCutsLooseCR2g0       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR2g0 = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
 
-    extraCutsLooseCR3e0            = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
-    extraPhotonCutsLooseCR3e0      = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+    extraCutsLooseCR2g1       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR2g1 = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+
+    extraCutsLooseCR3e0       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR3e0 = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
 
 
 elif finalState=="QCDMu2":
@@ -255,6 +269,7 @@ elif finalState=="QCDMu2":
     outputhistName = "histograms/mu/qcdhistsCR2"
 
     nBJets = 0
+
     extraCuts            = "(passPresel_Mu && muPFRelIso>0.3 && nJet>=3 && nBJet==0)*"
     extraPhotonCuts      = "(passPresel_Mu && muPFRelIso>0.3 && nJet>=3 && nBJet==0 && %s)*"
 
@@ -297,11 +312,6 @@ else:
     print "Unknown final state, options are Mu and Ele"
     sys.exit()
 
-
-Pileup ="PUweight"
-MuEff = "muEffWeight"
-evtWeight ="evtWeight"
-btagWeightCategory = ["1","(1-btagWeight[0])","(btagWeight[2])","(btagWeight[1])"]
 
 
 if 'PU' in sys.argv:
@@ -350,8 +360,6 @@ if isLooseCR2e0Selection:
     nJets = 2
     nBJets = 0
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]"
-    #CHANGED
-#    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight"
     extraCuts = extraCutsLooseCR2e0
     extraPhotonCuts = extraPhotonCutsLooseCR2e0
     outputhistName = outputhistName + "_looseCR2e0"
@@ -361,8 +369,10 @@ if isLooseCR2g1Selection:
     nJets = 2
     nBJets = 1
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(1-btagWeight[0])"
+    if 'QCD' in finalState:
+        weights = "evtWeight*PUweight*muEffWeight*eleEffWeight"
     extraCuts = extraCutsLooseCR2g1
-    extraPhotonCuts = extraPhotonCutsLooseCR2g1
+    extraPhotonCuts = extraPhotonCutsLooseCR2g1    
     outputhistName = outputhistName + "_looseCR2g1"
 
 
@@ -375,6 +385,7 @@ if isLooseCR3e0Selection:
     extraPhotonCuts = extraPhotonCutsLooseCR3e0
     outputhistName = outputhistName + "_looseCR3e0"
 
+
 from HistogramListDict import *
 histogramInfo = GetHistogramInfo(extraCuts,extraPhotonCuts,nBJets)
 #histogramInfo = GetHistforfits(extraCuts,extraPhotonCuts,nBJets)
@@ -385,6 +396,9 @@ if plotList is None:
     if makeAllPlots:
         plotList = histogramInfo.keys()
         print "Making full list of plots"
+    elif makeMorePlots:
+        plotList = ["presel_Njet","presel_Nbjet","phosel_Njet","phosel_Nbjet","presel_jet1Pt","presel_jet2Pt","presel_jet3Pt","phosel_LeadingPhotonEt","phosel_LeadingPhotonEta","phosel_dRLeadingPhotonJet","phosel_dRLeadingPhotonLepton","presel_WtransMass","phosel_WtransMass","presel_MET","phosel_MET"]
+        print "Making subset of kinematic plots"
     elif makeEGammaPlots:
         plotList = ["phosel_MassEGamma","phosel_MassEGammaMisIDEle","phosel_MassEGammaOthers"]
         print "Making only plots for e-gamma fits"
@@ -447,16 +461,22 @@ histograms=[]
 if sample =="QCD_DD":
     if finalState=="Mu":
         if isTightSelection:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR_Tight/QCD_DD.root","read")
-        elif isLooseSelection:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR_Loose/QCD_DD.root","read")
+            qcd_File    = TFile("histograms/mu/qcdhistsCR_tight/QCD_DD.root","read")
+        elif isLooseCR2g1Selection:
+            qcd_File    = TFile("histograms/mu/qcdhistsCR_LooseCR2g1/QCD_DD.root","read")
+        elif isLooseCR2g0Selection:
+            qcd_File    = TFile("histograms/mu/qcdhistsCR_LooseCR2g0/QCD_DD.root","read")
+        elif isLooseCR2e0Selection:
+            qcd_File    = TFile("histograms/mu/qcdhistsCR_LooseCR2e1/QCD_DD.root","read")
+        elif isLooseCR3e0Selection:
+            qcd_File    = TFile("histograms/mu/qcdhistsCR_LooseCR3e1/QCD_DD.root","read")
         else:
             qcd_File    = TFile("histograms/mu/qcdhistsCR/QCD_DD.root","read")
         qcd_TF_File = TFile("histograms/mu/qcdTransferFactors.root","read")
         dirName = "QCDMu"
     if finalState=="Ele":
         if isTightSelection:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR_Tight/QCD_DD.root","read")
+            qcd_File    = TFile("histograms/ele/qcdhistsCR_tight/QCD_DD.root","read")
         elif isLooseSelection:
             qcd_File    = TFile("histograms/ele/qcdhistsCR_Loose/QCD_DD.root","read")
         else:
@@ -485,7 +505,7 @@ if sample =="QCD_DD":
         if not h_Info[5]: continue
         print "filling", h_Info[1], sample
 
-        histograms.append(qcd_File.Get("QCD_DD/%s_QCD_DD"%(h_Info[1])))
+        histograms.append(qcd_File.Get("%s_QCD_DD"%(h_Info[1])))
         histograms[-1].Scale(transferFactor)
 
 if not "QCD_DD" in sample:
@@ -502,7 +522,7 @@ if not "QCD_DD" in sample:
     print sample
 
     print "Number of events:", tree.GetEntries()
-
+    
     for hist in histogramsToMake:
         h_Info = histogramInfo[hist]
 
@@ -519,7 +539,6 @@ if not "QCD_DD" in sample:
 
         if "Data" in sample:
             evtWeight = "%s%s"%(h_Info[3],weights)
-        #     evtWeight = h_Info[3]
 
         if evtWeight[-1]=="*":
             evtWeight= evtWeight[:-1]
