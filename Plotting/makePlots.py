@@ -26,6 +26,8 @@ parser.add_option("--LooseCR2g0","--looseCR2g0", dest="isLooseCR2g0Selection", d
 		  help="Use 2j at least 0t control region selection" )
 parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection", default=False,action="store_true",
 		  help="Use 2j at least 1t control region selection" )
+parser.add_option("--overflow", dest="useOverflow",default=False,action="store_true",
+		  help="Add oveflow bin to the plots" )
 parser.add_option("--plot", dest="plotList",action="append",
 		  help="Add plots" )
 parser.add_option("--morePlots","--MorePlots",dest="makeMorePlots",action="store_true",default=False,
@@ -47,6 +49,8 @@ isLooseCR2g0Selection = options.isLooseCR2g0Selection
 isLooseCR2g1Selection = options.isLooseCR2g1Selection
 isLooseCR3e0Selection = options.isLooseCR3e0Selection
 plotList = options.plotList
+
+useOverflow = options.useOverflow
 
 inputFile = options.inputFile
 useQCDMC = options.useQCDMC
@@ -300,12 +304,15 @@ legendHeightPer = 0.04
 legList = stackList[:]
 legList.reverse()
 
+legendStart = 0.69
+legendEnd = 0.97-(R/W)
+
 legend = TLegend(0.71, 1-T/H-0.01 - legendHeightPer*(len(legList)+1), 1-R/W-0.01, 1-(T/H)-0.01)
 
 #legendR = TLegend(0.71, 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*(len(legList)+1), 0.99-(R/W), 0.99-(T/H)/(1.-padRatio+padOverlap))
 
 
-legendR = TLegend(2*0.71 - (0.99-(R/W)) , 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*round((len(legList)+1)/2.), 0.99-(R/W), 0.99-(T/H)/(1.-padRatio+padOverlap))
+legendR = TLegend(2*legendStart - legendEnd , 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*round((len(legList)+1)/2.), legendEnd, 0.99-(T/H)/(1.-padRatio+padOverlap))
 
 legendR.SetNColumns(2)
 
@@ -342,14 +349,14 @@ for sample in legList:
 #    print sample, _file[sample]
     # print "%s/%s_%s"%(sample,histName,sample)
     hist = _file[sample].Get("%s_%s"%(histName,sample))
-    print hist, "%s_%s"%(histName,sample)
+#    print hist, "%s_%s"%(histName,sample)
     hist.SetFillColor(samples[sample][1])
     hist.SetLineColor(samples[sample][1])
     legend.AddEntry(hist,samples[sample][2],'f')
 
     #legendR.AddEntry(hist,samples[sample][2],'f')
 
-
+### Splitting the legend into two columns (with order going top to bottom in first column, then top to bottom in second column)
 X = int(len(legList)/2)
 sample = legList[X]
 hist = _file[sample].Get("%s_%s"%(histName,sample))
@@ -458,11 +465,20 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
         hist.SetFillColor(samples[sample][1])
         hist.SetLineColor(samples[sample][1])
 
+
 	if type(plotInfo[2]) is type(list()):
 		hist = hist.Rebin(len(plotInfo[2])-1,"",array('d',plotInfo[2]))
 	else:
 		hist.Rebin(plotInfo[2])
-	
+
+	if useOverflow:
+		lastBin = hist.GetNbinsX()
+		lastBinContent = hist.GetBinContent(lastBin)
+		lastBinError   = hist.GetBinError(lastBin)
+		overFlowContent = hist.GetBinContent(lastBin+1)
+		overFlowError   = hist.GetBinError(lastBin+1)
+		hist.SetBinContent(lastBin,lastBinContent + overFlowContent)
+		hist.SetBinError(lastBin, (lastBinError**2 + overFlowError**2)**0.5 )
 
         stack.Add(hist)
     if finalState=='Ele':
@@ -478,6 +494,17 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	    else:
 		    dataHist.Rebin(plotInfo[2])
 #	    dataHist.Rebin(plotInfo[2])
+
+	    if useOverflow:
+		    lastBin = dataHist.GetNbinsX()
+		    lastBinContent = dataHist.GetBinContent(lastBin)
+		    lastBinError   = dataHist.GetBinError(lastBin)
+		    overFlowContent = dataHist.GetBinContent(lastBin+1)
+		    overFlowError   = dataHist.GetBinError(lastBin+1)
+		    dataHist.SetBinContent(lastBin,lastBinContent + overFlowContent)
+		    dataHist.SetBinError(lastBin, (lastBinError**2 + overFlowError**2)**0.5 )
+
+
 
     oneLine = TF1("oneline","1",-9e9,9e9)
     oneLine.SetLineColor(kBlack)

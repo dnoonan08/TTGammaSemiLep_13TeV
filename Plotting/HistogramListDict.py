@@ -111,7 +111,10 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_mcMomPIDHadFake"                : ["photonParentPID"   , "phosel_mcMomPIDHadFake"   ,[2000,-1000,1000], extraPhotonCuts%("phoMediumID && photonIsHadronicFake")   , "", False],
                       "phosel_PhotonCategory"                 : ["photonIsGenuine[0] + 2*photonIsMisIDEle[0] + 3*photonIsHadronicPhoton[0] + 4*photonIsHadronicFake[0]", "phosel_PhotonCategory", [4,1,5], extraPhotonCuts%("phoMediumID"), "", False],
                       ################
-                      "phosel_MassLepGamma"                   : ["phoMassLepGamma", "phosel_MassLepGamma", [200,0,200], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_MassLepGamma"                   : ["phoMassLepGamma", "phosel_MassLepGamma", [300,0,300], extraPhotonCuts%("phoMediumID"), "", True],
+                      "phosel_MassLepGammaFromW"             : ["phoMassLepGamma", "phosel_MassLepGammaFromW", [300,0,300], extraPhotonCuts%("phoMediumID && phoEt>40 && (phoGenMatchInd>0 && abs(mcMomPID[phoGenMatchInd])==24 )"), "", True],
+                      "phosel_MassLepGammaNotFromW"             : ["phoMassLepGamma", "phosel_MassLepGammaNotFromW", [300,0,300], extraPhotonCuts%("phoMediumID && phoEt>40 && !(phoGenMatchInd>0 && abs(mcMomPID[phoGenMatchInd])==24 )"), "", True],
+
                       "phosel_MassEGamma"                     : ["phoMassEGamma", "phosel_MassEGamma", [200,0,200], extraPhotonCuts%("phoMediumID"), "", True],
                       "phosel_MassEGammaMisIDEle"             : ["phoMassEGamma", "phosel_MassEGammaMisIDEle", [200,0,200], extraPhotonCuts%("phoMediumID && photonIsMisIDEle"), "", True],
                       "phosel_MassEGammaOthers"               : ["phoMassEGamma", "phosel_MassEGammaOthers", [200,0,200], extraPhotonCuts%("phoMediumID && (photonIsGenuine||photonIsHadronicFake||photonIsHadronicPhoton)"), "", True],
