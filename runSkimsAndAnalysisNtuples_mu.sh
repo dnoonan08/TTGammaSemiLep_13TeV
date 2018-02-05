@@ -53,13 +53,13 @@ $DannyEOS"TTGamma_SingleLeptFromT_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_Dilept_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_Hadronic_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_1of4.root "$GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_2of4.root "$GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_3of4.root "$GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_4of4.root" \
-$DannyEOS"TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
-$DannyEOS"TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
-$DannyEOS"TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$LPCtop"TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$LPCtop"TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$LPCtop"TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"TGJets_TuneCUETP8M1_13TeV_amcatnlo_madspin_pythia8.root" \
-$DannyEOS"TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8-ext1.root" \
-$DannyEOS"TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
-$DannyEOS"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_1of6.root "$DannyEOS"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_2of6.root "$DannyEOS"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_3of6.root "$DannyEOS"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_4of6.root "$DannyEOS"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_5of6.root "$DannyEOS"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_6of6.root" \
+$LPCtop"TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8-ext1.root" \
+$LPCtop"TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_1of6.root "$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_2of6.root "$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_3of6.root "$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_4of6.root "$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_5of6.root "$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_6of6.root" \
 $GGNtupleGroupEOSMC"W1JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W2JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $GGNtupleGroupEOSMC"W3JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
@@ -95,13 +95,13 @@ $DannyEOS"GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
-$LPCtop"job_SingleMu_Run2016B_FebReminiAOD.root" \
-$LPCtop"job_SingleMu_Run2016C_FebReminiAOD.root" \
-$LPCtop"job_SingleMu_Run2016D_FebReminiAOD.root" \
-$LPCtop"job_SingleMu_Run2016E_FebReminiAOD.root" \
-$LPCtop"job_SingleMu_Run2016F_FebReminiAOD.root" \
-$LPCtop"job_SingleMu_Run2016G_FebReminiAOD.root" \
-$LPCtop"job_SingleMu_Run2016H_FebReminiAODv2.root "$LPCtop"job_SingleMu_Run2016H_FebReminiAODv3.root")
+$GGNtupleGroupEOSData"job_SingleMu_Run2016B_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleMu_Run2016C_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleMu_Run2016D_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleMu_Run2016E_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleMu_Run2016F_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleMu_Run2016G_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleMu_Run2016H_FebReminiAODv2.root "$GGNtupleGroupEOSData"job_SingleMu_Run2016H_FebReminiAODv3.root")
 
 
 
