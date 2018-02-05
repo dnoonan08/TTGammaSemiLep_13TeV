@@ -129,6 +129,7 @@ private :
 	std::vector<bool>    _phoMediumID;
 	std::vector<int>     _phoGenMatchInd;
 	std::vector<float>   _phoMassEGamma;
+	std::vector<float>   _phoMassLepGamma;
 
 	std::vector<bool>  _photonIsGenuine;
 	std::vector<bool>  _photonIsMisIDEle;
@@ -169,6 +170,7 @@ private :
 	std::vector<bool>    _loosePhoLooseID;
 	std::vector<int>     _loosePhoGenMatchInd;
 	std::vector<float>   _loosePhoMassEGamma;
+	std::vector<float>   _loosePhoMassLepGamma;
 
 	std::vector<bool>    _loosePhoMediumIDFunction; 
 	std::vector<bool>    _loosePhoMediumIDPassHoverE; 
@@ -371,6 +373,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
 	outputTree->Branch("phoGenMatchInd"                , &_phoGenMatchInd                 ); 
 	outputTree->Branch("phoMassEGamma"                 , &_phoMassEGamma                  ); 
+	outputTree->Branch("phoMassLepGamma"                 , &_phoMassLepGamma                  ); 
 
 
 	outputTree->Branch("nLoosePho"                       , &_nLoosePho                        ); 
@@ -398,6 +401,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("loosePhoLooseID"                 , &_loosePhoLooseID                  ); 
 	outputTree->Branch("loosePhoGenMatchInd"                 , &_loosePhoGenMatchInd                  ); 
 	outputTree->Branch("loosePhoMassEGamma"                  , &_loosePhoMassEGamma                   ); 
+	outputTree->Branch("loosePhoMassLepGamma"                  , &_loosePhoMassLepGamma                   ); 
 	
 	outputTree->Branch("loosePhoMediumIDFunction"        , &_loosePhoMediumIDFunction         ); 
 	outputTree->Branch("loosePhoMediumIDPassHoverE"      , &_loosePhoMediumIDPassHoverE       ); 
@@ -575,6 +579,7 @@ void makeAnalysisNtuple::InitVariables()
 	_phoMediumID.clear();
 	_phoGenMatchInd.clear();
 	_phoMassEGamma.clear();
+	_phoMassLepGamma.clear();
 
 	_photonIsGenuine.clear();
 	_photonIsMisIDEle.clear();
@@ -607,6 +612,7 @@ void makeAnalysisNtuple::InitVariables()
 	_loosePhoLooseID.clear();
 	_loosePhoGenMatchInd.clear();
 	_loosePhoMassEGamma.clear();
+	_loosePhoMassLepGamma.clear();
 	_loosePhoMediumIDFunction.clear(); 
 	_loosePhoMediumIDPassHoverE.clear(); 
 	_loosePhoMediumIDPassSIEIE.clear(); 

@@ -520,6 +520,8 @@ void makeAnalysisNtuple::FillEvent()
 		if (_nEle==1 && _nMu==0){
 			_phoMassEGamma.push_back( (phoVector+lepVector).M() );
 		}
+		_phoMassLepGamma.push_back( (phoVector+lepVector).M() );
+
 
 		bool isGenuine = false;
 		bool isMisIDEle = false;
@@ -633,6 +635,7 @@ void makeAnalysisNtuple::FillEvent()
 		if (_nEle==1 && _nMu==0){
 			_loosePhoMassEGamma.push_back( (phoVector+lepVector).M() );
 		}
+		_loosePhoMassLepGamma.push_back( (phoVector+lepVector).M() );
 
 		bool isGenuine = false;
 		bool isMisIDEle = false;
