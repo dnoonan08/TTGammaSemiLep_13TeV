@@ -18,23 +18,23 @@ Queue 54
 
 ###This is an example of how to start at a certain point, 
 ###it starts with job 27 (QCD samples in this case) and goes from there
-#Arguments = "11+$(process)"
+#Arguments = "4+$(process)"
 #Queue 1
 
 
 ####This section can be used to submit analysis ntuple jobs for systematic uncertainties
 #Arguments = "$(process) JEC"
-#Queue 53
+#Queue 54
 #
 #Arguments = "$(process) JER"
-#Queue 53
+#Queue 54
 #
 #Arguments = "$(process) pho"
-#Queue 53
+#Queue 54
 #
 #Arguments = "$(process) elesmear"
-#Queue 53
+#Queue 54
 #
 #Arguments = "$(process) musmear"
-#Queue 53
+#Queue 54
 #

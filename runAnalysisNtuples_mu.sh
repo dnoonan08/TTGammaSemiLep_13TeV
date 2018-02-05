@@ -129,13 +129,13 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "GJets_HT-200To400" \
 "GJets_HT-400To600" \
 "GJets_HT-600ToInf" \
-"Data_SingleEle_b" \
-"Data_SingleEle_c" \
-"Data_SingleEle_d" \
-"Data_SingleEle_e" \
-"Data_SingleEle_f" \
-"Data_SingleEle_g" \
-"Data_SingleEle_h")
+"Data_SingleMu_b" \
+"Data_SingleMu_c" \
+"Data_SingleMu_d" \
+"Data_SingleMu_e" \
+"Data_SingleMu_f" \
+"Data_SingleMu_g" \
+"Data_SingleMu_h")
 
 
 if [ "$systematic" = false ] ; then
