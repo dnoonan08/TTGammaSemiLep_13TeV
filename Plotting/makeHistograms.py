@@ -477,10 +477,17 @@ if sample =="QCD_DD":
     if finalState=="Ele":
         if isTightSelection:
             qcd_File    = TFile("histograms/ele/qcdhistsCR_tight/QCD_DD.root","read")
-        elif isLooseSelection:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR_Loose/QCD_DD.root","read")
+        elif isLooseCR2g1Selection:
+            qcd_File    = TFile("histograms/ele/qcdhistsCR_LooseCR2g1/QCD_DD.root","read")
+        elif isLooseCR2g0Selection:
+            qcd_File    = TFile("histograms/ele/qcdhistsCR_LooseCR2g0/QCD_DD.root","read")
+        elif isLooseCR2e0Selection:
+            qcd_File    = TFile("histograms/ele/qcdhistsCR_LooseCR2e1/QCD_DD.root","read")
+        elif isLooseCR3e0Selection:
+            qcd_File    = TFile("histograms/ele/qcdhistsCR_LooseCR3e1/QCD_DD.root","read")
         else:
             qcd_File    = TFile("histograms/ele/qcdhistsCR/QCD_DD.root","read")
+
         qcd_TF_File = TFile("histograms/ele/qcdTransferFactors.root","read")
         dirName = "QCDEle"
 

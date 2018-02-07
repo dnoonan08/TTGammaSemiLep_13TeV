@@ -40,6 +40,12 @@ parser.add_option("--useQCDMC","--qcdMC",dest="useQCDMC", default=False, action=
 		  help="")
 parser.add_option("--noQCD",dest="noQCD", default=False, action="store_true",
 		  help="")
+parser.add_option("--reorderTop", dest="newStackListTop",action="append",
+		  help="New order for stack list (which plots will be put on top of the stack)" )
+parser.add_option("--reorderBot", dest="newStackListBot",action="append",
+		  help="New order for stack list (which plots will be put on top of the stack)" )
+
+
 
 (options, args) = parser.parse_args()
 
@@ -49,6 +55,9 @@ isLooseCR2g0Selection = options.isLooseCR2g0Selection
 isLooseCR2g1Selection = options.isLooseCR2g1Selection
 isLooseCR3e0Selection = options.isLooseCR3e0Selection
 plotList = options.plotList
+
+newStackListTop = options.newStackListTop
+newStackListBot = options.newStackListBot
 
 useOverflow = options.useOverflow
 
@@ -194,7 +203,7 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_noCut_SIEIE_HadPho"      : ["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog, "Hadronic Photon"],
 	      "phosel_noCut_SIEIE_HadFake"     : ["Sigma Ieta Ieta"            , "Events/0.0007", 1, [-1,-1], regionText, YesLog, "Hadronic Fake"],
 #	      "phosel_noCut_ChIso"             : ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, NoLog, " "],
-	      "phosel_noCut_ChIso"             : ["Charged Hadron Iso (GeV)"   , "Events", [0.,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, YesLog, " "],
+	      "phosel_noCut_ChIso"             : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, NoLog, " "],
 	      "phosel_noCut_ChIso_GenuinePhoton": ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "Genuine Photon"],
 	      "phosel_noCut_ChIso_MisIDEle"    : ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "MisIDEle"],
 	      "phosel_noCut_ChIso_HadronicPhoton": ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "Hadronic Photon"],
@@ -203,11 +212,13 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_noCut_ChIso_NonPromptPhoton": ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "NonPrompt Photon"],
 	      "phosel_noCut_NeuIso"            : ["Neutral Hadron Iso (GeV)"   , "Events/0.5", 1, [-1,-1], regionText, YesLog, " "],
 	      "phosel_noCut_PhoIso"            : ["Photon Iso (GeV)"           , "Events/0.5", 1, [-1,-1], regionText, YesLog, " "],
-	      "phosel_AntiSIEIE_ChIso"         : ["Charged Hadron Iso (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog, " "],
-	      "phosel_AntiSIEIE_ChIso_GenuinePho": ["Charged Hadron Iso (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog, "Genuine Photon"],
-	      "phosel_AntiSIEIE_ChIso_MisIDEle": ["Charged Hadron Iso (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog, "MisIDEle"],    
-	      "phosel_AntiSIEIE_ChIso_HadPho"  : ["Charged Hadron Iso (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog,"Hadronic Photon"],       
-	      "phosel_AntiSIEIE_ChIso_HadFake" : ["Charged Hadron Iso HadFake (GeV)"   , "Events/0.5", 1, [0,15], regionText,  NoLog, "Hadronic Fake"],
+	      "phosel_AntiSIEIE_ChIso"         : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, " "],
+	      "phosel_AntiSIEIE_ChIso_barrel"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, " "],
+	      "phosel_AntiSIEIE_ChIso_endcap"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, " "],
+	      "phosel_AntiSIEIE_ChIso_GenuinePho": ["Charged Hadron Iso (GeV)"   , "Events",  [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, "Genuine Photon"],
+	      "phosel_AntiSIEIE_ChIso_MisIDEle": ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog, "MisIDEle"],    
+	      "phosel_AntiSIEIE_ChIso_HadPho"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog,"Hadronic Photon"],       
+	      "phosel_AntiSIEIE_ChIso_HadFake" : ["Charged Hadron Iso HadFake (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog, "Hadronic Fake"],
 	      "phosel_noCut_SIEIE_endcap"      : ["Sigma Ieta Ieta"            , "Events/0.0006", 1, [-1,1], regionText,  NoLog, "Endcap"],
 	      "phosel_noCut_SIEIE_barrel"      : ["Sigma Ieta Ieta"            , "Events/0.0002", 1, [-1,-1], regionText,  NoLog, "Barrel"],
 	      "phosel_mcMomPIDGenuinePho"      : ["ParentPID of GenuinePho"  , "Events", 1, [-25,25], regionText,  YesLog, "GenuinePhoton"],
@@ -269,6 +280,25 @@ else:
 
 
 stackList.reverse()
+
+
+if not newStackListTop is None:
+	newStackListTop.reverse()
+	for sample in newStackListTop:
+		if not sample in stackList:
+			print "Unknown sample name %s"%sample
+			continue
+		stackList.remove(sample)
+		stackList.append(sample)
+
+if not newStackListBot is None:
+	newStackListBot.reverse()
+	for sample in newStackListBot:
+		if not sample in stackList:
+			print "Unknown sample name %s"%sample
+			continue
+		stackList.remove(sample)
+		stackList.insert(0,sample)
 
 if finalState=="Mu":
 	_channelText = "#mu+jets"
@@ -487,6 +517,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     elif finalState=='Mu':
 	dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
     noData = False
+    print dataHist
     if type(dataHist)==type(TObject()): noData = True
     if not noData:
 	    if type(plotInfo[2]) is type(list()):	
@@ -530,7 +561,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	    minVal = max(stack.GetStack()[0].GetMinimum(),1)
 	    stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
 #	    stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(stack.GetMinimum())))
-	    print minVal
+#	    print minVal
 	    stack.SetMinimum(minVal)
 	    # print stack.GetStack()[0]
 	    # print stack.GetStack()[0].GetName()
