@@ -14,10 +14,9 @@ double totalTTGamma_semilept_Tbar = 4836134.;
 double totalTTGamma_semilept_T    = 4791766.;
 double totalTTGamma_dilept        = 4907307.;
 
-double totalTTGJets               = 9884993.;
+double totalTTGJets               = 3199101.; //9884993 Total before weights (6542047 +weights, 3342946 -weights)
 
-double totalTGJets                    = 1556973.;
-
+double totalTGJets                = 310437.; //1556973 before negative weights
 
 double totalTTbarPowheg           = 77227178.;
 double totalTTbarMCatNLO          = 77227178.;
@@ -28,7 +27,7 @@ double totalTTbarMadgraph_Dilepton            = 6094300.;
 
 double totalTTbarMadgraph         = 10139697.;
 
-double totalWjetsInclusive   = 14571460. + 43770073. + 45924073. + 40616144. + 45738743. + 44952030.;
+double totalWjetsInclusive   = 161142175.; // 235572523 Total before weights (198357349 +weights, 37215174 -weights)
 
 double totalW1jets           = 45366416.;
 double totalW2jets           = 30318880.;
@@ -42,8 +41,8 @@ double totalTTWtoQQ         = 833257.;
 double totalTTWtoLNu        = 2160030.;
 double totalTTZtoLL         = 5933898.;
 
-double totalZGamma           = 2307116. + 14372399.; //ZGTo2LG + ZGTo2LG-ext1
-double totalWGamma           = 5048404. + 10231838. + 12146594.;
+double totalZGamma           = 11411341.; //Total 16679515 before negative weights 
+double totalWGamma           = 17589398.; //Total 27426836 before negative weights
 
 double totalWW               = 6987017.;
 double totalWZ               = 2995783.;
@@ -95,9 +94,9 @@ double TTGJets_xs               =  3.697; //https://twiki.cern.ch/twiki/bin/view
 
 double TGJets_xs                =  2.967;
 
-double TTGamma_hadronic_xs  =  4.599;
-double TTGamma_semilept_xs  =  4.499/2.;
-double TTGamma_dilept_xs    =  0.899;
+double TTGamma_hadronic_xs  =  3.482;   //4.599;
+double TTGamma_semilept_xs  =  5.017/2.;//4.499/2.;
+double TTGamma_dilept_xs    =  1.679;   //0.899;
 
 double WjetsInclusive_xs    = 61526.7; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#W_jets
 

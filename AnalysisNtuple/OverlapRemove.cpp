@@ -16,7 +16,9 @@ double minGenDr(int myInd, const EventTree* tree){
 	int bestInd = -1;
 	for( int oind = 0; oind < tree->nMC_; oind++){
 		if(oind == myInd) continue;
-		if(tree->mcMass->at(oind) > 10) continue; // this is top or W, not final state particle
+		//		if(tree->mcMass->at(oind) > 10) continue; // this is top or W, not final state particle
+		if(tree->mcStatus->at(oind) != 1) continue; // check if it's final state
+		if(tree->mcPt->at(oind) < 5)  continue;
 		int opid = abs(tree->mcPID->at(oind));
 		if(opid == 12 || opid == 14 || opid == 16) continue; // skip neutrinos
 		dr = dR(myEta, myPhi, tree->mcEta->at(oind), tree->mcPhi->at(oind));
@@ -25,7 +27,8 @@ double minGenDr(int myInd, const EventTree* tree){
 			bestInd = oind;
 		}
 	}
-	return dr;
+	//	cout << tree->event_ << "  " << mindr << "  " << bestInd << "  " << tree->mcPID->at(bestInd) << "  " << tree->mcPt->at(bestInd) << endl;
+	return mindr;
 }
 
 bool overlapRemovalTT(EventTree* tree){
@@ -33,13 +36,15 @@ bool overlapRemovalTT(EventTree* tree){
 	const double Eta_cut = 3.0;
 	bool haveOverlap = false;
 	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
-		//if(tree->mcIndex->at(mcInd) > 100) break;
 		if(tree->mcPID->at(mcInd)==22 &&
-		tree->mcPt->at(mcInd) > Et_cut &&
-		fabs(tree->mcEta->at(mcInd)) < Eta_cut &&
-		(tree->mcParentage->at(mcInd)==2 || tree->mcParentage->at(mcInd)==10 || tree->mcParentage->at(mcInd)==26) ) {
+		   tree->mcPt->at(mcInd) > Et_cut &&
+		   fabs(tree->mcEta->at(mcInd)) < Eta_cut &&
+		   (fabs(tree->mcMomPID->at(mcInd))<37 || tree->mcMomPID->at(mcInd) == -999)  && (fabs(tree->mcGMomPID->at(mcInd))<37 || tree->mcGMomPID->at(mcInd) -999)  ) {
+			//			(tree->mcParentage->at(mcInd)==2 || tree->mcParentage->at(mcInd)==10 || tree->mcParentage->at(mcInd)==26) ) {
 			// candidate for signal photon. check dR to other gen particles to confirm
-			if(minGenDr(mcInd, tree) > 0.2) {
+			double minDR = minGenDr(mcInd, tree);
+			
+			if(minDR > 0.2) {
 				haveOverlap = true;
 			}
 		}
@@ -48,20 +53,21 @@ bool overlapRemovalTT(EventTree* tree){
 }
 
 bool overlapRemovalWZ(EventTree* tree){
-        const double Et_cut = 10;
-        const double Eta_cut = 2.6;
-        bool haveOverlap = false;
-        for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
+	const double Et_cut = 10;
+	const double Eta_cut = 2.6;
+	bool haveOverlap = false;
+	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
 		if(tree->mcPID->at(mcInd)==22 &&
-                tree->mcPt->at(mcInd) > Et_cut &&
-                fabs(tree->mcEta->at(mcInd)) < Eta_cut &&
-                (tree->mcParentage->at(mcInd)==2 || tree->mcParentage->at(mcInd)==10 || tree->mcParentage->at(mcInd)==26) ) {
+		   tree->mcPt->at(mcInd) > Et_cut &&
+		   fabs(tree->mcEta->at(mcInd)) < Eta_cut &&
+		   (fabs(tree->mcMomPID->at(mcInd))<37 || tree->mcMomPID->at(mcInd) == -999)  && (fabs(tree->mcGMomPID->at(mcInd))<37 || tree->mcGMomPID->at(mcInd) -999)  ) {
+			//		   (tree->mcParentage->at(mcInd)==2 || tree->mcParentage->at(mcInd)==10 || tree->mcParentage->at(mcInd)==26) ) {
 			if(minGenDr(mcInd, tree) > 0.2) {
-                                haveOverlap = true;
-                        }
-                }
-        }
-        return haveOverlap;
+				haveOverlap = true;
+			}
+		}
+	}
+	return haveOverlap;
 }
 
 

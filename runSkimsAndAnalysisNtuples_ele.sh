@@ -91,13 +91,13 @@ $DannyEOS"GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"GJets_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"GJets_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $DannyEOS"GJets_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
-$LPCtop"job_SingleElectron_Run2016B_FebReminiAOD.root" \
-$LPCtop"job_SingleElectron_Run2016C_FebReminiAOD.root" \
-$LPCtop"job_SingleElectron_Run2016D_FebReminiAOD.root" \
-$LPCtop"job_SingleElectron_Run2016E_FebReminiAOD.root" \
-$LPCtop"job_SingleElectron_Run2016F_FebReminiAOD.root" \
-$LPCtop"job_SingleElectron_Run2016G_FebReminiAOD.root" \
-$LPCtop"job_SingleElectron_Run2016H_FebReminiAODv2.root "$LPCtop"job_SingleElectron_Run2016H_FebReminiAODv3.root")
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016B_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016C_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016D_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016E_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016F_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016G_FebReminiAOD.root" \
+$GGNtupleGroupEOSData"job_SingleElectron_Run2016H_FebReminiAODv2.root "$GGNtupleGroupEOSData"job_SingleElectron_Run2016H_FebReminiAODv3.root")
 
 
 

@@ -189,6 +189,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	_lumiWeight = getEvtWeight(sampleType);
 
+	_PUweight       = 1.;
 	_muEffWeight    = 1.;
 	_muEffWeight_Do = 1.;
 	_muEffWeight_Up = 1.;
@@ -250,7 +251,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		}
 		// //		Apply systematics shifts where needed
 		if( isMC ){
-			jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
+			if (jecvar012_g != 1){
+				jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
+			}
 		}
 
 
@@ -295,6 +298,23 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				}
 			}
 
+			if (tree->isData_){
+				if (evtPick->bJets.size() == 0){
+					_btagWeight.push_back(1.0);
+					_btagWeight.push_back(0.0);
+					_btagWeight.push_back(0.0);
+				}				
+				if (evtPick->bJets.size() == 1){
+					_btagWeight.push_back(0.0);
+					_btagWeight.push_back(1.0);
+					_btagWeight.push_back(0.0);
+				}				
+				if (evtPick->bJets.size() >= 2){
+					_btagWeight.push_back(0.0);
+					_btagWeight.push_back(0.0);
+					_btagWeight.push_back(1.0);
+				}				
+			}
 			outputTree->Fill();
 		}
 	}
@@ -328,6 +348,8 @@ void makeAnalysisNtuple::FillEvent()
 	_rho		     = tree->rho_;
 
 	_evtWeight       = _lumiWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
+
+	if (_isData) {_evtWeight= 1.;}
 	
 	_genMET		     = tree->genMET_;
 	_pfMET		     = tree->pfMET_;
@@ -498,6 +520,8 @@ void makeAnalysisNtuple::FillEvent()
 		if (_nEle==1 && _nMu==0){
 			_phoMassEGamma.push_back( (phoVector+lepVector).M() );
 		}
+		_phoMassLepGamma.push_back( (phoVector+lepVector).M() );
+
 
 		bool isGenuine = false;
 		bool isMisIDEle = false;
@@ -611,6 +635,7 @@ void makeAnalysisNtuple::FillEvent()
 		if (_nEle==1 && _nMu==0){
 			_loosePhoMassEGamma.push_back( (phoVector+lepVector).M() );
 		}
+		_loosePhoMassLepGamma.push_back( (phoVector+lepVector).M() );
 
 		bool isGenuine = false;
 		bool isMisIDEle = false;
