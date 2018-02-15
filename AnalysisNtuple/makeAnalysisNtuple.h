@@ -117,6 +117,16 @@ private :
 	std::vector<float>   _phoPFChIso;
 	std::vector<float>   _phoPFPhoIso;
 	std::vector<float>   _phoPFNeuIso;
+        std::vector<float>  _phoScale_stat_up;
+        std::vector<float>  _phoScale_stat_dn;
+        std::vector<float>  _phoScale_syst_up;
+        std::vector<float>  _phoScale_syst_dn;
+        std::vector<float>  _phoScale_gain_up;
+        std::vector<float>  _phoScale_gain_dn;
+        std::vector<float>  _phoResol_rho_up;
+        std::vector<float>  _phoResol_rho_dn;
+        std::vector<float>  _phoResol_phi_up;
+        std::vector<float>  _phoResol_phi_dn;
 	std::vector<std::vector<float>>   _phoPFRandConeChIso;
 	std::vector<std::vector<float>>   _phoPFRandConeEta;
 	std::vector<std::vector<float>>   _phoPFRandConePhi;
@@ -208,7 +218,16 @@ private :
 	std::vector<float>   _elePhi;
 	std::vector<float>   _eleSCEta;
 	std::vector<float>   _elePFRelIso;
-	
+        std::vector<float>  _eleScale_stat_up;
+        std::vector<float>  _eleScale_stat_dn;
+        std::vector<float>  _eleScale_syst_up;
+        std::vector<float>  _eleScale_syst_dn;
+        std::vector<float>  _eleScale_gain_up;
+        std::vector<float>  _eleScale_gain_dn;
+        std::vector<float>  _eleResol_rho_up;
+        std::vector<float>  _eleResol_rho_dn;
+        std::vector<float>  _eleResol_phi_up;
+        std::vector<float>  _eleResol_phi_dn;	
 	Int_t           _nMu;
 	Int_t           _nMuLoose;
 	std::vector<float>   _muPt;
@@ -375,7 +394,16 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoMassEGamma"                 , &_phoMassEGamma                  ); 
 	outputTree->Branch("phoMassLepGamma"                 , &_phoMassLepGamma                  ); 
 
-
+        outputTree->Branch("phoScale_stat_up"            , &_phoScale_stat_up                     );
+        outputTree->Branch("phoScale_stat_dn"            , &_phoScale_stat_dn                     );
+        outputTree->Branch("phoScale_syst_up"            , &_phoScale_syst_up                   );
+        outputTree->Branch("phoScale_syst_dn"            , &_phoScale_syst_dn                );
+        outputTree->Branch("phoScale_gain_up"            , &_phoScale_gain_up                   );
+        outputTree->Branch("phoScale_gain_dn"            , &_phoScale_gain_dn                );
+        outputTree->Branch("phoResol_rho_up"            , &_phoResol_rho_up                   );
+        outputTree->Branch("phoResol_rho_dn"            , &_phoResol_rho_dn                );
+        outputTree->Branch("phoResol_phi_up"            , &_phoResol_phi_up                   );
+        outputTree->Branch("phoResol_phi_dn"            , &_phoResol_phi_dn                );
 	outputTree->Branch("nLoosePho"                       , &_nLoosePho                        ); 
 	outputTree->Branch("loosePhoEt"                      , &_loosePhoEt                       );
 	outputTree->Branch("loosePhoEta"                     , &_loosePhoEta                      ); 
@@ -422,7 +450,16 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("elePhi"                      , &_elePhi                     ); 
 	outputTree->Branch("eleSCEta"                    , &_eleSCEta                   ); 
 	outputTree->Branch("elePFRelIso"                 , &_elePFRelIso                ); 
-	
+        outputTree->Branch("eleScale_stat_up"            , &_eleScale_stat_up                     );
+        outputTree->Branch("eleScale_stat_dn"            , &_eleScale_stat_dn                     );
+        outputTree->Branch("eleScale_syst_up"            , &_eleScale_syst_up                   );
+        outputTree->Branch("eleScale_syst_dn"            , &_eleScale_syst_dn                );
+	outputTree->Branch("eleScale_gain_up"            , &_eleScale_gain_up                   );
+        outputTree->Branch("eleScale_gain_dn"            , &_eleScale_gain_dn                );
+        outputTree->Branch("eleResol_rho_up"            , &_eleResol_rho_up                   );
+        outputTree->Branch("eleResol_rho_dn"            , &_eleResol_rho_dn                );
+        outputTree->Branch("eleResol_phi_up"            , &_eleResol_phi_up                   );
+        outputTree->Branch("eleResol_phi_dn"            , &_eleResol_phi_dn                );
 	outputTree->Branch("nMu"                         , &_nMu                        ); 
 	outputTree->Branch("muPt"                        , &_muPt                       ); 
 	outputTree->Branch("muEta"                       , &_muEta                      );
