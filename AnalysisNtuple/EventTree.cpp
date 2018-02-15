@@ -35,8 +35,11 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchAddress("puTrue", &puTrue_);
 	chain->SetBranchStatus("pdf",1);
 	chain->SetBranchAddress("pdf", &pdf_);
-
-
+        
+        pdfWeight_ = new vector<float>;
+        chain->SetBranchStatus("pdfWeight",1);
+        chain->SetBranchAddress("pdfWeight", &pdfWeight_);
+        
 	pdfSystWeight_ = new vector<float>;
 	chain->SetBranchStatus("pdfSystWeight",1);
 	chain->SetBranchAddress("pdfSystWeight", &pdfSystWeight_);

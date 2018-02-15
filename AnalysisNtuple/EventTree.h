@@ -90,7 +90,7 @@ public:
 	vector<int>*    mcParentage;
 	vector<int>*    mcStatus;
         vector<UShort_t>* mcStatusFlag;
-
+        vector<float>* pdfWeight_;
 	vector<float>* pdfSystWeight_;
 	vector<float>* genScaleSystWeights_;
 
