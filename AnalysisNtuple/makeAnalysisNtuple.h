@@ -104,7 +104,7 @@ private :
 	Float_t 	_DiphoMass;
 	Float_t         _DilepDelR;
 
-
+        std::vector<float> _pdfSystWeight;
 	Int_t           _nPho;
 	std::vector<float>   _phoEt;
 	std::vector<float>   _phoEta;
@@ -333,6 +333,7 @@ void makeAnalysisNtuple::InitBranches(){
 
 	outputTree->Branch("run"                        , &_run                         );
 	outputTree->Branch("event"                      , &_event                       );
+	outputTree->Branch("pdfSystWeight"              , &_pdfSystWeight               );
 	outputTree->Branch("lumis"                      , &_lumis                       );
 	outputTree->Branch("isData"                     , &_isData                      ); 
 	outputTree->Branch("PUweight"                   , &_PUweight                    );
