@@ -8,7 +8,7 @@ def GetHistogramInfo_2Dplot(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*",
                      }
     return histogramInfo
 
-
+		
 def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraPhotonCuts="(passPresel_Mu && nJet>=3 && nBJet>=1 && %s)*", nBJets=1):
 
     histogramInfo = { "presel_jet1Pt"                         : ["jetPt[0]"  , "presel_jet1Pt"   ,    [1000,0,1000], extraCuts      , "", True],
@@ -89,14 +89,15 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_noCut_ChIso_PromptPhoton"       : ["loosePhoPFChIso" , "phosel_noCut_ChIso_PromptPhoton"   ,       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (loosePhotonIsGenuine||loosePhotonIsMisIDEle)")           , "", False],
                       "phosel_noCut_ChIso_NonPromptPhoton"    : ["loosePhoPFChIso" , "phosel_noCut_ChIso_NonPromptPhoton",       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && (loosePhotonIsHadronicPhoton||loosePhotonIsHadronicFake)"), "", False],
                       "phosel_noCut_NeuIso"                   : ["loosePhoPFNeuIso", "phosel_noCut_NeuIso"               ,        [80,0,40], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassPhoIso")                                 , "", True],
-                      "phosel_noCut_PhoIso"                   : ["loosePhoPFLoosePhoIso", "phosel_noCut_PhoIso"               ,      [200,0,100], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso")                                 , "", True],
+
+                      "phosel_noCut_PhoIso"                   : ["loosePhoPFPhoIso", "phosel_noCut_PhoIso"               ,      [200,0,100], extraPhotonCuts%("loosePhoMediumIDPassHoverE && loosePhoMediumIDPassSIEIE && loosePhoMediumIDPassChIso && loosePhoMediumIDPassNeuIso")                                 , "", True],
                       "phosel_AntiSIEIE_ChIso"                : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso"            ,       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.015 && loosePhoSIEIE<0.55) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso")                               , "", True],
                       "phosel_AntiSIEIE_ChIso_GenuinePho"     : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_GenuinePho" ,       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.015 && loosePhoSIEIE<0.55) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsGenuine")       , "", False],
                       "phosel_AntiSIEIE_ChIso_MisIDEle"       : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_MisIDEle"   ,       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.015 && loosePhoSIEIE<0.55) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsMisIDEle")      , "", False],
                       "phosel_AntiSIEIE_ChIso_HadPho"         : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_HadPho"     ,       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.015 && loosePhoSIEIE<0.55) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsHadronicPhoton"), "", False],
-                      "phosel_AntiSIEIE_ChIso_HadFake"        : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_HadFake"    ,       [200,0,50], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.015 && loosePhoSIEIE<0.55) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsHadronicFake")  , "", False],
-                      "phosel_AntiSIEIE_ChIso_barrel"        : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_barrel"    ,       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.015 && loosePhoSIEIE<0.55) && (abs(loosePhoSCEta)<1.47) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso")  , "", True],
-                      "phosel_AntiSIEIE_ChIso_endcap"        : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_endcap"    ,       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.031 && loosePhoSIEIE<0.55) && (abs(loosePhoSCEta)>1.47) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso")  , "", True],
+                      "phosel_AntiSIEIE_ChIso_HadFake"        : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_HadFake"    ,       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.015 && loosePhoSIEIE<0.55) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso && loosePhotonIsHadronicFake")  , "", False],
+                      "phosel_AntiSIEIE_ChIso_barrel"         : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_barrel"    ,       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.015 && loosePhoSIEIE<0.55) && (abs(loosePhoSCEta)<1.47) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso")  , "", True],
+                      "phosel_AntiSIEIE_ChIso_endcap"         : ["loosePhoPFChIso" , "phosel_AntiSIEIE_ChIso_endcap"    ,       [200,0,20], extraPhotonCuts%("loosePhoMediumIDPassHoverE && (loosePhoSIEIE>0.031 && loosePhoSIEIE<0.55) && (abs(loosePhoSCEta)>1.47) && loosePhoMediumIDPassNeuIso && loosePhoMediumIDPassPhoIso")  , "", True],
 
                       #################
                       "phosel_NGenuinePho"                    : ["nPho"              , "phosel_NGenuinePho"       ,          [2,0,2], extraPhotonCuts%("photonIsGenuine")                       , "", False],
@@ -129,4 +130,3 @@ def GetHistogramInfo(extraCuts="(passPresel_Mu && nJet>=3 && nBJet>=1)*", extraP
                       "phosel_DilepDR"                      : ["DilepDelR"     , "phosel_DilepDR"       , [100,0,6]  ,extraPhotonCuts%("phoMediumID"),"",True],
                       }
     return histogramInfo
-

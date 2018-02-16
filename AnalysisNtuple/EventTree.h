@@ -90,7 +90,7 @@ public:
 	vector<int>*    mcParentage;
 	vector<int>*    mcStatus;
         vector<UShort_t>* mcStatusFlag;
-
+        vector<float>* pdfWeight_;
 	vector<float>* pdfSystWeight_;
 	vector<float>* genScaleSystWeights_;
 
@@ -271,7 +271,16 @@ public:
 	vector<float>*  elePFClusEcalIso_;
 	vector<float>*  elePFClusHcalIso_;
 	vector<float>*  eleDr03TkSumPt_;
-
+        vector<float>*  eleScale_stat_up_;
+	vector<float>*  eleScale_stat_dn_;
+	vector<float>*  eleScale_syst_up_;
+	vector<float>*  eleScale_syst_dn_;
+	vector<float>*  eleScale_gain_up_;
+	vector<float>*  eleScale_gain_dn_;
+	vector<float>*  eleResol_rho_up_;
+	vector<float>*  eleResol_rho_dn_;
+	vector<float>*  eleResol_phi_up_;
+	vector<float>*  eleResol_phi_dn_;
 	// Photon
 	Int_t    nPho_;
 	vector<ULong_t>* phoTrg_;
@@ -312,7 +321,16 @@ public:
 	vector<float>*  phoHcalIsoDR04_;
 	vector<float>*  phoHcalIsoDR0412_;
 	vector<float>*  phoHcalIsoSolidDR04_;
-	
+        vector<float>*  phoScale_stat_up_;
+        vector<float>*  phoScale_stat_dn_;
+        vector<float>*  phoScale_syst_up_;
+        vector<float>*  phoScale_syst_dn_;
+        vector<float>*  phoScale_gain_up_;
+        vector<float>*  phoScale_gain_dn_;
+        vector<float>*  phoResol_rho_up_;
+        vector<float>*  phoResol_rho_dn_;
+        vector<float>*  phoResol_phi_up_;
+        vector<float>*  phoResol_phi_dn_;	
 	vector<vector<float> >*  phoCiCTrkIsoDR03_;
 	vector<vector<float> >*  phoCiCTrkIsoDR04_;
 	vector<float>*  phoCiCdRtoTrk_;

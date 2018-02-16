@@ -35,8 +35,11 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchAddress("puTrue", &puTrue_);
 	chain->SetBranchStatus("pdf",1);
 	chain->SetBranchAddress("pdf", &pdf_);
-
-
+        
+        pdfWeight_ = new vector<float>;
+        chain->SetBranchStatus("pdfWeight",1);
+        chain->SetBranchAddress("pdfWeight", &pdfWeight_);
+        
 	pdfSystWeight_ = new vector<float>;
 	chain->SetBranchStatus("pdfSystWeight",1);
 	chain->SetBranchAddress("pdfSystWeight", &pdfSystWeight_);
@@ -207,7 +210,49 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchAddress("eleDr03TkSumPt", &eleDr03TkSumPt_);
 
 
+        eleScale_stat_up_ = new vector<float>;
+        chain->SetBranchStatus("eleScale_stat_up",1);
+        chain->SetBranchAddress("eleScale_stat_up", &eleScale_stat_up_);
 
+        eleScale_stat_dn_ = new vector<float>;
+        chain->SetBranchStatus("eleScale_stat_dn",1);
+        chain->SetBranchAddress("eleScale_stat_dn", &eleScale_stat_dn_);
+
+        eleScale_syst_up_ = new vector<float>;
+        chain->SetBranchStatus("eleScale_syst_up",1);
+        chain->SetBranchAddress("eleScale_syst_up", &eleScale_syst_up_);
+
+        eleScale_syst_dn_ = new vector<float>;
+        chain->SetBranchStatus("eleScale_syst_dn",1);
+        chain->SetBranchAddress("eleScale_syst_dn", &eleScale_syst_dn_);
+
+
+        eleScale_gain_up_ = new vector<float>;
+        chain->SetBranchStatus("eleScale_gain_up",1);
+        chain->SetBranchAddress("eleScale_gain_up", &eleScale_gain_up_);
+
+        eleScale_gain_dn_ = new vector<float>;
+        chain->SetBranchStatus("eleScale_gain_dn",1);
+        chain->SetBranchAddress("eleScale_gain_dn", &eleScale_gain_dn_);
+
+
+        eleResol_rho_up_ = new vector<float>;
+        chain->SetBranchStatus("eleResol_rho_up",1);
+        chain->SetBranchAddress("eleResol_rho_up", &eleResol_rho_up_);
+
+        eleResol_rho_dn_ = new vector<float>;
+        chain->SetBranchStatus("eleResol_rho_dn",1);
+        chain->SetBranchAddress("eleResol_rho_dn", &eleResol_rho_dn_);
+
+        eleResol_phi_up_ = new vector<float>;
+        chain->SetBranchStatus("eleResol_phi_up",1);
+        chain->SetBranchAddress("eleResol_phi_up", &eleResol_phi_up_);
+
+        eleResol_phi_dn_ = new vector<float>;
+        chain->SetBranchStatus("eleResol_phi_dn",1);
+        chain->SetBranchAddress("eleResol_phi_dn", &eleResol_phi_dn_);
+
+        
 
 	// muons
 	// keep some branches in the skim
@@ -563,6 +608,48 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	phoPFRandConePhi_ = new vector<vector<float>>;
 	chain->SetBranchStatus("phoPFRandConePhi",1);
 	chain->SetBranchAddress("phoPFRandConePhi", &phoPFRandConePhi_);
+
+        phoScale_stat_up_ = new vector<float>;
+        chain->SetBranchStatus("phoScale_stat_up",1);
+        chain->SetBranchAddress("phoScale_stat_up", &phoScale_stat_up_); 
+
+        phoScale_stat_dn_ = new vector<float>;
+        chain->SetBranchStatus("phoScale_stat_dn",1);
+        chain->SetBranchAddress("phoScale_stat_dn", &phoScale_stat_dn_);
+
+        phoScale_syst_up_ = new vector<float>;
+        chain->SetBranchStatus("phoScale_syst_up",1);
+        chain->SetBranchAddress("phoScale_syst_up", &phoScale_syst_up_);
+
+        phoScale_syst_dn_ = new vector<float>;
+        chain->SetBranchStatus("phoScale_syst_dn",1);
+        chain->SetBranchAddress("phoScale_syst_dn", &phoScale_syst_dn_);
+
+
+        phoScale_gain_up_ = new vector<float>;
+        chain->SetBranchStatus("phoScale_gain_up",1);
+        chain->SetBranchAddress("phoScale_gain_up", &phoScale_gain_up_);
+
+        phoScale_gain_dn_ = new vector<float>;
+        chain->SetBranchStatus("phoScale_gain_dn",1);
+        chain->SetBranchAddress("phoScale_gain_dn", &phoScale_gain_dn_);
+
+       
+        phoResol_rho_up_ = new vector<float>;
+        chain->SetBranchStatus("phoResol_rho_up",1);
+        chain->SetBranchAddress("phoResol_rho_up", &phoResol_rho_up_);
+        
+        phoResol_rho_dn_ = new vector<float>;
+        chain->SetBranchStatus("phoResol_rho_dn",1);
+        chain->SetBranchAddress("phoResol_rho_dn", &phoResol_rho_dn_);
+
+        phoResol_phi_up_ = new vector<float>;
+        chain->SetBranchStatus("phoResol_phi_up",1);
+        chain->SetBranchAddress("phoResol_phi_up", &phoResol_phi_up_);
+
+        phoResol_phi_dn_ = new vector<float>;
+        chain->SetBranchStatus("phoResol_phi_dn",1);
+        chain->SetBranchAddress("phoResol_phi_dn", &phoResol_phi_dn_);
 
 	//phoPFPhoIso_ = new vector<float>;
 	//chain->SetBranchStatus("phoPFPhoIso",1);
