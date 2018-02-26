@@ -50,6 +50,7 @@ stackList = sampleList[:-3]
 
 _file = {}
 for sample in stackList:
+	print sample, "%s/%s.root"%(_fileDir,sample)
 	_file[sample] = TFile("%s/%s.root"%(_fileDir,sample),"read")
 
 if finalState=='Ele':
@@ -69,10 +70,6 @@ keylist = gDirectory.GetListOfKeys()
 
 histoList = {}
 print stackList
-#key = _file.FindKey("Data%s"%finalState)
-##print key
-#list2 = key.ReadObj().GetListOfKeys()
-#print keylist
 for key in keylist:
     
     name = key.GetName()
@@ -84,32 +81,14 @@ for key in keylist:
 
     hName = "%s_QCD_DD"%(nameKey)
     print hName
-    histoList[nameKey] = key.ReadObj().Clone(hName)
+   # histoList[nameKey] = key.ReadObj().Clone(hName)
+    histoList[nameKey]= _file["Data%s"%finalState].Get("%s_%s"%(nameKey,"Data%s"%finalState))
     histoList[nameKey].SetNameTitle(hName,hName)
 
     for sample in stackList:
 	print "%s_%s"%(nameKey,sample)
         tempHist = _file[sample].Get("%s_%s"%(nameKey,sample))
         histoList[nameKey].Add(tempHist,-1)
-        
-# for key in keylist:
-
-#     if "Data" in key.GetName() or "QCD" in key.GetName():
-#         continue
-
-#     list2 = key.ReadObj().GetListOfKeys()
-
-#     for l in list2:
-#         name = l.GetName()
-#         split = name.split('_')
-
-#         nameKey = split[0]
-
-#         for n in split[1:-1]: nameKey += "_%s"%n
-#         tempHist = l.ReadObj()
-
-#         histoList[nameKey].Add(tempHist,-1)
-#         print nameKey, l.GetName(), histoList[nameKey].Integral()
 
 outputFile = TFile("%s/QCD_DD.root"%_fileDir,"recreate")
 
