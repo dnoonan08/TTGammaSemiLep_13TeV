@@ -1,5 +1,5 @@
 #include"Selector.h"
-
+#include"TRandom3.h"
 
 double dR(double eta1, double phi1, double eta2, double phi2){
 	double dphi = phi2 - phi1;
@@ -8,7 +8,7 @@ double dR(double eta1, double phi1, double eta2, double phi2){
 	dphi = TMath::Abs( TMath::Abs(dphi) - pi ) - pi;
 	return TMath::Sqrt( dphi*dphi + deta*deta );
 }
-
+TRandom* generator = new TRandom3(0);
 Selector::Selector(){
 	// jets
 	jet_Pt_cut = 30;
@@ -21,9 +21,12 @@ Selector::Selector(){
 	veto_lep_pho_dR = 0.4; // remove photons with a lepton closer than this cut level
 	veto_jet_pho_dR = 0.4; // remove photons with a jet closer than this cut level
 
-	JERsystLevel = 1;
-	JECsystLevel = 1;
-
+	JERsystLevel  = 1;
+	JECsystLevel  = 1;
+        phosmearLevel = 1;
+        elesmearLevel = 1;
+        phoscaleLevel = 1;
+        elescaleLevel = 1;
 	useDeepCSVbTag = false;
 	//https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation80XReReco
 	// CSVv2M
@@ -52,6 +55,10 @@ Selector::Selector(){
 	
 	mu_Iso_invert = false;
 	smearJetPt = true;
+        smearPho = true;
+        smearEle = true;
+        scaleEle = true;
+        scalePho = true;
 	// photons
 	pho_Et_cut = 15.0; 
 	pho_Eta_cut = 2.5; 
@@ -115,11 +122,13 @@ void Selector::filter_photons(){
 	for(int phoInd = 0; phoInd < tree->nPho_; ++phoInd){
 		double SCeta = tree->phoSCEta_->at(phoInd);
 		double absSCEta = TMath::Abs(SCeta);
+//		TRandom* generator = new TRandom3(0);
 
 		double eta = tree->phoEta_->at(phoInd);
 		double absEta = TMath::Abs(eta);
 		double et = tree->phoEt_->at(phoInd);
 		double phi = tree->phoPhi_->at(phoInd);
+                double phoEn = tree->phoE_->at(phoInd);
 
 		uint photonIDbit = tree->phoIDbit_->at(phoInd);
 		// bool passLoosePhotonID  = photonIDbit >> 0 & 1;
@@ -133,7 +142,27 @@ void Selector::filter_photons(){
 		PhoChHadIso_corr.push_back(rhoCorrPFChIso);
 		PhoNeuHadIso_corr.push_back(rhoCorrPFNeuIso);
 		PhoPhoIso_corr.push_back(rhoCorrPFPhoIso);
-
+		double PhoSmear = 1.;
+		if (!tree->isData_ && phosmearLevel==1) {PhoSmear = generator->Gaus(1,(tree->phoResol_rho_up_->at(phoInd)+tree->phoResol_rho_dn_->at(phoInd))/2.);}
+                if (!tree->isData_ && phosmearLevel==0) {PhoSmear = generator->Gaus(1,tree->phoResol_rho_dn_->at(phoInd));}
+                if (!tree->isData_ && phosmearLevel==2) {PhoSmear = generator->Gaus(1,tree->phoResol_rho_up_->at(phoInd));}
+                if (smearPho){
+		//	std::cout << "stat: "<<PhoSmear <<std::endl;
+                        et = et*PhoSmear;
+                        phoEn = PhoSmear*phoEn;
+                }
+                tree->phoEt_->at(phoInd) = et;
+                tree->phoE_->at(phoInd)= phoEn;		
+                double PhoScale = 1.;
+                if (tree->isData_ && phoscaleLevel==1) {PhoScale = ((tree->phoScale_stat_up_->at(phoInd)+tree->phoScale_stat_dn_->at(phoInd))/2.);}
+                if (!tree->isData_ && phoscaleLevel==2){PhoScale =1.+sqrt(pow((1-tree->phoScale_syst_up_->at(phoInd)),2)+pow((1-tree->phoScale_stat_up_->at(phoInd)),2)+pow((1-tree->phoScale_gain_up_->at(phoInd)),2));}
+                if (!tree->isData_ && phoscaleLevel==0) {PhoScale=1.-sqrt(pow((1-tree->phoScale_syst_dn_->at(phoInd)),2)+pow((1-tree->phoScale_stat_dn_->at(phoInd)),2)+pow((1-tree->phoScale_gain_dn_->at(phoInd)),2));}
+                if (scalePho){
+                        et = et*PhoScale;
+                        phoEn = PhoScale*phoEn;
+                }
+                tree->phoEt_->at(phoInd) = et;
+                tree->phoE_->at(phoInd)= phoEn; 
 		if (tree->isData_){
 			vector<float> correctedRandConeIso;
 			for (unsigned int i = 0; i < tree->phoPFRandConeChIso_->at(phoInd).size(); i++){
@@ -231,7 +260,8 @@ void Selector::filter_electrons(){
 		double SCeta = tree->eleSCEta_->at(eleInd);
 		double absSCEta = TMath::Abs(SCeta);
 		double pt = tree->elePt_->at(eleInd);
-
+                double en = tree->eleEn_->at(eleInd);
+//		TRandom* generator = new TRandom3(0);
 		// Not actually needed at the moment, the relIso cuts are incorporated into the electron ID requirements
 		double rho = tree->rho_;
 		double ea = electronEA[egammaRegion(absSCEta)];
@@ -263,6 +293,39 @@ void Selector::filter_electrons(){
 			       (absEta > 1.479 && tree->eleD0_->at(eleInd) < 0.1));
 		bool passDz = ((absEta < 1.479 && tree->eleDz_->at(eleInd) < 0.1) ||
 			       (absEta > 1.479 && tree->eleDz_->at(eleInd) < 0.2));
+
+
+
+		double EleSmear = 1.;
+                if (!tree->isData_ && elesmearLevel==1) {EleSmear = generator->Gaus(1,(tree->eleResol_rho_up_->at(eleInd)+tree->eleResol_rho_dn_->at(eleInd))/2.);}
+                if (!tree->isData_ && elesmearLevel==0) {EleSmear = generator->Gaus(1,tree->eleResol_rho_dn_->at(eleInd));}
+                if (!tree->isData_ && elesmearLevel==2) {EleSmear = generator->Gaus(1,tree->eleResol_rho_up_->at(eleInd));}
+		if (pt<10.){
+			smearEle= false;
+			}
+                if (smearEle){
+                        pt = pt*EleSmear;
+                        en = EleSmear*en;
+                }
+                tree->elePt_->at(eleInd) = pt;
+                tree->eleEn_->at(eleInd)= en;   
+                double EleScale = 1.;
+		double nom_scale =  (float(tree->eleScale_stat_up_->at(eleInd)+tree->eleScale_stat_dn_->at(eleInd))/2.);
+                if (tree->isData_ && elescaleLevel==1) {EleScale = ((tree->eleScale_stat_up_->at(eleInd)+tree->eleScale_stat_dn_->at(eleInd))/2.);}
+                if (!tree->isData_ && elescaleLevel==2){EleScale = 1.+sqrt(pow((1-tree->eleScale_syst_up_->at(eleInd)),2)+pow((1-tree->eleScale_stat_up_->at(eleInd)),2)+pow((1-tree->eleScale_gain_up_->at(eleInd)),2));}
+                if (!tree->isData_ && elescaleLevel==0){EleScale = 1.-(sqrt(pow((1-tree->eleScale_syst_dn_->at(eleInd)),2)+pow(1-(tree->eleScale_stat_dn_->at(eleInd)),2)+pow((1-tree->eleScale_gain_dn_->at(eleInd)),2)));}
+                if (scaleEle){
+		//	std::cout<<tree->eleScale_syst_dn_->at(eleInd)<<   tree->eleScale_stat_dn_->at(eleInd)<<   tree->eleScale_syst_dn_->at(eleInd)<<std::endl;
+	//		std::cout<<"nominal is:"<< nom_scale<<std::endl;
+		//	std::cout << "stat: "<<EleScale <<std::endl;
+                        pt = pt*EleScale;
+                        en = EleScale*en;
+                }       
+                tree->elePt_->at(eleInd) = pt;
+                tree->eleEn_->at(eleInd)= en;
+
+
+
 	   
 		if (QCDselect){
 			passTightID = false;

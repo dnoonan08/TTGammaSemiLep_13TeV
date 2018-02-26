@@ -6,14 +6,14 @@
 #include <TLorentzVector.h>
 #include <iostream>
 #include <ctime>
-
+#include "TRandom3.h"
 #include"PUReweight.h"
 #include "METzCalculator.h"
 #include "TopEventCombinatorics.h"
 #include "JetResolutions.h"
 #include"JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
-
+#include <cmath>
 #include "elemuSF.h"
 
 std::string PUfilename = "Data_2016BCDGH_Pileup.root";
@@ -25,7 +25,8 @@ int jervar012_g = 1; // 0:down, 1:norm, 2:up
 int phosmear012_g = 1; // 0:down, 1:norm, 2:up 
 int musmear012_g = 1; // 0:down, 1:norm, 2: up
 int elesmear012_g = 1; // 0:down, 1:norm, 2: up
-
+int phoscale012_g = 1;
+int elescale012_g = 1;
 #include "BTagCalibrationStandalone.h"
 
 bool overlapRemovalTT(EventTree* tree);
@@ -116,14 +117,20 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	bool doOverlapRemoval_WZ = false;	
 	bool doOverlapRemoval_Tchannel = false;	
 	bool skipOverlap = false;
+	applypdfweight = false;
+	applyqsquare  = false;
 	if( sampleType == "TTbarPowheg" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
 
 	if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50") doOverlapRemoval_WZ = true;
 
 	if( sampleType == "ST_t-channel" || sampleType == "ST_tbar-channel") doOverlapRemoval_Tchannel = true;
 	if(doOverlapRemoval || doOverlapRemoval_WZ || doOverlapRemoval_Tchannel) std::cout << "########## Will apply overlap removal ###########" << std::endl;
-
-
+	if ( sampleType == "TTbarPowheg"||sampleType == "TTGamma_SingleLeptFromT" || sampleType == "TTGamma_SingleLeptFromTbar" || sampleType == "TTGamma_Dilepton"|| sampleType == "TTGamma_Hadronic"){
+		 applypdfweight = true; 	
+		 applyqsquare = true;
+	}
+	
+	if (applypdfweight||applyqsquare)  std::cout<<"###### Will apply pdfWeights and Q2 weights ######"<< std::endl;
 
 	dileptonsample = false;
 	string JECsystLevel = "";
@@ -143,16 +150,25 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	// if( systematicType=="JEC_down")     {jecvar012_g = 0; selector->JECsystLevel=0;}
 	if( systematicType=="JER_up")       {jervar012_g = 2; selector->JERsystLevel=2;}
 	if( systematicType=="JER_down")     {jervar012_g = 0; selector->JERsystLevel=0;}
+	if(systematicType=="phosmear_down") {phosmear012_g=0;selector->phosmearLevel=0;}
+        if(systematicType=="phosmear_up") {phosmear012_g=2;selector->phosmearLevel=2;}
+        if(systematicType=="elesmear_down") {elesmear012_g=0;selector->elesmearLevel=0;}
+        if(systematicType=="elesmear_up") {elesmear012_g=2;selector->elesmearLevel=2;}
+        if(systematicType=="phoscale_down") {phoscale012_g=0;selector->phoscaleLevel=0;}
+        if(systematicType=="phoscale_up") {phoscale012_g=2;selector->phoscaleLevel=2;}
+        if(systematicType=="elescale_down") {elescale012_g=0;selector->elescaleLevel=0;}
+        if(systematicType=="elescale_up") {elescale012_g=2;  selector->elescaleLevel=2;}
+
 	if( systematicType=="pho_up")       {phosmear012_g = 2;}
 	if( systematicType=="pho_down")     {phosmear012_g = 0;}
 	if( systematicType=="musmear_up")   {musmear012_g = 2;}
 	if( systematicType=="musmear_down") {musmear012_g = 0;}
-	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
-	if( systematicType=="elesmear_down"){elesmear012_g = 0;}
+//	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
+//	if( systematicType=="elesmear_down"){elesmear012_g = 0;}
 	if( systematicType=="Dilep")     {dileptonsample =true; evtPick->Nmu_eq=2; evtPick->Nele_eq=2;}
 	if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->ZeroBExclusive=true;}
 	std::cout << "Dilepton Sample :" << dileptonsample << std::endl;
-	std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << "  ";
+	std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << " eleScale "<< elescale012_g << " phoScale" << phoscale012_g << "   ";
 	std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << endl;
 
 
@@ -188,7 +204,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 
 	_lumiWeight = getEvtWeight(sampleType);
-
+	
 	_PUweight       = 1.;
 	_muEffWeight    = 1.;
 	_muEffWeight_Do = 1.;
@@ -225,7 +241,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			startClock = clock();
 
 		}
-
+              //  cout << entry << endl;
 		tree->GetEntry(entry);
 		isMC = !(tree->isData_);
 
@@ -256,18 +272,19 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			}
 		}
 
+	
+				
 
 		selector->process_objects(tree);
 
 		evtPick->process_event(tree, selector, _PUweight);
 
-
+            //    cout << "HERE" << endl;
 		if ( evtPick->passPresel_ele || evtPick->passPresel_mu ) {
 			InitVariables();
 			FillEvent();
-
+              //          cout << "HERE" << endl;
 			if(isMC) {
-
 				_PUweight    = PUweighter->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
 				//				std::cout << "PUweight " << _PUweight << std::endl;
 				_PUweight_Up = PUweighterUp->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
@@ -276,7 +293,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				_btagWeight    = getBtagSF("central", reader, _btagSF);
 				_btagWeight_Up = getBtagSF("up", reader, _btagSF_Up);
 				_btagWeight_Do = getBtagSF("down", reader, _btagSF_Do);				
-
+				
 				if (evtPick->passPresel_mu) {
 					int muInd_ = evtPick->Muons.at(0);
 					_muEffWeight    = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),1);
@@ -286,7 +303,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 					_eleEffWeight_Up = 1.;
 					_eleEffWeight_Do = 1.;
 				}
-
 				if (evtPick->passPresel_ele) {
 					int eleInd_ = evtPick->Electrons.at(0);
 					_muEffWeight    = 1.;
@@ -295,7 +311,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 					_eleEffWeight    = getEleSF(tree->elePt_->at(eleInd_),tree->eleSCEta_->at(eleInd_),1);
 					_eleEffWeight_Do = getEleSF(tree->elePt_->at(eleInd_),tree->eleSCEta_->at(eleInd_),0);
 					_eleEffWeight_Up = getEleSF(tree->elePt_->at(eleInd_),tree->eleSCEta_->at(eleInd_),2);
+                         //               std::cout<<"done with Ele scaling"<<std::endl;
+                                     
 				}
+			
 			}
 
 			if (tree->isData_){
@@ -316,6 +335,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				}				
 			}
 			outputTree->Fill();
+	//		std::cout<<"done with filling"<<std::endl;
 		}
 	}
 	if (doOverlapRemoval){
@@ -327,9 +347,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	if(doOverlapRemoval_Tchannel){
 		 std::cout << "Total number of events removed from t-channel:"<< count_overlapTchannel <<std::endl;
 	}
-		
+//	std::cout <<outputFile <<std::endl;		
 	outputFile->cd();
+ //     	std::cout << "cd in file"<< std::endl; 
 	outputTree->Write();
+//	std::cout << "done writing"<< std::endl;
 	outputFile->Close();
 
 }
@@ -350,7 +372,8 @@ void makeAnalysisNtuple::FillEvent()
 	_evtWeight       = _lumiWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
 
 	if (_isData) {_evtWeight= 1.;}
-	
+       // _pdfWeight           = tree->pdfWeight_;
+       // _pdfSystWeight       = tree->pdfSystWeight_;	
 	_genMET		     = tree->genMET_;
 	_pfMET		     = tree->pfMET_;
 	_pfMETPhi	     = tree->pfMETPhi_;
@@ -364,7 +387,7 @@ void makeAnalysisNtuple::FillEvent()
 	_nJet            = evtPick->Jets.size();
 	_nBJet           = evtPick->bJets.size();
 	_nMC             = tree->nMC_;
-	
+        _pdfWeight       = tree->pdfWeight_;	
 	double ht = 0.0;
         ht += tree->pfMET_;
         for( int i_jet = 0; i_jet < _nJet; i_jet++)
@@ -378,6 +401,7 @@ void makeAnalysisNtuple::FillEvent()
 		_elePt.push_back(tree->elePt_->at(eleInd));
 		_elePhi.push_back(tree->elePhi_->at(eleInd));
 		_eleSCEta.push_back(tree->eleSCEta_->at(eleInd));
+
 		_elePFRelIso.push_back(selector->EleRelIso_corr.at(eleInd));
 		lepVector.SetPtEtaPhiE(tree->elePt_->at(eleInd),
 							   tree->eleSCEta_->at(eleInd),
@@ -473,7 +497,6 @@ void makeAnalysisNtuple::FillEvent()
 	int countTightIDPho = 0;
 
 	int parentPID = -1;
-
 	for (int i_pho = 0; i_pho <_nPho; i_pho++){
 		int phoInd = evtPick->Photons.at(i_pho);
 		phoVector.SetPtEtaPhiM(tree->phoEt_->at(phoInd),
@@ -483,6 +506,8 @@ void makeAnalysisNtuple::FillEvent()
 	//	std::cout << "separate" << phoVector.M()<<std::endl;
 		_phoEt.push_back(tree->phoEt_->at(phoInd));
 		_phoEta.push_back(tree->phoEta_->at(phoInd));
+		
+
 		_phoSCEta.push_back(tree->phoSCEta_->at(phoInd));
 		_phoPhi.push_back(tree->phoPhi_->at(phoInd));
 		_phoIsBarrel.push_back( abs(tree->phoSCEta_->at(phoInd))<1.47 );
@@ -493,6 +518,7 @@ void makeAnalysisNtuple::FillEvent()
 		_phoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
 
 		if (tree->isData_){
+
 			std::vector<float> randConeIso;
 			std::vector<float> randConeIsoUnCorr;
 			std::vector<float> randConeEta;
@@ -828,15 +854,40 @@ void makeAnalysisNtuple::FillEvent()
 	// j_ind.clear();
 
 	
-	if (!tree->isData_){		
-		for (int i=0;i<9;i++){
-			if (getGenScaleWeights){
-				_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
+	if (!tree->isData_){
+//		std::cout<< applyqsquare <<std::endl;
+//		std::cout<< applypdfweight <<std::endl;		
+		if (applyqsquare){
+//			std::cout<< "will do q2"<<std::endl;
+			for (int i=0;i<9;i++){
+			//	std::cout <<i <<std::endl;
+				if (getGenScaleWeights){
+			//		std::cout<<tree->genScaleSystWeights_->at(i)<<std::endl;
+					_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
+				}
+				else{
+					_genScaleSystWeights.push_back(1.);
+				}
 			}
-			else{
-				_genScaleSystWeights.push_back(1.);
-			}
+		 	_q2weight_Up = *max_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());		
+			_q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());
 		}
+		if(applypdfweight){
+               // 	std::cout<< "will do pdfWeights"<<std::endl;        
+                        
+                        for (int i=9;i<109;i++){
+                        //	std::cout<< i << std::endl;
+			//	std::cout<<tree->pdfSystWeight_->at(i)<<std::endl;
+                        	_pdfSystWeight.push_back(tree->pdfSystWeight_->at(i));
+                        }
+			float sum=0.;
+			for (int j=0;j<100;j++){
+			sum+=_pdfSystWeight[j];
+			}
+			_pdfuncer = sqrt(sum/100);
+			_pdfweight_Up = _pdfWeight + _pdfuncer;
+			_pdfweight_Do = _pdfWeight - _pdfuncer;
+                   }
 
 			
 		for (int i_mc = 0; i_mc <_nMC; i_mc++){
@@ -850,6 +901,14 @@ void makeAnalysisNtuple::FillEvent()
 			_mcMomPID.push_back(tree->mcMomPID->at(i_mc));
 			_mcGMomPID.push_back(tree->mcGMomPID->at(i_mc));
 			_mcParentage.push_back(tree->mcParentage->at(i_mc));
+		//	if(applypdfweight){
+			
+		//	_pdfWeight.push_back(tree->pdfWeight_->at(i_mc));
+		//	for (int i=0;i<9;i++){
+		//	print i, tree->pdfSystWeight_->at(i)
+                  //      _pdfSystWeight.push_back(tree->pdfSystWeight_->at(i));
+		//	}
+		 //  }
 		}
 	}
 

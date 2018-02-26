@@ -91,8 +91,16 @@ public:
 	double veto_lep_pho_dR;
 	double veto_jet_pho_dR;
 	int JERsystLevel; //0= syst down, 1 = central, 2 = syst up
-	int JECsystLevel; //0= syst down, 1 = central, 2 = syst up
+	int JECsystLevel;//0= syst down, 1 = central, 2 = syst up
+	int phosmearLevel;
+	int elesmearLevel;
+	int phoscaleLevel;
+	int elescaleLevel;
 	bool   smearJetPt;
+	bool scaleEle;
+	bool smearEle;
+	bool scalePho;
+	bool smearPho;
 	bool   looseJetID;
 	bool   useDeepCSVbTag;
 	bool   QCDselect;

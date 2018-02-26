@@ -10,7 +10,7 @@ parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,ac
                      help="Use 4j2t selection" )
 parser.add_option("--Loose","--loose", dest="isLooseSelection", default=False,action="store_true",
                      help="Use 2j0t selection" )
-parser.add_option("-f","--file",dest="fileDir",default="histograms/ele/qcdhistsCR",
+parser.add_option("-f","--file",dest="fileDir",default="histograms/mu/qcdhistsCR",
                      help="histogram file direcotry")
 
 (options, args) = parser.parse_args()

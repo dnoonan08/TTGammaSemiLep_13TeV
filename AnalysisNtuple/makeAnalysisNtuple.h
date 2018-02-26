@@ -52,7 +52,8 @@ private :
 
 
 	bool getGenScaleWeights;
-
+	bool applypdfweight;
+	bool applyqsquare;
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
@@ -64,6 +65,30 @@ private :
 	Float_t         _PUweight;
 	Float_t         _PUweight_Up;
 	Float_t         _PUweight_Do;
+	
+	Float_t 	_PhoScale;
+	Float_t		_PhoScale_Up;
+	Float_t         _PhoScale_Do;
+	
+	Float_t         _EleScale;
+        Float_t         _EleScale_Up;
+        Float_t         _EleScale_Do;
+
+
+	Float_t         _PhoSmear;
+        Float_t         _PhoSmear_Up;
+        Float_t         _PhoSmear_Do;
+
+        Float_t         _EleSmear;
+        Float_t         _EleSmear_Up;
+        Float_t         _EleSmear_Do;
+	Float_t         _q2weight_Up;
+	Float_t         _q2weight_Do;
+	Float_t         _pdfuncer;
+	
+	Float_t          _pdfweight_Up;
+	Float_t	         _pdfweight_Do;
+
 
 	std::vector<float> _btagWeight;
 	std::vector<float> _btagWeight_Up;
@@ -103,7 +128,7 @@ private :
 	Float_t 	_DilepMass;
 	Float_t 	_DiphoMass;
 	Float_t         _DilepDelR;
-        std::vector<float> _pdfWeight;
+        Float_t         _pdfWeight;
         std::vector<float> _pdfSystWeight;
 	Int_t           _nPho;
 	std::vector<float>   _phoEt;
@@ -351,6 +376,19 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("eleEffWeight"               , &_eleEffWeight                );
 	outputTree->Branch("eleEffWeight_Up"            , &_eleEffWeight_Up             );
 	outputTree->Branch("eleEffWeight_Do"            , &_eleEffWeight_Do             );
+	outputTree->Branch("PhoScale"                   , &_PhoScale                    );
+        outputTree->Branch("PhoSmear"                   , &_PhoSmear                    );
+        outputTree->Branch("PhoScale_Up"                , &_PhoScale_Up                    );
+        outputTree->Branch("PhoSmear_Up"                , &_PhoSmear_Up                    );
+	outputTree->Branch("PhoScale_Do"                , &_PhoScale_Do                    );
+        outputTree->Branch("PhoSmear_Do"                , &_PhoSmear_Do                    );
+        outputTree->Branch("EleScale_Up"                , &_EleScale_Up                    );
+        outputTree->Branch("EleSmear_Up"                , &_EleSmear_Up                    );
+        outputTree->Branch("EleScale_Do"                , &_EleScale_Do                    );
+        outputTree->Branch("EleSmear_Do"                , &_EleSmear_Do                    );
+        outputTree->Branch("EleScale"                  , &_EleScale                    );
+        outputTree->Branch("EleSmear"                   , &_EleSmear                    );
+
 	outputTree->Branch("evtWeight"                  , &_evtWeight                   );      
 	outputTree->Branch("nVtx"                       , &_nVtx                        ); 
 	outputTree->Branch("nGoodVtx"                   , &_nGoodVtx                    ); 
