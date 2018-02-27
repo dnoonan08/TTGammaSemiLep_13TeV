@@ -860,15 +860,16 @@ void makeAnalysisNtuple::FillEvent()
 		if (applyqsquare){
 //			std::cout<< "will do q2"<<std::endl;
 			for (int i=0;i<9;i++){
+				if(i==5||i==7){continue;}
 			//	std::cout <<i <<std::endl;
-				if (getGenScaleWeights){
+					if (getGenScaleWeights){
 			//		std::cout<<tree->genScaleSystWeights_->at(i)<<std::endl;
-					_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
-				}
-				else{
-					_genScaleSystWeights.push_back(1.);
-				}
-			}
+						_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
+					}
+					else{
+						_genScaleSystWeights.push_back(1.);
+					    }
+					}
 		 	_q2weight_Up = *max_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());		
 			_q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());
 		}
