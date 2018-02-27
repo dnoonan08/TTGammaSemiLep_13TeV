@@ -67,14 +67,6 @@ noQCD = options.noQCD
 makeMorePlots = options.makeMorePlots
 makeAllPlots = options.makeAllPlots
 
-if plotList is None:
-	if makeMorePlots:
-		plotList = ["presel_Njet","presel_Nbjet","phosel_Njet","phosel_Nbjet","presel_jet1Pt","presel_jet2Pt","presel_jet3Pt","phosel_LeadingPhotonEt","phosel_LeadingPhotonEta","phosel_dRLeadingPhotonJet","phosel_dRLeadingPhotonLepton","presel_WtransMass","phosel_WtransMass","presel_MET","phosel_MET"]
-	elif makeAllPlots:
-		plotList = histograms.keys()
-		plotList.sort()
-	else:
-		plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
 
 
 finalState = options.channel
@@ -176,11 +168,11 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_Nphotons"                : ["Number of Photons "            , "Events", 1, [-1,-1], regionText,  YesLog, " "],
 	      "phosel_HT"                      : ["H_{T} (GeV)"                ,"Events/9",  1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_MET"                     : ["MET (GeV)  "                , "Events/2", 5, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_M3"                      : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, " "],   
-	      "phosel_M3_GenuinePhoton"        : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "Genuine Photon"],   
-	      "phosel_M3_MisIDEle"             : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "MisIDEle"],
-	      "phosel_M3_HadronicPhoton"       : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "Hadronic Photon"],
-	      "phosel_M3_HadronicFake"         : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "Hadronic Fake"],
+	      "phosel_M3"                      : ["M_{3} (GeV)"                , "Events/5 GeV", 5, [-1,-1], regionText,  NoLog, " "],   
+	      "phosel_M3_GenuinePhoton"        : ["M_{3} (GeV)"                , "Events/5 GeV", 5, [-1,-1], regionText,  NoLog, "Genuine Photon"],   
+	      "phosel_M3_MisIDEle"             : ["M_{3} (GeV)"                , "Events/5 GeV", 5, [-1,-1], regionText,  NoLog, "MisIDEle"],
+	      "phosel_M3_HadronicPhoton"       : ["M_{3} (GeV)"                , "Events/5 GeV", 5, [-1,-1], regionText,  NoLog, "Hadronic Photon"],
+	      "phosel_M3_HadronicFake"         : ["M_{3} (GeV)"                , "Events/5 GeV", 5, [-1,-1], regionText,  NoLog, "Hadronic Fake"],
 	      "phosel_muEta"                   : ["Muon #eta"                  , "Events/0.05", 5, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_muPt"    		       : ["Muon p_{T} (GeV) "          , "Events", 5, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_elePt"                   : ["Electron p_{T} (GeV)"       , "Events", 5, [-1,-1], regionText,  NoLog, " "],
@@ -240,7 +232,14 @@ if not plotList is None:
 	if not allHistsDefined:
 		sys.exit()
 
-
+if plotList is None:
+        if makeMorePlots:
+                plotList = ["presel_Njet","presel_Nbjet","phosel_Njet","phosel_Nbjet","presel_jet1Pt","presel_jet2Pt","presel_jet3Pt","phosel_LeadingPhotonEt","phosel_LeadingPhotonEta","phosel_dRLeadingPhotonJet","phosel_dRLeadingPhotonLepton","presel_WtransMass","phosel_WtransMass","presel_MET","phosel_MET"]
+        elif makeAllPlots:
+                plotList = histograms.keys()
+                plotList.sort()
+        else:
+                plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
 
 
 import CMS_lumi
@@ -511,11 +510,24 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 		hist.SetBinError(lastBin, (lastBinError**2 + overFlowError**2)**0.5 )
 
         stack.Add(hist)
+    
     if finalState=='Ele':
-   	dataHist = _file["DataEle"].Get("%s_DataEle"%(histName))
+	if 'nVtx'in histName:
+		if 'phosel' in histName:
+   			dataHist = _file["DataEle"].Get("phosel_nVtx_DataEle")
+		else:
+			dataHist = _file["DataEle"].Get("presel_nVtx_DataEle")
+	else:
+		dataHist = _file["DataEle"].Get("%s_DataEle"%(histName))
 #	dataHist.Draw()
     elif finalState=='Mu':
-	dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
+	 if 'nVtx'in histName:
+                if 'phosel' in histName:
+			dataHist = _file["DataMu"].Get("phosel_nVtx_DataMu")
+		else:
+			dataHist = _file["DataMu"].Get("presel_nVtx_DataMu")
+	 else:
+		dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
     noData = False
     print dataHist
     if type(dataHist)==type(TObject()): noData = True

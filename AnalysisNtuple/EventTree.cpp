@@ -36,7 +36,7 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	chain->SetBranchStatus("pdf",1);
 	chain->SetBranchAddress("pdf", &pdf_);
         
-        pdfWeight_ = new vector<float>;
+        
         chain->SetBranchStatus("pdfWeight",1);
         chain->SetBranchAddress("pdfWeight", &pdfWeight_);
         
@@ -217,7 +217,7 @@ EventTree::EventTree(int nFiles, char** fileNames){
         eleScale_stat_dn_ = new vector<float>;
         chain->SetBranchStatus("eleScale_stat_dn",1);
         chain->SetBranchAddress("eleScale_stat_dn", &eleScale_stat_dn_);
-
+//
         eleScale_syst_up_ = new vector<float>;
         chain->SetBranchStatus("eleScale_syst_up",1);
         chain->SetBranchAddress("eleScale_syst_up", &eleScale_syst_up_);

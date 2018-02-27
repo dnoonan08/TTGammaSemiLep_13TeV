@@ -67,7 +67,8 @@ preselCut = "passPresel_Ele"
 QCDcut = "elePFRelIso>0.01"
 if finalState=="Mu":
     preselCut = "passPresel_Mu"
-    QCDcut = "muPRFelIso> 0.15 && muPFRelIso<0.3"
+    QCDcut = "muPFRelIso> 0.15 && muPFRelIso<0.3"
+
 
 
 if "QCD" in sample:
@@ -77,6 +78,7 @@ if "QCD" in sample:
     PhoselQCDTemplate = TH1F("phoselnjets0Tag_QCD_DD","phoselnjets0Tag_QCD_DD",10,0,10)
     tree = TChain("AnalysisTree")
     fileList = samples[sampleList[-1]][0]
+    print fileList
     for fileName in fileList:
         tree.Add("%s/QCDcr_%s"%(analysisNtupleLocation,fileName))
 
@@ -90,6 +92,7 @@ if "QCD" in sample:
     print sampleList[:-2]
     for s in sampleList[:-2]:
 #        if s == "Diboson": continue
+	print fileList
         fileList = samples[s][0]
         for fileName in fileList:
             tree.Add("%s/QCDcr_%s"%(analysisNtupleLocation,fileName))
