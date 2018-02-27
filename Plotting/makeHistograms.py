@@ -69,7 +69,7 @@ btagWeightCategory = ["1","(1-btagWeight[0])","(btagWeight[2])","(btagWeight[1])
 #atleast 0, atleast 1, atleast 2, exactly 1, btagWeight[0] = exactly 0
 
 
-if finalState=="Mu":
+if finalState=="mu":
     sampleList[-1] = "DataMu"
     sampleList[-2] = "QCDMu"
 
@@ -318,13 +318,13 @@ if 'PU' in sys.argv:
 
     Pileup = "PUweight_%s"%(level)
     sys.argv.remove("PU")
-    outputhistName = outputhistName + "Pileup_%s"%(level)
+    outputhistName = "histograms/%s/%sPileup_%s"%(finalState,outputFileName,level)
 
 if 'MuEff' in sys.argv:
     MuEff = "muEffWeight_%s"%(level)
 
     sys.argv.remove("MuEff")
-    outputhistName = outputhistName + "MuEff_%s"%(level)
+    outputhistName = "histograms/%s/%sMuEff_%s"%(finalState,outputFileName,level)
 
 
 if 'BTagSF' in sys.argv:
@@ -333,7 +333,7 @@ if 'BTagSF' in sys.argv:
 
 
     sys.argv.remove("BTagSF")
-    outputhistName = outputhistName + "BTagSF_%s"%(level)
+    outputhistName = "histograms/%s/%sBTagSF_%s"%(finalState,outputFileName,level)
 
 weights = "%s*%s*%s*eleEffWeight*%s"%(evtWeight,Pileup,MuEff,btagWeightCategory[nBJets])
 
@@ -459,7 +459,7 @@ histograms=[]
 #sample = sys.argv[-1]
 
 if sample =="QCD_DD":
-    if finalState=="Mu":
+    if finalState=="mu":
         if isTightSelection:
             qcd_File    = TFile("histograms/mu/qcdhistsCR_tight/QCD_DD.root","read")
         elif isLooseCR2g1Selection:
@@ -474,7 +474,7 @@ if sample =="QCD_DD":
             qcd_File    = TFile("histograms/mu/qcdhistsCR/QCD_DD.root","read")
         qcd_TF_File = TFile("histograms/mu/qcdTransferFactors.root","read")
         dirName = "QCDMu"
-    if finalState=="Ele":
+    if finalState=="ele":
         if isTightSelection:
             qcd_File    = TFile("histograms/ele/qcdhistsCR_tight/QCD_DD.root","read")
         elif isLooseCR2g1Selection:
