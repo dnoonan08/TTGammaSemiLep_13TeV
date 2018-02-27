@@ -372,8 +372,6 @@ void makeAnalysisNtuple::FillEvent()
 	_evtWeight       = _lumiWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
 
 	if (_isData) {_evtWeight= 1.;}
-       // _pdfWeight           = tree->pdfWeight_;
-       // _pdfSystWeight       = tree->pdfSystWeight_;	
 	_genMET		     = tree->genMET_;
 	_pfMET		     = tree->pfMET_;
 	_pfMETPhi	     = tree->pfMETPhi_;
@@ -872,6 +870,7 @@ void makeAnalysisNtuple::FillEvent()
 					}
 		 	_q2weight_Up = *max_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());		
 			_q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());
+			_q2weight_nominal = tree->genScaleSystWeights_->at(0);
 		}
 		if(applypdfweight){
                // 	std::cout<< "will do pdfWeights"<<std::endl;        
@@ -886,8 +885,8 @@ void makeAnalysisNtuple::FillEvent()
 			sum+=_pdfSystWeight[j];
 			}
 			_pdfuncer = sqrt(sum/100);
-			_pdfweight_Up = _pdfWeight + _pdfuncer;
-			_pdfweight_Do = _pdfWeight - _pdfuncer;
+			_pdfweight_Up = (_pdfWeight + _pdfuncer)/_pdfWeight;
+			_pdfweight_Do = (_pdfWeight - _pdfuncer)/_pdfWeight;
                    }
 
 			

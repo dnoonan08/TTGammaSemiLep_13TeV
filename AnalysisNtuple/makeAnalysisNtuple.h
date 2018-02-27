@@ -66,24 +66,25 @@ private :
 	Float_t         _PUweight_Up;
 	Float_t         _PUweight_Do;
 	
-	Float_t 	_PhoScale;
-	Float_t		_PhoScale_Up;
-	Float_t         _PhoScale_Do;
+//	Float_t 	_PhoScale;
+//	Float_t		_PhoScale_Up;
+//	Float_t         _PhoScale_Do;
 	
-	Float_t         _EleScale;
-        Float_t         _EleScale_Up;
-        Float_t         _EleScale_Do;
+//	Float_t         _EleScale;
+  //      Float_t         _EleScale_Up;
+   //     Float_t         _EleScale_Do;
 
 
-	Float_t         _PhoSmear;
-        Float_t         _PhoSmear_Up;
-        Float_t         _PhoSmear_Do;
+//	Float_t         _PhoSmear;
+  //      Float_t         _PhoSmear_Up;
+    //    Float_t         _PhoSmear_Do;
 
-        Float_t         _EleSmear;
-        Float_t         _EleSmear_Up;
-        Float_t         _EleSmear_Do;
+      //  Float_t         _EleSmear;
+      //  Float_t         _EleSmear_Up;
+       // Float_t         _EleSmear_Do;
 	Float_t         _q2weight_Up;
 	Float_t         _q2weight_Do;
+	Float_t         _q2weight_nominal;
 	Float_t         _pdfuncer;
 	
 	Float_t          _pdfweight_Up;
@@ -376,19 +377,12 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("eleEffWeight"               , &_eleEffWeight                );
 	outputTree->Branch("eleEffWeight_Up"            , &_eleEffWeight_Up             );
 	outputTree->Branch("eleEffWeight_Do"            , &_eleEffWeight_Do             );
-	outputTree->Branch("PhoScale"                   , &_PhoScale                    );
-        outputTree->Branch("PhoSmear"                   , &_PhoSmear                    );
-        outputTree->Branch("PhoScale_Up"                , &_PhoScale_Up                    );
-        outputTree->Branch("PhoSmear_Up"                , &_PhoSmear_Up                    );
-	outputTree->Branch("PhoScale_Do"                , &_PhoScale_Do                    );
-        outputTree->Branch("PhoSmear_Do"                , &_PhoSmear_Do                    );
-        outputTree->Branch("EleScale_Up"                , &_EleScale_Up                    );
-        outputTree->Branch("EleSmear_Up"                , &_EleSmear_Up                    );
-        outputTree->Branch("EleScale_Do"                , &_EleScale_Do                    );
-        outputTree->Branch("EleSmear_Do"                , &_EleSmear_Do                    );
-        outputTree->Branch("EleScale"                  , &_EleScale                    );
-        outputTree->Branch("EleSmear"                   , &_EleSmear                    );
-
+        outputTree->Branch("q2weight_Up"               , &_q2weight_Up               );
+	outputTree->Branch("q2weight_Do"               , &_q2weight_Do               );
+	outputTree->Branch("q2weight_nominal"          , &_q2weight_nominal          );
+	outputTree->Branch("pdfuncer"                  , &_pdfuncer                 );
+	outputTree->Branch("pdfweight_Up"              , &_pdfweight_Up             );
+	outputTree->Branch("pdfweight_Do"              , &_pdfweight_Do             );
 	outputTree->Branch("evtWeight"                  , &_evtWeight                   );      
 	outputTree->Branch("nVtx"                       , &_nVtx                        ); 
 	outputTree->Branch("nGoodVtx"                   , &_nGoodVtx                    ); 
