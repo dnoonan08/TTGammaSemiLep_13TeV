@@ -2,6 +2,7 @@
 makeAnalysisNtuple
 makeSkim
 makeCutflows
+checkOverlap
 *.root
 *.pdf
 *.pyc
