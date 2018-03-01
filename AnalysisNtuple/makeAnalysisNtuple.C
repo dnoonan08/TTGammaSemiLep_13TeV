@@ -199,8 +199,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	std::cout << "isMC: " << isMC << endl;
 
 	JECvariation* jecvar;
-	if (isMC) {
-		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, "Total");//SubTotalAbsolute");
+	if (isMC && jecvar012_g!=1) {
+		//		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, "Total");//SubTotalAbsolute");
+		cout << "Applying JEC uncertainty variations : " << JECsystLevel << endl;
+		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);//SubTotalAbsolute");
 	}
 
 	_lumiWeight = getEvtWeight(sampleType);
@@ -268,7 +270,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		// //		Apply systematics shifts where needed
 		if( isMC ){
 			if (jecvar012_g != 1){
+				//				double before = tree->jetPt_->at(0);
 				jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
+				// double after = tree->jetPt_->at(0);
+				// cout << before << " " << after << endl;
 			}
 		}
 
