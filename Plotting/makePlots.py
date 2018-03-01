@@ -204,6 +204,8 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_noCut_ChIso_NonPromptPhoton": ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "NonPrompt Photon"],
 	      "phosel_noCut_NeuIso"            : ["Neutral Hadron Iso (GeV)"   , "Events/0.5", 1, [-1,-1], regionText, YesLog, " "],
 	      "phosel_noCut_PhoIso"            : ["Photon Iso (GeV)"           , "Events/0.5", 1, [-1,-1], regionText, YesLog, " "],
+	      "phosel_noCut_NeuIso"            : ["Neutral Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, YesLog, " "],
+	      "phosel_noCut_PhoIso"            : ["Photon Iso (GeV)"           , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.,22.,24.,26.,28.,30.,32.,34.,36.,38.,40.], [-1,-1], regionText, YesLog, " "],
 	      "phosel_AntiSIEIE_ChIso"         : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, " "],
 	      "phosel_AntiSIEIE_ChIso_barrel"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, " "],
 	      "phosel_AntiSIEIE_ChIso_endcap"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, " "],
@@ -267,7 +269,10 @@ ROOT.gROOT.ForceStyle()
 
 
 if useQCDMC:
-	sampleList[-2] = "QCDMu"
+	if channel=="mu":
+		sampleList[-2] = "QCDMu"
+	if channel=="ele":
+		sampleList[-2] = "QCDEle"
 	stackList = sampleList[:-1]
 elif noQCD:
 	stackList = sampleList[:-3]
@@ -375,10 +380,10 @@ legend.AddEntry(dataHist, "Data", 'pe')
 legendR.AddEntry(dataHist, "Data", 'pe')
 
 for sample in legList:
-#    print sample, _file[sample]
+    # print sample, _file[sample]
     # print "%s/%s_%s"%(sample,histName,sample)
     hist = _file[sample].Get("%s_%s"%(histName,sample))
-#    print hist, "%s_%s"%(histName,sample)
+    # print hist, "%s_%s"%(histName,sample)
     hist.SetFillColor(samples[sample][1])
     hist.SetLineColor(samples[sample][1])
     legend.AddEntry(hist,samples[sample][2],'f')
@@ -665,6 +670,17 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 
 	maxRatio = ratio.GetMaximum()
 	minRatio = ratio.GetMinimum()
+
+
+	maxRatio = 1.2
+	minRatio = 0.8
+	for i_bin in range(1,ratio.GetNbinsX()):
+		if ratio.GetBinError(i_bin)<1:
+			if ratio.GetBinContent(i_bin)>maxRatio:
+				maxRatio = ratio.GetBinContent(i_bin)
+			if ratio.GetBinContent(i_bin)<minRatio:
+				minRatio = ratio.GetBinContent(i_bin)
+
 	if maxRatio > 1.8:
 		ratio.GetYaxis().SetRangeUser(0,round(0.5+maxRatio))
 	elif maxRatio < 1:

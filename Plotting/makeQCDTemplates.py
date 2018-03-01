@@ -50,7 +50,7 @@ stackList = sampleList[:-3]
 
 _file = {}
 for sample in stackList:
-	print sample, "%s/%s.root"%(_fileDir,sample)
+#	print sample, "%s/%s.root"%(_fileDir,sample)
 	_file[sample] = TFile("%s/%s.root"%(_fileDir,sample),"read")
 
 if finalState=='Ele':
@@ -62,31 +62,32 @@ if finalState=='Mu':
 
 
 gROOT.SetBatch(True)
-_file["Data%s"%finalState].cd("Data%s"%finalState)
-
-keylist = gDirectory.GetListOfKeys()
+# _file["Data%s"%finalState].cd("Data%s"%finalState)
+# keylist = gDirectory.GetListOfKeys()
+keylist = _file["Data%s"%finalState].GetListOfKeys()
+#cd("Data%s"%finalState)
 	
 
 
 histoList = {}
-print stackList
+#print stackList
 for key in keylist:
     
     name = key.GetName()
     split = name.split('_')
     nameKey = split[0]
-    print split, nameKey, split[1:-1]
+#    print split, nameKey, split[1:-1]
 
     for n in split[1:-1]: nameKey += "_%s"%n
 
     hName = "%s_QCD_DD"%(nameKey)
-    print hName
+#    print hName
    # histoList[nameKey] = key.ReadObj().Clone(hName)
     histoList[nameKey]= _file["Data%s"%finalState].Get("%s_%s"%(nameKey,"Data%s"%finalState))
     histoList[nameKey].SetNameTitle(hName,hName)
 
     for sample in stackList:
-	print "%s_%s"%(nameKey,sample)
+#	print "%s_%s"%(nameKey,sample)
         tempHist = _file[sample].Get("%s_%s"%(nameKey,sample))
         histoList[nameKey].Add(tempHist,-1)
 
