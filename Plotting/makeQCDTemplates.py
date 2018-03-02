@@ -62,20 +62,21 @@ if finalState=='Mu':
 
 
 gROOT.SetBatch(True)
-_file["Data%s"%finalState].cd("Data%s"%finalState)
+#_file["Data%s"%finalState].cd("Data%s"%finalState)
 
-keylist = gDirectory.GetListOfKeys()
-	
-
+#keylist = gDirectory.GetListOfKeys()
+keylist = _file["Data%s"%finalState].GetListOfKeys()	
+print keylist
 
 histoList = {}
-print stackList
+#print stackList
 for key in keylist:
-    
+     
     name = key.GetName()
+    print name
     split = name.split('_')
     nameKey = split[0]
-    print split, nameKey, split[1:-1]
+#    print split, nameKey, split[1:-1]
 
     for n in split[1:-1]: nameKey += "_%s"%n
 
