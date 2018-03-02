@@ -23,17 +23,13 @@ HistDict_do={}
 _file_up={}
 _file_do={}
 
-systematics = ["JER","phosmear","phoscale","elesmear","elescale","Pileup","BTagSF","MuEff","EleEff","Q2","Pdf"]
+systematics = ["JER","phosmear","phoscale","elesmear","elescale","BTagSF","EleEff","Q2","Pdf","Pileup","MuEff"]
 
 for sys in systematics:
-      # HistDict_up[sys]={}
-      # HistDict_do[sys]={}
        _file_up[sys]={}
        _file_do[sys]={}
        for s in samples:
                if s =="DataMu":continue
-       #        HistDict_up[sys][s]={}
-        #       HistDict_do[sys][s]={}  
                _file_up[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/mu/hists%s_up/%s.root"%(sys,s))
                _file_do[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/mu/hists%s_down/%s.root"%(sys,s))
 
@@ -45,11 +41,14 @@ observables={"M3": ["M3",10],
 	     "M3_control":["M3_control",10]
            }
 
+print sorted(observables.keys())[:2]
+
+
 process_signal = {"TTGamma_Prompt":["TTGamma"],
 	   "TTGamma_NonPrompt":["TTGamma"],
            "TTbar_Prompt": ["TTbar"],
            "TTbar_NonPrompt": ["TTbar"],
-           "VGamma_Prompt":["ZGamma", "WGamma"],
+           "VGamma_Prompt":["ZGamma","WGamma"],
            "VGamma_NonPrompt":["ZGamma","WGamma"],
 	   "SingleTop_Prompt":["TGJets", "SingleTop"],
 	   "SingleTop_NonPrompt":["TGJets", "SingleTop"],
@@ -104,6 +103,8 @@ for obs in observables:
 		
 
 		for p in process_signal:
+			HistDict_up[obs][p]={}
+                        HistDict_do[obs][p]={}
 			
 		 	s = process_signal[p][0]
 			if "NonPrompt" in p:
@@ -112,7 +113,7 @@ for obs in observables:
 				 HistDict[obs][p].Add(_file[s].Get("phosel_%s_HadronicFake_%s"%(observables[obs][0],s)))
 				 
 				
-				for sys in systematics:
+				 for sys in systematics:
 					 HistDict_up[obs][p][sys] = _file_up[sys][s].Get("phosel_%s_HadronicPhoton_%s"%(observables[obs][0],s)).Clone("%s_%s"%(obs,p))
 					 HistDict_up[obs][p][sys].Add(_file_up[sys][s].Get("phosel_%s_HadronicFake_%s"%(observables[obs][0],s)))
 
@@ -124,6 +125,7 @@ for obs in observables:
 			 	HistDict[obs][p].Add(_file[s].Get("phosel_%s_MisIDEle_%s"%(observables[obs][0],s)))
 				
 				for sys in systematics:
+					print sys,observables[obs][0],s,p
 					HistDict_up[obs][p][sys] = _file_up[sys][s].Get("phosel_%s_GenuinePhoton_%s"%(observables[obs][0],s)).Clone("%s_%s"%(obs,p))
 					HistDict_up[obs][p][sys].Add(_file_up[sys][s].Get("phosel_%s_MisIDEle_%s"%(observables[obs][0],s)))
 
@@ -149,7 +151,7 @@ for obs in observables:
                                         HistDict[obs][p].Add(_file[s].Get("phosel_%s_HadronicFake_%s"%(observables[obs][0],s)))
 
 
-					 for sys in systematics:
+					for sys in systematics:
                                                 HistDict_up[obs][p][sys].Add(_file_up[sys][s].Get("phosel_%s_HadronicPhoton_%s"%(observables[obs][0],s)))
 						HistDict_up[obs][p][sys].Add(_file_up[sys][s].Get("phosel_%s_HadronicFake_%s"%(observables[obs][0],s)))
 
@@ -181,7 +183,8 @@ total = h1.Integral(-1,-1)
 print "total antisiesie data:", total
 NormFactor={}
 
-HistScaled={}
+
+
 for p in process_signal:
 	NormFactor[p]={}
 	if "_NonPrompt" in p:
@@ -190,14 +193,15 @@ for p in process_signal:
 		p1= p1.strip("_")
 		print p1
 		print "%s_DD"%p1
-		HistScaled["%s_DD"%p1]=_file["DataMu"].Get("phosel_AntiSIEIE_ChIso_barrel_DataMu").Clone("ChHad_NonPrompt")
-		HistScaled["%s_DD"%p1].Add(_file["DataMu"].Get("phosel_AntiSIEIE_ChIso_endcap_DataMu"))
-		print HistScaled["%s_DD"%p1].Integral(-1,-1)	
+		HistDict["ChHad"]["%s_DD"%p1]=_file["DataMu"].Get("phosel_AntiSIEIE_ChIso_barrel_DataMu").Clone("ChHad_NonPrompt")
+		HistDict["ChHad"]["%s_DD"%p1].Add(_file["DataMu"].Get("phosel_AntiSIEIE_ChIso_endcap_DataMu"))
 		NormFactor["%s_DD"%p1]=HistDict["ChHad"][p].Integral(-1,-1)
 		print "Scaling to:",NormFactor["%s_DD"%p1]
-		print "Original number:",HistScaled["%s_DD"%p1].Integral(-1,-1)
-		HistScaled["%s_DD"%p1].Scale(NormFactor["%s_DD"%p1]/total)
-		print "Final number:",HistScaled["%s_DD"%p1].Integral(-1,-1)
+		print "Original number:",HistDict["ChHad"]["%s_DD"%p1].Integral(-1,-1)
+		HistDict["ChHad"]["%s_DD"%p1].Scale(NormFactor["%s_DD"%p1]/total)
+		print "Final number:",HistDict["ChHad"]["%s_DD"%p1].Integral(-1,-1)
+
+
 
 
 
@@ -329,6 +333,7 @@ process_colors = {"TTGamma_Prompt":[kOrange,"TTGamma"],
            "Other_DD":[kBlue,"Other"],
         }
 process_= ["SingleTop_Prompt","SingleTop_DD","Other_Prompt","Other_DD","VGamma_Prompt","VGamma_DD","VJets_Prompt","VJets_DD","TTbar_Prompt","TTbar_DD","TTGamma_Prompt","TTGamma_DD"]
+
 observe_ =["ChHad"]
 gStyle.SetOptStat(0)
 gStyle.SetOptTitle(0)
@@ -340,19 +345,19 @@ SetOwnership(stack,True)
 h2 = _file["DataMu"].Get("phosel_noCut_ChIso_DataMu").Clone("ChHad_Iso")
 h2 = h2.Rebin(21,"",array('d',bins))
 print "data ChIso:", h2.Integral(-1,-1)
-print HistScaled
+#print HistDict[o]
 for o in observe_:
 	for p in process_:
 		if "DD" in p:
 			print p
-                        HistScaled[p].SetFillColor(process_colors[p][0])
-                        HistScaled[p].SetLineColor(process_colors[p][0])
-                        HistScaled[p]=HistScaled[p].Rebin(21,"",array('d',bins))
-                        stack.Add(HistScaled[p])
-			stack1.Add(HistScaled[p])
-                        legend.AddEntry(HistScaled[p],process_colors[p][1],'f')
-			legend1.AddEntry(HistScaled[p],process_colors[p][1],'f')
-                        legendR.AddEntry(HistScaled[p],process_colors[p][1],'f')
+                        HistDict[o][p].SetFillColor(process_colors[p][0])
+                        HistDict[o][p].SetLineColor(process_colors[p][0])
+                        HistDict[o][p]=HistDict[o][p].Rebin(21,"",array('d',bins))
+                        stack.Add(HistDict[o][p])
+			stack1.Add(HistDict[o][p])
+                        legend.AddEntry(HistDict[o][p],process_colors[p][1],'f')
+			legend1.AddEntry(HistDict[o][p],process_colors[p][1],'f')
+                        legendR.AddEntry(HistDict[o][p],process_colors[p][1],'f')
 
 		
 		else:
@@ -491,11 +496,123 @@ newFile = TFile("ChargeHadIso.root","recreate")
 process_DD = ["TTGamma_DD","TTbar_DD","VJets_DD","VGamma_DD","SingleTop_DD","Other_DD"]
 
 for p in process_signal:
-	
 	HistDict["ChHad"][p].Write("%s"%p)
 for p in process_DD:		
-		
-	HistScaled[p].Write("%s_DD"%p)
+	HistDict[o][p].Write("%s_DD"%p)
 h1.Write("AntiSIEIE_ChIso_DataMu")
 h2.Write("noCut_ChIso_DataMu")
 newFile.Close()
+
+
+def makePseudoData(HistDict,processList,variables,processScales = None):
+        print processList
+        if processScales==None :processScales = [1.]*len(processList)
+        if not len(processList)==len(processScales):
+                print "different length of process list and process scales, ignoring scales"
+                processScales = [1.]*len(processList)
+
+        for c in variables:
+                print c
+                HistDict[c]["data_obs"] = HistDict[c][processList[0]].Clone("%s_data_obs"%c)
+                HistDict[c]["data_obs"].Scale(processScales[0])
+                for p,scale in zip(processList[1:],processScales[1:]):
+			print c, p
+                        HistDict[c]["data_obs"].Add(HistDict[c][p],scale)
+                for b in range(1,HistDict[c]["data_obs"].GetNbinsX()+1):
+                        HistDict[c]["data_obs"].SetBinContent(b,int(random.Poisson(HistDict[c]["data_obs"].GetBinContent(b))))
+                        HistDict[c]["data_obs"].SetBinError(b,math.sqrt(HistDict[c]["data_obs"].GetBinContent(b)))
+        return HistDict
+
+
+
+
+process_templates = {"TTGamma_Prompt":["TTGamma"],
+           "TTGamma_DD":["TTGamma"],
+           "TTbar_Prompt": ["TTbar"],
+           "TTbar_DD": ["TTbar"],
+           "VGamma_Prompt":["ZGamma","WGamma"],
+           "VGamma_DD":["ZGamma","WGamma"],
+           "SingleTop_Prompt":["TGJets", "SingleTop"],
+           "SingleTop_DD":["TGJets", "SingleTop"],
+           "VJets_Prompt":["WJets", "ZJets"],
+           "VJets_DD":["WJets", "ZJets"],
+           "Other_Prompt":["TTV", "Diboson"],
+           "Other_DD":["TTV", "Diboson"],
+        }
+
+
+all_processtemplates = {"TTGamma_Prompt":["TTGamma"],
+           "TTGamma_DD":["TTGamma"],
+	   "TTGamma_NonPrompt":["TTGamma"],
+           "TTbar_Prompt": ["TTbar"],
+           "TTbar_DD": ["TTbar"],
+	   "TTbar_NonPrompt": ["TTbar"],
+           "VGamma_Prompt":["ZGamma","WGamma"],
+           "VGamma_DD":["ZGamma","WGamma"],
+	   "VGamma_NonPrompt":["ZGamma","WGamma"],
+           "SingleTop_Prompt":["TGJets", "SingleTop"],
+           "SingleTop_DD":["TGJets", "SingleTop"],
+	   "SingleTop_NonPrompt":["TGJets", "SingleTop"],
+           "VJets_Prompt":["WJets", "ZJets"],
+           "VJets_DD":["WJets", "ZJets"],
+	   "VJets_NonPrompt":["WJets", "ZJets"],
+           "Other_Prompt":["TTV", "Diboson"],
+           "Other_DD":["TTV", "Diboson"],
+	   "Other_NonPrompt":["TTV", "Diboson"],
+        }
+
+
+
+
+for c in HistDict:
+        if c=="M3_control":
+                HistDict = makePseudoData(HistDict,process_control.keys(),["M3_control"])
+        if c=="M3":
+		HistDict = makePseudoData(HistDict,process_signal.keys(),["M3"])
+	if c =="ChHad":
+                HistDict = makePseudoData(HistDict,process_templates.keys(),["ChHad"])
+
+
+outputFile = TFile("Combine_withDDTemplate.root","recreate")
+for obs in observables:
+        outputFile.mkdir("%s/%s"%(obs,"data_obs"))
+        outputFile.cd("%s/%s"%(obs,"data_obs"))
+        HistDict[obs]["data_obs"].Write("nominal")
+        outputFile.mkdir(obs)
+        if obs=="M3_control":
+                 for p in process_control.keys():
+                         outputFile.mkdir("%s/%s"%(obs,p))
+                         outputFile.cd("%s/%s"%(obs,p))
+                         HistDict[obs][p].Write("nominal")
+                         for sys in systematics:
+                                HistDict_up[obs][p][sys].Write("%sUp"%(sys))
+                                HistDict_do[obs][p][sys].Write("%sDown"%(sys))
+	elif obs=="ChHad":
+		for p in all_processtemplates.keys():
+                        outputFile.mkdir("%s/%s"%(obs,p))
+                        outputFile.cd("%s/%s"%(obs,p))
+                        
+                        HistDict[obs][p].Write("nominal")
+                
+                        for sys in systematics:
+                                if "_DD" in p :continue
+                                print sys,obs,p
+                                HistDict_up[obs][p][sys].Write("%sUp"%(sys))
+                                HistDict_do[obs][p][sys].Write("%sDown"%(sys))
+		
+        else:
+
+                for p in process_signal.keys():
+                        outputFile.mkdir("%s/%s"%(obs,p))
+                        outputFile.cd("%s/%s"%(obs,p))
+			
+			print obs,p
+                        HistDict[obs][p].Write("nominal")
+		
+                        for sys in systematics:
+                               
+				print sys,obs,p
+                                HistDict_up[obs][p][sys].Write("%sUp"%(sys))
+                                HistDict_do[obs][p][sys].Write("%sDown"%(sys))
+
+outputFile.Close()
