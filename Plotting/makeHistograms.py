@@ -33,6 +33,8 @@ parser.add_option("--morePlots","--MorePlots","--makeMorePlots", dest="makeMoreP
                      help="Make larger list of plots in histogramDict (mostly object kinematics)" )
 parser.add_option("--MegammaPlots","--megammaPlots", dest="makeEGammaPlots",action="store_true",default=False,
                      help="Make only plots for e-gamma mass fits" )
+parser.add_option("--quiet", "-q", dest="quiet",default=False,action="store_true",
+                     help="Quiet outputs" )
 
 (options, args) = parser.parse_args()
 
@@ -53,6 +55,8 @@ outputFileName = options.outputFileName
 makeAllPlots = options.makeAllPlots
 makeMorePlots = options.makeMorePlots
 makeEGammaPlots = options.makeEGammaPlots
+
+runQuiet = options.quiet
 
 nJets = 3
 nBJets = 1
@@ -429,7 +433,7 @@ if 'BTagSF' in sys.argv:
 weights = "%s*%s*%s*%s*%s*%s*%s"%(evtWeight,Pileup,MuEff,EleEff,Q2,Pdf,btagWeightCategory[nBJets])
 
 if isTightSelection:
-    print "Tight Select"
+    if not runQuiet: print "Tight Select"
     nJets = 4
     nBJets = 2
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]"
@@ -438,7 +442,7 @@ if isTightSelection:
     outputhistName = outputhistName + "_tight"
 
 if isLooseCR2g0Selection:
-    print "Loose Select"
+    if not runQuiet: print "Loose Select"
     nJets = 2
     nBJets = 0
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight"
@@ -447,7 +451,7 @@ if isLooseCR2g0Selection:
     outputhistName = outputhistName  +"_looseCR2g0"
 
 if isLooseCR2e0Selection:
-    print "Loose Control Region Select"
+    if not runQuiet: print "Loose Control Region Select"
     nJets = 2
     nBJets = 0
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]"
@@ -456,7 +460,7 @@ if isLooseCR2e0Selection:
     outputhistName = outputhistName + "_looseCR2e0"
 
 if isLooseCR2g1Selection:
-    print "Loose Control Region1 Select"
+    if not runQuiet: print "Loose Control Region1 Select"
     nJets = 2
     nBJets = 1
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(1-btagWeight[0])"
@@ -468,7 +472,7 @@ if isLooseCR2g1Selection:
 
 
 if isLooseCR3e0Selection:
-    print "Loose Control Region Select"
+    if not runQuiet: print "Loose Control Region Select"
     nJets = 3
     nBJets = 0
     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(btagWeight[0])"
@@ -488,23 +492,24 @@ plotList = options.plotList
 if plotList is None:
     if makeAllPlots:
         plotList = histogramInfo.keys()
-        print "Making full list of plots"
+        if not runQuiet: print "Making full list of plots"
     elif makeMorePlots:
         plotList = ["presel_Njet","presel_Nbjet","phosel_Njet","phosel_Nbjet","presel_jet1Pt","presel_jet2Pt","presel_jet3Pt","phosel_LeadingPhotonEt","phosel_LeadingPhotonEta","phosel_dRLeadingPhotonJet","phosel_dRLeadingPhotonLepton","presel_WtransMass","phosel_WtransMass","presel_MET","phosel_MET"]
-        print "Making subset of kinematic plots"
+        if not runQuiet: print "Making subset of kinematic plots"
     elif makeEGammaPlots:
         plotList = ["phosel_MassEGamma","phosel_MassEGammaMisIDEle","phosel_MassEGammaOthers"]
-        print "Making only plots for e-gamma fits"
+        if not runQuiet: print "Making only plots for e-gamma fits"
     else:
         plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
-        print "Making only plots for simultaneous fits"
+        if not runQuiet: print "Making only plots for simultaneous fits"
 
 plotList.sort()
-print '-----'
-print "Making the following plots:"
-for p in plotList: print "%s,"%p,
-print
-print '-----'
+if not runQuiet: print '-----'
+if not runQuiet: print "Making the following plots:"
+if not runQuiet: 
+    for p in plotList: print "%s,"%p,
+if not runQuiet: print
+if not runQuiet: print '-----'
 
 histogramsToMake = plotList
 
@@ -548,6 +553,7 @@ if not allHistsDefined:
 
 
 histograms=[]
+canvas = TCanvas()
 
 #sample = sys.argv[-1]
 
@@ -598,12 +604,12 @@ if sample =="QCD_DD":
         histNjet_2b.Add(histNjet_1b)
 #    transferFactor = histNjet_2b.Integral(nJets+1,-1)/histNjet_QCDcr.Integral(-1,-1)
     transferFactor = histNjet_2b.Integral(nJets+1,-1)/histNjet_QCDcr.Integral(nJets+1,-1)
-    print transferFactor
+    #print transferFactor
 
     for hist in histogramsToMake:
         h_Info = histogramInfo[hist]
         if not h_Info[5]: continue
-        print "filling", h_Info[1], sample
+        if not runQuiet: print "filling", h_Info[1], sample
 
         histograms.append(qcd_File.Get("%s_QCD_DD"%(h_Info[1])))
         histograms[-1].Scale(transferFactor)
@@ -619,9 +625,9 @@ if not "QCD_DD" in sample:
     for fileName in fileList:
         tree.Add("%s%s"%(analysisNtupleLocation,fileName))
 
-    print sample
+    #print sample
 
-    print "Number of events:", tree.GetEntries()
+    #print "Number of events:", tree.GetEntries()
     
     for hist in histogramsToMake:
         h_Info = histogramInfo[hist]
@@ -629,7 +635,7 @@ if not "QCD_DD" in sample:
         # skip some histograms which rely on MC truth and can't be done in data or QCD data driven templates
         if ('Data' in sample or isQCD) and not h_Info[5]: continue
 
-        print "filling", h_Info[1], sample
+        if not runQuiet: print "filling", h_Info[1], sample
         evtWeight = ""
         histograms.append(TH1F("%s_%s"%(h_Info[1],sample),"%s_%s"%(h_Info[1],sample),h_Info[2][0],h_Info[2][1],h_Info[2][2]))
         if h_Info[4]=="":

@@ -151,16 +151,16 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	if( systematicType=="JER_up")       {jervar012_g = 2; selector->JERsystLevel=2;}
 	if( systematicType=="JER_down")     {jervar012_g = 0; selector->JERsystLevel=0;}
 	if(systematicType=="phosmear_down") {phosmear012_g=0;selector->phosmearLevel=0;}
-        if(systematicType=="phosmear_up") {phosmear012_g=2;selector->phosmearLevel=2;}
-        if(systematicType=="elesmear_down") {elesmear012_g=0;selector->elesmearLevel=0;}
-        if(systematicType=="elesmear_up") {elesmear012_g=2;selector->elesmearLevel=2;}
-        if(systematicType=="phoscale_down") {phoscale012_g=0;selector->phoscaleLevel=0;}
-        if(systematicType=="phoscale_up") {phoscale012_g=2;selector->phoscaleLevel=2;}
-        if(systematicType=="elescale_down") {elescale012_g=0;selector->elescaleLevel=0;}
-        if(systematicType=="elescale_up") {elescale012_g=2;  selector->elescaleLevel=2;}
+	if(systematicType=="phosmear_up") {phosmear012_g=2;selector->phosmearLevel=2;}
+	if(systematicType=="elesmear_down") {elesmear012_g=0;selector->elesmearLevel=0;}
+	if(systematicType=="elesmear_up") {elesmear012_g=2;selector->elesmearLevel=2;}
+	if(systematicType=="phoscale_down") {phoscale012_g=0;selector->phoscaleLevel=0;}
+	if(systematicType=="phoscale_up") {phoscale012_g=2;selector->phoscaleLevel=2;}
+	if(systematicType=="elescale_down") {elescale012_g=0;selector->elescaleLevel=0;}
+	if(systematicType=="elescale_up") {elescale012_g=2;  selector->elescaleLevel=2;}
 
-	if( systematicType=="pho_up")       {phosmear012_g = 2;}
-	if( systematicType=="pho_down")     {phosmear012_g = 0;}
+	// if( systematicType=="pho_up")       {phosmear012_g = 2;}
+	// if( systematicType=="pho_down")     {phosmear012_g = 0;}
 	if( systematicType=="musmear_up")   {musmear012_g = 2;}
 	if( systematicType=="musmear_down") {musmear012_g = 0;}
 //	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
@@ -199,8 +199,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	std::cout << "isMC: " << isMC << endl;
 
 	JECvariation* jecvar;
-	if (isMC) {
-		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, "Total");//SubTotalAbsolute");
+	if (isMC && jecvar012_g!=1) {
+		//		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, "Total");//SubTotalAbsolute");
+		cout << "Applying JEC uncertainty variations : " << JECsystLevel << endl;
+		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);//SubTotalAbsolute");
 	}
 
 	_lumiWeight = getEvtWeight(sampleType);
@@ -268,7 +270,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		// //		Apply systematics shifts where needed
 		if( isMC ){
 			if (jecvar012_g != 1){
+				//				double before = tree->jetPt_->at(0);
 				jecvar->applyJEC(tree, jecvar012_g); // 0:down, 1:norm, 2:up
+				// double after = tree->jetPt_->at(0);
+				// cout << before << " " << after << endl;
 			}
 		}
 
@@ -853,41 +858,34 @@ void makeAnalysisNtuple::FillEvent()
 
 	
 	if (!tree->isData_){
-//		std::cout<< applyqsquare <<std::endl;
-//		std::cout<< applypdfweight <<std::endl;		
 		if (applyqsquare){
-//			std::cout<< "will do q2"<<std::endl;
+			
 			for (int i=0;i<9;i++){
 				if(i==5||i==7){continue;}
-			//	std::cout <<i <<std::endl;
-					if (getGenScaleWeights){
-			//		std::cout<<tree->genScaleSystWeights_->at(i)<<std::endl;
-						_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
-					}
-					else{
-						_genScaleSystWeights.push_back(1.);
-					    }
-					}
+				if (getGenScaleWeights){
+					_genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
+				}
+				else{
+					_genScaleSystWeights.push_back(1.);
+				}
+			}
 		 	_q2weight_Up = *max_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());		
 			_q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());
 			_q2weight_nominal = tree->genScaleSystWeights_->at(0);
 		}
 		if(applypdfweight){
-               // 	std::cout<< "will do pdfWeights"<<std::endl;        
-                        
-                        for (int i=9;i<109;i++){
-                        //	std::cout<< i << std::endl;
-			//	std::cout<<tree->pdfSystWeight_->at(i)<<std::endl;
-                        	_pdfSystWeight.push_back(tree->pdfSystWeight_->at(i));
-                        }
+			for (int i=9;i<109;i++){
+				_pdfSystWeight.push_back(tree->pdfSystWeight_->at(i));
+			}
 			float sum=0.;
 			for (int j=0;j<100;j++){
+
 			sum+=pow((_pdfSystWeight[j]),2.);
 			}
 			_pdfuncer = sqrt(sum/100);
 			_pdfweight_Up = (_pdfWeight + _pdfuncer)/_pdfWeight;
 			_pdfweight_Do = (_pdfWeight - _pdfuncer)/_pdfWeight;
-                   }
+		}
 
 			
 		for (int i_mc = 0; i_mc <_nMC; i_mc++){

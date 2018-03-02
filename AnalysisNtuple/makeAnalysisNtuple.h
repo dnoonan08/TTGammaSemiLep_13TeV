@@ -66,29 +66,16 @@ private :
 	Float_t         _PUweight_Up;
 	Float_t         _PUweight_Do;
 	
-//	Float_t 	_PhoScale;
-//	Float_t		_PhoScale_Up;
-//	Float_t         _PhoScale_Do;
-	
-//	Float_t         _EleScale;
-  //      Float_t         _EleScale_Up;
-   //     Float_t         _EleScale_Do;
-
-
-//	Float_t         _PhoSmear;
-  //      Float_t         _PhoSmear_Up;
-    //    Float_t         _PhoSmear_Do;
-
-      //  Float_t         _EleSmear;
-      //  Float_t         _EleSmear_Up;
-       // Float_t         _EleSmear_Do;
 	Float_t         _q2weight_Up;
 	Float_t         _q2weight_Do;
 	Float_t         _q2weight_nominal;
-	Float_t         _pdfuncer;
+	std::vector<float>   _genScaleSystWeights;
 	
+	Float_t          _pdfWeight;
+	Float_t          _pdfuncer;
 	Float_t          _pdfweight_Up;
 	Float_t	         _pdfweight_Do;
+	std::vector<float> _pdfSystWeight;
 
 
 	std::vector<float> _btagWeight;
@@ -129,8 +116,7 @@ private :
 	Float_t 	_DilepMass;
 	Float_t 	_DiphoMass;
 	Float_t         _DilepDelR;
-        Float_t         _pdfWeight;
-        std::vector<float> _pdfSystWeight;
+
 	Int_t           _nPho;
 	std::vector<float>   _phoEt;
 	std::vector<float>   _phoEta;
@@ -143,16 +129,6 @@ private :
 	std::vector<float>   _phoPFChIso;
 	std::vector<float>   _phoPFPhoIso;
 	std::vector<float>   _phoPFNeuIso;
-        std::vector<float>  _phoScale_stat_up;
-        std::vector<float>  _phoScale_stat_dn;
-        std::vector<float>  _phoScale_syst_up;
-        std::vector<float>  _phoScale_syst_dn;
-        std::vector<float>  _phoScale_gain_up;
-        std::vector<float>  _phoScale_gain_dn;
-        std::vector<float>  _phoResol_rho_up;
-        std::vector<float>  _phoResol_rho_dn;
-        std::vector<float>  _phoResol_phi_up;
-        std::vector<float>  _phoResol_phi_dn;
 	std::vector<std::vector<float>>   _phoPFRandConeChIso;
 	std::vector<std::vector<float>>   _phoPFRandConeEta;
 	std::vector<std::vector<float>>   _phoPFRandConePhi;
@@ -244,16 +220,6 @@ private :
 	std::vector<float>   _elePhi;
 	std::vector<float>   _eleSCEta;
 	std::vector<float>   _elePFRelIso;
-        std::vector<float>  _eleScale_stat_up;
-        std::vector<float>  _eleScale_stat_dn;
-        std::vector<float>  _eleScale_syst_up;
-        std::vector<float>  _eleScale_syst_dn;
-        std::vector<float>  _eleScale_gain_up;
-        std::vector<float>  _eleScale_gain_dn;
-        std::vector<float>  _eleResol_rho_up;
-        std::vector<float>  _eleResol_rho_dn;
-        std::vector<float>  _eleResol_phi_up;
-        std::vector<float>  _eleResol_phi_dn;	
 	Int_t           _nMu;
 	Int_t           _nMuLoose;
 	std::vector<float>   _muPt;
@@ -292,7 +258,7 @@ private :
 	std::vector<int>     _mcMomPID;
 	std::vector<int>     _mcGMomPID;
 	std::vector<int>     _mcParentage;
-	std::vector<float>   _genScaleSystWeights;
+
 	double               _M3;
 	double               _HT;
 	
@@ -359,9 +325,7 @@ void makeAnalysisNtuple::InitBranches(){
 
 	outputTree->Branch("run"                        , &_run                         );
 	outputTree->Branch("event"                      , &_event                       );
-        outputTree->Branch("pdfWeight"              , &_pdfSystWeight               );
 
-	outputTree->Branch("pdfSystWeight"              , &_pdfSystWeight               );
 	outputTree->Branch("lumis"                      , &_lumis                       );
 	outputTree->Branch("isData"                     , &_isData                      ); 
 	outputTree->Branch("PUweight"                   , &_PUweight                    );
@@ -377,19 +341,24 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("eleEffWeight"               , &_eleEffWeight                );
 	outputTree->Branch("eleEffWeight_Up"            , &_eleEffWeight_Up             );
 	outputTree->Branch("eleEffWeight_Do"            , &_eleEffWeight_Do             );
-        outputTree->Branch("q2weight_Up"               , &_q2weight_Up               );
+
+	outputTree->Branch("q2weight_Up"               , &_q2weight_Up               );
 	outputTree->Branch("q2weight_Do"               , &_q2weight_Do               );
 	outputTree->Branch("q2weight_nominal"          , &_q2weight_nominal          );
+	outputTree->Branch("genScaleSystWeights"       , &_genScaleSystWeights         );
+
+	outputTree->Branch("pdfWeight"                 , &_pdfWeight                );
 	outputTree->Branch("pdfuncer"                  , &_pdfuncer                 );
 	outputTree->Branch("pdfweight_Up"              , &_pdfweight_Up             );
 	outputTree->Branch("pdfweight_Do"              , &_pdfweight_Do             );
+	outputTree->Branch("pdfSystWeight"             , &_pdfSystWeight               );
+
 	outputTree->Branch("evtWeight"                  , &_evtWeight                   );      
 	outputTree->Branch("nVtx"                       , &_nVtx                        ); 
 	outputTree->Branch("nGoodVtx"                   , &_nGoodVtx                    ); 
 	outputTree->Branch("isPVGood"                   , &_isPVGood                    ); 
 	outputTree->Branch("rho"                        , &_rho                         ); 
 	outputTree->Branch("genMET"                     , &_genMET                      ); 
-	outputTree->Branch("genScaleSystWeights"        , &_genScaleSystWeights         );
 	outputTree->Branch("pfMET"                      , &_pfMET                       );
 	outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
 	outputTree->Branch("WtransMass"                 , &_WtransMass                  );
@@ -429,16 +398,6 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoMassEGamma"                 , &_phoMassEGamma                  ); 
 	outputTree->Branch("phoMassLepGamma"                 , &_phoMassLepGamma                  ); 
 
-        outputTree->Branch("phoScale_stat_up"            , &_phoScale_stat_up                     );
-        outputTree->Branch("phoScale_stat_dn"            , &_phoScale_stat_dn                     );
-        outputTree->Branch("phoScale_syst_up"            , &_phoScale_syst_up                   );
-        outputTree->Branch("phoScale_syst_dn"            , &_phoScale_syst_dn                );
-        outputTree->Branch("phoScale_gain_up"            , &_phoScale_gain_up                   );
-        outputTree->Branch("phoScale_gain_dn"            , &_phoScale_gain_dn                );
-        outputTree->Branch("phoResol_rho_up"            , &_phoResol_rho_up                   );
-        outputTree->Branch("phoResol_rho_dn"            , &_phoResol_rho_dn                );
-        outputTree->Branch("phoResol_phi_up"            , &_phoResol_phi_up                   );
-        outputTree->Branch("phoResol_phi_dn"            , &_phoResol_phi_dn                );
 	outputTree->Branch("nLoosePho"                       , &_nLoosePho                        ); 
 	outputTree->Branch("loosePhoEt"                      , &_loosePhoEt                       );
 	outputTree->Branch("loosePhoEta"                     , &_loosePhoEta                      ); 
@@ -485,16 +444,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("elePhi"                      , &_elePhi                     ); 
 	outputTree->Branch("eleSCEta"                    , &_eleSCEta                   ); 
 	outputTree->Branch("elePFRelIso"                 , &_elePFRelIso                ); 
-        outputTree->Branch("eleScale_stat_up"            , &_eleScale_stat_up                     );
-        outputTree->Branch("eleScale_stat_dn"            , &_eleScale_stat_dn                     );
-        outputTree->Branch("eleScale_syst_up"            , &_eleScale_syst_up                   );
-        outputTree->Branch("eleScale_syst_dn"            , &_eleScale_syst_dn                );
-	outputTree->Branch("eleScale_gain_up"            , &_eleScale_gain_up                   );
-        outputTree->Branch("eleScale_gain_dn"            , &_eleScale_gain_dn                );
-        outputTree->Branch("eleResol_rho_up"            , &_eleResol_rho_up                   );
-        outputTree->Branch("eleResol_rho_dn"            , &_eleResol_rho_dn                );
-        outputTree->Branch("eleResol_phi_up"            , &_eleResol_phi_up                   );
-        outputTree->Branch("eleResol_phi_dn"            , &_eleResol_phi_dn                );
+
 	outputTree->Branch("nMu"                         , &_nMu                        ); 
 	outputTree->Branch("muPt"                        , &_muPt                       ); 
 	outputTree->Branch("muEta"                       , &_muEta                      );
@@ -578,7 +528,7 @@ void makeAnalysisNtuple::InitVariables()
 	_isPVGood	     = false;
 	_rho		     = -9999;
 	_genMET		     = -9999;
-	//_genScaleSystWeights = -9999;
+
 	_pfMET		     = -9999;
 	_pfMETPhi	     = -9999;
 	_WtransMass      = -9999;
@@ -606,6 +556,14 @@ void makeAnalysisNtuple::InitVariables()
 	_passAll_Ele     = false;
 	_passAll_Mu      = false;
 
+	_pdfWeight    = 1.;
+	_pdfweight_Up = 1.;
+	_pdfweight_Do = 1.;
+	_pdfuncer = 0.;
+
+	_q2weight_nominal = 1.;
+	_q2weight_Up = 1.;
+	_q2weight_Do = 1.;
 
 	_btagWeight.clear();
 	_btagWeight_Up.clear();
@@ -725,6 +683,8 @@ void makeAnalysisNtuple::InitVariables()
 	_AnglePhotonLepton.clear();
 	
 	_genScaleSystWeights.clear();
+	_pdfSystWeight.clear();
+
 	_mcPt.clear();
 	_mcPhi.clear();
 	_mcEta.clear();

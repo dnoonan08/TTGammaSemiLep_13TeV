@@ -41,6 +41,8 @@ void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
 	TLorentzVector tMET;
 	tMET.SetPtEtaPhiM(tree->pfMET_,0.0,tree->pfMETPhi_,0.0);
 
+	//	double before = tree->jetPt_->at(0);
+
 	for(int jetInd = 0; jetInd < tree->nJet_ ; ++jetInd){
 		if(tree->jetPt_->at(jetInd) < 30) continue;
 		JetCorrector->setJetEta(tree->jetEta_->at(jetInd));
@@ -49,7 +51,8 @@ void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
 		JetCorrector->setRho(tree->rho_);
 		
 		double correction = JetCorrector->getCorrection();
-		//std::cout << tree->jetPt_->at(jetInd) << "  " << tree->jetRawPt_->at(jetInd) << "  " << tree->jetPt_->at(jetInd)/tree->jetRawPt_->at(jetInd) << "  " << correction << std::endl;
+		// std::cout << scaleDownNormUp012 << std::endl;
+		// std::cout << tree->jetPt_->at(jetInd) << "  " << tree->jetRawPt_->at(jetInd) << "  " << tree->jetPt_->at(jetInd)/tree->jetRawPt_->at(jetInd) << "  " << correction << std::endl;
 		// assume jets are corrected, no need to change unless we want Up Down variation
 		//tree->jetPt_->at(jetInd) = tree->jetRawPt_->at(jetInd) * correction;
 		//tree->jetEn_->at(jetInd) = tree->jetRawEn_->at(jetInd) * correction;
@@ -78,5 +81,7 @@ void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
 	tree->pfMET_ = tMET.Pt();
 	tree->pfMETPhi_ = tMET.Phi();
 
+	// double after = tree->jetPt_->at(0);
+	// std::cout << before << " " << after << std::endl;
 }
 

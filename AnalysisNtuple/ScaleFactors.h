@@ -79,6 +79,24 @@ double totalGJets_HT200to400 = 9930766.;
 double totalGJets_HT400to600 = 2529663.;
 double totalGJets_HT600toInf = 2463751.;
 
+//// systematics samples
+double totalTTGamma_dilept_fsrDown      = 3983729.;
+double totalTTGamma_dilept_fsrUp        = 3926890.;
+double totalTTGamma_dilept_isrDown      = 3886639.;
+double totalTTGamma_dilept_isrUp        = 3940857.;
+
+double totalTTGamma_semilept_T_fsrDown  = 4813819.;
+double totalTTGamma_semilept_T_fsrUp    = 4985392.;
+double totalTTGamma_semilept_T_isrDown  = 4966800.;
+double totalTTGamma_semilept_T_isrUp    = 4922478.;
+
+double totalTTGamma_semilept_Tbar_fsrDown = 4770115.;
+double totalTTGamma_semilept_Tbar_fsrUp   = 4802977.;
+double totalTTGamma_semilept_Tbar_isrDown = 4952386.;
+double totalTTGamma_semilept_Tbar_isrUp   = 4838684.;
+
+
+
 
 //////////////////////////
 // Cross Sections Used  //
@@ -222,6 +240,23 @@ double GJets_HT200to400_SF = GJets_HT200to400_xs * luminosity / totalGJets_HT200
 double GJets_HT400to600_SF = GJets_HT400to600_xs * luminosity / totalGJets_HT400to600 ;
 double GJets_HT600toInf_SF = GJets_HT600toInf_xs * luminosity / totalGJets_HT600toInf ;
 
+double TTGamma_dilept_fsrDown_SF   = TTGamma_dilept_xs * luminosity / totalTTGamma_dilept_fsrDown;
+double TTGamma_dilept_fsrUp_SF     = TTGamma_dilept_xs * luminosity / totalTTGamma_dilept_fsrUp;
+double TTGamma_dilept_isrDown_SF   = TTGamma_dilept_xs * luminosity / totalTTGamma_dilept_isrDown;
+double TTGamma_dilept_isrUp_SF     = TTGamma_dilept_xs * luminosity / totalTTGamma_dilept_isrUp;
+
+double TTGamma_semilept_T_fsrDown_SF = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_T_fsrDown;
+double TTGamma_semilept_T_fsrUp_SF   = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_T_fsrUp;
+double TTGamma_semilept_T_isrDown_SF = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_T_isrDown;
+double TTGamma_semilept_T_isrUp_SF   = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_T_isrUp;
+
+double TTGamma_semilept_Tbar_fsrDown_SF = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_Tbar_fsrDown;
+double TTGamma_semilept_Tbar_fsrUp_SF   = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_Tbar_fsrUp;
+double TTGamma_semilept_Tbar_isrDown_SF = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_Tbar_isrDown;
+double TTGamma_semilept_Tbar_isrUp_SF   = TTGamma_semilept_xs * luminosity / totalTTGamma_semilept_Tbar_isrUp;
+
+
+
 double getEvtWeight(string sampleType){
 	double evtWeight = -1.;
 	if( sampleType.substr(0,4)=="Data") {evtWeight = 1.;}
@@ -281,6 +316,19 @@ double getEvtWeight(string sampleType){
 	else if( sampleType=="GJets_HT-200To400") {evtWeight = GJets_HT200to400_SF;}
 	else if( sampleType=="GJets_HT-400To600") {evtWeight = GJets_HT400to600_SF;}
 	else if( sampleType=="GJets_HT-600ToInf") {evtWeight = GJets_HT600toInf_SF;}
+
+	else if( sampleType=="TTGamma_Dilepton_fsrDown") {evtWeight = TTGamma_dilept_fsrDown_SF;}
+	else if( sampleType=="TTGamma_Dilepton_fsrUp")   {evtWeight = TTGamma_dilept_fsrUp_SF;}
+	else if( sampleType=="TTGamma_Dilepton_isrDown") {evtWeight = TTGamma_dilept_isrDown_SF;}
+	else if( sampleType=="TTGamma_Dilepton_isrUp")   {evtWeight = TTGamma_dilept_isrUp_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromT_fsrDown") {evtWeight = TTGamma_semilept_T_fsrDown_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromT_fsrUp")   {evtWeight = TTGamma_semilept_T_fsrUp_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromT_isrDown") {evtWeight = TTGamma_semilept_T_isrDown_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromT_isrUp")   {evtWeight = TTGamma_semilept_T_isrUp_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromTbar_fsrDown") {evtWeight = TTGamma_semilept_Tbar_fsrDown_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromTbar_fsrUp")   {evtWeight = TTGamma_semilept_Tbar_fsrUp_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromTbar_isrDown") {evtWeight = TTGamma_semilept_Tbar_isrDown_SF;}
+	else if( sampleType=="TTGamma_SingleLeptFromTbar_isrUp")   {evtWeight = TTGamma_semilept_Tbar_isrUp_SF;}
 	else {
 		cout << "-------------------------------------------------" << endl;
 		cout << "-------------------------------------------------" << endl;
@@ -375,6 +423,18 @@ const std::string allowedSampleTypes[99] = {"Data",
 											"GJets_HT-600ToInf",
 											"TGJets",
 											"TTGJets",
+											"TTGamma_SingleLeptFromTbar_isrUp",
+											"TTGamma_SingleLeptFromT_isrUp",
+											"TTGamma_Dilepton_isrUp",
+											"TTGamma_SingleLeptFromTbar_isrDown",
+											"TTGamma_SingleLeptFromT_isrDown",
+											"TTGamma_Dilepton_isrDown",
+											"TTGamma_SingleLeptFromTbar_fsrUp",
+											"TTGamma_SingleLeptFromT_fsrUp",
+											"TTGamma_Dilepton_fsrUp",
+											"TTGamma_SingleLeptFromTbar_fsrDown",
+											"TTGamma_SingleLeptFromT_fsrDown",
+											"TTGamma_Dilepton_fsrDown",
 											"Test",
                                                                                         };
 

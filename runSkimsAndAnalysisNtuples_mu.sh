@@ -52,7 +52,7 @@ inputfiles=($DannyEOS"TTGamma_SingleLeptFromTbar_TuneCUETP8M2T4_13TeV-amcatnlo-p
 $DannyEOS"TTGamma_SingleLeptFromT_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_Dilept_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
 $DannyEOS"TTGamma_Hadronic_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8.root" \
-$GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_1of4.root "$GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_2of4.root "$GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_3of4.root "$GGNtupleGroupEOSMC"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_4of4.root" \
+$DannyEOS"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_newGenParticleList_1.root "$DannyEOS"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_newGenParticleList_2.root "$DannyEOS"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_newGenParticleList_3.root "$DannyEOS"TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_newGenParticleList_4.root" \
 $LPCtop"TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $LPCtop"TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $LPCtop"TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
@@ -60,10 +60,10 @@ $DannyEOS"TGJets_TuneCUETP8M1_13TeV_amcatnlo_madspin_pythia8.root" \
 $LPCtop"TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8-ext1.root" \
 $LPCtop"TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
 $LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_1of6.root "$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_2of6.root "$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_3of6.root "$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_4of6.root "$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_5of6.root "$LPCtop"WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_temp_6of6.root" \
-$GGNtupleGroupEOSMC"W1JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
-$GGNtupleGroupEOSMC"W2JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
-$GGNtupleGroupEOSMC"W3JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
-$GGNtupleGroupEOSMC"W4JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root" \
+$DannyEOS"W1JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_newGenParticleList.root" \
+$DannyEOS"W2JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_newGenParticleList.root" \
+$DannyEOS"W3JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_newGenParticleList.root" \
+$DannyEOS"W4JetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_newGenParticleList.root" \
 $GGNtupleGroupEOSMC"DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_1.root "$GGNtupleGroupEOSMC"DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_2.root" \
 $TitasEOS"DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_2_1of2.root "$TitasEOS"DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_2_1of2.root"
 $TitasEOS"ST_s-channel_4f_InclusiveDecays_13TeV-amcatnlo-pythia8.root" \

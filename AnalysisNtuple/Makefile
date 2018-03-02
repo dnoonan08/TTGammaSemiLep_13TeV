@@ -1,12 +1,15 @@
 .PHONY: JEC
 
-all: JEC Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple makeCutflows
+all: JEC Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple makeCutflows checkOverlap
 
 makeSkim: Selector.o EventPick.o EventTree.o  makeSkim.cpp OverlapRemove.cpp
 	g++ -o makeSkim `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o EventPick.o Selector.o  OverlapRemove.cpp makeSkim.cpp 
 
 makeCutflows: Selector.o EventPick.o EventTree.o  makeCutflows.cpp OverlapRemove.cpp BTagCalibrationStandalone.o PUReweight.cpp PUReweight.h ScaleFactors.h
 	g++ -o makeCutflows `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o EventPick.o Selector.o  OverlapRemove.cpp makeCutflows.cpp BTagCalibrationStandalone.o PUReweight.cpp
+
+checkOverlap: EventTree.o  checkOverlap.cpp OverlapRemove.cpp Selector.o
+	g++ -o checkOverlap `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o Selector.o OverlapRemove.cpp checkOverlap.cpp 
 
 EventTree.o: EventTree.cpp EventTree.h
 	g++ -c -I`root-config --incdir` -std=c++11 EventTree.cpp
