@@ -882,7 +882,7 @@ void makeAnalysisNtuple::FillEvent()
                         }
 			float sum=0.;
 			for (int j=0;j<100;j++){
-			sum+=_pdfSystWeight[j];
+			sum+=pow((_pdfSystWeight[j]),2.);
 			}
 			_pdfuncer = sqrt(sum/100);
 			_pdfweight_Up = (_pdfWeight + _pdfuncer)/_pdfWeight;
