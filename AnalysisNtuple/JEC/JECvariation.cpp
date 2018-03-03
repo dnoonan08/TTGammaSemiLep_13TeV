@@ -44,7 +44,8 @@ void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
 	//	double before = tree->jetPt_->at(0);
 
 	for(int jetInd = 0; jetInd < tree->nJet_ ; ++jetInd){
-		if(tree->jetPt_->at(jetInd) < 30) continue;
+		if(tree->jetPt_->at(jetInd) < 10) continue;
+		if(fabs(tree->jetEta_->at(jetInd)) > 5.2) continue;
 		JetCorrector->setJetEta(tree->jetEta_->at(jetInd));
 		JetCorrector->setJetPt(tree->jetRawPt_->at(jetInd));
 		JetCorrector->setJetA(tree->jetArea_->at(jetInd));
@@ -65,6 +66,8 @@ void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
 		
 		jecUnc->setJetEta(tree->jetEta_->at(jetInd));
 		jecUnc->setJetPt(tree->jetPt_->at(jetInd)); // here you must use the CORRECTED jet pt
+
+		//		std::cout << jetInd << "  " << tree->jetPt_->at(jetInd) << "  " << tree->jetEta_->at(jetInd) << std::endl;
 		double unc = jecUnc->getUncertainty(true);
 		//std::cout << "unc " << unc << std::endl;
 		if(scaleDownNormUp012==0) correction-=unc;
