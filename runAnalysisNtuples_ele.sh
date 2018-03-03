@@ -41,34 +41,48 @@ if [ "$jobType" == "Dilep" ] ;	then
 fi
 
 systematic=false
-if [ "$jobType" == "JEC" ] ;	then
-	channel="mu"
-	channelDir="muons"
-	tupleExtraName1="JEC"
+JEC=false
+if [[ "$jobType" == "JEC"* ]] ;	then
+	channel="ele"
+	channelDir="electrons"
+	tupleExtraName1="$jobType"
 	systematic=true
+	JEC=true
 fi
 if [ "$jobType" == "JER" ] ;	then
-	channel="mu"
-	channelDir="muons"
+	channel="ele"
+	channelDir="electrons"
 	tupleExtraName1="JER"
 	systematic=true
 fi
-if [ "$jobType" == "pho" ] ;	then
-	channel="mu"
-	channelDir="muons"
-	tupleExtraName1="pho"
+if [ "$jobType" == "phosmear" ] ;	then
+	channel="ele"
+	channelDir="electrons"
+	tupleExtraName1="phosmear"
+	systematic=true
+fi
+if [ "$jobType" == "phoscale" ] ;	then
+	channel="ele"
+	channelDir="electrons"
+	tupleExtraName1="phoscale"
 	systematic=true
 fi
 if [ "$jobType" == "elesmear" ] ;	then
-	channel="mu"
-	channelDir="muons"
-	tupleExtraName1="pho"
+	channel="ele"
+	channelDir="electrons"
+	tupleExtraName1="elesmear"
+	systematic=true
+fi
+if [ "$jobType" == "elescale" ] ;	then
+	channel="ele"
+	channelDir="electrons"
+	tupleExtraName1="elescale"
 	systematic=true
 fi
 if [ "$jobType" == "musmear" ] ;	then
-	channel="mu"
-	channelDir="muons"
-	tupleExtraName1="pho"
+	channel="ele"
+	channelDir="electrons"
+	tupleExtraName1="musmear"
 	systematic=true
 fi
 
@@ -143,15 +157,67 @@ if [ "$systematic" = false ] ; then
 fi
 
 if [ "$systematic" = true ] ; then
-	echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_up . ${inputdir}${sampleType[job]}_skim.root"
-	AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_up . ${inputdir}${sampleType[job]}_skim.root
+	if [ "$JEC" = false ] ; then
+		echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_up . ${inputdir}${sampleType[job]}_skim.root"
+		AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_up . ${inputdir}${sampleType[job]}_skim.root
+		
+		echo "xrdcp -f ${tupleExtraName1}_up_${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
+		xrdcp -f ${tupleExtraName1}_up_${sampleType[job]}_AnalysisNtuple.root ${outputdir}
 
-	echo "xrdcp -f ${tupleExtraName1}_up_${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
-	xrdcp -f ${tupleExtraName1}_up_${sampleType[job]}_AnalysisNtuple.root ${outputdir}
+		echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_down . ${inputdir}${sampleType[job]}_skim.root"
+		AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_down . ${inputdir}${sampleType[job]}_skim.root
+		
+		echo "xrdcp -f ${tupleExtraName1}_down_${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
+		xrdcp -f ${tupleExtraName1}_down_${sampleType[job]}_AnalysisNtuple.root ${outputdir}
 
-	echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_down . ${inputdir}${sampleType[job]}_skim.root"
-	AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_down . ${inputdir}${sampleType[job]}_skim.root
+	else
 
-	echo "xrdcp -f ${tupleExtraName1}_down_${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
-	xrdcp -f ${tupleExtraName1}_down_${sampleType[job]}_AnalysisNtuple.root ${outputdir}
+		if [ "$jobType" == "JEC1" ] ;   then
+			jecList=("JECTotal" \
+				"JECAbsoluteStat" \
+				"JECAbsoluteScale" \
+				"JECAbsoluteMPFBias" \
+				"JECFragmentation")
+		fi
+		if [ "$jobType" == "JEC2" ] ;   then
+			jecList=("JECSinglePionECAL" \
+				"JECSinglePionHCAL" \
+				"JECFlavorQCD" \
+				"JECTimePtEta" \
+				"JECRelativeJEREC1")
+		fi
+		if [ "$jobType" == "JEC3" ] ;   then
+			jecList=("JECRelativePtBB" \
+				"JECRelativePtEC1" \
+				"JECRelativeBal" \
+				"JECRelativeFSR" \
+				"JECRelativeStatFSR")
+		fi
+		if [ "$jobType" == "JEC4" ] ;   then
+			jecList=("JECRelativeStatEC" \
+				"JECPileUpDataMC" \
+				"JECPileUpPtRef" \
+				"JECPileUpPtBB" \
+				"JECPileUpPtEC1")
+		fi
+
+		for tupleExtraName1 in "${jecList[@]}"
+		do :
+			echo $jobType" "$tupleExtraName1
+			echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_up . ${inputdir}${sampleType[job]}_skim.root"
+			AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_up . ${inputdir}${sampleType[job]}_skim.root
+
+			echo "xrdcp -f ${tupleExtraName1}_up_${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
+			xrdcp -f ${tupleExtraName1}_up_${sampleType[job]}_AnalysisNtuple.root ${outputdir}
+			rm ${tupleExtraName1}_up_${sampleType[job]}_AnalysisNtuple.root
+		
+			echo "AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_down . ${inputdir}${sampleType[job]}_skim.root"
+			AnalysisNtuple/makeAnalysisNtuple ${sampleType[job]}__${tupleExtraName1}_down . ${inputdir}${sampleType[job]}_skim.root
+
+			echo "xrdcp -f ${tupleExtraName1}_down_${sampleType[job]}_AnalysisNtuple.root ${outputdir}"
+			xrdcp -f ${tupleExtraName1}_down_${sampleType[job]}_AnalysisNtuple.root ${outputdir}
+			rm ${tupleExtraName1}_down_${sampleType[job]}_AnalysisNtuple.root
+
+		done
+	fi
 fi
