@@ -41,7 +41,6 @@ if finalState=='Ele':
 
 
 _fileDir = "histograms/%s/hists/"%channel
-
 if isTightSelection:      _fileDir  = "histograms/%s/hists_tight/"%channel
 if isLooseCR2e0Selection: _fileDir  = "histograms/%s/hists_looseCR2e0/"%channel
 if isLooseCR2g0Selection: _fileDir  = "histograms/%s/hists_looseCR2g0/"%channel
@@ -95,18 +94,13 @@ err = Double(0.0)
 yield_['QCD'][3] = hist.IntegralAndError(-1,-1, err)
 err_['QCD'][3] = err
 
+sum
+
 list_.append('QCD')
 
 sum_=[]
 total_=0
 totalerr=0.0
-for sample in list_:
-	
-	sum_s[sample] = (yield_[sample][0]+yield_[sample][1]+yield_[sample][2]+yield_[sample][3])
-	err_s[sample] = (((err_[sample][0])**2+(err_[sample][1])**2+(err_[sample][2])**2+(err_[sample][3])**2)**0.5)
-for sample in list_:
-	total_+=sum_s[sample]
-	totalerr+= err_s[sample]**2
 
 error=0.
 error= (totalerr)**.5
@@ -135,56 +129,102 @@ genuine_error=genuineerr**0.5
 misID_error=misIDerr**0.5
 HadPho_error=HadPhoerr**0.5
 HadFake_error=HadFakeerr**0.5
-percentage=[]
-percentage.append((genuine_/total_)*100)
-percentage.append((misID_/total_)*100)
-percentage.append((HadPho_/total_)*100)
-percentage.append((HadFake_/total_)*100)
 
-percentage_err=[]
-percentage_err.append((genuine_error/total_)*100)
-percentage_err.append((misID_error/total_)*100)
-percentage_err.append((HadPho_error/total_)*100)
-percentage_err.append((HadFake_error/total_)*100)
+process_list ={"TTGamma":["TTGamma"],
+	       "TTbar":  ["TTbar"],
+	       "VGamma":["ZGamma", "WGamma"],
+	       "VJets":["WJets", "ZJets"],
+	       "SingleTop":["SingleTop"],
+	       "Other":[ "TTV", "Diboson","QCD"],
+	       }	
 
+
+prompt ={}
+prompt_err ={}
+nonprompt = {}
+nonprompt_err = {}
+
+totalPrompt = 0.
+totalPromptErr = 0.
+
+totalNonPrompt = 0.
+totalNonPromptErr = 0.
+
+
+for process in process_list:
+	prompt[process] = 0.
+	prompt_err[process] = 0.
+	nonprompt[process] = 0.
+	nonprompt_err[process] = 0.
+	for sample in process_list[process]:
+		prompt[process] += yield_[sample][0] + yield_[sample][1]
+		prompt_err[process] += err_[sample][0]**2 + err_[sample][1]**2
+
+		nonprompt[process] += yield_[sample][2] + yield_[sample][3]
+		nonprompt_err[process] += err_[sample][2]**2 + err_[sample][3]**2
+
+	totalPrompt += prompt[process]
+	totalPromptErr += prompt_err[process]
+	totalNonPrompt += nonprompt[process]
+	totalNonPromptErr += nonprompt_err[process]
+
+	sum_s[process] = prompt[process] + nonprompt[process]
+	err_s[process] = prompt_err[process] + nonprompt_err[process]
+
+	prompt_err[process] = prompt_err[process]**0.5
+	nonprompt_err[process] = nonprompt_err[process]**0.5
+	err_s[process] = err_s[process]**0.5
+
+for sample in process_list:
+	total_+=sum_s[sample]
+	totalerr+= err_s[sample]**2
+
+
+totalPromptErr = totalPromptErr**0.5
+totalNonPromptErr = totalNonPromptErr**0.5
+totalerr = totalerr **0.5
+
+process_list = ["TTGamma", "TTbar", "VGamma", "SingleTop","VJets","Other"]
 
 process_latexNames = {"TTGamma":"\\ttgamma",
 		      "TTbar":"\\ttbar",
 		      "VGamma":"\\Vgamma",
-		      "WGamma":"\\Wgamma",
-		      "ZGamma":"\\Zgamma",
 		      "SingleTop":"Single top",
-		      "ST-tW":"Single top tW",
-		      "ST-tch":"Single top t-ch.",
-		      "ST-sch":"Single top s-ch.",
-		      "TGJets":"Single top t-ch.+$\gamma$",
 		      "VJets":"\\VJets",
-		      "WJets":"\\WJets",
-		      "ZJets":"\\ZJets",
-		      "TTV":"\\ttbarV",
-		      "Diboson":"Diboson",
-		      "QCD":"QCD",
 		      "Other":"Other",
 		      }
-
-
-
+print
+print
+print
 
 table=''
-table +=  '\\begin{tabular}{l | c c c c | c r} \n'
+table +=  '\\begin{tabular}{l | c c  } \n'
 table +=  '\\hline\n'
-table +=  'Sample & Genuine Photon & Mis-ID Ele & Hadronic Photon & Hadronic Fake & Total & Percent \\\\ \n'
+table +=  'Sample & Prompt & Hadronic/Nonprompt \\\\ \n'
 table +=  '\\hline\n'
-for sample in list_:
-	table += '%s & $%.1f \pm %.1f$  & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f\%%$   \\\\ \n' % (process_latexNames[sample], yield_[sample][0], err_[sample][0], yield_[sample][1], err_[sample][1], yield_[sample][2], err_[sample][2], yield_[sample][3], err_[sample][3], sum_s[sample], err_s[sample],100.*sum_s[sample]/total_)
+for sample in process_list:
+	table += '%s & $%.1f \pm %.1f$   & $%.1f \\pm %.1f$  \\\\ \n' % (process_latexNames[sample], prompt[sample], prompt_err[sample], nonprompt[sample], nonprompt_err[sample])
 
-#	total += yield_[sample][0]+yield_[sample][1]+yield_[sample][2]+yield_[sample][3]
-#	totalErr += (err_[sample][0]+err_[sample][1]+err_[sample][2]+err_[sample][3])**0.5
+table += '\\end{tabular} \n'
+
+table = table.replace("$0.0 \pm 0.0$","---")
+
+print table
+print
+print
+print
+table=''
+table +=  '\\begin{tabular}{l | c c | c } \n'
+table +=  '\\hline\n'
+table +=  'Sample & Prompt & Hadronic/Nonprompt & Total \\\\ \n'
+table +=  '\\hline\n'
+for sample in process_list:
+	table += '%s & $%.1f \pm %.1f$  & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$  \\\\ \n' % (process_latexNames[sample], prompt[sample], prompt_err[sample], nonprompt[sample], nonprompt_err[sample], sum_s[sample], err_s[sample])
+
 table += '\\hline \n'
-table += "MC Totals & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ &\\\\ \n" %(genuine_,genuine_error,misID_,misID_error,HadPho_,HadPho_error,HadFake_,HadFake_error, total_, error)
-table += "Data & --- & --- & --- & --- & $%.1f$ &\\\\ \n" %(data)
+table += "MC Totals & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ &\\\\ \n" %(totalPrompt,totalPromptErr, totalNonPrompt, totalNonPromptErr, total_, error)
+table += "Data & --- & --- & $%.1f$ &\\\\ \n" %(data)
 table += '\\hline \n'
-table += "Percentage & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ \\\\ \n" % (percentage[0], percentage_err[0],percentage[1], percentage_err[1], percentage[2], percentage_err[2],percentage[3], percentage_err[3])
 table += '\\end{tabular} \n'
 
 table = table.replace("$0.0 \pm 0.0$","---")
