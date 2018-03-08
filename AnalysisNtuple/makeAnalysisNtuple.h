@@ -151,6 +151,12 @@ private :
 	std::vector<int>   _photonParentage;
 	std::vector<int>   _photonParentPID;
 
+	std::vector<float>    _phoEffWeight;
+	std::vector<float>    _phoEffWeight_Up;
+	std::vector<float>    _phoEffWeight_Do;
+
+
+
 	std::vector<float>   _dRPhotonJet;
 	std::vector<float>   _dRPhotonLepton;
 	std::vector<float>   _MPhotonLepton;
@@ -202,6 +208,9 @@ private :
 	std::vector<bool>    _loosePhotonIsHadronicPhoton;
 	std::vector<bool>    _loosePhotonIsHadronicFake;
 
+	std::vector<float>    _loosePhoEffWeight;
+	std::vector<float>    _loosePhoEffWeight_Up;
+	std::vector<float>    _loosePhoEffWeight_Do;
 
 
 	int  _eventCategoryMediumID;
@@ -341,6 +350,12 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("eleEffWeight"               , &_eleEffWeight                );
 	outputTree->Branch("eleEffWeight_Up"            , &_eleEffWeight_Up             );
 	outputTree->Branch("eleEffWeight_Do"            , &_eleEffWeight_Do             );
+	outputTree->Branch("phoEffWeight"               , &_phoEffWeight                );
+	outputTree->Branch("phoEffWeight_Up"            , &_phoEffWeight_Up             );
+	outputTree->Branch("phoEffWeight_Do"            , &_phoEffWeight_Do             );
+	outputTree->Branch("loosePhoEffWeight"               , &_loosePhoEffWeight                );
+	outputTree->Branch("loosePhoEffWeight_Up"            , &_loosePhoEffWeight_Up             );
+	outputTree->Branch("loosePhoEffWeight_Do"            , &_loosePhoEffWeight_Do             );
 
 	outputTree->Branch("q2weight_Up"               , &_q2weight_Up               );
 	outputTree->Branch("q2weight_Do"               , &_q2weight_Do               );
@@ -556,6 +571,8 @@ void makeAnalysisNtuple::InitVariables()
 	_passAll_Ele     = false;
 	_passAll_Mu      = false;
 
+
+
 	_pdfWeight    = 1.;
 	_pdfweight_Up = 1.;
 	_pdfweight_Do = 1.;
@@ -564,6 +581,22 @@ void makeAnalysisNtuple::InitVariables()
 	_q2weight_nominal = 1.;
 	_q2weight_Up = 1.;
 	_q2weight_Do = 1.;
+
+	_eleEffWeight    = 1.;
+	_eleEffWeight_Do = 1.;
+	_eleEffWeight_Up = 1.;
+
+	_muEffWeight    = 1.;
+	_muEffWeight_Do = 1.;
+	_muEffWeight_Up = 1.;
+
+	_phoEffWeight.clear();
+	_phoEffWeight_Do.clear();
+	_phoEffWeight_Up.clear();
+
+	_loosePhoEffWeight.clear();
+	_loosePhoEffWeight_Do.clear();
+	_loosePhoEffWeight_Up.clear();
 
 	_btagWeight.clear();
 	_btagWeight_Up.clear();

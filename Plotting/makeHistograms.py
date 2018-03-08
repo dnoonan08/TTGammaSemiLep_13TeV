@@ -27,6 +27,8 @@ parser.add_option("--output", dest="outputFileName", default="hists",
                      help="Give the name of the root file for histograms to be saved in (default is hists.root)" )
 parser.add_option("--plot", dest="plotList",action="append",
                      help="Add plots" )
+parser.add_option("--multiPlots", "--multiplots", dest="multiPlotList",action="append",
+                     help="Add plots" )
 parser.add_option("--allPlots","--AllPlots", dest="makeAllPlots",action="store_true",default=False,
                      help="Make full list of plots in histogramDict" )
 parser.add_option("--morePlots","--MorePlots","--makeMorePlots", dest="makeMorePlots",action="store_true",default=False,
@@ -68,6 +70,8 @@ Pdf = 1.
 Pileup ="PUweight"
 MuEff = "muEffWeight"
 EleEff= "eleEffWeight"
+PhoEff= "phoEffWeight"
+loosePhoEff= "loosePhoEffWeight"
 evtWeight ="evtWeight"
 btagWeightCategory = ["1","(1-btagWeight[0])","(btagWeight[2])","(btagWeight[1])"]
 
@@ -419,6 +423,17 @@ if 'EleEff' in sys.argv:
     sys.argv.remove("EleEff")
     outputhistName = "histograms/%s/%sEleEff_%s"%(finalState,outputFileName,level)
 
+if 'PhoEff' in sys.argv:
+    if level=="up":
+    	PhoEff = "phoEffWeight_Up"
+    	lossePhoEff = "loosePhoEffWeight_Up"
+    else:
+	PhoEff = "phoEffWeight_Do"
+    	lossePhoEff = "loosePhoEffWeight_Do"
+
+    sys.argv.remove("PhoEff")
+    outputhistName = "histograms/%s/%sPhoEff_%s"%(finalState,outputFileName,level)
+
 
 if 'BTagSF' in sys.argv:
     if level=="up":
@@ -430,13 +445,14 @@ if 'BTagSF' in sys.argv:
     sys.argv.remove("BTagSF")
     outputhistName = "histograms/%s/%sBTagSF_%s"%(finalState,outputFileName,level)
 
-weights = "%s*%s*%s*%s*%s*%s*%s"%(evtWeight,Pileup,MuEff,EleEff,Q2,Pdf,btagWeightCategory[nBJets])
+btagWeight = btagWeightCategory[nBJets]
 
 if isTightSelection:
     if not runQuiet: print "Tight Select"
     nJets = 4
     nBJets = 2
-    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]"
+    btagWeight = btagWeightCategory[nBJets]
+    # weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]"
     extraCuts = extraCutsTight 
     extraPhotonCuts = extraPhotonCutsTight 
     outputhistName = outputhistName + "_tight"
@@ -445,7 +461,7 @@ if isLooseCR2g0Selection:
     if not runQuiet: print "Loose Select"
     nJets = 2
     nBJets = 0
-    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight"
+    btagWeight = "1"
     extraCuts = extraCutsLooseCR2g0
     extraPhotonCuts = extraPhotonCutsLooseCR2g0
     outputhistName = outputhistName  +"_looseCR2g0"
@@ -454,7 +470,8 @@ if isLooseCR2e0Selection:
     if not runQuiet: print "Loose Control Region Select"
     nJets = 2
     nBJets = 0
-    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]"
+    btagWeight = "btagWeight[0]"
+    #    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]"
     extraCuts = extraCutsLooseCR2e0
     extraPhotonCuts = extraPhotonCutsLooseCR2e0
     outputhistName = outputhistName + "_looseCR2e0"
@@ -463,9 +480,12 @@ if isLooseCR2g1Selection:
     if not runQuiet: print "Loose Control Region1 Select"
     nJets = 2
     nBJets = 1
-    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(1-btagWeight[0])"
+    btagWeight = "(1-btagWeight[0])"
     if 'QCD' in finalState:
-        weights = "evtWeight*PUweight*muEffWeight*eleEffWeight"
+        btagWeight="1"
+    # weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(1-btagWeight[0])"
+    # if 'QCD' in finalState:
+    #     weights = "evtWeight*PUweight*muEffWeight*eleEffWeight"
     extraCuts = extraCutsLooseCR2g1
     extraPhotonCuts = extraPhotonCutsLooseCR2g1    
     outputhistName = outputhistName + "_looseCR2g1"
@@ -475,18 +495,24 @@ if isLooseCR3e0Selection:
     if not runQuiet: print "Loose Control Region Select"
     nJets = 3
     nBJets = 0
-    weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(btagWeight[0])"
+    btagWeight = "(btagWeight[0])"
+    #weights = "evtWeight*PUweight*muEffWeight*eleEffWeight*(btagWeight[0])"
     extraCuts = extraCutsLooseCR3e0
     extraPhotonCuts = extraPhotonCutsLooseCR3e0
     outputhistName = outputhistName + "_looseCR3e0"
 
-print " the output folder is:", outputhistName
+weights = "%s*%s*%s*%s*%s*%s*%s"%(evtWeight,Pileup,MuEff,EleEff,Q2,Pdf,btagWeight)
+
+
+if not runQuiet: print " the output folder is:", outputhistName
 
 
 from HistogramListDict import *
 histogramInfo = GetHistogramInfo(extraCuts,extraPhotonCuts,nBJets)
 #histogramInfo = GetHistforfits(extraCuts,extraPhotonCuts,nBJets)
 
+
+multiPlotList = options.multiPlotList
 
 plotList = options.plotList
 if plotList is None:
@@ -499,8 +525,26 @@ if plotList is None:
     elif makeEGammaPlots:
         plotList = ["phosel_MassEGamma","phosel_MassEGammaMisIDEle","phosel_MassEGammaOthers"]
         if not runQuiet: print "Making only plots for e-gamma fits"
+    elif not multiPlotList is None:
+        plotList = []
+        for plotNameTemplate in multiPlotList:
+            thisPlotList = []
+            for plotName in histogramInfo.keys():
+                if plotNameTemplate in plotName:
+                    thisPlotList.append(plotName)
+            thisPlotList.sort()
+            if not runQuiet: 
+                print '---'
+                print '  Found the following plots matching the name key %s'%plotNameTemplate
+                print '    thisPlotList'
+            plotList += thisPlotList
+
+        #take the set to avoid duplicates (if multiple plot name templates are used, and match the same plot)
+        plotList = list(set(plotList))
+
+
     else:
-        plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
+        plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap","phosel_PhotonCategory"]
         if not runQuiet: print "Making only plots for simultaneous fits"
 
 plotList.sort()
@@ -648,6 +692,17 @@ if not "QCD_DD" in sample:
 
         if evtWeight[-1]=="*":
             evtWeight= evtWeight[:-1]
+
+
+        ### Correctly add the photon weights to the plots
+        if 'phosel' in h_Info[1]:
+            if h_Info[0][:8]=="loosePho":
+                evtWeight = "%s*%s"%(evtWeight,loosePhoEff)
+            elif h_Info[0][:3]=="pho":
+                evtWeight = "%s*%s"%(evtWeight,PhoEff)
+            else:
+                evtWeight = "%s*%s[0]"%(evtWeight,PhoEff)
+        print "%s>>%s_%s"%(h_Info[0],h_Info[1],sample),evtWeight
         tree.Draw("%s>>%s_%s"%(h_Info[0],h_Info[1],sample),evtWeight)
 
 if not os.path.exists(outputhistName):

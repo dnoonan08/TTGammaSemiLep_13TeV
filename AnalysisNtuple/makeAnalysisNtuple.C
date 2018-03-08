@@ -325,7 +325,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
                          //               std::cout<<"done with Ele scaling"<<std::endl;
                                      
 				}
-			
+
 			}
 
 			if (tree->isData_){
@@ -527,6 +527,16 @@ void makeAnalysisNtuple::FillEvent()
 		_phoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
 
 		if (tree->isData_){
+			_phoEffWeight.push_back(1.);
+			_phoEffWeight_Do.push_back(1.);
+			_phoEffWeight_Up.push_back(1.);
+		} else {
+			_phoEffWeight.push_back(getPhoSF(tree->phoEt_->at(phoInd),tree->phoSCEta_->at(phoInd),1));
+			_phoEffWeight_Do.push_back(getPhoSF(tree->phoEt_->at(phoInd),tree->phoSCEta_->at(phoInd),0));
+			_phoEffWeight_Up.push_back(getPhoSF(tree->phoEt_->at(phoInd),tree->phoSCEta_->at(phoInd),2));
+		}
+
+		if (tree->isData_){
 
 			std::vector<float> randConeIso;
 			std::vector<float> randConeIsoUnCorr;
@@ -624,6 +634,16 @@ void makeAnalysisNtuple::FillEvent()
 		_loosePhoPFChIso.push_back( selector->PhoChHadIso_corr.at(phoInd));
 		_loosePhoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
 		_loosePhoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
+
+		if (tree->isData_){
+			_loosePhoEffWeight.push_back(1.);
+			_loosePhoEffWeight_Do.push_back(1.);
+			_loosePhoEffWeight_Up.push_back(1.);
+		} else {
+			_loosePhoEffWeight.push_back(getPhoSF(tree->phoEt_->at(phoInd),tree->phoSCEta_->at(phoInd),1));
+			_loosePhoEffWeight_Do.push_back(getPhoSF(tree->phoEt_->at(phoInd),tree->phoSCEta_->at(phoInd),0));
+			_loosePhoEffWeight_Up.push_back(getPhoSF(tree->phoEt_->at(phoInd),tree->phoSCEta_->at(phoInd),2));
+		}
 
 		if (tree->isData_){
 			std::vector<float> randConeIso;
@@ -880,15 +900,19 @@ void makeAnalysisNtuple::FillEvent()
 			_q2weight_nominal = tree->genScaleSystWeights_->at(0);
 		}
 		if(applypdfweight){
+			double mean=0.;
 			for (int i=9;i<109;i++){
 				_pdfSystWeight.push_back(tree->pdfSystWeight_->at(i));
+				mean += tree->pdfSystWeight_->at(i);
 			}
-			float sum=0.;
-			for (int j=0;j<100;j++){
+			mean = mean/100.;
 
-			sum+=pow((_pdfSystWeight[j]),2.);
+			double sum=0.;
+			for (int j=0;j<100;j++){
+				sum+=pow((_pdfSystWeight[j]-mean),2.);
 			}
-			_pdfuncer = sqrt(sum/100);
+			_pdfuncer = sqrt(sum/100.);
+
 			_pdfweight_Up = (_pdfWeight + _pdfuncer)/_pdfWeight;
 			_pdfweight_Do = (_pdfWeight - _pdfuncer)/_pdfWeight;
 		}
