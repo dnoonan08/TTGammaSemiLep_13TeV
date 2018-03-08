@@ -211,6 +211,15 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_noCut_ChIso_HadronicFake": ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "Hadronic Fake"],
 	      "phosel_noCut_ChIso_PromptPhoton": ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "Prompt Photon"],
 	      "phosel_noCut_ChIso_NonPromptPhoton": ["Charged Hadron Iso (GeV)"   , "Events/0.25", 1, [-1,-1], regionText, YesLog, "NonPrompt Photon"],
+
+	      "phosel_noCut_ChIso_PUdown"             : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, NoLog, " "],
+	      "phosel_noCut_ChIso_PUup"               : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, NoLog, " "],
+	      "phosel_noCut_ChIso_0nVtx15"               : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, NoLog, " "],
+	      "phosel_noCut_ChIso_15nVtx20"               : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, NoLog, " "],
+	      "phosel_noCut_ChIso_20nVtx25"               : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, NoLog, " "],
+	      "phosel_noCut_ChIso_25nVtx50"               : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, NoLog, " "],
+
+
 	      "phosel_noCut_NeuIso"            : ["Neutral Hadron Iso (GeV)"   , "Events/0.5", 1, [-1,-1], regionText, YesLog, " "],
 	      "phosel_noCut_PhoIso"            : ["Photon Iso (GeV)"           , "Events/0.5", 1, [-1,-1], regionText, YesLog, " "],
 	      "phosel_noCut_NeuIso"            : ["Neutral Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText, YesLog, " "],
@@ -397,7 +406,7 @@ legend.AddEntry(dataHist, "Data", 'pe')
 legendR.AddEntry(dataHist, "Data", 'pe')
 #legList.remove("QCD_DD")
 for sample in legList:
-    # print sample, _file[sample]
+    print sample, _file[sample]
     # print "%s/%s_%s"%(sample,histName,sample)
     hist = _file[sample].Get("%s_%s"%(histName,sample))
     # print hist, "%s_%s"%(histName,sample)
@@ -534,22 +543,25 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
         stack.Add(hist)
     
     if finalState=='Ele':
-	if 'nVtx'in histName:
-		if 'phosel' in histName:
-   			dataHist = _file["DataEle"].Get("phosel_nVtx_DataEle")
-		else:
-			dataHist = _file["DataEle"].Get("presel_nVtx_DataEle")
-	else:
-		dataHist = _file["DataEle"].Get("%s_DataEle"%(histName))
+	    if 'phosel_nVtx' in histName:
+		    dataHist = _file["DataEle"].Get("phosel_nVtx_DataEle")
+	    elif 'presel_nVtx' in histName:
+		    dataHist = _file["DataEle"].Get("presel_nVtx_DataEle")
+	    elif 'phosel_noCut_ChIso_PU' in histName:
+		    dataHist = _file["DataEle"].Get("phosel_noCut_ChIso_DataEle")
+	    else:
+		    dataHist = _file["DataEle"].Get("%s_DataEle"%(histName))
 #	dataHist.Draw()
     elif finalState=='Mu':
-	 if 'nVtx'in histName:
-                if 'phosel' in histName:
-			dataHist = _file["DataMu"].Get("phosel_nVtx_DataMu")
-		else:
-			dataHist = _file["DataMu"].Get("presel_nVtx_DataMu")
-	 else:
-		dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
+	    if 'phosel_nVtx' in histName:
+		    dataHist = _file["DataMu"].Get("phosel_nVtx_DataMu")
+	    elif 'presel_nVtx' in histName:
+		    dataHist = _file["DataMu"].Get("presel_nVtx_DataMu")
+	    elif 'phosel_noCut_ChIso_PU' in histName:
+		    dataHist = _file["DataMu"].Get("phosel_noCut_ChIso_DataMu")
+	    else:
+		    dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
+
     noData = False
     print dataHist
     if type(dataHist)==type(TObject()): noData = True
