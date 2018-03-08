@@ -894,15 +894,19 @@ void makeAnalysisNtuple::FillEvent()
 			_q2weight_nominal = tree->genScaleSystWeights_->at(0);
 		}
 		if(applypdfweight){
+			double mean=0.;
 			for (int i=9;i<109;i++){
 				_pdfSystWeight.push_back(tree->pdfSystWeight_->at(i));
+				mean += tree->pdfSystWeight_->at(i);
 			}
-			float sum=0.;
-			for (int j=0;j<100;j++){
+			mean = mean/100.;
 
-			sum+=pow((_pdfSystWeight[j]),2.);
+			double sum=0.;
+			for (int j=0;j<100;j++){
+				sum+=pow((_pdfSystWeight[j]-mean),2.);
 			}
-			_pdfuncer = sqrt(sum/100);
+			_pdfuncer = sqrt(sum/100.);
+
 			_pdfweight_Up = (_pdfWeight + _pdfuncer)/_pdfWeight;
 			_pdfweight_Do = (_pdfWeight - _pdfuncer)/_pdfWeight;
 		}
