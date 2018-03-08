@@ -23,18 +23,30 @@ Queue 54
 
 
 ####This section can be used to submit analysis ntuple jobs for systematic uncertainties
-#Arguments = "$(process) JEC"
-#Queue 54
-#
-#Arguments = "$(process) JER"
-#Queue 54
-#
-#Arguments = "$(process) pho"
-#Queue 54
-#
-#Arguments = "$(process) elesmear"
-#Queue 54
-#
-#Arguments = "$(process) musmear"
-#Queue 54
-#
+# Arguments = "$(process) JEC1"
+# Queue 47
+
+# Arguments = "$(process)-47 JEC2"
+# Queue 47
+
+# Arguments = "$(process)-94 JEC3"
+# Queue 47
+
+# Arguments = "$(process)-141 JEC4"
+# Queue 47
+
+# Arguments = "$(process)-188 JER"
+# Queue 47
+
+# Arguments = "$(process)-235 phoscale"
+# Queue 47
+
+# Arguments = "$(process)-282 phosmear"
+# Queue 47
+
+# Arguments = "$(process)-329 elescale"
+# Queue 47
+
+# Arguments = "$(process)-376 elesmear"
+# Queue 47
+
