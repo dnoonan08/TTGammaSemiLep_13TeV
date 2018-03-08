@@ -143,26 +143,30 @@ void Selector::filter_photons(){
 		PhoNeuHadIso_corr.push_back(rhoCorrPFNeuIso);
 		PhoPhoIso_corr.push_back(rhoCorrPFPhoIso);
 		double PhoSmear = 1.;
+
 		if (!tree->isData_ && phosmearLevel==1) {PhoSmear = generator->Gaus(1,(tree->phoResol_rho_up_->at(phoInd)+tree->phoResol_rho_dn_->at(phoInd))/2.);}
-                if (!tree->isData_ && phosmearLevel==0) {PhoSmear = generator->Gaus(1,tree->phoResol_rho_dn_->at(phoInd));}
-                if (!tree->isData_ && phosmearLevel==2) {PhoSmear = generator->Gaus(1,tree->phoResol_rho_up_->at(phoInd));}
-                if (smearPho){
-		//	std::cout << "stat: "<<PhoSmear <<std::endl;
-                        et = et*PhoSmear;
-                        phoEn = PhoSmear*phoEn;
-                }
-                tree->phoEt_->at(phoInd) = et;
-                tree->phoE_->at(phoInd)= phoEn;		
-                double PhoScale = 1.;
-                if (tree->isData_ && phoscaleLevel==1) {PhoScale = ((tree->phoScale_stat_up_->at(phoInd)+tree->phoScale_stat_dn_->at(phoInd))/2.);}
-                if (!tree->isData_ && phoscaleLevel==2){PhoScale =1.+sqrt(pow((1-tree->phoScale_syst_up_->at(phoInd)),2)+pow((1-tree->phoScale_stat_up_->at(phoInd)),2)+pow((1-tree->phoScale_gain_up_->at(phoInd)),2));}
-                if (!tree->isData_ && phoscaleLevel==0) {PhoScale=1.-sqrt(pow((1-tree->phoScale_syst_dn_->at(phoInd)),2)+pow((1-tree->phoScale_stat_dn_->at(phoInd)),2)+pow((1-tree->phoScale_gain_dn_->at(phoInd)),2));}
-                if (scalePho){
-                        et = et*PhoScale;
-                        phoEn = PhoScale*phoEn;
-                }
-                tree->phoEt_->at(phoInd) = et;
-                tree->phoE_->at(phoInd)= phoEn; 
+		if (!tree->isData_ && phosmearLevel==0) {PhoSmear = generator->Gaus(1,tree->phoResol_rho_dn_->at(phoInd));}
+		if (!tree->isData_ && phosmearLevel==2) {PhoSmear = generator->Gaus(1,tree->phoResol_rho_up_->at(phoInd));}
+		if (smearPho){
+			//	std::cout << "stat: "<<PhoSmear <<std::endl;
+			et = et*PhoSmear;
+			phoEn = PhoSmear*phoEn;
+		}
+		tree->phoEt_->at(phoInd) = et;
+		tree->phoE_->at(phoInd)= phoEn;		
+		double PhoScale = 1.;
+
+		if (tree->isData_ && phoscaleLevel==1) {PhoScale = ((tree->phoScale_stat_up_->at(phoInd)+tree->phoScale_stat_dn_->at(phoInd))/2.);}
+		if (!tree->isData_ && phoscaleLevel==2){PhoScale =1.+sqrt(pow((1-tree->phoScale_syst_up_->at(phoInd)),2)+pow((1-tree->phoScale_stat_up_->at(phoInd)),2)+pow((1-tree->phoScale_gain_up_->at(phoInd)),2));}
+		if (!tree->isData_ && phoscaleLevel==0) {PhoScale=1.-sqrt(pow((1-tree->phoScale_syst_dn_->at(phoInd)),2)+pow((1-tree->phoScale_stat_dn_->at(phoInd)),2)+pow((1-tree->phoScale_gain_dn_->at(phoInd)),2));}
+
+		if (scalePho){
+			et = et*PhoScale;
+			phoEn = PhoScale*phoEn;
+		}
+		tree->phoEt_->at(phoInd) = et;
+		tree->phoE_->at(phoInd)= phoEn; 
+
 		if (tree->isData_){
 			vector<float> correctedRandConeIso;
 			for (unsigned int i = 0; i < tree->phoPFRandConeChIso_->at(phoInd).size(); i++){

@@ -217,7 +217,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	Long64_t nEntr = tree->GetEntries();
 
+	bool saveAllEntries = false;
+
 	if (sampleType=="Test") nEntr = 10000;
+	if (sampleType=="TestAll") {
+		nEntr = 1000;
+		saveAllEntries = true;
+	}
 	//nEntr = 10000;
 
 	int dumpFreq = 1;
@@ -285,7 +291,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		evtPick->process_event(tree, selector, _PUweight);
 
             //    cout << "HERE" << endl;
-		if ( evtPick->passPresel_ele || evtPick->passPresel_mu ) {
+		if ( evtPick->passPresel_ele || evtPick->passPresel_mu || saveAllEntries) {
 			InitVariables();
 			FillEvent();
               //          cout << "HERE" << endl;

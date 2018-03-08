@@ -261,6 +261,7 @@ double getEvtWeight(string sampleType){
 	double evtWeight = -1.;
 	if( sampleType.substr(0,4)=="Data") {evtWeight = 1.;}
 	else if( sampleType=="Test") {evtWeight = 1.;}
+	else if( sampleType=="TestAll") {evtWeight = 1.;}
 	else if( sampleType=="TGJets"){evtWeight = TGJets_SF;} 
 	else if( sampleType=="TTGJets"){evtWeight = TTGJets_SF;} 
 	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_SF;}
@@ -435,6 +436,7 @@ const std::string allowedSampleTypes[99] = {"Data",
 											"TTGamma_SingleLeptFromTbar_fsrDown",
 											"TTGamma_SingleLeptFromT_fsrDown",
 											"TTGamma_Dilepton_fsrDown",
+											"TestAll",
 											"Test",
                                                                                         };
 
