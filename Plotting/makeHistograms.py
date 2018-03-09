@@ -1,4 +1,4 @@
-from ROOT import *
+from ROOT import TH1F, TFile, TChain, TCanvas
 import sys
 from sampleInformation import *
 import os
@@ -544,7 +544,8 @@ if plotList is None:
 
 
     else:
-        plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap","phosel_PhotonCategory"]
+        # plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap","phosel_PhotonCategory"]
+        plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_barrel","phosel_noCut_ChIso_endcap","phosel_noCut_ChIso_GenuinePhoton_barrel","phosel_noCut_ChIso_GenuinePhoton_endcap","phosel_noCut_ChIso_MisIDEle_barrel","phosel_noCut_ChIso_MisIDEle_endcap","phosel_noCut_ChIso_HadronicPhoton_barrel","phosel_noCut_ChIso_HadronicPhoton_endcap","phosel_noCut_ChIso_HadronicFake_barrel","phosel_noCut_ChIso_HadronicFake_endcap","phosel_M3","phosel_M3_barrel","phosel_M3_endcap","phosel_M3_GenuinePhoton_barrel","phosel_M3_GenuinePhoton_endcap","phosel_M3_MisIDEle_barrel","phosel_M3_MisIDEle_endcap","phosel_M3_HadronicPhoton_barrel","phosel_M3_HadronicPhoton_endcap","phosel_M3_HadronicFake_barrel","phosel_M3_HadronicFake_endcap","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
         if not runQuiet: print "Making only plots for simultaneous fits"
 
 plotList.sort()
@@ -565,44 +566,13 @@ for hist in histogramsToMake:
 if not allHistsDefined:
     sys.exit()
 
-# ###This part will make a list of the histograms that need to be produced
-# plotList = options.plotList
-# if not plotList is None:
-#     #gets list of histograms from input options if any given
-#     histogramsToMake = plotList
-#     ### in this case, we need to check that the histograms are in histogramInfo
-#     allHistsDefined = True
-#     for hist in histogramsToMake:
-#         if not hist in histogramInfo:
-#             print "Histogram %s is not defined in HistogramListDict.py"%hist
-#             allHistsDefined = False
-#     if not allHistsDefined:
-#         sys.exit()
-# else:
-#     ## make all histograms defined in HistogramListDict
-#     histogramsToMake = histogramInfo.keys()
-#     histogramsToMake.sort()
-
-#     # ## make only a subset of histograms
-#     # histogramsToMake = ["phosel_PhotonCategory", "presel_nJet"]
-#     # ### in this case, we need to check that the histograms are in histogramInfo
-#     # allHistsDefined = True
-#     # for hist in histogramsToMake:
-#     #     if not hist in histogramInfo:
-#     #         print "Histogram %s is not defined in HistogramListDict.py"
-#     #         allHistsDefined = False
-#     # if not allHistsDefined:
-#     #     sys.exit()
-
-
+transferFactor = 1.
 
 histograms=[]
 canvas = TCanvas()
-
 #sample = sys.argv[-1]
-
 if sample =="QCD_DD":
-    if finalState=="mu":
+    if finalState=="Mu":
         if isTightSelection:
             qcd_File    = TFile("histograms/mu/qcdhistsCR_tight/QCD_DD.root","read")
         elif isLooseCR2g1Selection:
@@ -616,7 +586,7 @@ if sample =="QCD_DD":
         else:
             qcd_File    = TFile("histograms/mu/qcdhistsCR/QCD_DD.root","read")
         qcd_TF_File = TFile("histograms/mu/qcdTransferFactors.root","read")
-        dirName = "QCDMu"
+
     if finalState=="Ele":
         if isTightSelection:
             qcd_File    = TFile("histograms/ele/qcdhistsCR_tight/QCD_DD.root","read")
@@ -632,30 +602,29 @@ if sample =="QCD_DD":
             qcd_File    = TFile("histograms/ele/qcdhistsCR/QCD_DD.root","read")
 
         qcd_TF_File = TFile("histograms/ele/qcdTransferFactors.root","read")
-        dirName = "QCDEle"
-
 
     #Calculate the transfer Factor for the QCD events from the QCDcr to the signal region being used, based on jet/bjet multiplicities
-    transferFactor = 1.
     histNjet_QCDcr = qcd_TF_File.Get("histNjet_QCDcr")
     histNjet_0b = qcd_TF_File.Get("histNjet_0b")
     histNjet_1b = qcd_TF_File.Get("histNjet_1b")
     histNjet_2b = qcd_TF_File.Get("histNjet_2b")
+
     if nBJets==0:
         histNjet_2b.Add(histNjet_1b)
         histNjet_2b.Add(histNjet_0b)
     if nBJets==1:
         histNjet_2b.Add(histNjet_1b)
 #    transferFactor = histNjet_2b.Integral(nJets+1,-1)/histNjet_QCDcr.Integral(-1,-1)
+
     transferFactor = histNjet_2b.Integral(nJets+1,-1)/histNjet_QCDcr.Integral(nJets+1,-1)
     #print transferFactor
 
     for hist in histogramsToMake:
-        h_Info = histogramInfo[hist]
-        if not h_Info[5]: continue
-        if not runQuiet: print "filling", h_Info[1], sample
 
-        histograms.append(qcd_File.Get("%s_QCD_DD"%(h_Info[1])))
+        if not histogramInfo[hist][5]: continue
+        if not runQuiet: print "filling", histogramInfo[hist][1], sample
+
+        histograms.append(qcd_File.Get("%s_QCD_DD"%(histogramInfo[hist][1])))
         histograms[-1].Scale(transferFactor)
 
 if not "QCD_DD" in sample:
@@ -702,7 +671,7 @@ if not "QCD_DD" in sample:
                 evtWeight = "%s*%s"%(evtWeight,PhoEff)
             else:
                 evtWeight = "%s*%s[0]"%(evtWeight,PhoEff)
-        print "%s>>%s_%s"%(h_Info[0],h_Info[1],sample),evtWeight
+        # print "%s>>%s_%s"%(h_Info[0],h_Info[1],sample),evtWeight
         tree.Draw("%s>>%s_%s"%(h_Info[0],h_Info[1],sample),evtWeight)
 
 if not os.path.exists(outputhistName):
