@@ -60,7 +60,7 @@ Selector::Selector(){
         scaleEle = true;
         scalePho = true;
 	// photons
-	pho_Et_cut = 15.0; 
+	pho_Et_cut = 20.0; 
 	pho_Eta_cut = 2.5; 
 	pho_ID_ind = 0; // 0 - Loose, 1 - Medium, 2 - Tight
 	pho_noPixelSeed_cut = false;

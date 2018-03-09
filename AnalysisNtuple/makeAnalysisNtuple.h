@@ -51,6 +51,9 @@ private :
 	string systematicType;
 
 
+	bool isSystematicRun;
+
+
 	bool getGenScaleWeights;
 	bool applypdfweight;
 	bool applyqsquare;
@@ -213,10 +216,6 @@ private :
 	std::vector<float>    _loosePhoEffWeight_Do;
 
 
-	int  _eventCategoryMediumID;
-	int  _eventCategoryTightID;
-
-
 
 	/* std::vector<bool>    _phoMediumIDNoHoverECut;  */
 	/* std::vector<bool>    _phoMediumIDNoSIEIECut;  */
@@ -338,35 +337,47 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("lumis"                      , &_lumis                       );
 	outputTree->Branch("isData"                     , &_isData                      ); 
 	outputTree->Branch("PUweight"                   , &_PUweight                    );
-	outputTree->Branch("PUweight_Up"                , &_PUweight_Up                 );
-	outputTree->Branch("PUweight_Do"                , &_PUweight_Do                 );
+	if (!isSystematicRun){
+		outputTree->Branch("PUweight_Up"                , &_PUweight_Up                 );
+		outputTree->Branch("PUweight_Do"                , &_PUweight_Do                 );
+	}
 	outputTree->Branch("btagWeight"                 , &_btagWeight                  );
-	outputTree->Branch("btagWeight_Up"              , &_btagWeight_Up               );
-	outputTree->Branch("btagWeight_Do"              , &_btagWeight_Do               );
+	if (!isSystematicRun){
+		outputTree->Branch("btagWeight_Up"              , &_btagWeight_Up               );
+		outputTree->Branch("btagWeight_Do"              , &_btagWeight_Do               );
+	}
 	outputTree->Branch("btagSF"                     , &_btagSF                      );
 	outputTree->Branch("muEffWeight"                , &_muEffWeight                 );
-	outputTree->Branch("muEffWeight_Up"             , &_muEffWeight_Up              );
-	outputTree->Branch("muEffWeight_Do"             , &_muEffWeight_Do              );
+	if (!isSystematicRun){
+		outputTree->Branch("muEffWeight_Up"             , &_muEffWeight_Up              );
+		outputTree->Branch("muEffWeight_Do"             , &_muEffWeight_Do              );
+	}
 	outputTree->Branch("eleEffWeight"               , &_eleEffWeight                );
-	outputTree->Branch("eleEffWeight_Up"            , &_eleEffWeight_Up             );
-	outputTree->Branch("eleEffWeight_Do"            , &_eleEffWeight_Do             );
+	if (!isSystematicRun){
+		outputTree->Branch("eleEffWeight_Up"            , &_eleEffWeight_Up             );
+		outputTree->Branch("eleEffWeight_Do"            , &_eleEffWeight_Do             );
+	}
 	outputTree->Branch("phoEffWeight"               , &_phoEffWeight                );
-	outputTree->Branch("phoEffWeight_Up"            , &_phoEffWeight_Up             );
-	outputTree->Branch("phoEffWeight_Do"            , &_phoEffWeight_Do             );
+	if (!isSystematicRun){
+		outputTree->Branch("phoEffWeight_Up"            , &_phoEffWeight_Up             );
+		outputTree->Branch("phoEffWeight_Do"            , &_phoEffWeight_Do             );
+	}
 	outputTree->Branch("loosePhoEffWeight"               , &_loosePhoEffWeight                );
-	outputTree->Branch("loosePhoEffWeight_Up"            , &_loosePhoEffWeight_Up             );
-	outputTree->Branch("loosePhoEffWeight_Do"            , &_loosePhoEffWeight_Do             );
+	if (!isSystematicRun){
+		outputTree->Branch("loosePhoEffWeight_Up"            , &_loosePhoEffWeight_Up             );
+		outputTree->Branch("loosePhoEffWeight_Do"            , &_loosePhoEffWeight_Do             );
 
-	outputTree->Branch("q2weight_Up"               , &_q2weight_Up               );
-	outputTree->Branch("q2weight_Do"               , &_q2weight_Do               );
-	outputTree->Branch("q2weight_nominal"          , &_q2weight_nominal          );
-	outputTree->Branch("genScaleSystWeights"       , &_genScaleSystWeights         );
+		outputTree->Branch("q2weight_Up"               , &_q2weight_Up               );
+		outputTree->Branch("q2weight_Do"               , &_q2weight_Do               );
+		outputTree->Branch("q2weight_nominal"          , &_q2weight_nominal          );
+		outputTree->Branch("genScaleSystWeights"       , &_genScaleSystWeights         );
 
-	outputTree->Branch("pdfWeight"                 , &_pdfWeight                );
-	outputTree->Branch("pdfuncer"                  , &_pdfuncer                 );
-	outputTree->Branch("pdfweight_Up"              , &_pdfweight_Up             );
-	outputTree->Branch("pdfweight_Do"              , &_pdfweight_Do             );
-	outputTree->Branch("pdfSystWeight"             , &_pdfSystWeight               );
+		outputTree->Branch("pdfWeight"                 , &_pdfWeight                );
+		outputTree->Branch("pdfuncer"                  , &_pdfuncer                 );
+		outputTree->Branch("pdfweight_Up"              , &_pdfweight_Up             );
+		outputTree->Branch("pdfweight_Do"              , &_pdfweight_Do             );
+		outputTree->Branch("pdfSystWeight"             , &_pdfSystWeight               );
+	}
 
 	outputTree->Branch("evtWeight"                  , &_evtWeight                   );      
 	outputTree->Branch("nVtx"                       , &_nVtx                        ); 
@@ -399,14 +410,16 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("phoPFChIso"                 , &_phoPFChIso                  ); 
 	outputTree->Branch("phoPFPhoIso"                , &_phoPFPhoIso                 ); 
 	outputTree->Branch("phoPFNeuIso"                , &_phoPFNeuIso                 ); 
-	outputTree->Branch("phoPFRandConeChIso"         , &_phoPFRandConeChIso          ); 
-	outputTree->Branch("phoPFRandConeEta"           , &_phoPFRandConeEta            ); 
-	outputTree->Branch("phoPFRandConePhi"           , &_phoPFRandConePhi            ); 
-	outputTree->Branch("phoPFRandConeJetDR"         , &_phoPFRandConeJetDR          ); 
-	outputTree->Branch("phoPFRandConeChIsoUnCorr"   , &_phoPFRandConeChIsoUnCorr    ); 
-	outputTree->Branch("phoPFChIsoUnCorr"                 , &_phoPFChIsoUnCorr                  ); 
-	outputTree->Branch("phoPFPhoIsoUnCorr"                , &_phoPFPhoIsoUnCorr                 ); 
-	outputTree->Branch("phoPFNeuIsoUnCorr"                , &_phoPFNeuIsoUnCorr                 ); 
+    if (!isSystematicRun){
+		outputTree->Branch("phoPFRandConeChIso"         , &_phoPFRandConeChIso          ); 
+		outputTree->Branch("phoPFRandConeEta"           , &_phoPFRandConeEta            ); 
+		outputTree->Branch("phoPFRandConePhi"           , &_phoPFRandConePhi            ); 
+		outputTree->Branch("phoPFRandConeJetDR"         , &_phoPFRandConeJetDR          ); 
+		outputTree->Branch("phoPFRandConeChIsoUnCorr"   , &_phoPFRandConeChIsoUnCorr    ); 
+		outputTree->Branch("phoPFChIsoUnCorr"                 , &_phoPFChIsoUnCorr                  ); 
+		outputTree->Branch("phoPFPhoIsoUnCorr"                , &_phoPFPhoIsoUnCorr                 ); 
+		outputTree->Branch("phoPFNeuIsoUnCorr"                , &_phoPFNeuIsoUnCorr                 ); 
+	}
 	outputTree->Branch("phoTightID"                 , &_phoTightID                  ); 
 	outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
 	outputTree->Branch("phoGenMatchInd"                , &_phoGenMatchInd                 ); 
@@ -425,19 +438,21 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("loosePhoPFChIso"                 , &_loosePhoPFChIso                  ); 
 	outputTree->Branch("loosePhoPFPhoIso"                , &_loosePhoPFPhoIso                 ); 
 	outputTree->Branch("loosePhoPFNeuIso"                , &_loosePhoPFNeuIso                 ); 
-	outputTree->Branch("loosePhoPFRandConeChIso"         , &_loosePhoPFRandConeChIso          ); 
-	outputTree->Branch("loosePhoPFRandConeEta"           , &_loosePhoPFRandConeEta            ); 
-	outputTree->Branch("loosePhoPFRandConePhi"           , &_loosePhoPFRandConePhi            ); 
-	outputTree->Branch("loosePhoPFRandConeJetDR"         , &_loosePhoPFRandConeJetDR          ); 
-	outputTree->Branch("loosePhoPFRandConeChIsoUnCorr"   , &_loosePhoPFRandConeChIsoUnCorr    ); 
-	outputTree->Branch("loosePhoPFChIsoUnCorr"                 , &_loosePhoPFChIsoUnCorr                  ); 
-	outputTree->Branch("loosePhoPFPhoIsoUnCorr"                , &_loosePhoPFPhoIsoUnCorr                 ); 
-	outputTree->Branch("loosePhoPFNeuIsoUnCorr"                , &_loosePhoPFNeuIsoUnCorr                 ); 
+    if (!isSystematicRun){
+		outputTree->Branch("loosePhoPFRandConeChIso"         , &_loosePhoPFRandConeChIso          ); 
+		outputTree->Branch("loosePhoPFRandConeEta"           , &_loosePhoPFRandConeEta            ); 
+		outputTree->Branch("loosePhoPFRandConePhi"           , &_loosePhoPFRandConePhi            ); 
+		outputTree->Branch("loosePhoPFRandConeJetDR"         , &_loosePhoPFRandConeJetDR          ); 
+		outputTree->Branch("loosePhoPFRandConeChIsoUnCorr"   , &_loosePhoPFRandConeChIsoUnCorr    ); 
+		outputTree->Branch("loosePhoPFChIsoUnCorr"                 , &_loosePhoPFChIsoUnCorr                  ); 
+		outputTree->Branch("loosePhoPFPhoIsoUnCorr"                , &_loosePhoPFPhoIsoUnCorr                 ); 
+		outputTree->Branch("loosePhoPFNeuIsoUnCorr"                , &_loosePhoPFNeuIsoUnCorr                 ); 
+	}
 	outputTree->Branch("loosePhoTightID"                 , &_loosePhoTightID                  ); 
 	outputTree->Branch("loosePhoMediumID"                , &_loosePhoMediumID                 ); 
 	outputTree->Branch("loosePhoLooseID"                 , &_loosePhoLooseID                  ); 
 	outputTree->Branch("loosePhoGenMatchInd"                 , &_loosePhoGenMatchInd                  ); 
-	outputTree->Branch("loosePhoMassEGamma"                  , &_loosePhoMassEGamma                   ); 
+	//	outputTree->Branch("loosePhoMassEGamma"                  , &_loosePhoMassEGamma                   ); 
 	outputTree->Branch("loosePhoMassLepGamma"                  , &_loosePhoMassLepGamma                   ); 
 	
 	outputTree->Branch("loosePhoMediumIDFunction"        , &_loosePhoMediumIDFunction         ); 
@@ -446,12 +461,12 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("loosePhoMediumIDPassChIso"       , &_loosePhoMediumIDPassChIso        ); 
 	outputTree->Branch("loosePhoMediumIDPassNeuIso"      , &_loosePhoMediumIDPassNeuIso       ); 
 	outputTree->Branch("loosePhoMediumIDPassPhoIso"      , &_loosePhoMediumIDPassPhoIso       ); 
-	outputTree->Branch("loosePhoTightIDFunction"        , &_loosePhoTightIDFunction         ); 
-	outputTree->Branch("loosePhoTightIDPassHoverE"      , &_loosePhoTightIDPassHoverE       ); 
-	outputTree->Branch("loosePhoTightIDPassSIEIE"       , &_loosePhoTightIDPassSIEIE        ); 
-	outputTree->Branch("loosePhoTightIDPassChIso"       , &_loosePhoTightIDPassChIso        ); 
-	outputTree->Branch("loosePhoTightIDPassNeuIso"      , &_loosePhoTightIDPassNeuIso       ); 
-	outputTree->Branch("loosePhoTightIDPassPhoIso"      , &_loosePhoTightIDPassPhoIso       ); 
+	//outputTree->Branch("loosePhoTightIDFunction"        , &_loosePhoTightIDFunction         ); 
+	//outputTree->Branch("loosePhoTightIDPassHoverE"      , &_loosePhoTightIDPassHoverE       ); 
+	//outputTree->Branch("loosePhoTightIDPassSIEIE"       , &_loosePhoTightIDPassSIEIE        ); 
+	//outputTree->Branch("loosePhoTightIDPassChIso"       , &_loosePhoTightIDPassChIso        ); 
+	//outputTree->Branch("loosePhoTightIDPassNeuIso"      , &_loosePhoTightIDPassNeuIso       ); 
+	//outputTree->Branch("loosePhoTightIDPassPhoIso"      , &_loosePhoTightIDPassPhoIso       ); 
 
 	
 	outputTree->Branch("nEle"                        , &_nEle                       ); 
@@ -493,7 +508,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("MPhotonLepton"               , &_MPhotonLepton             );
 	outputTree->Branch("AnglePhotonLepton"           , &_AnglePhotonLepton         );
 
-	if (!tree->isData_){
+	if (!tree->isData_ && !isSystematicRun){
 		outputTree->Branch("nMC"   	                     , &_nMC		                ); 
 		outputTree->Branch("mcPt"	                     , &_mcPt	   	                );
 		outputTree->Branch("mcEta"	                     , &_mcEta	                    ); 
@@ -520,15 +535,13 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("photonIsMisIDEle"            , &_photonIsMisIDEle           );
 	outputTree->Branch("photonIsHadronicPhoton"      , &_photonIsHadronicPhoton     );
 	outputTree->Branch("photonIsHadronicFake"        , &_photonIsHadronicFake       );
-        outputTree->Branch("loosePhotonIsGenuine"             , &_loosePhotonIsGenuine            );
-        outputTree->Branch("loosePhotonIsMisIDEle"            , &_loosePhotonIsMisIDEle           );
-        outputTree->Branch("loosePhotonIsHadronicPhoton"      , &_loosePhotonIsHadronicPhoton     );
-        outputTree->Branch("loosePhotonIsHadronicFake"        , &_loosePhotonIsHadronicFake       );
+	outputTree->Branch("loosePhotonIsGenuine"             , &_loosePhotonIsGenuine            );
+	outputTree->Branch("loosePhotonIsMisIDEle"            , &_loosePhotonIsMisIDEle           );
+	outputTree->Branch("loosePhotonIsHadronicPhoton"      , &_loosePhotonIsHadronicPhoton     );
+	outputTree->Branch("loosePhotonIsHadronicFake"        , &_loosePhotonIsHadronicFake       );
 	outputTree->Branch("photonParentage"        , &_photonParentage       );
 	outputTree->Branch("photonParentPID"        , &_photonParentPID       );
 	
-	outputTree->Branch("_eventCategoryMediumID"      , &_eventCategoryMediumID      );
-	outputTree->Branch("_eventCategoryTightID"       , &_eventCategoryTightID       );
 }
 
 void makeAnalysisNtuple::InitVariables()
@@ -605,9 +618,6 @@ void makeAnalysisNtuple::InitVariables()
 	_btagSF.clear();
 	_btagSF_Up.clear();
 	_btagSF_Do.clear();
-
-	_eventCategoryMediumID = -1;
-	_eventCategoryTightID = -1;
 
 	_elePt.clear();
 	_elePhi.clear();

@@ -48,6 +48,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	systematicType = "";
 	cout << sampleType << endl;
 	
+	isSystematicRun = false;
+
 	size_t pos = sampleType.find("__");
 	if (pos != std::string::npos){
 		systematicType = sampleType.substr(pos+2,sampleType.length());
@@ -144,25 +146,28 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		}
 		if (systematicType.substr(pos+1,2)=="up"){ jecvar012_g = 2; }
 		if (systematicType.substr(pos+1,2)=="do"){ jecvar012_g = 0; }
+		// evtPick->Njet_ge = 3;	
+		// evtPick->NBjet_ge = 1;	
+		isSystematicRun = true;
 	}
 		
 	// if( systematicType=="JEC_up")       {jecvar012_g = 2; selector->JECsystLevel=2;}
 	// if( systematicType=="JEC_down")     {jecvar012_g = 0; selector->JECsystLevel=0;}
-	if( systematicType=="JER_up")       {jervar012_g = 2; selector->JERsystLevel=2;}
-	if( systematicType=="JER_down")     {jervar012_g = 0; selector->JERsystLevel=0;}
-	if(systematicType=="phosmear_down") {phosmear012_g=0;selector->phosmearLevel=0;}
-	if(systematicType=="phosmear_up") {phosmear012_g=2;selector->phosmearLevel=2;}
-	if(systematicType=="elesmear_down") {elesmear012_g=0;selector->elesmearLevel=0;}
-	if(systematicType=="elesmear_up") {elesmear012_g=2;selector->elesmearLevel=2;}
-	if(systematicType=="phoscale_down") {phoscale012_g=0;selector->phoscaleLevel=0;}
-	if(systematicType=="phoscale_up") {phoscale012_g=2;selector->phoscaleLevel=2;}
-	if(systematicType=="elescale_down") {elescale012_g=0;selector->elescaleLevel=0;}
-	if(systematicType=="elescale_up") {elescale012_g=2;  selector->elescaleLevel=2;}
+	if( systematicType=="JER_up")       {jervar012_g = 2; selector->JERsystLevel=2; isSystematicRun = true;}
+	if( systematicType=="JER_down")     {jervar012_g = 0; selector->JERsystLevel=0; isSystematicRun = true;}
+	if(systematicType=="phosmear_down") {phosmear012_g=0;selector->phosmearLevel=0; isSystematicRun = true;}
+	if(systematicType=="phosmear_up") {phosmear012_g=2;selector->phosmearLevel=2; isSystematicRun = true;}
+	if(systematicType=="elesmear_down") {elesmear012_g=0;selector->elesmearLevel=0; isSystematicRun = true;}
+	if(systematicType=="elesmear_up") {elesmear012_g=2;selector->elesmearLevel=2; isSystematicRun = true;}
+	if(systematicType=="phoscale_down") {phoscale012_g=0;selector->phoscaleLevel=0; isSystematicRun = true;} 
+	if(systematicType=="phoscale_up") {phoscale012_g=2;selector->phoscaleLevel=2; isSystematicRun = true;}
+	if(systematicType=="elescale_down") {elescale012_g=0;selector->elescaleLevel=0; isSystematicRun = true;}
+	if(systematicType=="elescale_up") {elescale012_g=2;  selector->elescaleLevel=2; isSystematicRun = true;}
 
 	// if( systematicType=="pho_up")       {phosmear012_g = 2;}
 	// if( systematicType=="pho_down")     {phosmear012_g = 0;}
-	if( systematicType=="musmear_up")   {musmear012_g = 2;}
-	if( systematicType=="musmear_down") {musmear012_g = 0;}
+	if( systematicType=="musmear_up")   {musmear012_g = 2; isSystematicRun = true;}
+	if( systematicType=="musmear_down") {musmear012_g = 0; isSystematicRun = true;}
 //	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
 //	if( systematicType=="elesmear_down"){elesmear012_g = 0;}
 	if( systematicType=="Dilep")     {dileptonsample =true; evtPick->Nmu_eq=2; evtPick->Nele_eq=2;}
@@ -171,8 +176,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << " eleScale "<< elescale012_g << " phoScale" << phoscale012_g << "   ";
 	std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << endl;
 
-
-
+	if (isSystematicRun){
+		std::cout << "  Systematic Run : Dropping genMC variables from tree" << endl;
+	}
 	std::string outputDirectory(av[2]);
 	std::string outputFileName = outputDirectory + "/" + sampleType+"_AnalysisNtuple.root";
 	// char outputFileName[100];
