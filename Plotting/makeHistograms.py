@@ -9,8 +9,10 @@ parser.add_option("-c", "--channel", dest="channel", default="Mu",type='str',
                      help="Specify which channel Mu or Ele? default is Mu" )
 parser.add_option("-s", "--sample", dest="sample", default="",type='str',
                      help="Specify which sample to run on" )
-parser.add_option("--syst", "--systematic", dest="systematic", default="nominal",type='str',
-		     help="Specify up, down or nominal, default is nominal")
+parser.add_option("--lev", "--level", dest="level", default="",type='str',
+                     help="Specify up/down of systematic")
+parser.add_option("--syst", "--systematic", dest="systematic", default="",type='str',
+		     help="Specify which systematic to run on")
 parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,action="store_true",
                      help="Use 4j2t selection" )
 parser.add_option("--LooseCR2e0","--looseCR2e0", dest="isLooseCR2e0Selection",default=False,action="store_true",
@@ -40,9 +42,17 @@ parser.add_option("--quiet", "-q", dest="quiet",default=False,action="store_true
 
 (options, args) = parser.parse_args()
 
-level =options.systematic
+level =options.level
+syst = options.systematic
+if syst=="":
+	runsystematic = False
+else:
+	runsystematic = True
+
 
 gROOT.SetBatch(True)
+
+
 
 finalState = options.channel
 sample = options.sample
@@ -59,6 +69,9 @@ makeMorePlots = options.makeMorePlots
 makeEGammaPlots = options.makeEGammaPlots
 
 runQuiet = options.quiet
+
+print runsystematic
+#exit()
 
 nJets = 3
 nBJets = 1
@@ -78,7 +91,6 @@ btagWeightCategory = ["1","(1-btagWeight[0])","(btagWeight[2])","(btagWeight[1])
 
 #atleast 0, atleast 1, atleast 2, exactly 1, btagWeight[0] = exactly 0
 
-
 if finalState=="Mu":
     sampleList[-1] = "DataMu"
     sampleList[-2] = "QCDMu"
@@ -87,55 +99,76 @@ if finalState=="Mu":
         sample = "DataMu"
     if sample=="QCD":
         sample = "QCDMu"
-    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07/"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07/Test/"
     outputhistName = "histograms/mu/%s"%outputFileName
-    if 'JECTotal' in sys.argv:
-	if  level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JECTotal_up_"
-            outputhistName = "histograms/mu/histsJECTotal_up"
-    	if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JECTotal_down_"
-            outputhistName = "histograms/mu/histsJECTotal_down"
-    if 'JER' in sys.argv: 
-        if  level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JER_up_"
-            outputhistName = "histograms/mu/histsJER_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/JER_down_"
-            outputhistName = "histograms/mu/histsJER_down"
+    if runsystematic:
 
-    if 'phosmear' in sys.argv: 
-        if  level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/phosmear_up_"
-            outputhistName = "histograms/mu/histsphosmear_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/phosmear_down_"
-            outputhistName = "histograms/mu/histsphosmear_down"
+	if syst=="PU":
+		print "is here" 
+                if level=="up":
+                        Pileup = "PUweight_Up"
+                else:
+                        Pileup = "PUweight_Do"
 
-    if 'phoscale' in sys.argv:
-        if  level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/phoscale_up_"
-            outputhistName = "histograms/mu/histsphoscale_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/phoscale_down_"
-            outputhistName = "histograms/mu/histsphoscale_down"
+                outputhistName = "histograms/mu/%sPileup_%s"%(outputFileName,level)
+
+        elif 'Q2' in syst:
+                if level=="up":
+                        Q2="q2weight_Up"
+                else:
+                        Q2="q2weight_Do"
+                outputhistName = "histograms/mu/%sQ2_%s"%(outputFileName,level)
+
+        elif 'Pdf' in syst:
+                if level=="up":
+                        Pdf="pdfweight_Up"
+                else:
+                        Pdf="pdfweight_Do"
+
+                outputhistName = "histograms/mu/%sPdf_%s"%(outputFileName,level)
+
+        elif 'MuEff' in syst:
+                if level=="up":
+                        MuEff = "muEffWeight_Up"
+                else:
+                        MuEff = "muEffWeight_Do"
+
+                outputhistName = "histograms/mu/%sMuEff_%s"%(outputFileName,level)
+
+        elif 'EleEff' in syst:
+                if level=="up":
+                        EleEff = "eleEffWeight_Up"
+                else:
+                        EleEff = "eleEffWeight_Do"
+
+                outputhistName = "histograms/mu/%sEleEff_%s"%(outputFileName,level)
+	
+	elif 'PhoEff' in syst:
+                if level=="up":
+                        PhoEff = "phoEffWeight_Up"
+                        loosePhoEff = "loosePhoEffWeight_Up"
+                else:
+                        PhoEff = "phoEffWeight_Do"
+                        lossePhoEff = "loosePhoEffWeight_Do"
+
+                outputhistName = "histograms/mu/%sPhoEff_%s"%(outputFileName,level)
+
+        elif 'BTagSF' in syst:
+                if level=="up":
+                        btagWeightCategory = ["1","(1-btagWeight_Up[0])","(btagWeight_Up[2])","(btagWeight_Up[1])"]
+                else:
+                        btagWeightCategory = ["1","(1-btagWeight_Do[0])","(btagWeight_Do[2])","(btagWeight_Do[1])"]
 
 
-    if 'elesmear' in sys.argv:
-        if  level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/elesmear_up_"
-            outputhistName = "histograms/mu/histselesmear_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/elesmear_down_"
-            outputhistName = "histograms/mu/histselesmear_down"
+                outputhistName = "histograms/mu/%sBTagSF_%s"%(outputFileName,level)
 
-    if 'elescale' in sys.argv:
-        if  level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/elescale_up_"
-            outputhistName = "histograms/mu/histselescale_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/elescale_down_"
-            outputhistName = "histograms/mu/histselescale_down"
+	else:
+		if  level=="up":
+            		analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/Test/%s_up_"%(syst)
+            		outputhistName = "histograms/mu/hists%s_up"%(syst)
+        	if level=="down":
+            		analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/Test/%s_down_"%(syst)
+            		outputhistName = "histograms/mu/hists%s_down"%(syst)
 
 
 
@@ -166,52 +199,74 @@ elif finalState=="Ele":
         sample = "QCDEle"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07/"
     outputhistName = "histograms/ele/%s"%outputFileName
-    if 'JECTotal' in sys.argv:
-        if level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JECTotal_up_"
-            outputhistName = "histograms/ele/histsJECTotal_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JECTotal_down_"
-            outputhistName = "histograms/ele/histsJECTotal_down"
-    if 'JER' in sys.argv:
-        if level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JER_up_"
-            outputhistName = "histograms/ele/histsJER_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/JER_down_"
-            outputhistName = "histograms/ele/histsJER_down"
+    if runsys:
+	 if 'PU' in syst:
+                if level=="up":
+                        Pileup = "PUweight_Up"
+                else:
+                        Pileup = "PUweight_Do"
 
-    if 'phosmear' in sys.argv:
-        if level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/phosmear_up_"
-            outputhistName = "histograms/ele/histsphosmear_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/phosmear_down_"
-            outputhistName = "histograms/ele/histsphosmear_down"
+                outputhistName = "histograms/ele/%sPileup_%s"%(outputFileName,level)
 
-    if 'phoscale' in sys.argv:
-        if level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/phoscale_up_"
-            outputhistName = "histograms/ele/histsphoscale_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/phoscale_down_"
-            outputhistName = "histograms/ele/histsphoscale_down"
 
-    if 'elesmear' in sys.argv:
-        if level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/elesmear_up_"
-            outputhistName = "histograms/ele/histselesmear_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/elesmear_down_"
-            outputhistName = "histograms/ele/histselesmear_down"
+         elif 'Q2' in syst:
+                if level=="up":
+                        Q2="q2weight_Up"
+                else:
+                        Q2="q2weight_Do"
+                outputhistName = "histograms/ele/%sQ2_%s"%(outputFileName,level)
 
-    if 'elescale' in sys.argv:
-        if level=="up":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/elescale_up_"
-            outputhistName = "histograms/ele/histselescale_up"
-        if level=="down":
-            analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/elescale_down_"
-            outputhistName = "histograms/ele/histselescale_down"
+
+         elif 'Pdf' in syst:
+                if level=="up":
+                        Pdf="pdfweight_Up"
+                else:
+                        Pdf="pdfweight_Do"
+
+                outputhistName = "histograms/ele/%sPdf_%s"%(outputFileName,level)
+
+
+         elif 'MuEff' in syst:
+                if level=="up":
+                        MuEff = "muEffWeight_Up"
+                else:
+                        MuEff = "muEffWeight_Do"
+
+                outputhistName = "histograms/ele/%sMuEff_%s"%(outputFileName,level)
+
+         elif 'EleEff' in syst:
+                if level=="up":
+                        EleEff = "eleEffWeight_Up"
+                else:
+                        EleEff = "eleEffWeight_Do"
+                                                    
+	 elif 'PhoEff' in syst:
+                if level=="up":
+                        PhoEff = "phoEffWeight_Up"
+                        loosePhoEff = "loosePhoEffWeight_Up"
+                else:
+                        PhoEff = "phoEffWeight_Do"
+                        lossePhoEff = "loosePhoEffWeight_Do"
+
+                outputhistName = "histograms/ele/%sPhoEff_%s"%(outputFileName,level)
+
+
+         elif 'BTagSF' in syst:
+                if level=="up":
+                        btagWeightCategory = ["1","(1-btagWeight_Up[0])","(btagWeight_Up[2])","(btagWeight_Up[1])"]
+                else:
+                        btagWeightCategory = ["1","(1-btagWeight_Do[0])","(btagWeight_Do[2])","(btagWeight_Do[1])"]
+
+
+                outputhistName = "histograms/ele/%sBTagSF_%s"%(outputFileName,level)  
+	 else:                     
+        	if  level=="up":
+            		analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/%s_up_"%(syst)
+            		outputhistName = "histograms/ele/hists%s_up"%(syst)
+        	if level=="down":
+            		analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/%s_down_"%(syst)
+            		outputhistName = "histograms/ele/hists%s_down"%(syst)
+
 
     extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet>=1)*"
     extraPhotonCuts      = "(passPresel_Ele && nJet>=3 && nBJet>=1 && %s)*"
@@ -374,77 +429,6 @@ else:
     sys.exit()
 
 
-
-if 'PU' in sys.argv:
-    if level=="up":
-	
-    	Pileup = "PUweight_Up"
-    else:
-	Pileup = "PUweight_Do"
-    sys.argv.remove("PU")
-    
-    outputhistName = "histograms/%s/%sPileup_%s"%(finalState,outputFileName,level)
-
-
-if 'Q2' in sys.argv:
-	if level=="up":
-		Q2="q2weight_Up"
-	else:
-		Q2="q2weight_Do"
-	sys.argv.remove("Q2")
-	outputhistName = "histograms/%s/%sQ2_%s"%(finalState,outputFileName,level)
-
-
-if 'Pdf' in sys.argv:
-        if level=="up":
-                Pdf="pdfweight_Up"
-        else:
-                Pdf="pdfweight_Do"
-
-        sys.argv.remove("Pdf")
-        outputhistName = "histograms/%s/%sPdf_%s"%(finalState,outputFileName,level)
-
-
-if 'MuEff' in sys.argv:
-    if level=="up":
-    	MuEff = "muEffWeight_Up"
-    else:
-	MuEff = "muEffWeight_Do"
-
-    sys.argv.remove("MuEff")
-    outputhistName = "histograms/%s/%sMuEff_%s"%(finalState,outputFileName,level)
-
-if 'EleEff' in sys.argv:
-    if level=="up":
-    	EleEff = "eleEffWeight_Up"
-    else:
-	EleEff = "eleEffWeight_Do"
-
-    sys.argv.remove("EleEff")
-    outputhistName = "histograms/%s/%sEleEff_%s"%(finalState,outputFileName,level)
-
-if 'PhoEff' in sys.argv:
-    if level=="up":
-    	PhoEff = "phoEffWeight_Up"
-    	lossePhoEff = "loosePhoEffWeight_Up"
-    else:
-	PhoEff = "phoEffWeight_Do"
-    	lossePhoEff = "loosePhoEffWeight_Do"
-
-    sys.argv.remove("PhoEff")
-    outputhistName = "histograms/%s/%sPhoEff_%s"%(finalState,outputFileName,level)
-
-
-if 'BTagSF' in sys.argv:
-    if level=="up":
-    	btagWeightCategory = ["1","(1-btagWeight_Up[0])","(btagWeight_Up[2])","(btagWeight_Up[1])"]
-    else:
-	btagWeightCategory = ["1","(1-btagWeight_Do[0])","(btagWeight_Do[2])","(btagWeight_Do[1])"]
-
-
-    sys.argv.remove("BTagSF")
-    outputhistName = "histograms/%s/%sBTagSF_%s"%(finalState,outputFileName,level)
-
 btagWeight = btagWeightCategory[nBJets]
 
 if isTightSelection:
@@ -509,7 +493,6 @@ if not runQuiet: print " the output folder is:", outputhistName
 
 from HistogramListDict import *
 histogramInfo = GetHistogramInfo(extraCuts,extraPhotonCuts,nBJets)
-#histogramInfo = GetHistforfits(extraCuts,extraPhotonCuts,nBJets)
 
 
 multiPlotList = options.multiPlotList
@@ -671,7 +654,7 @@ if not "QCD_DD" in sample:
                 evtWeight = "%s*%s"%(evtWeight,PhoEff)
             else:
                 evtWeight = "%s*%s[0]"%(evtWeight,PhoEff)
-        # print "%s>>%s_%s"%(h_Info[0],h_Info[1],sample),evtWeight
+
         tree.Draw("%s>>%s_%s"%(h_Info[0],h_Info[1],sample),evtWeight)
 
 if not os.path.exists(outputhistName):
@@ -679,10 +662,6 @@ if not os.path.exists(outputhistName):
 
 outputFile = TFile("%s/%s.root"%(outputhistName,sample),"update")
 
-# if not onlyAddPlots:
-#     outputFile.rmdir(sample)
-#     outputFile.mkdir(sample)
-# outputFile.cd(sample)
 for h in histograms:
     outputFile.Delete("%s;*"%h.GetName())
     if onlyAddPlots:
