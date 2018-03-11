@@ -16,7 +16,7 @@ public:
 	EventPick(std::string titleIn);
 	~EventPick();
 	
-	void process_event(const EventTree* inp_tree, const Selector* inp_selector, double weight=1.0);
+	void process_event(EventTree* inp_tree, Selector* inp_selector, double weight=1.0);
 	void print_cutflow_mu(TH1D* _cutflow);
 	void print_cutflow_ele(TH1D* _cutflow);
 	
@@ -95,8 +95,8 @@ public:
 	/* TH1D* genPhoMinDR; */
 
 private:
-	const EventTree* tree;
-	const Selector* selector;
+	EventTree* tree;
+	Selector* selector;
 	
 	void clear_vectors();
 	void set_cutflow_labels_mu(TH1D* hist);

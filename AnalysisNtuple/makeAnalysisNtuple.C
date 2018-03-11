@@ -292,7 +292,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	
 				
 
-		selector->process_objects(tree);
+		//		selector->process_objects(tree);
+		selector->clear_vectors();
 
 		evtPick->process_event(tree, selector, _PUweight);
 
@@ -312,7 +313,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				_btagWeight_Do = getBtagSF("down", reader, _btagSF_Do);				
 				
 				if (evtPick->passPresel_mu) {
-					int muInd_ = evtPick->Muons.at(0);
+					int muInd_ = selector->Muons.at(0);
 					_muEffWeight    = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),1);
 					_muEffWeight_Do = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),0);
 					_muEffWeight_Up = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),2);
@@ -321,7 +322,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 					_eleEffWeight_Do = 1.;
 				}
 				if (evtPick->passPresel_ele) {
-					int eleInd_ = evtPick->Electrons.at(0);
+					int eleInd_ = selector->Electrons.at(0);
 					_muEffWeight    = 1.;
 					_muEffWeight_Do = 1.;
 					_muEffWeight_Up = 1.;
@@ -335,17 +336,17 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			}
 
 			if (tree->isData_){
-				if (evtPick->bJets.size() == 0){
+				if (selector->bJets.size() == 0){
 					_btagWeight.push_back(1.0);
 					_btagWeight.push_back(0.0);
 					_btagWeight.push_back(0.0);
 				}				
-				if (evtPick->bJets.size() == 1){
+				if (selector->bJets.size() == 1){
 					_btagWeight.push_back(0.0);
 					_btagWeight.push_back(1.0);
 					_btagWeight.push_back(0.0);
 				}				
-				if (evtPick->bJets.size() >= 2){
+				if (selector->bJets.size() >= 2){
 					_btagWeight.push_back(0.0);
 					_btagWeight.push_back(0.0);
 					_btagWeight.push_back(1.0);
@@ -393,14 +394,14 @@ void makeAnalysisNtuple::FillEvent()
 	_pfMET		     = tree->pfMET_;
 	_pfMETPhi	     = tree->pfMETPhi_;
 
-	_nPho		     = evtPick->Photons.size();
-	_nLoosePho	     = evtPick->LoosePhotons.size();
-	_nEle		     = evtPick->Electrons.size();
-	_nEleLoose           = evtPick->ElectronsLoose.size();
-	_nMuLoose            = evtPick->MuonsLoose.size();
-	_nMu		     = evtPick->Muons.size();
-	_nJet            = evtPick->Jets.size();
-	_nBJet           = evtPick->bJets.size();
+	_nPho		     = selector->Photons.size();
+	_nLoosePho	     = selector->LoosePhotons.size();
+	_nEle		     = selector->Electrons.size();
+	_nEleLoose           = selector->ElectronsLoose.size();
+	_nMuLoose            = selector->MuonsLoose.size();
+	_nMu		     = selector->Muons.size();
+	_nJet            = selector->Jets.size();
+	_nBJet           = selector->bJets.size();
 	_nMC             = tree->nMC_;
         _pdfWeight       = tree->pdfWeight_;	
 	double ht = 0.0;
@@ -412,7 +413,7 @@ void makeAnalysisNtuple::FillEvent()
 
 
 	for (int i_ele = 0; i_ele <_nEle; i_ele++){
-		int eleInd = evtPick->Electrons.at(i_ele);
+		int eleInd = selector->Electrons.at(i_ele);
 		_elePt.push_back(tree->elePt_->at(eleInd));
 		_elePhi.push_back(tree->elePhi_->at(eleInd));
 		_eleSCEta.push_back(tree->eleSCEta_->at(eleInd));
@@ -427,7 +428,7 @@ void makeAnalysisNtuple::FillEvent()
 
 
 	for (int i_mu = 0; i_mu <_nMu; i_mu++){
-		int muInd = evtPick->Muons.at(i_mu);
+		int muInd = selector->Muons.at(i_mu);
 		_muPt.push_back(tree->muPt_->at(muInd));
 		_muPhi.push_back(tree->muPhi_->at(muInd));
 		_muEta.push_back(tree->muEta_->at(muInd));
@@ -445,8 +446,8 @@ void makeAnalysisNtuple::FillEvent()
 	if (dileptonsample){
 		if (_nMu==2) {
 
-			int muInd1 = evtPick->Muons.at(0);
-			int muInd2 = evtPick->Muons.at(1);
+			int muInd1 = selector->Muons.at(0);
+			int muInd2 = selector->Muons.at(1);
 
 			lepVector.SetPtEtaPhiE(tree->muPt_->at(muInd1),
 								   tree->muEta_->at(muInd1),
@@ -464,8 +465,8 @@ void makeAnalysisNtuple::FillEvent()
 		
 		if (_nEle==2){
 			//		std::cout<<"doing electrons"<<std::endl;
-			int eleInd1 = evtPick->Electrons.at(0);
-			int eleInd2 = evtPick->Electrons.at(1);
+			int eleInd1 = selector->Electrons.at(0);
+			int eleInd2 = selector->Electrons.at(1);
 			
 			lepVector.SetPtEtaPhiE(tree->elePt_->at(eleInd1),
 								   tree->eleEta_->at(eleInd1),
@@ -486,8 +487,8 @@ void makeAnalysisNtuple::FillEvent()
 	//dipho Mass
 	if (_nPho>1){
 		//	std::cout<<_nPho<<std::endl;
-		int phoInd1 = evtPick->Photons.at(0);
-		int phoInd2 = evtPick->Photons.at(1);
+		int phoInd1 = selector->Photons.at(0);
+		int phoInd2 = selector->Photons.at(1);
 		phoVector1.SetPtEtaPhiM(tree->phoEt_->at(phoInd1),
 								tree->phoEta_->at(phoInd1),
 								tree->phoPhi_->at(phoInd1),
@@ -513,7 +514,7 @@ void makeAnalysisNtuple::FillEvent()
 
 	int parentPID = -1;
 	for (int i_pho = 0; i_pho <_nPho; i_pho++){
-		int phoInd = evtPick->Photons.at(i_pho);
+		int phoInd = selector->Photons.at(i_pho);
 		phoVector.SetPtEtaPhiM(tree->phoEt_->at(phoInd),
 							   tree->phoEta_->at(phoInd),
 							   tree->phoPhi_->at(phoInd),
@@ -554,7 +555,7 @@ void makeAnalysisNtuple::FillEvent()
 				randConeIsoUnCorr.push_back( tree->phoPFRandConeChIso_->at(phoInd).at(i_randCone) );
 				randConeEta.push_back( tree->phoEta_->at(phoInd));
 				randConePhi.push_back( tree->phoPFRandConePhi_->at(phoInd).at(i_randCone));
-				randConeJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPFRandConePhi_->at(phoInd).at(i_randCone),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+				randConeJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPFRandConePhi_->at(phoInd).at(i_randCone),selector->Jets,tree->jetEta_,tree->jetPhi_));
 			}
 			_phoPFRandConeChIso.push_back( randConeIso );
 			_phoPFRandConeChIsoUnCorr.push_back( randConeIsoUnCorr );
@@ -612,19 +613,19 @@ void makeAnalysisNtuple::FillEvent()
 		_photonParentage.push_back(parentage);
 		_photonParentPID.push_back(parentPID);
 		
-		_dRPhotonJet.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+		_dRPhotonJet.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),selector->Jets,tree->jetEta_,tree->jetPhi_));
 		_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
 		_MPhotonLepton.push_back((phoVector+lepVector).M());
 		_AnglePhotonLepton.push_back(phoVector.Angle(lepVector.Vect()));	
 
-		_phoJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+		_phoJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),selector->Jets,tree->jetEta_,tree->jetPhi_));
 	
 
 	}
 
 
 	for (int i_pho = 0; i_pho <_nLoosePho; i_pho++){
-		int phoInd = evtPick->LoosePhotons.at(i_pho);
+		int phoInd = selector->LoosePhotons.at(i_pho);
 		phoVector.SetPtEtaPhiM(tree->phoEt_->at(phoInd),
 							   tree->phoEta_->at(phoInd),
 							   tree->phoPhi_->at(phoInd),
@@ -662,7 +663,7 @@ void makeAnalysisNtuple::FillEvent()
 				randConeIsoUnCorr.push_back( tree->phoPFRandConeChIso_->at(phoInd).at(i_randCone) );
 				randConeEta.push_back( tree->phoEta_->at(phoInd));
 				randConePhi.push_back( tree->phoPFRandConePhi_->at(phoInd).at(i_randCone));
-				randConeJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPFRandConePhi_->at(phoInd).at(i_randCone),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+				randConeJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPFRandConePhi_->at(phoInd).at(i_randCone),selector->Jets,tree->jetEta_,tree->jetPhi_));
 			}
 			_loosePhoPFRandConeChIso.push_back( randConeIso );
 			_loosePhoPFRandConeChIsoUnCorr.push_back( randConeIsoUnCorr );
@@ -715,14 +716,14 @@ void makeAnalysisNtuple::FillEvent()
 			_loosePhotonIsHadronicPhoton.push_back(isHadronicPhoton);
 			_loosePhotonIsHadronicFake.push_back(isHadronicFake);
 		}
-		_loosePhoJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),evtPick->Jets,tree->jetEta_,tree->jetPhi_));
+		_loosePhoJetDR.push_back(minDr(tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd),selector->Jets,tree->jetEta_,tree->jetPhi_));
 
 	}
 
 
 	for (int i_jet = 0; i_jet <_nJet; i_jet++){
 		
-		int jetInd = evtPick->Jets.at(i_jet);
+		int jetInd = selector->Jets.at(i_jet);
 		_jetPt.push_back(tree->jetPt_->at(jetInd));
 		_jetEn.push_back(tree->jetEn_->at(jetInd));
 		_jetEta.push_back(tree->jetEta_->at(jetInd));
@@ -762,15 +763,15 @@ void makeAnalysisNtuple::FillEvent()
 		TLorentzVector jet2;
 		TLorentzVector jet3;
 		for (int i_jet1 = 0; i_jet1 <_nJet-2; i_jet1++){
-			int jetInd1 = evtPick->Jets.at(i_jet1);
+			int jetInd1 = selector->Jets.at(i_jet1);
 			jet1.SetPtEtaPhiM(tree->jetPt_->at(jetInd1),tree->jetEta_->at(jetInd1),tree->jetPhi_->at(jetInd1),0.0);
 
 			for (int i_jet2 = i_jet1+1; i_jet2 <_nJet-1; i_jet2++){
-				int jetInd2 = evtPick->Jets.at(i_jet2);
+				int jetInd2 = selector->Jets.at(i_jet2);
 				jet2.SetPtEtaPhiM(tree->jetPt_->at(jetInd2),tree->jetEta_->at(jetInd2),tree->jetPhi_->at(jetInd2),0.0);
 
 				for (int i_jet3 = i_jet2+1; i_jet3 <_nJet; i_jet3++){
-					int jetInd3 = evtPick->Jets.at(i_jet3);
+					int jetInd3 = selector->Jets.at(i_jet3);
 					jet3.SetPtEtaPhiM(tree->jetPt_->at(jetInd3),tree->jetEta_->at(jetInd3),tree->jetPhi_->at(jetInd3),0.0);
 
 					if ((jet1 + jet2 + jet3).Pt()>maxPt){
@@ -986,7 +987,7 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 	double SFb2;
 
 
-	for(std::vector<int>::const_iterator bjetInd = evtPick->bJets.begin(); bjetInd != evtPick->bJets.end(); bjetInd++){
+	for(std::vector<int>::const_iterator bjetInd = selector->bJets.begin(); bjetInd != selector->bJets.end(); bjetInd++){
 		jetpt = tree->jetPt_->at(*bjetInd);
 		jeteta = fabs(tree->jetEta_->at(*bjetInd));
 		jetflavor = abs(tree->jetHadFlvr_->at(*bjetInd));
@@ -1005,14 +1006,14 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 		btagSF.push_back(SFb);
 	}
 
-	if(evtPick->bJets.size() == 0) {
+	if(selector->bJets.size() == 0) {
 		btagWeights.push_back(1.0);
 		btagWeights.push_back(0.0);
 		btagWeights.push_back(0.0);
 
 		return btagWeights;
 
-	} else if (evtPick->bJets.size() == 1) {
+	} else if (selector->bJets.size() == 1) {
 		btagWeights.push_back(1-btagSF.at(0));
 		btagWeights.push_back(btagSF.at(0));
 		btagWeights.push_back(0.0);
@@ -1023,11 +1024,11 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 
 		// We are following the method 1SFc from the twiki
 		// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1c_Event_reweighting_using_scale
-		for (int i = 0; i < evtPick->bJets.size(); i++){
+		for (int i = 0; i < selector->bJets.size(); i++){
 			SFb = btagSF.at(i);
 			weight0tag *= 1.0 - SFb;
 			double prod = SFb;
-			for (int j = 0; j < evtPick->bJets.size(); j++){
+			for (int j = 0; j < selector->bJets.size(); j++){
 				if (j==i) {continue;}
 				prod *= (1.-btagSF.at(j));
 			}

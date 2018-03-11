@@ -269,12 +269,22 @@ double getEvtWeight(string sampleType){
 	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_T_SF;}
 	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_SF;}
 	else if( sampleType=="TTbarPowheg") {evtWeight = TTbarPowheg_SF;}
+	else if( sampleType=="TTbarPowheg1") {evtWeight = TTbarPowheg_SF;}
+	else if( sampleType=="TTbarPowheg2") {evtWeight = TTbarPowheg_SF;}
+	else if( sampleType=="TTbarPowheg3") {evtWeight = TTbarPowheg_SF;}
+	else if( sampleType=="TTbarPowheg4") {evtWeight = TTbarPowheg_SF;}
 	else if( sampleType=="TTbarMCatNLO") {evtWeight = TTbarMCatNLO_SF;}
 	else if( sampleType=="TTbarMadgraph") {evtWeight = TTbarMadgraph_SF;}
 	else if( sampleType=="TTbarMadgraph_Dilepton") {evtWeight = TTbarMadgraph_Dilepton_SF;}
 	else if( sampleType=="TTbarMadgraph_SingleLeptFromT") {evtWeight = TTbarMadgraph_SingleLeptFromT_SF;}
 	else if( sampleType=="TTbarMadgraph_SingleLeptFromTbar") {evtWeight = TTbarMadgraph_SingleLeptFromTbar_SF;}
 	else if( sampleType=="WjetsInclusive") {evtWeight = WjetsInclusive_SF;}
+	else if( sampleType=="WjetsInclusive1") {evtWeight = WjetsInclusive_SF;}
+	else if( sampleType=="WjetsInclusive2") {evtWeight = WjetsInclusive_SF;}
+	else if( sampleType=="WjetsInclusive3") {evtWeight = WjetsInclusive_SF;}
+	else if( sampleType=="WjetsInclusive4") {evtWeight = WjetsInclusive_SF;}
+	else if( sampleType=="WjetsInclusive5") {evtWeight = WjetsInclusive_SF;}
+	else if( sampleType=="WjetsInclusive6") {evtWeight = WjetsInclusive_SF;}
 	else if( sampleType=="W1jets") {evtWeight = W1jets_SF;}
 	else if( sampleType=="W2jets") {evtWeight = W2jets_SF;}
 	else if( sampleType=="W3jets") {evtWeight = W3jets_SF;}
@@ -374,12 +384,22 @@ const std::string allowedSampleTypes[99] = {"Data",
 											"TTGamma_SingleLeptFromT",
 											"TTGamma_Dilepton",
 											"TTbarPowheg",
+											"TTbarPowheg1",
+											"TTbarPowheg2",
+											"TTbarPowheg3",
+											"TTbarPowheg4",
 											"TTbarMCatNLO",
 											"TTbarMadgraph",
 											"TTbarMadgraph_SingleLeptFromTbar",
 											"TTbarMadgraph_SingleLeptFromT",
 											"TTbarMadgraph_Dilepton",
 											"WjetsInclusive",
+											"WjetsInclusive1",
+											"WjetsInclusive2",
+											"WjetsInclusive3",
+											"WjetsInclusive4",
+											"WjetsInclusive5",
+											"WjetsInclusive6",
 											"W1jets",
 											"W2jets",
 											"W3jets",

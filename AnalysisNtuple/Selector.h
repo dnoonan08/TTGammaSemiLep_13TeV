@@ -54,11 +54,11 @@ public:
 	void process_objects(EventTree* inp_tree);
 	
 	// selected object indices
-	std::vector<int> PhotonsPresel;
+	std::vector<int> Photons;
 	std::vector<bool> PhoPassChHadIso;
 	std::vector<bool> PhoPassPhoIso;
 	std::vector<bool> PhoPassSih;
-	std::vector<int> LoosePhotonsPresel;
+	std::vector<int> LoosePhotons;
 	std::vector<int> Electrons;
 	std::vector<int> ElectronsLoose;
 	std::vector<int> ElectronsMedium;
@@ -140,10 +140,10 @@ public:
  	double mu_MVA_range[2];
 	bool   mu_Iso_invert;
 
+	void clear_vectors();
 
 private:
 	EventTree* tree;
-	void clear_vectors();
 	void filter_photons();
 	void filter_electrons();
 	void filter_muons();

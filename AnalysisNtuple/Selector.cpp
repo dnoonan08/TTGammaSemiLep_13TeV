@@ -94,12 +94,12 @@ void Selector::process_objects(EventTree* inp_tree){
 }
 
 void Selector::clear_vectors(){
-	PhotonsPresel.clear();
+	Photons.clear();
 	PhoPassChHadIso.clear();
 	PhoPassPhoIso.clear();
 	PhoPassSih.clear();
 
-	LoosePhotonsPresel.clear();
+	LoosePhotons.clear();
 	
 	Electrons.clear();
 	ElectronsLoose.clear();
@@ -203,10 +203,10 @@ void Selector::filter_photons(){
 						  !hasPixelSeed);
 
 		if(phoPresel && passMediumPhotonID){
-			PhotonsPresel.push_back(phoInd);
+			Photons.push_back(phoInd);
 		}
 		if(phoPresel){
-			LoosePhotonsPresel.push_back(phoInd);
+			LoosePhotons.push_back(phoInd);
 		}
 	}
 }
@@ -215,8 +215,8 @@ void Selector::filter_photons(){
 void Selector::filter_photons_jetsDR(){
 	if (veto_jet_pho_dR < 0) return;
 
-	for(int i = PhotonsPresel.size()-1; i >= 0; i--){
-		int phoInd = PhotonsPresel.at(i);
+	for(int i = Photons.size()-1; i >= 0; i--){
+		int phoInd = Photons.at(i);
 		double eta = tree->phoEta_->at(phoInd);
 		double et = tree->phoEt_->at(phoInd);
 		double phi = tree->phoPhi_->at(phoInd);
@@ -229,14 +229,14 @@ void Selector::filter_photons_jetsDR(){
 			if (_dr < veto_jet_pho_dR) passDR_jet_pho = false;
 		}
 		if (!passDR_jet_pho){
-			PhotonsPresel.erase(PhotonsPresel.begin()+i);
+			Photons.erase(Photons.begin()+i);
 		}
 	}
 
 
 
-	for(int i = LoosePhotonsPresel.size()-1; i >= 0; i--){
-		int phoInd = LoosePhotonsPresel.at(i);
+	for(int i = LoosePhotons.size()-1; i >= 0; i--){
+		int phoInd = LoosePhotons.at(i);
 		double eta = tree->phoEta_->at(phoInd);
 		double et = tree->phoEt_->at(phoInd);
 		double phi = tree->phoPhi_->at(phoInd);
@@ -249,7 +249,7 @@ void Selector::filter_photons_jetsDR(){
 			if (_dr < veto_jet_pho_dR) passDR_jet_pho = false;
 		}
 		if (!passDR_jet_pho){
-			LoosePhotonsPresel.erase(LoosePhotonsPresel.begin()+i);
+			LoosePhotons.erase(LoosePhotons.begin()+i);
 		}
 
 	}
@@ -477,7 +477,7 @@ void Selector::filter_jets(){
 		//		cout << "photon dR" << endl;
 		//loop over selected photons
 
-		for(std::vector<int>::const_iterator phoInd = PhotonsPresel.begin(); phoInd != PhotonsPresel.end(); phoInd++) {
+		for(std::vector<int>::const_iterator phoInd = Photons.begin(); phoInd != Photons.end(); phoInd++) {
 			// Only look at photons which pass the medium ID (this is left out of the selector in makeAnalysisNtuple so that different cuts can be invereted)
 			if (tree->phoIDbit_->at(*phoInd) >> 1 & 1){
 				if (dR(tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), tree->phoEta_->at(*phoInd), tree->phoPhi_->at(*phoInd)) < veto_pho_jet_dR) passDR_pho_jet = false;
