@@ -22,21 +22,21 @@ public:
 	
 	std::string title;
 	
-	// selected object indices
-	std::vector<int> Electrons;
-	std::vector<int> ElectronsLoose;
-	std::vector<int> ElectronsMedium;
-	std::vector<int> Muons;
-	std::vector<int> MuonsLoose;
-	std::vector<int> Jets;
-	std::vector<int> bJets;
-	// indices and selection cuts for photons
-	std::vector<int> Photons;
-	std::vector<int> LoosePhotons;
-	std::vector<int> PhotonsPresel;
-	std::vector<bool> PhoPassChHadIso;
-	std::vector<bool> PhoPassPhoIso;
-	std::vector<bool> PhoPassSih;
+	/* // selected object indices */
+	/* std::vector<int> Electrons; */
+	/* std::vector<int> ElectronsLoose; */
+	/* std::vector<int> ElectronsMedium; */
+	/* std::vector<int> Muons; */
+	/* std::vector<int> MuonsLoose; */
+	/* std::vector<int> Jets; */
+	/* std::vector<int> bJets; */
+	/* // indices and selection cuts for photons */
+	/* std::vector<int> Photons; */
+	/* std::vector<int> LoosePhotons; */
+	/* std::vector<int> PhotonsPresel; */
+	/* std::vector<bool> PhoPassChHadIso; */
+	/* std::vector<bool> PhoPassPhoIso; */
+	/* std::vector<bool> PhoPassSih; */
 
 	bool saveCutflows;
 
@@ -98,13 +98,13 @@ private:
 	EventTree* tree;
 	Selector* selector;
 	
-	void clear_vectors();
+	//	void clear_vectors();
 	void set_cutflow_labels_mu(TH1D* hist);
 	void set_cutflow_labels_ele(TH1D* hist);
-	double dR_jet_ele(int jetInd, int eleInd);
-	double dR_jet_mu(int jetInd, int muInd);
-	double dR_jet_pho(int jetInd, int phoInd);
-	double dR_ele_pho(int eleInd, int phoInd);
-	double dR_mu_pho(int muInd, int phoInd);
+	/* double dR_jet_ele(int jetInd, int eleInd); */
+	/* double dR_jet_mu(int jetInd, int muInd); */
+	/* double dR_jet_pho(int jetInd, int phoInd); */
+	/* double dR_ele_pho(int eleInd, int phoInd); */
+	/* double dR_mu_pho(int muInd, int phoInd); */
 };
 #endif
