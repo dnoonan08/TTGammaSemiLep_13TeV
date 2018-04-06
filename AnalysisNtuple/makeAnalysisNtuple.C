@@ -118,6 +118,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	bool doOverlapRemoval = false;
 	bool doOverlapRemoval_WZ = false;	
 	bool doOverlapRemoval_Tchannel = false;	
+
+	bool invertOverlap = false;
+
 	bool skipOverlap = false;
 	applypdfweight = false;
 	applyqsquare  = false;
@@ -127,7 +130,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	if( sampleType == "ST_t-channel" || sampleType == "ST_tbar-channel") doOverlapRemoval_Tchannel = true;
 	if(doOverlapRemoval || doOverlapRemoval_WZ || doOverlapRemoval_Tchannel) std::cout << "########## Will apply overlap removal ###########" << std::endl;
-	if ( sampleType == "TTbarPowheg"||sampleType == "TTGamma_SingleLeptFromT" || sampleType == "TTGamma_SingleLeptFromTbar" || sampleType == "TTGamma_Dilepton"|| sampleType == "TTGamma_Hadronic"){
+	if( sampleType == "TTbarPowheg" || sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType=="TTGamma_Dilepton" || sampleType == "TTGamma_SingleLeptFromT" || sampleType == "TTGamma_SingleLeptFromTbar" || sampleType == "TTGamma_Hadronic" || sampleType == "TTGJets"){
 		 applypdfweight = true; 	
 		 applyqsquare = true;
 	}
@@ -248,6 +251,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	int count_overlapTchannel=0;
 	int count_overlapVJets=0;
 	int count_overlapTTbar=0;
+
 	for(Long64_t entry=0; entry<nEntr; entry++){
 		if(entry%dumpFreq == 0){
 			duration =  ( clock() - startClock ) / (double) CLOCKS_PER_SEC;
@@ -260,11 +264,18 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		isMC = !(tree->isData_);
 
 		if( isMC && doOverlapRemoval){
-			if (overlapRemovalTT(tree)){
-	
-				count_overlapTTbar++;			
-			//	cout << "removing event " << entry << endl;
-				continue;
+			if (!invertOverlap){
+				if (overlapRemovalTT(tree)){	
+					count_overlapTTbar++;			
+					//	cout << "removing event " << entry << endl;
+					continue;
+				}
+			} else {
+				if (!overlapRemovalTT(tree)){	
+					count_overlapTTbar++;			
+					//	cout << "removing event " << entry << endl;
+					continue;
+				}
 			}
 		}
 		if( isMC && doOverlapRemoval_WZ){
@@ -906,12 +917,16 @@ void makeAnalysisNtuple::FillEvent()
 			_q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());
 			_q2weight_nominal = tree->genScaleSystWeights_->at(0);
 		}
+
 		if(applypdfweight){
 			double mean=0.;
-			for (int i=9;i<109;i++){
+			for (int i=9;i<tree->pdfSystWeight_->size();i++){
 				_pdfSystWeight.push_back(tree->pdfSystWeight_->at(i));
-				mean += tree->pdfSystWeight_->at(i);
+				if (i<109){
+					mean += tree->pdfSystWeight_->at(i);
+				}
 			}
+
 			mean = mean/100.;
 
 			double sum=0.;
@@ -1241,9 +1256,11 @@ void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, boo
 	}
 
 	//	mcMatchInd = findPhotonGenMatch(int phoInd, EventTree* tree);
+	bool parentagePass = (fabs(tree->mcMomPID->at(mcMatchInd))<37 || tree->mcMomPID->at(mcMatchInd) == -999);
 
 	if (tree->mcPID->at(mcMatchInd) == 22){
-		bool parentagePass = tree->mcParentage->at(mcMatchInd)==2 || tree->mcParentage->at(mcMatchInd)==10 || tree->mcParentage->at(mcMatchInd)==26;
+		//bool parentagePass = (fabs(tree->mcMomPID->at(mcMatchInd))<37 || tree->mcMomPID->at(mcMatchInd) == -999);
+		//parentagePass = tree->mcParentage->at(mcMatchInd)==2 || tree->mcParentage->at(mcMatchInd)==10 || tree->mcParentage->at(mcMatchInd)==26;
 		bool drotherPass = minGenDr(mcMatchInd, tree) > 0.2;
 		if (parentagePass && drotherPass){ 
 			*genuine = true;
@@ -1252,7 +1269,7 @@ void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, boo
 			*hadronicphoton = true;
 		}
 	}
-	else if ( abs(tree->mcPID->at(mcMatchInd) ) == 11 && tree->mcParentage->at(mcMatchInd)==10 && minGenDr(mcMatchInd, tree) > 0.2 ) {
+	else if ( abs(tree->mcPID->at(mcMatchInd) ) == 11 && parentagePass && minGenDr(mcMatchInd, tree) > 0.2 ) {
 		*misIDele = true;
 	} 
 	else {
