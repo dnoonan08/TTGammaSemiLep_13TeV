@@ -100,14 +100,22 @@ sampleType=("TTGamma_SingleLeptFromTbar" \
 "TTGamma_SingleLeptFromT" \
 "TTGamma_Dilepton" \
 "TTGamma_Hadronic" \
-"TTbarPowheg" \
+"TTbarPowheg1" \
+"TTbarPowheg2" \
+"TTbarPowheg3" \
+"TTbarPowheg4" \
 "TTbarMadgraph_SingleLeptFromT" \
 "TTbarMadgraph_SingleLeptFromTbar" \
 "TTbarMadgraph_Dilepton" \
 "TGJets" \
 "TTGJets" \
 "TTbarMadgraph" \
-"WjetsInclusive" \
+"WjetsInclusive1" \
+"WjetsInclusive2" \
+"WjetsInclusive3" \
+"WjetsInclusive4" \
+"WjetsInclusive5" \
+"WjetsInclusive6" \
 "W1jets" \
 "W2jets" \
 "W3jets" \
@@ -177,27 +185,29 @@ if [ "$systematic" = true ] ; then
 	else
 
 		if [ "$jobType" == "JEC1" ] ;   then
-			jecList=("JECTotal" \
-				"JECAbsoluteStat" \
+			jecList=("JECTotal")
+		fi
+		if [ "$jobType" == "JEC2" ] ;   then
+			jecList=("JECAbsoluteStat" \
 				"JECAbsoluteScale" \
 				"JECAbsoluteMPFBias" \
 				"JECFragmentation")
 		fi
-		if [ "$jobType" == "JEC2" ] ;   then
+		if [ "$jobType" == "JEC3" ] ;   then
 			jecList=("JECSinglePionECAL" \
 				"JECSinglePionHCAL" \
 				"JECFlavorQCD" \
 				"JECTimePtEta" \
 				"JECRelativeJEREC1")
 		fi
-		if [ "$jobType" == "JEC3" ] ;   then
+		if [ "$jobType" == "JEC4" ] ;   then
 			jecList=("JECRelativePtBB" \
 				"JECRelativePtEC1" \
 				"JECRelativeBal" \
 				"JECRelativeFSR" \
 				"JECRelativeStatFSR")
 		fi
-		if [ "$jobType" == "JEC4" ] ;   then
+		if [ "$jobType" == "JEC5" ] ;   then
 			jecList=("JECRelativeStatEC" \
 				"JECPileUpDataMC" \
 				"JECPileUpPtRef" \

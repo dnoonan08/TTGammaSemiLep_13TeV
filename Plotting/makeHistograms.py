@@ -70,7 +70,7 @@ makeEGammaPlots = options.makeEGammaPlots
 
 runQuiet = options.quiet
 
-print runsystematic
+if not runQuiet: print runsystematic
 #exit()
 
 nJets = 3
@@ -99,7 +99,7 @@ if finalState=="Mu":
         sample = "DataMu"
     if sample=="QCD":
         sample = "QCDMu"
-    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07/Test/"
+    analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07/"
     outputhistName = "histograms/mu/%s"%outputFileName
     if runsystematic:
 
@@ -120,12 +120,20 @@ if finalState=="Mu":
                 outputhistName = "histograms/mu/%sQ2_%s"%(outputFileName,level)
 
         elif 'Pdf' in syst:
-                if level=="up":
-                        Pdf="pdfweight_Up"
-                else:
-                        Pdf="pdfweight_Do"
+		if syst=="Pdf":
 
-                outputhistName = "histograms/mu/%sPdf_%s"%(outputFileName,level)
+			if level=="up":
+				Pdf="pdfweight_Up"
+			else:
+				Pdf="pdfweight_Do"
+			outputhistName = "histograms/mu/%sPdf_%s"%(outputFileName,level)
+
+		else:
+			if type(eval(syst[3:]))==type(int()):
+				pdfNumber = eval(syst[3:])
+				Pdf="pdfSystWeight[%i]/pdfWeight"%(pdfNumber-1)
+				outputhistName = "histograms/mu/%sPdf/Pdf%i"%(outputFileName,pdfNumber)				
+
 
         elif 'MuEff' in syst:
                 if level=="up":
@@ -199,7 +207,7 @@ elif finalState=="Ele":
         sample = "QCDEle"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/electrons/V08_00_26_07/"
     outputhistName = "histograms/ele/%s"%outputFileName
-    if runsys:
+    if runsystematic:
 	 if 'PU' in syst:
                 if level=="up":
                         Pileup = "PUweight_Up"
@@ -218,14 +226,20 @@ elif finalState=="Ele":
 
 
          elif 'Pdf' in syst:
-                if level=="up":
-                        Pdf="pdfweight_Up"
-                else:
-                        Pdf="pdfweight_Do"
+		if syst=="Pdf":
 
-                outputhistName = "histograms/ele/%sPdf_%s"%(outputFileName,level)
+			if level=="up":
+				Pdf="pdfweight_Up"
+			else:
+				Pdf="pdfweight_Do"
+			outputhistName = "histograms/ele/%sPdf_%s"%(outputFileName,level)
 
-
+		else:
+			if type(eval(syst[3:]))==type(int()):
+				pdfNumber = eval(syst[3:])
+				Pdf="pdfSystWeight[%i]/pdfWeight"%(pdfNumber-1)
+				outputhistName = "histograms/ele/%sPdf/Pdf%i"%(outputFileName,pdfNumber)				
+				
          elif 'MuEff' in syst:
                 if level=="up":
                         MuEff = "muEffWeight_Up"
@@ -519,7 +533,7 @@ if plotList is None:
             if not runQuiet: 
                 print '---'
                 print '  Found the following plots matching the name key %s'%plotNameTemplate
-                print '    thisPlotList'
+                print '    ',thisPlotList
             plotList += thisPlotList
 
         #take the set to avoid duplicates (if multiple plot name templates are used, and match the same plot)

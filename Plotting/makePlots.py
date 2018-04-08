@@ -151,7 +151,7 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "presel_nVtxup"   : ["N Vtx up"               , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "presel_nVtxdo"   : ["N Vtx down"               , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "presel_nVtxNoPU" : ["N Vtx noPU"               , "Events", 1, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_LeadingPhotonEt"                : ["Photon Et (GeV)"          , "Events", 5, [-1,-1], regionText,  NoLog, " "],     
+	      "phosel_LeadingPhotonEt"                : ["Photon Et (GeV)"          , "Events", 5, [0,150], regionText,  NoLog, " "],     
 	      "phosel_SecondLeadingPhotonEt"          : ["Photon Phi (GeV)"         , "Events", 1, [-1,-1], regionText,  NoLog, " "],    
 	      "phosel_LeadingPhotonEta"               : ["Photon Eta (GeV)"         , "Events/0.1", 1, [-1,-1], regionText,  NoLog, " "],   
 	      "phosel_LeadingPhotonSCEta"             : ["Photon SCEta (GeV)"       , "Events/0.1", 1, [-1,-1], regionText,  NoLog, " "], 
@@ -270,7 +270,7 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_mcMomPIDHadPho"          : ["ParentPID of HadronicPho" , "Events", 1, [-1000,600], regionText, YesLog, "Hadronic Photon"],
 	      "phosel_mcMomPIDHadFake"         : ["ParentPID of HadronicFake", "Events", 1, [-1,-1], regionText,  YesLog, "Hadronic Fake"],
 	    #  "phosel_RandomCone"              : ["RandomConeIsolation GeV"  , "Events", 1, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_PhotonCategory"          :["Genuine,MisIDEle,HadPho,HadFake","Events", 1, [-1,-1], regionText,  YesLog, " "],
+	      "phosel_PhotonCategory"          : ["Photon Category","Events", 1, [-1,-1], regionText,  YesLog, " "],
 	      "phosel_MassEGamma"              : ["m_{e,#gamma} GeV"         , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_MassLepGamma"            : ["m_{lepton,#gamma} GeV"    , "Events", 5, [-1,-1], regionText,  NoLog, " "],
 	      }
@@ -293,7 +293,7 @@ if plotList is None:
                 plotList.sort()
         else:
                 #plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
-		plotList = ["presel_M3_control","phosel_noCut_ChIso_barrel","phosel_noCut_ChIso_endcap","phosel_noCut_ChIso_GenuinePhoton_barrel","phosel_noCut_ChIso_GenuinePhoton_endcap","phosel_noCut_ChIso_MisIDEle_barrel","phosel_noCut_ChIso_MisIDEle_endcap","phosel_noCut_ChIso_HadronicPhoton_barrel","phosel_noCut_ChIso_HadronicPhoton_endcap","phosel_noCut_ChIso_HadronicFake_barrel","phosel_noCut_ChIso_HadronicFake_endcap","phosel_M3_barrel","phosel_M3_endcap","phosel_M3_GenuinePhoton_barrel","phosel_M3_GenuinePhoton_endcap","phosel_M3_MisIDEle_barrel","phosel_M3_MisIDEle_endcap","phosel_M3_HadronicPhoton_barrel","phosel_M3_HadronicPhoton_endcap","phosel_M3_HadronicFake_barrel","phosel_M3_HadronicFake_endcap","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
+		plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_barrel","phosel_noCut_ChIso_endcap","phosel_noCut_ChIso_GenuinePhoton_barrel","phosel_noCut_ChIso_GenuinePhoton_endcap","phosel_noCut_ChIso_MisIDEle_barrel","phosel_noCut_ChIso_MisIDEle_endcap","phosel_noCut_ChIso_HadronicPhoton_barrel","phosel_noCut_ChIso_HadronicPhoton_endcap","phosel_noCut_ChIso_HadronicFake_barrel","phosel_noCut_ChIso_HadronicFake_endcap","phosel_M3","phosel_M3_barrel","phosel_M3_endcap","phosel_M3_GenuinePhoton_barrel","phosel_M3_GenuinePhoton_endcap","phosel_M3_MisIDEle_barrel","phosel_M3_MisIDEle_endcap","phosel_M3_HadronicPhoton_barrel","phosel_M3_HadronicPhoton_endcap","phosel_M3_HadronicFake_barrel","phosel_M3_HadronicFake_endcap","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
 
 
 import CMS_lumi
@@ -599,7 +599,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	    else:
 		    dataHist.Rebin(plotInfo[2])
 #	    dataHist.Rebin(plotInfo[2])
-
+	    print dataHist.GetMarkerStyle()
 	    if useOverflow:
 		    lastBin = dataHist.GetNbinsX()
 		    lastBinContent = dataHist.GetBinContent(lastBin)
@@ -653,6 +653,13 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 
     #histograms list has x-axis title
     stack.GetHistogram().GetXaxis().SetTitle(plotInfo[0])
+
+    if "phosel_PhotonCategory" in histName:
+	    stack.GetHistogram().GetXaxis().SetBinLabel(1,"Genuine")
+	    stack.GetHistogram().GetXaxis().SetBinLabel(2,"Mis-id ele")
+	    stack.GetHistogram().GetXaxis().SetBinLabel(3,"Hadronic Photon")
+	    stack.GetHistogram().GetXaxis().SetBinLabel(4,"Hadronic Fake")
+
     stack.GetHistogram().GetYaxis().SetTitle(plotInfo[1])
     if not -1 in plotInfo[3]:
         stack.GetHistogram().GetXaxis().SetRangeUser(plotInfo[3][0],plotInfo[3][1])
