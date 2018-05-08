@@ -40,14 +40,11 @@ process_signal = {"TTGamma_Prompt":["t#bar{t}+#gamma Prompt"],
 		  "TTbar_NonPrompt": ["t#bar{t} Nonprompt"],
 		  "VGamma_Prompt":["V+#gamma Prompt"],
 		  "VGamma_NonPrompt":["V+#gamma Nonprompt"],
-		  "SingleTop_Prompt":["Single top Prompt"],
-		  "SingleTop_NonPrompt":["Single top Nonprompt"],
 		  "VJets_Prompt":["V+jets Prompt"],
 		  "VJets_NonPrompt":["V+jets Nonprompt"],
 		  "Other_Prompt":["Other Prompt"],
 		  "Other_NonPrompt":["Other Nonprompt"],
 		  "Other":["Other"],
-		  "SingleTop":["Single top"],
 		  "VJets":["V+jets"],
 		  "VGamma":["V+#gamma"],
 		  "TTbar":["t#bar{t}"],
@@ -137,15 +134,15 @@ SetOwnership(pad1,False)
 SetOwnership(pad2,False)
 
 if finalState=="ele":
-	_file = TFile("Combine_withDDTemplate_v2_ele.root","read")
+	_file = TFile("Combine_withDDTemplateData_v2_ele.root","read")
         if TightSelection :
 		_file = TFile("Combine_withDDTemplate_v2_ele_tight.root","read")
 else:
-	_file = TFile("Combine_withDDTemplate_v2_mu.root","read")
+	_file = TFile("Combine_withDDTemplateData_v2_mu.root","read")
 	if TightSelection :
                 _file = TFile("Combine_withDDTemplate_v2_mu_tight.root","read")
-MC_signal = ["TTbar_Prompt","TTbar_NonPrompt","TTGamma_Prompt","TTGamma_NonPrompt","TTbar_DD"]
-MC_control =["TTGamma","TTbar"]
+MC_signal = ["TTbar_Prompt","TTbar_NonPrompt","TTGamma_Prompt","TTGamma_NonPrompt","VGamma_Prompt","VGamma_NonPrompt","VJets_Prompt","VJets_NonPrompt","Other_Prompt","Other_NonPrompt"]
+MC_control =["TTGamma","TTbar","VGamma","VJets","Other"]
 
 process = MC_signal
 if finalState=="mu":
@@ -158,7 +155,13 @@ if finalState=="mu":
 		       "PU" :["Pileup"],
 		       "MuEff"  :["Muon Eff"],
 		       "PhoEff" :["Photon Eff"],
-		       "JECTotal": ["JEC Total"],	
+		       "JECTotal": ["JEC Total"],
+		       "JECSubTotalRelative" :["JEC Relative SubTotal"],
+                       "JECSubTotalScale" : ["JEC Scale SubTotal"],
+                       "JECSubTotalPt" :["JEC Pt SubTotal"],
+                       "JECSubTotalPileUp" : ["JEC PileUp SubTotal"], 
+                       "JECSubTotalMC" : ["JEC MC SubTotal"],
+                       "JECSubTotalAbsolute" : ["JEC Absolute SubTotal"],   	
 		       "isr":["ISR"],
 		       "fsr":["FSR"],
 		       "shapeDD":["Shape unc"],
@@ -178,6 +181,12 @@ else:
 		       "EleEff" :["Electron Eff"],
 		       "PhoEff" :["Photon Eff"],
 		       "JECTotal": ["JEC Total"],
+		       "JECSubTotalRelative" :["JEC Relative SubTotal"],
+                       "JECSubTotalScale" : ["JEC Scale SubTotal"],
+                       "JECSubTotalPt" :["JEC Pt SubTotal"],
+                       "JECSubTotalPileUp" : ["JEC PileUp SubTotal"],
+                       "JECSubTotalMC" : ["JEC MC SubTotal"],
+                       "JECSubTotalAbsolute" : ["JEC Absolute SubTotal"],
 		       "isr":["ISR"],
 		       "fsr":["FSR"],
 		       "shapeDD":["Shape unc"],
@@ -210,16 +219,18 @@ for o in observe_:
 		
 		
 	for p in process:
-		if o=="ChHad" and "NonPrompt" in p:continue
+		if finalState=="mu" and "VJets_Prompt" in p:continue
 		# print _file
 		# print "%s/%s/nominal"%(o,p)		
-		if p=="TTbar_DD":
+		if o=="ChHad" and "NonPrompt" in p:
 			systematics_use=["shapeDD"]
 		else:
 			systematics_use=systematics
-		if "TTbar_DD" in p and "ChHad" not in o:continue
+		#if "TTbar_DD" in p and "ChHad" not in o:continue
 		print  _file, "%s/%s/nominal"%(o,p)
                 nominal = _file.Get("%s/%s/nominal"%(o,p))
+	#	if "M3" in o:
+		nominal.Scale(1.,"width")
 		nominal.SetLineColor(kBlack)
 		nominal.SetLineWidth(2)
 		nominal.SetMarkerColor(kBlack)
@@ -227,13 +238,25 @@ for o in observe_:
 		for sys in systematics_use:
 			c1.Draw()
 			c1.cd()
-			if sys in ["isr","fsr"] and not 'TTGamma' in p: continue
-			if sys=="shapeDD" and "TTbar_DD" not in p: continue
+			if sys in ["isr","fsr","Q2","Pdf"] :
+				print sys, p
+				
+				if p not in ["TTbar_Prompt","TTGamma_Prompt","TTbar_NonPrompt","TTGamma_NonPrompt","TTbar","TTGamma"] :continue
+					
+				
+			if sys=="shapeDD" and "M3" in o: continue
+			if sys=="shapeDD" and o=="ChHad" and "NonPrompt" not in p:continue
 			
 			
 
 			up =  _file.Get("%s/%s/%sUp"%(o,p,sys))
-			do = _file.Get("%s/%s/%sDown"%(o,p,sys))
+			do =  _file.Get("%s/%s/%sDown"%(o,p,sys))
+			#if "M3" in o:
+				#print "%s/%s/%sUp"%(o,p,sys)
+				#print "%s/%s/%sDown"%(o,p,sys)
+			print "%s/%s/%sUp"%(o,p,sys)
+			up.Scale(1.,"width")
+			do.Scale(1.,"width")
 			print o,p,sys	
 			_max = max(up.GetMaximum(), do.GetMaximum(), nominal.GetMaximum())
 
@@ -256,7 +279,7 @@ for o in observe_:
 			up.SetMarkerColor(kRed)
 			up.Draw("hist")
 			up.GetXaxis().SetTitle("%s"%(observe_[o][0]))
-			up.GetYaxis().SetTitle("Events")
+			up.GetYaxis().SetTitle("#LT Events / GeV #GT")
 
 			do.SetLineStyle(1)
                         do.SetLineWidth(2)
@@ -276,13 +299,17 @@ for o in observe_:
   			CMS_lumi.channelText = _channelText      	
         		CMS_lumi.CMS_lumi(c1, 4, 11)
 
-        		Quiet(c1.SaveAs)("Systematics_1/%s_%s_%s_%s.pdf"%(o,p,sys,finalState))
-        		c1.Clear()
+#        		Quiet(c1.SaveAs)("Systematics_1/%s_%s_%s_%s.pdf"%(o,p,sys,finalState))
+ #       		c1.Clear()
 
 			c2.cd()
 			c2.ResetDrawn()
 			c2.Draw()
 			c2.cd()
+#			if :
+#				c2.SetLogy(1)
+#			else:
+#3				c2.SetLogy(0)
 		#	if sys=="shapeDD":
 		#		print "it is!!"
 		#		c2.SetLogy()
@@ -320,9 +347,11 @@ for o in observe_:
 
 			ratioUp.SetLineColor(kRed)
 			ratioDo.SetLineColor(kBlue)
-		#	if sys=="shapeDD":
-                 #               print "it is!!"
-                  #              pad1.SetLogy()
+			if o=="ChHad":
+               #                 print "it is!!"
+                                pad1.SetLogy(1)
+			else:
+				pad1.SetLogy(0)
 				
 			up.Draw("hist")
 			do.Draw("hist,same")
@@ -339,4 +368,4 @@ for o in observe_:
 			oneline.Draw("same")
 			
 				
-        		Quiet(c2.SaveAs)("Systematics_1/%s_%s_%s_%s_ratio.pdf"%(o,p,sys,finalState))
+        		Quiet(c2.SaveAs)("Systematics_M3shape/%s_%s_%s_%s_ratio.pdf"%(o,p,sys,finalState))
