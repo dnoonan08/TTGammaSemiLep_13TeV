@@ -41,15 +41,20 @@ parser.add_option("--useQCDMC","--qcdMC",dest="useQCDMC", default=False, action=
 		  help="")
 parser.add_option("--noQCD",dest="noQCD", default=False, action="store_true",
 		  help="")
+parser.add_option("--useQCDCR",dest="useQCDCR", default=False, action="store_true",
+                  help="to make plots in QCDCR region")
+
 parser.add_option("--reorderTop", dest="newStackListTop",action="append",
 		  help="New order for stack list (which plots will be put on top of the stack)" )
 parser.add_option("--reorderBot", dest="newStackListBot",action="append",
 		  help="New order for stack list (which plots will be put on top of the stack)" )
 
-
+parser.add_option("--dilepmassPlots","--dilepmassPlots", dest="Dilepmass",action="store_true",default=False,
+                     help="Make only plots for ZJetsSF fits" )
 
 (options, args) = parser.parse_args()
 
+Dilepmass = options.Dilepmass
 isTightSelection = options.isTightSelection
 isLooseCR2e0Selection = options.isLooseCR2e0Selection
 isLooseCR2g0Selection = options.isLooseCR2g0Selection
@@ -65,6 +70,7 @@ useOverflow = options.useOverflow
 inputFile = options.inputFile
 useQCDMC = options.useQCDMC
 noQCD = options.noQCD
+useQCDCR = options.useQCDCR
 makeMorePlots = options.makeMorePlots
 makeAllPlots = options.makeAllPlots
 
@@ -74,14 +80,34 @@ finalState = options.channel
 print "Running on the %s channel"%(finalState)
 if finalState=='Mu':
 	_fileDir = "histograms/mu/hists"
-	plotDirectory = "plots_mu/"
+	plotDirectory = "plots_mu"
 	regionText = ", N_{j}#geq3, N_{b}#geq1"
 	channel = 'mu'
+	if useQCDCR:
+		_fileDir = "histograms/mu/qcdhistsCR"
+		plotDirectory = "plots_mu_QCDCR"
+		regionText = ", QCD CR"
 if finalState=="Ele":
 	_fileDir = "histograms/ele/hists"
-        plotDirectory = "plots_ele/"
+        plotDirectory = "plots_ele"
         regionText = ", N_{j}#geq3, N_{b}#geq1"
 	channel = 'ele'
+	if useQCDCR:
+                _fileDir = "histograms/ele/qcdhistsCR"
+                plotDirectory = "plots_ele_QCDCR"
+                regionText = ", QCD CR"
+
+
+if finalState=='DiMu':
+        _fileDir = "histograms/mu/dilephists"
+        plotDirectory = "plots_mu"
+        regionText = ", N_{j}#geq3, N_{b}#geq1"
+        channel = 'mu'
+if finalState=="DiEle":
+        _fileDir = "histograms/ele/dilephists"
+        plotDirectory = "plots_ele"
+        regionText = ", N_{j}#geq3, N_{b}#geq1"
+        channel = 'ele'
 
 
 
@@ -94,16 +120,16 @@ if isLooseCR2g0Selection:
 	_fileDir = "histograms/%s/hists_looseCR2g0/"%channel
 	regionText = ", N_{j}=2, N_{b}#geq0"
 if isLooseCR2g1Selection:
-	plotDirectory = "looseplots_%s_CR2g1/"%channel
-	_fileDir = "histograms/%s/hists_looseCR2g1/"%channel
+	plotDirectory = plotDirectory+"_looseCR2g1"
+	_fileDir = _fileDir+"_looseCR2g1"
 	regionText = ", N_{j}=2, N_{b}#geq1"
 if isLooseCR2e0Selection:
 	plotDirectory = "looseplots_%s_CR2e0/"%channel
 	_fileDir = "histograms/%s/hists_looseCR2e0"%channel
 	regionText = ", N_{j}#geq2, N_{b}=0"
 if isLooseCR3e0Selection:
-	plotDirectory = "looseCRplots_%s_CR3e0/"%channel
-	_fileDir = "histograms/%s/hists_looseCR3e0"%channel
+	plotDirectory =  plotDirectory+"_looseCR3e0"
+	_fileDir = "histograms/ele/hists_looseCR3e0"
 	regionText = ", N_{j}#geq3, N_{b}=0"
 
 if not inputFile is None:
@@ -130,6 +156,11 @@ NoLog=False
 #  Extra text about region
 #  log plot]
 
+histograms_dilep = {"presel_DilepMass"   : ["m_(lepton,lepton) (GeV)", "Events", 5, [-1,-1], regionText, NoLog, " "],
+		}
+
+
+
 
 histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1], regionText, YesLog, " "],
 	      "presel_jet2Pt"   : ["Second Jet Pt (GeV)" , "Events", 5, [-1,-1], regionText, YesLog, " "],
@@ -142,8 +173,8 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "presel_elePhi"   : ["Electron #phi"       , "Events/0.06", 5, [-1,-1], regionText,  NoLog, " "],
 	      "presel_Njet"     : ["N Jets"              , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "presel_Nbjet"    : ["N B-Jets"            , "Events", 1, [-1,-1], regionText,  NoLog, " "],
-	      "presel_M3"       : ["M_{3} (GeV)"         , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, " "],
-	      "presel_M3_control": ["M_{3} (GeV)"         , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, " "],
+	      "presel_M3"       : ["M_{3} (GeV)"         , "Events/10 GeV", 10, [50,550], regionText,  NoLog, " "],
+	      "presel_M3_control": ["M_{3} (GeV)"         , "Events/10 GeV", 10, [50,550], regionText,  NoLog, " "],
 	      "presel_MET"      : ["MET (GeV)  "         , "Events/2 GeV", 5, [-1,-1], regionText,  NoLog, " "],
 	      "presel_WtransMass"     : ["W transverse mass (GeV)  ", "Events/5", 1, [-1,-1], regionText,  NoLog, " "],
 	      "presel_HT"       :["H_{T} (GeV)","Events/9", 1, [-1,-1], regionText,  NoLog, " "],
@@ -169,9 +200,9 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_Nphotons"                : ["Number of Photons "            , "Events", 1, [-1,-1], regionText,  YesLog, " "],
 	      "phosel_HT"                      : ["H_{T} (GeV)"                ,"Events/9",  1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_MET"                     : ["MET (GeV)  "                , "Events/2", 5, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_M3"                      : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, " "],   
-	      "phosel_M3_barrel"               : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, " "],   
-	      "phosel_M3_endcap"               : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, " "],   
+	      "phosel_M3"                      : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [50,500], regionText,  NoLog, " "],   
+	      "phosel_M3_barrel"               : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [50,500], regionText,  NoLog, " "],   
+	      "phosel_M3_endcap"               : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [50,500], regionText,  NoLog, " "],   
 	      "phosel_M3_GenuinePhoton"        : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "Genuine Photon"],   
 	      "phosel_M3_MisIDEle"             : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "MisIDEle"],
 	      "phosel_M3_HadronicPhoton"       : ["M_{3} (GeV)"                , "Events/10 GeV", 10, [-1,-1], regionText,  NoLog, "Hadronic Photon"],
@@ -254,15 +285,15 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_AntiSIEIE_ChIso"         : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, " "],
 	      "phosel_AntiSIEIE_ChIso_barrel"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, " "],
 	      "phosel_AntiSIEIE_ChIso_endcap"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, " "],
-	      "phosel_AntiSIEIE_ChIso_GenuinePho_barrel": ["Charged Hadron Iso (GeV)"   , "Events",  [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, "Genuine Photon"],
-	       "phosel_AntiSIEIE_ChIso_GenuinePho_endcap": ["Charged Hadron Iso (GeV)"   , "Events",  [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, "Genuine Photon"],
+	      "phosel_AntiSIEIE_ChIso_GenuinePhoton_barrel": ["Charged Hadron Iso (GeV)"   , "Events",  [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, "Genuine Photon"],
+	       "phosel_AntiSIEIE_ChIso_GenuinePhoton_endcap": ["Charged Hadron Iso (GeV)"   , "Events",  [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.], [-1,-1], regionText,  NoLog, "Genuine Photon"],
 	      "phosel_AntiSIEIE_ChIso_MisIDEle_barrel": ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog, "MisIDEle"],    
 	      
 	      "phosel_AntiSIEIE_ChIso_MisIDEle_endcap": ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog, "MisIDEle"],
-	      "phosel_AntiSIEIE_ChIso_HadPho_barrel"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog,"Hadronic Photon"],       
-	      "phosel_AntiSIEIE_ChIso_HadPho_endcap"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog,"Hadronic Photon"],
-	      "phosel_AntiSIEIE_ChIso_HadFake_barrel" : ["Charged Hadron Iso HadFake (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog, "Hadronic Fake"],
-	      "phosel_AntiSIEIE_ChIso_HadFake_endcap" : ["Charged Hadron Iso HadFake (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog, "Hadronic Fake"],
+	      "phosel_AntiSIEIE_ChIso_HadronicPhoton_barrel"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog,"Hadronic Photon"],       
+	      "phosel_AntiSIEIE_ChIso_HadronicPhoton_endcap"  : ["Charged Hadron Iso (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog,"Hadronic Photon"],
+	      "phosel_AntiSIEIE_ChIso_HadronicFake_barrel" : ["Charged Hadron Iso HadFake (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog, "Hadronic Fake"],
+	      "phosel_AntiSIEIE_ChIso_HadronicFake_endcap" : ["Charged Hadron Iso HadFake (GeV)"   , "Events", [0.,0.1,1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15.,16.,17.,18.,19.,20.] , [-1,-1], regionText,  NoLog, "Hadronic Fake"],
 	      "phosel_noCut_SIEIE_endcap"      : ["Sigma Ieta Ieta"            , "Events/0.0006", 1, [-1,1], regionText,  NoLog, "Endcap"],
 	      "phosel_noCut_SIEIE_barrel"      : ["Sigma Ieta Ieta"            , "Events/0.0002", 1, [-1,-1], regionText,  NoLog, "Barrel"],
 	      "phosel_mcMomPIDGenuinePho"      : ["ParentPID of GenuinePho"  , "Events", 1, [-25,25], regionText,  YesLog, "GenuinePhoton"],
@@ -270,7 +301,7 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [-1,-1],
 	      "phosel_mcMomPIDHadPho"          : ["ParentPID of HadronicPho" , "Events", 1, [-1000,600], regionText, YesLog, "Hadronic Photon"],
 	      "phosel_mcMomPIDHadFake"         : ["ParentPID of HadronicFake", "Events", 1, [-1,-1], regionText,  YesLog, "Hadronic Fake"],
 	    #  "phosel_RandomCone"              : ["RandomConeIsolation GeV"  , "Events", 1, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_PhotonCategory"          : ["Photon Category","Events", 1, [-1,-1], regionText,  YesLog, " "],
+	      "phosel_PhotonCategory"          : ["Photon Category","Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_MassEGamma"              : ["m_{e,#gamma} GeV"         , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_MassLepGamma"            : ["m_{lepton,#gamma} GeV"    , "Events", 5, [-1,-1], regionText,  NoLog, " "],
 	      }
@@ -287,14 +318,20 @@ if not plotList is None:
 
 if plotList is None:
         if makeMorePlots:
-                plotList = ["presel_Njet","presel_Nbjet","phosel_Njet","phosel_Nbjet","presel_jet1Pt","presel_jet2Pt","presel_jet3Pt","phosel_LeadingPhotonEt","phosel_LeadingPhotonEta","phosel_dRLeadingPhotonJet","phosel_dRLeadingPhotonLepton","presel_WtransMass","phosel_WtransMass","presel_MET","phosel_MET"]
+                plotList = ["presel_Njet","phosel_PhotonCategory","presel_Nbjet","phosel_Njet","phosel_Nbjet","presel_jet1Pt","phosel_LeadingPhotonEt","phosel_LeadingPhotonEta","phosel_dRLeadingPhotonJet","phosel_dRLeadingPhotonLepton","presel_WtransMass","phosel_WtransMass","presel_MET","phosel_MET","presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_barrel","phosel_noCut_ChIso_GenuinePhoton_barrel","phosel_noCut_ChIso_MisIDEle_barrel","phosel_noCut_ChIso_HadronicPhoton_barrel","phosel_noCut_ChIso_HadronicFake_barrel","phosel_M3","phosel_M3_barrel","phosel_M3_GenuinePhoton_barrel","phosel_M3_MisIDEle_barrel","phosel_M3_HadronicPhoton_barrel","phosel_M3_HadronicFake_barrel","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_GenuinePhoton_barrel","phosel_AntiSIEIE_ChIso_HadronicPhoton_barrel","phosel_AntiSIEIE_ChIso_HadronicFake_barrel","phosel_AntiSIEIE_ChIso_MisIDEle_barrel","phosel_noCut_SIEIE_barrel","phosel_noCut_SIEIE_endcap","presel_HT","presel_nVtx","phosel_nVtx","presel_nVtxdo","phosel_nVtxdo","presel_nVtxup","phosel_nVtxup","presel_nVtxNoPU","phosel_nVtxNoPU","phosel_ChIso","phosel_NeuIso","phosel_HoverE","phosel_Nphotons","phosel_LeadingPhotonSCEta"]
         elif makeAllPlots:
                 plotList = histograms.keys()
                 plotList.sort()
+	elif Dilepmass:
+		plotList =["presel_DilepMass"]
         else:
                 #plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
-		plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_barrel","phosel_noCut_ChIso_endcap","phosel_noCut_ChIso_GenuinePhoton_barrel","phosel_noCut_ChIso_GenuinePhoton_endcap","phosel_noCut_ChIso_MisIDEle_barrel","phosel_noCut_ChIso_MisIDEle_endcap","phosel_noCut_ChIso_HadronicPhoton_barrel","phosel_noCut_ChIso_HadronicPhoton_endcap","phosel_noCut_ChIso_HadronicFake_barrel","phosel_noCut_ChIso_HadronicFake_endcap","phosel_M3","phosel_M3_barrel","phosel_M3_endcap","phosel_M3_GenuinePhoton_barrel","phosel_M3_GenuinePhoton_endcap","phosel_M3_MisIDEle_barrel","phosel_M3_MisIDEle_endcap","phosel_M3_HadronicPhoton_barrel","phosel_M3_HadronicPhoton_endcap","phosel_M3_HadronicFake_barrel","phosel_M3_HadronicFake_endcap","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
+		plotList = ["presel_M3_control","presel_M3","phosel_noCut_ChIso","phosel_noCut_ChIso_barrel","phosel_noCut_ChIso_GenuinePhoton_barrel","phosel_noCut_ChIso_MisIDEle_barrel","phosel_noCut_ChIso_HadronicPhoton_barrel","phosel_noCut_ChIso_HadronicFake_barrel","phosel_M3","phosel_M3_barrel","phosel_M3_GenuinePhoton_barrel","phosel_M3_MisIDEle_barrel","phosel_M3_HadronicPhoton_barrel","phosel_M3_HadronicFake_barrel","phosel_AntiSIEIE_ChIso_barrel"]
+if useQCDCR:
+	plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_barrel","phosel_M3","phosel_M3_barrel","phosel_AntiSIEIE_ChIso_barrel"]
 
+
+#3print plotList
 
 import CMS_lumi
 
@@ -361,6 +398,11 @@ if finalState=="Mu":
 elif finalState=="Ele":
         _channelText = "e+jets"
 
+elif finalState=="DiEle":
+        _channelText = "ee+jets"
+elif finalState=="DiMu":
+        _channelText = "#mu#mu+jets"
+
 CMS_lumi.channelText = _channelText
 CMS_lumi.writeChannelText = True
 CMS_lumi.writeExtraText = True
@@ -413,31 +455,52 @@ legend.SetBorderSize(0)
 legend.SetFillColor(0)
 
 _file = {}
+if Dilepmass:
+	stackList.remove("QCD_DD")
+
+if useQCDCR:
+	stackList.remove("QCD_DD")
+#	if finalState=="mu":
+#		stackList.remove("QCDMu")
+#	else:
+#		stackList.remove("QCDEle")
 for sample in stackList:
 	_file[sample] = TFile("%s/%s.root"%(_fileDir,sample),"read")
 
-if finalState=='Ele':
+if 'Ele'in finalState:
 	sample = "DataEle"
 	_file[sample] = TFile("%s/%s.root"%(_fileDir,sample),"read")
-if finalState=='Mu':
+if 'Mu'in finalState:
 	sample = "DataMu"
 	_file[sample] = TFile("%s/%s.root"%(_fileDir,sample),"read")
 
 histName = plotList[0]
 
+
+
+print "%s_DataMu"%(histName)
 if finalState=='Ele':
     dataHist = _file["DataEle"].Get("%s_DataEle"%(histName))
 elif finalState=='Mu':
+    dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
+if finalState=='DiEle':
+    dataHist = _file["DataEle"].Get("%s_DataEle"%(histName))
+elif finalState=='DiMu':
     dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
 
 legend.AddEntry(dataHist, "Data", 'pe')
 legendR.AddEntry(dataHist, "Data", 'pe')
 #legList.remove("QCD_DD")
+if Dilepmass:
+	legList.remove("QCD_DD")
+if useQCDCR:
+	legList.remove("QCD_DD")
+
 for sample in legList:
-    #print sample, _file[sample]
-    # print "%s/%s_%s"%(sample,histName,sample)
+#    print sample, _file[sample]
+   # print "%s/%s_%s"%(sample,histName,sample)
     hist = _file[sample].Get("%s_%s"%(histName,sample))
-    # print hist, "%s_%s"%(histName,sample)
+    print hist, "%s_%s"%(histName,sample)
     hist.SetFillColor(samples[sample][1])
     hist.SetLineColor(samples[sample][1])
     legend.AddEntry(hist,samples[sample][2],'f')
@@ -471,7 +534,7 @@ for i in range(X):
 TGaxis.SetMaxDigits(3)
 
 def drawHist(histName,plotInfo, plotDirectory, _file):
-    print "start drawing"
+    #print "start drawing"
 
 
     canvas = TCanvas('c1','c1',W,H)
@@ -545,14 +608,15 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     stack = THStack(histName,histName)
     SetOwnership(stack,True)
     for sample in stackList:
-#        print sample, histName
+        #print sample, histName, _file[sample], "%s_%s"%(histName,sample)
         hist = _file[sample].Get("%s_%s"%(histName,sample))
-#        hist = _file[sample].Get("%s/%s_%s"%(sample,histName,sample))
-	if type(hist)==type(TObject()): continue
+     #   hist = _file[sample].Get("%s/%s_%s"%(sample,histName,sample))
+#	print "%s/%s_%s"%(sample,histName,sample), type(hist)
+	if type(hist)==type(TObject()):continue
 	hist = hist.Clone(sample)	
         hist.SetFillColor(samples[sample][1])
         hist.SetLineColor(samples[sample][1])
-
+	
 
 	if type(plotInfo[2]) is type(list()):
 		hist = hist.Rebin(len(plotInfo[2])-1,"",array('d',plotInfo[2]))
@@ -568,9 +632,11 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 		hist.SetBinContent(lastBin,lastBinContent + overFlowContent)
 		hist.SetBinError(lastBin, (lastBinError**2 + overFlowError**2)**0.5 )
 
+	
+	print sample, histName, hist.Integral(-1,-1)
         stack.Add(hist)
     
-    if finalState=='Ele':
+    if 'Ele' in finalState:
 	    if 'phosel_nVtx' in histName:
 		    dataHist = _file["DataEle"].Get("phosel_nVtx_DataEle")
 	    elif 'presel_nVtx' in histName:
@@ -580,7 +646,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	    else:
 		    dataHist = _file["DataEle"].Get("%s_DataEle"%(histName))
 #	dataHist.Draw()
-    elif finalState=='Mu':
+    elif 'Mu' in finalState:
 	    if 'phosel_nVtx' in histName:
 		    dataHist = _file["DataMu"].Get("phosel_nVtx_DataMu")
 	    elif 'presel_nVtx' in histName:
@@ -589,6 +655,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 		    dataHist = _file["DataMu"].Get("phosel_noCut_ChIso_DataMu")
 	    else:
 		    dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
+
 
     noData = False
     #print dataHist
@@ -599,7 +666,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	    else:
 		    dataHist.Rebin(plotInfo[2])
 #	    dataHist.Rebin(plotInfo[2])
-	    print dataHist.GetMarkerStyle()
+	    #print dataHist.GetMarkerStyle()
 	    if useOverflow:
 		    lastBin = dataHist.GetNbinsX()
 		    lastBinContent = dataHist.GetBinContent(lastBin)
@@ -653,8 +720,9 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 
     #histograms list has x-axis title
     stack.GetHistogram().GetXaxis().SetTitle(plotInfo[0])
-
+    print histName
     if "phosel_PhotonCategory" in histName:
+	    print "phosel_Category"
 	    stack.GetHistogram().GetXaxis().SetBinLabel(1,"Genuine")
 	    stack.GetHistogram().GetXaxis().SetBinLabel(2,"Mis-id ele")
 	    stack.GetHistogram().GetXaxis().SetBinLabel(3,"Hadronic Photon")
@@ -779,8 +847,14 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
     canvasRatio.Close()
     
 
-for histName in plotList:
-	drawHist(histName,histograms[histName],plotDirectory,_file)
+if Dilepmass:
+        for histName in plotList:
+                drawHist(histName,histograms_dilep[histName],plotDirectory,_file)
+
+else:
+	for histName in plotList:
+		#print _file
+		drawHist(histName,histograms[histName],plotDirectory,_file)
 
 # for histName in phoselhistograms:
 #         drawHist("phosel_%s"%histName,phoselhistograms[histName],plotDirectory,_file)

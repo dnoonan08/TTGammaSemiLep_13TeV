@@ -10,17 +10,40 @@ parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,ac
                      help="Use 4j2t selection" )
 parser.add_option("--Loose","--loose", dest="isLooseSelection", default=False,action="store_true",
                      help="Use 2j0t selection" )
-parser.add_option("-f","--file",dest="fileDir",default="histograms/mu/qcdhistsCR",
-                     help="histogram file direcotry")
+parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection",default=False,action="store_true",
+                  help="Use 2j at least 1t control region selection")
+parser.add_option("--LooseCR3e0","--looseCR3e0", dest="isLooseCR3e0Selection",default=False,action="store_true",
+                  help="Use 3j exactly 0t control region selection" )
+
+#parser.add_option("-f","--file",dest="fileDir",default="histograms/mu/qcdhistsCR",
+ #                    help="histogram file direcotry")
 
 (options, args) = parser.parse_args()
 
 finalState = options.channel
 isTightSelection = options.isTightSelection
 isLooseSelection = options.isLooseSelection
+isLooseCR2g1Selection = options.isLooseCR2g1Selection
+isLooseCR3e0Selection = options.isLooseCR3e0Selection
+#_fileDir = options.fileDir
+if finalState=="Mu":
+	_fileDir="histograms/mu/qcdhistsCR"
+	if isLooseCR2g1Selection:
+		_fileDir ="histograms/mu/qcdhistsCR_looseCR2g1/"
+	if isLooseCR3e0Selection:
+                _fileDir ="histograms/mu/qcdhistsCR_looseCR3e0/"
+#	if "CR2" in sys.argv:
+#		 _fileDir="histograms/mu/qcdhistsCR2"
 
-_fileDir = options.fileDir
-
+elif finalState=="Ele":
+	_fileDir="histograms/ele/qcdhistsCR"
+	if isLooseCR2g1Selection:
+                _fileDir ="histograms/ele/qcdhistsCR_looseCR2g1/"
+        if isLooseCR3e0Selection:
+                _fileDir ="histograms/ele/qcdhistsCR_looseCR3e0/"
+#	if "CR2" in sys.argv:
+#		_fileDir="histograms/ele/qcdhistsCR2"
+	
 
 # if finalState=="Mu":
 #     if isTightSelection:
@@ -40,8 +63,8 @@ _fileDir = options.fileDir
 
 
 
-# if 'CR2' in sys.argv:
-#     _file  = TFile("histograms/mu/qcdhistsCR2.root","update")
+#if 'CR2' in sys.argv:
+ #    _file  = TFile("histograms/mu/qcdhistsCR2.root","update")
 
 
 from sampleInformation import *
@@ -49,6 +72,7 @@ from sampleInformation import *
 stackList = sampleList[:-3]
 
 _file = {}
+print _fileDir
 for sample in stackList:
 #	print sample, "%s/%s.root"%(_fileDir,sample)
 	_file[sample] = TFile("%s/%s.root"%(_fileDir,sample),"read")
@@ -67,10 +91,10 @@ keylist = _file["Data%s"%finalState].GetListOfKeys()
 
 #keylist = gDirectory.GetListOfKeys()
 keylist = _file["Data%s"%finalState].GetListOfKeys()	
-print keylist
+#print keylist
 
 histoList = {}
-#print stackList
+print stackList
 for key in keylist:
      
     name = key.GetName()
@@ -90,10 +114,11 @@ for key in keylist:
     for sample in stackList:
 #	print "%s_%s"%(nameKey,sample)
         tempHist = _file[sample].Get("%s_%s"%(nameKey,sample))
+	print _file[sample], "%s_%s"%(nameKey,sample)
         histoList[nameKey].Add(tempHist,-1)
 
 outputFile = TFile("%s/QCD_DD.root"%_fileDir,"recreate")
-
+print "output file:"," %s/QCD_DD.root"%(_fileDir)
 for h in histoList:
     histoList[h].Write()
 

@@ -37,6 +37,9 @@ parser.add_option("--morePlots","--MorePlots","--makeMorePlots", dest="makeMoreP
                      help="Make larger list of plots in histogramDict (mostly object kinematics)" )
 parser.add_option("--MegammaPlots","--megammaPlots", dest="makeEGammaPlots",action="store_true",default=False,
                      help="Make only plots for e-gamma mass fits" )
+parser.add_option("--dilepmassPlots","--dilepmassPlots", dest="Dilepmass",action="store_true",default=False,
+                     help="Make only plots for ZJetsSF fits" )
+
 parser.add_option("--quiet", "-q", dest="quiet",default=False,action="store_true",
                      help="Quiet outputs" )
 
@@ -53,7 +56,7 @@ else:
 gROOT.SetBatch(True)
 
 
-
+Dilepmass=options.Dilepmass
 finalState = options.channel
 sample = options.sample
 isTightSelection = options.isTightSelection
@@ -77,7 +80,7 @@ nJets = 3
 nBJets = 1
 
 isQCD = False
-
+dir_=""
 Q2 = 1.
 Pdf = 1.
 Pileup ="PUweight"
@@ -90,6 +93,18 @@ btagWeightCategory = ["1","(1-btagWeight[0])","(btagWeight[2])","(btagWeight[1])
 
 
 #atleast 0, atleast 1, atleast 2, exactly 1, btagWeight[0] = exactly 0
+
+if (syst=="isr" or syst=="fsr") and sample=="TTbar":
+		samples={"TTbar"     : [["TTbarPowheg_AnalysisNtuple.root",
+                           #"TTbarPowheg2_AnalysisNtuple.root",
+                           #"TTbarPowheg3_AnalysisNtuple.root",
+                           #"TTbarPowheg4_AnalysisNtuple.root",
+                           ],
+                          kRed+1,
+                          "t#bar{t}",
+                          isMC
+                          ],
+			}
 
 if finalState=="Mu":
     sampleList[-1] = "DataMu"
@@ -110,7 +125,7 @@ if finalState=="Mu":
                 else:
                         Pileup = "PUweight_Do"
 
-                outputhistName = "histograms/mu/%sPileup_%s"%(outputFileName,level)
+                outputhistName = "histograms/mu/%sPU_%s"%(outputFileName,level)
 
         elif 'Q2' in syst:
                 if level=="up":
@@ -157,7 +172,7 @@ if finalState=="Mu":
                         loosePhoEff = "loosePhoEffWeight_Up"
                 else:
                         PhoEff = "phoEffWeight_Do"
-                        lossePhoEff = "loosePhoEffWeight_Do"
+                        loosePhoEff = "loosePhoEffWeight_Do"
 
                 outputhistName = "histograms/mu/%sPhoEff_%s"%(outputFileName,level)
 
@@ -167,15 +182,14 @@ if finalState=="Mu":
                 else:
                         btagWeightCategory = ["1","(1-btagWeight_Do[0])","(btagWeight_Do[2])","(btagWeight_Do[1])"]
 
-
                 outputhistName = "histograms/mu/%sBTagSF_%s"%(outputFileName,level)
 
 	else:
 		if  level=="up":
-            		analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/Test/%s_up_"%(syst)
+            		analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/%s_up_"%(syst)
             		outputhistName = "histograms/mu/hists%s_up"%(syst)
         	if level=="down":
-            		analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/Test/%s_down_"%(syst)
+            		analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_muons/V08_00_26_07/%s_down_"%(syst)
             		outputhistName = "histograms/mu/hists%s_down"%(syst)
 
 
@@ -195,8 +209,8 @@ if finalState=="Mu":
     extraCutsLooseCR2e0       = "(passPresel_Mu && nJet>=2)*"
     extraPhotonCutsLooseCR2e0 = "(passPresel_Mu && nJet>=2 && %s)*"
 
-    extraCutsLooseCR3e0       = "(passPresel_Mu && nJet>=3)*"
-    extraPhotonCutsLooseCR3e0 = "(passPresel_Mu && nJet>=3 && %s)*"
+    extraCutsLooseCR3e0       = "(passPresel_Mu && nJet>=3 && nBJet==0)*"
+    extraPhotonCutsLooseCR3e0 = "(passPresel_Mu && nJet>=3 && nBJet==0 && %s)*"
 
 elif finalState=="Ele":
     sampleList[-1] = "DataEle"
@@ -214,7 +228,7 @@ elif finalState=="Ele":
                 else:
                         Pileup = "PUweight_Do"
 
-                outputhistName = "histograms/ele/%sPileup_%s"%(outputFileName,level)
+                outputhistName = "histograms/ele/%sPU_%s"%(outputFileName,level)
 
 
          elif 'Q2' in syst:
@@ -253,6 +267,7 @@ elif finalState=="Ele":
                         EleEff = "eleEffWeight_Up"
                 else:
                         EleEff = "eleEffWeight_Do"
+		outputhistName = "histograms/ele/%sEleEff_%s"%(outputFileName,level)
                                                     
 	 elif 'PhoEff' in syst:
                 if level=="up":
@@ -260,7 +275,7 @@ elif finalState=="Ele":
                         loosePhoEff = "loosePhoEffWeight_Up"
                 else:
                         PhoEff = "phoEffWeight_Do"
-                        lossePhoEff = "loosePhoEffWeight_Do"
+                        loosePhoEff = "loosePhoEffWeight_Do"
 
                 outputhistName = "histograms/ele/%sPhoEff_%s"%(outputFileName,level)
 
@@ -280,6 +295,7 @@ elif finalState=="Ele":
         	if level=="down":
             		analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/systematics_electrons/V08_00_26_07/%s_down_"%(syst)
             		outputhistName = "histograms/ele/hists%s_down"%(syst)
+		
 
 
     extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet>=1)*"
@@ -297,8 +313,8 @@ elif finalState=="Ele":
     extraCutsLooseCR2e0       = "(passPresel_Ele && nJet>=2)*"
     extraPhotonCutsLooseCR2e0 = "(passPresel_Ele && nJet>=2 && %s)*"
 
-    extraCutsLooseCR3e0       = "(passPresel_Ele && nJet>=3)*"
-    extraPhotonCutsLooseCR3e0 = "(passPresel_Ele && nJet>=3 && %s)*"
+    extraCutsLooseCR3e0       = "(passPresel_Ele && nJet>=3 && nBJet==0)*"
+    extraPhotonCutsLooseCR3e0 = "(passPresel_Ele && nJet>=3 && nBJet==0 && %s)*"
 
 elif finalState=="DiMu":
     sampleList[-1] = "DataMu"
@@ -323,8 +339,14 @@ elif finalState=="DiMu":
     extraCutsLooseCR2g0       = "(passPresel_Mu && nJet>=2)*"
     extraPhotonCutsLooseCR2g0 = "(passPresel_Mu && nJet>=2 && %s)*"
 
+    extraCutsLooseCR2g1       = "(passPresel_Mu && nJet==2 && nBJet>=1)*"
+    extraPhotonCutsLooseCR2g1 = "(passPresel_Mu && nJet==2 && nBJet>=1 && %s)*"
+
     extraCutsLooseCR3g0       = "(passPresel_Mu && nJet>=3 && nBJet>=0)*"
     extraPhotonCutsLooseCR3g0 = "(passPresel_Mu && nJet>=3 && nBJet>=0 && %s)*"
+ 
+    extraCutsLooseCR3e0       = "(passPresel_Mu && nJet>=3 && nBJet==0)*"
+    extraPhotonCutsLooseCR3e0 = "(passPresel_Mu && nJet>=3 && nBJet==0 && %s)*"
 
 elif finalState=="DiEle":
     sampleList[-1] = "DataEle"
@@ -345,11 +367,14 @@ elif finalState=="DiEle":
     extraCutsLooseCR2e0       = "(passPresel_Ele && nJet==2)*"
     extraPhotonCutsLooseCR2e0 = "(passPresel_Ele && nJet==2 && %s)*"
 
+    extraCutsLooseCR2g1       = "(passPresel_Ele && nJet==2 && nBJet>=1)*"
+    extraPhotonCutsLooseCR2g1 = "(passPresel_Ele && nJet==2 && nBJet>=1 && %s)*"
+
     extraCutsLooseCR2g0       = "(passPresel_Ele && nJet>=2)*"
     extraPhotonCutsLooseCR2g0 = "(passPresel_Ele && nJet>=2 && %s)*"
 
-    extraCutsLooseCR3g0       = "(passPresel_Ele && nJet>=3)*"
-    extraPhotonCutsLooseCR3g0 = "(passPresel_Ele && nJet>=3 && %s)*"
+    extraCutsLooseCR3e0       = "(passPresel_Ele && nJet>=3 && nBJet==0)*"
+    extraPhotonCutsLooseCR3e0 = "(passPresel_Ele && nJet>=3 && nBJet==0 && %s)*"
 
 elif finalState=="QCDMu":
     sampleList[-1] = "DataMu"
@@ -378,11 +403,11 @@ elif finalState=="QCDMu":
     extraCutsLooseCR2g0       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
     extraPhotonCutsLooseCR2g0 = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
 
-    extraCutsLooseCR2g1       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
-    extraPhotonCutsLooseCR2g1 = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+    extraCutsLooseCR2g1       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet>=1)*"
+    extraPhotonCutsLooseCR2g1 = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet>=1 && %s)*"
 
-    extraCutsLooseCR3e0       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0)*"
-    extraPhotonCutsLooseCR3e0 = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=2 && nBJet==0 && %s)*"
+    extraCutsLooseCR3e0       = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=3 && nBJet==0)*"
+    extraPhotonCutsLooseCR3e0 = "(passPresel_Mu && muPFRelIso<0.3 && nJet>=3 && nBJet==0 && %s)*"
 
 
 elif finalState=="QCDMu2":
@@ -421,22 +446,30 @@ elif finalState=="QCDEle":
         sample = "QCDEle"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdelectrons/V08_00_26_07/QCDcr_"
     outputhistName = "histograms/ele/qcdhistsCR"
+    print outputhistName
 
     isQCD = True
 
     nBJets = 0
 
-    extraCuts            = "(passPresel_Ele && nJet>=3 && nBJet==0)*"
-    extraPhotonCuts      = "(passPresel_Ele && nJet>=3 && nBJet==0 && %s)*"
+    extraCuts            = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=3 && nBJet==0)*"
+    extraPhotonCuts      = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=3 && nBJet==0 && %s)*"
 
-    extraCutsTight            = "(passPresel_Ele && nJet>=4 && nBJet==0)*"
-    extraPhotonCutsTight      = "(passPresel_Ele && nJet>=4 && nBJet==0 && %s)*"
+    extraCutsTight            = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=4 && nBJet==0)*"
+    extraPhotonCutsTight      = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=4 && nBJet==0 && %s)*"
 
-    extraCutsLoose            = "(passPresel_Ele && nJet>=2 && nBJet==0)*"
-    extraPhotonCutsLoose      = "(passPresel_Ele && nJet>=2 && nBJet==0 && %s)*"
+    extraCutsLoose            = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLoose      = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=2 && nBJet==0 && %s)*"
 
-    extraCutsLooseCR          = "(passPresel_Ele && nJet>=2 && nBJet==0)*"
-    extraPhotonCutsLooseCR    = "(passPresel_Ele && nJet>=2 && nBJet==0 && %s)*"
+    extraCutsLooseCR2g1       = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=2 && nBJet>=1)*"
+    extraPhotonCutsLooseCR2g1 = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=2 && nBJet>=1 && %s)*"
+
+    extraCutsLooseCR          = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=2 && nBJet==0)*"
+    extraPhotonCutsLooseCR    = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=2 && nBJet==0 && %s)*"
+
+
+    extraCutsLooseCR3e0       = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=3 && nBJet==0)*"
+    extraPhotonCutsLooseCR3e0 = "(passPresel_Ele && elePFRelIso>0.01 && nJet>=3 && nBJet==0 && %s)*"
 
 else:
     print "Unknown final state, options are Mu and Ele"
@@ -454,6 +487,7 @@ if isTightSelection:
     extraCuts = extraCutsTight 
     extraPhotonCuts = extraPhotonCutsTight 
     outputhistName = outputhistName + "_tight"
+    dir_="_tight"
 
 if isLooseCR2g0Selection:
     if not runQuiet: print "Loose Select"
@@ -487,6 +521,7 @@ if isLooseCR2g1Selection:
     extraCuts = extraCutsLooseCR2g1
     extraPhotonCuts = extraPhotonCutsLooseCR2g1    
     outputhistName = outputhistName + "_looseCR2g1"
+    dir_="_looseCR2g1"
 
 
 if isLooseCR3e0Selection:
@@ -498,10 +533,11 @@ if isLooseCR3e0Selection:
     extraCuts = extraCutsLooseCR3e0
     extraPhotonCuts = extraPhotonCutsLooseCR3e0
     outputhistName = outputhistName + "_looseCR3e0"
+    dir_="_looseCR3e0"
 
 weights = "%s*%s*%s*%s*%s*%s*%s"%(evtWeight,Pileup,MuEff,EleEff,Q2,Pdf,btagWeight)
 
-
+print "using weights", weights
 if not runQuiet: print " the output folder is:", outputhistName
 
 
@@ -517,11 +553,14 @@ if plotList is None:
         plotList = histogramInfo.keys()
         if not runQuiet: print "Making full list of plots"
     elif makeMorePlots:
-        plotList = ["presel_Njet","presel_Nbjet","phosel_Njet","phosel_Nbjet","presel_jet1Pt","presel_jet2Pt","presel_jet3Pt","phosel_LeadingPhotonEt","phosel_LeadingPhotonEta","phosel_dRLeadingPhotonJet","phosel_dRLeadingPhotonLepton","presel_WtransMass","phosel_WtransMass","presel_MET","phosel_MET"]
+        plotList = ["phosel_PhotonCategory","presel_Njet","presel_Nbjet","phosel_Njet","phosel_Nbjet","presel_jet1Pt","phosel_LeadingPhotonEt","phosel_LeadingPhotonEta","phosel_dRLeadingPhotonJet","phosel_dRLeadingPhotonLepton","presel_WtransMass","phosel_WtransMass","presel_MET","phosel_MET","presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_barrel","phosel_noCut_ChIso_GenuinePhoton_barrel","phosel_noCut_ChIso_MisIDEle_barrel","phosel_noCut_ChIso_HadronicPhoton_barrel","phosel_noCut_ChIso_HadronicFake_barrel","phosel_M3","phosel_M3_barrel","phosel_M3_GenuinePhoton_barrel","phosel_M3_MisIDEle_barrel","phosel_M3_HadronicPhoton_barrel","phosel_M3_HadronicFake_barrel","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_GenuinePhoton_barrel","phosel_AntiSIEIE_ChIso_HadronicPhoton_barrel","phosel_AntiSIEIE_ChIso_HadronicFake_barrel","phosel_AntiSIEIE_ChIso_MisIDEle_barrel","phosel_noCut_SIEIE_barrel","phosel_noCut_SIEIE_endcap","presel_HT","presel_nVtx","phosel_nVtx","presel_nVtxdo","phosel_nVtxdo","presel_nVtxup","phosel_nVtxup","presel_nVtxNoPU","phosel_nVtxNoPU","phosel_ChIso","phosel_NeuIso","phosel_HoverE","phosel_Nphotons","phosel_LeadingPhotonSCEta"]
         if not runQuiet: print "Making subset of kinematic plots"
     elif makeEGammaPlots:
         plotList = ["phosel_MassEGamma","phosel_MassEGammaMisIDEle","phosel_MassEGammaOthers"]
         if not runQuiet: print "Making only plots for e-gamma fits"
+    elif Dilepmass:
+	plotList = ["presel_DilepMass"]
+        if not runQuiet: print "Making only plots for ZJetsSF fits"
     elif not multiPlotList is None:
         plotList = []
         for plotNameTemplate in multiPlotList:
@@ -542,8 +581,15 @@ if plotList is None:
 
     else:
         # plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_GenuinePhoton","phosel_noCut_ChIso_MisIDEle","phosel_noCut_ChIso_HadronicPhoton","phosel_noCut_ChIso_HadronicFake","phosel_M3","phosel_M3_GenuinePhoton","phosel_M3_MisIDEle","phosel_M3_HadronicPhoton","phosel_M3_HadronicFake","phosel_AntiSIEIE_ChIso","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap","phosel_PhotonCategory"]
-        plotList = ["presel_M3_control","phosel_noCut_ChIso","phosel_noCut_ChIso_barrel","phosel_noCut_ChIso_endcap","phosel_noCut_ChIso_GenuinePhoton_barrel","phosel_noCut_ChIso_GenuinePhoton_endcap","phosel_noCut_ChIso_MisIDEle_barrel","phosel_noCut_ChIso_MisIDEle_endcap","phosel_noCut_ChIso_HadronicPhoton_barrel","phosel_noCut_ChIso_HadronicPhoton_endcap","phosel_noCut_ChIso_HadronicFake_barrel","phosel_noCut_ChIso_HadronicFake_endcap","phosel_M3","phosel_M3_barrel","phosel_M3_endcap","phosel_M3_GenuinePhoton_barrel","phosel_M3_GenuinePhoton_endcap","phosel_M3_MisIDEle_barrel","phosel_M3_MisIDEle_endcap","phosel_M3_HadronicPhoton_barrel","phosel_M3_HadronicPhoton_endcap","phosel_M3_HadronicFake_barrel","phosel_M3_HadronicFake_endcap","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_endcap"]
-        if not runQuiet: print "Making only plots for simultaneous fits"
+        plotList = ["presel_M3_control","presel_M3","phosel_noCut_ChIso","phosel_noCut_ChIso_barrel","phosel_noCut_ChIso_GenuinePhoton_barrel","phosel_noCut_ChIso_MisIDEle_barrel","phosel_noCut_ChIso_HadronicPhoton_barrel","phosel_noCut_ChIso_HadronicFake_barrel","phosel_M3","phosel_M3_barrel","phosel_M3_GenuinePhoton_barrel","phosel_M3_MisIDEle_barrel","phosel_M3_HadronicPhoton_barrel","phosel_M3_HadronicFake_barrel","phosel_AntiSIEIE_ChIso_barrel","phosel_AntiSIEIE_ChIso_GenuinePhoton_barrel","phosel_AntiSIEIE_ChIso_HadronicPhoton_barrel","phosel_AntiSIEIE_ChIso_HadronicFake_barrel","phosel_AntiSIEIE_ChIso_MisIDEle_barrel"]
+        if isLooseCR2g1Selection:
+		plotList.append("presel_WtransMass")
+		plotList.append("phosel_WtransMass_barrel")
+		plotList.append("phosel_WtransMass_GenuinePhoton_barrel")
+		plotList.append("phosel_WtransMass_HadronicPhoton_barrel")
+		plotList.append("phosel_WtransMass_MisIDEle_barrel")
+		plotList.append("phosel_WtransMass_HadronicFake_barrel")
+	if not runQuiet: print "Making only plots for simultaneous fits"
 
 plotList.sort()
 if not runQuiet: print '-----'
@@ -570,33 +616,14 @@ canvas = TCanvas()
 #sample = sys.argv[-1]
 if sample =="QCD_DD":
     if finalState=="Mu":
-        if isTightSelection:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR_tight/QCD_DD.root","read")
-        elif isLooseCR2g1Selection:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR_LooseCR2g1/QCD_DD.root","read")
-        elif isLooseCR2g0Selection:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR_LooseCR2g0/QCD_DD.root","read")
-        elif isLooseCR2e0Selection:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR_LooseCR2e1/QCD_DD.root","read")
-        elif isLooseCR3e0Selection:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR_LooseCR3e1/QCD_DD.root","read")
-        else:
-            qcd_File    = TFile("histograms/mu/qcdhistsCR/QCD_DD.root","read")
+        
+        qcd_File    = TFile("histograms/mu/qcdhistsCR%s/QCD_DD.root"%(dir_),"read")
         qcd_TF_File = TFile("histograms/mu/qcdTransferFactors.root","read")
 
     if finalState=="Ele":
-        if isTightSelection:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR_tight/QCD_DD.root","read")
-        elif isLooseCR2g1Selection:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR_LooseCR2g1/QCD_DD.root","read")
-        elif isLooseCR2g0Selection:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR_LooseCR2g0/QCD_DD.root","read")
-        elif isLooseCR2e0Selection:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR_LooseCR2e1/QCD_DD.root","read")
-        elif isLooseCR3e0Selection:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR_LooseCR3e1/QCD_DD.root","read")
-        else:
-            qcd_File    = TFile("histograms/ele/qcdhistsCR/QCD_DD.root","read")
+        
+        qcd_File    = TFile("histograms/ele/qcdhistsCR%s/QCD_DD.root"%(dir_),"read")
+        print  qcd_File
 
         qcd_TF_File = TFile("histograms/ele/qcdTransferFactors.root","read")
 
@@ -605,16 +632,22 @@ if sample =="QCD_DD":
     histNjet_0b = qcd_TF_File.Get("histNjet_0b")
     histNjet_1b = qcd_TF_File.Get("histNjet_1b")
     histNjet_2b = qcd_TF_File.Get("histNjet_2b")
+   
+    print "doing QCD using :", nBJets
 
     if nBJets==0:
         histNjet_2b.Add(histNjet_1b)
         histNjet_2b.Add(histNjet_0b)
+    #    transferFactor_old = histNjet_0b.Integral(nJets+1,-1)/histNjet_QCDcr.Integral(nJets+1,-1)
+#	print histNjet_0b.Integral(nJets+1,-1), histNjet_QCDcr.Integral(nJets+1,-1)
+	transferFactor =  qcd_TF_File.Get("TransferFactors").GetBinContent(1)
+	
     if nBJets==1:
         histNjet_2b.Add(histNjet_1b)
 #    transferFactor = histNjet_2b.Integral(nJets+1,-1)/histNjet_QCDcr.Integral(-1,-1)
 
-    transferFactor = histNjet_2b.Integral(nJets+1,-1)/histNjet_QCDcr.Integral(nJets+1,-1)
-    #print transferFactor
+    	transferFactor = histNjet_2b.Integral(nJets+1,-1)/histNjet_QCDcr.Integral(nJets+1,-1)
+# 	transferFactor =  qcd_TF_File.Get("TransferFactors").GetBinContent(2)
 
     for hist in histogramsToMake:
 
@@ -622,6 +655,8 @@ if sample =="QCD_DD":
         if not runQuiet: print "filling", histogramInfo[hist][1], sample
 
         histograms.append(qcd_File.Get("%s_QCD_DD"%(histogramInfo[hist][1])))
+	#print "old value:", transferFactor_old
+	print transferFactor, qcd_File, histogramInfo[hist][1]
         histograms[-1].Scale(transferFactor)
 
 if not "QCD_DD" in sample:
@@ -662,13 +697,16 @@ if not "QCD_DD" in sample:
 
         ### Correctly add the photon weights to the plots
         if 'phosel' in h_Info[1]:
+	    	    
             if h_Info[0][:8]=="loosePho":
                 evtWeight = "%s*%s"%(evtWeight,loosePhoEff)
             elif h_Info[0][:3]=="pho":
+#		print h_Info[0][:3], "%s*%s"%(evtWeight,PhoEff)
                 evtWeight = "%s*%s"%(evtWeight,PhoEff)
             else:
+#		print h_Info[0], "%s*%s[0]"%(evtWeight,PhoEff)
                 evtWeight = "%s*%s[0]"%(evtWeight,PhoEff)
-
+	print h_Info[1],sample,evtWeight
         tree.Draw("%s>>%s_%s"%(h_Info[0],h_Info[1],sample),evtWeight)
 
 if not os.path.exists(outputhistName):
