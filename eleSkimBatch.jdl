@@ -9,12 +9,13 @@ Output = condor/eleSkim_$(cluster)_$(process).stdout
 Error  = condor/eleSkim_$(cluster)_$(process).stderr
 Log    = condor/eleSkim_$(cluster)_$(process).condor
 Requirements          = (OpSys == "LINUX" && (Arch != "DUMMY"))
-Arguments = $(process)
+
 #use_x509userproxy = true
 x509userproxy = $ENV(X509_USER_PROXY)
 
 # important, number of instances (jobs) of script
-Queue 50
+Arguments = "$(process)+12"
+Queue 4
 
-#Arguments = "11+$(process)"
-#Queue 1
+
+
