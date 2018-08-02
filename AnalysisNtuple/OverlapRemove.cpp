@@ -53,7 +53,7 @@ bool overlapRemovalTT(EventTree* tree){
 }
 
 bool overlapRemovalWZ(EventTree* tree){
-	const double Et_cut = 10;
+	const double Et_cut = 15;
 	const double Eta_cut = 2.6;
 	bool haveOverlap = false;
 	for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){

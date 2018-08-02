@@ -117,14 +117,10 @@ double getMuSF(double pt, double eta, int systLevel){
 	else if (pt < 50){muPtRegion_IDIso = 3;}
 	else if (pt < 60){muPtRegion_IDIso = 4;}
 	else {muPtRegion_IDIso = 5;}
-        
+        double syst_var[3][3]={ {0.99,0.995,0.995},{1.,1.,1.},{1.01,1.005,1.005}};
 	double muEffSF=-1;
-	if (systLevel= 1){
-	        muEffSF = muTrackingSF[muTrackEtaRegion][systLevel] * muIdIsoSF[muPtRegion_IDIso][muEtaRegion][systLevel] * muTrigSF[muPtRegion_Trigger][muEtaRegion][systLevel];
-	}
-	else {
-		muEffSF =  muTrackingSF[muTrackEtaRegion][systLevel] * muIdIsoSF[muPtRegion_IDIso][muEtaRegion][systLevel] * muTrigSF[muPtRegion_Trigger][muEtaRegion][systLevel] + 0.01*muTrackingSF[muTrackEtaRegion][systLevel] + 0.005*muIdIsoSF[muPtRegion_IDIso][muEtaRegion][systLevel] + 0.005*muTrigSF[muPtRegion_Trigger][muEtaRegion][systLevel];
-}		
+	
+	muEffSF = muTrackingSF[muTrackEtaRegion][systLevel] *syst_var[systLevel][0]* muIdIsoSF[muPtRegion_IDIso][muEtaRegion][systLevel]* syst_var[systLevel][1]* muTrigSF[muPtRegion_Trigger][muEtaRegion][systLevel]*syst_var[systLevel][2];
 	return muEffSF;
 
 }
