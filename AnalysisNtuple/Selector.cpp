@@ -107,6 +107,7 @@ void Selector::clear_vectors(){
 	Muons.clear();
 	MuonsLoose.clear();
 	Jets.clear();
+	FwdJets.clear();
 	bJets.clear();
 	
 	EleRelIso_corr.clear();
@@ -419,28 +420,9 @@ void Selector::filter_muons(){
 void Selector::filter_jets(){
 	TLorentzVector tMET;
 
-	// if (JECsystLevel==0 || JECsystLevel==2){
-	// 	tMET.SetPtEtaPhiM(tree->pfMET_,0.0,tree->pfMETPhi_,0.0);
-	// }
 
 	for(int jetInd = 0; jetInd < tree->nJet_; ++jetInd){
 
-		// if (JECsystLevel==0 || JECsystLevel==2){
-		// 	TLorentzVector tJet;
-		// 	tJet.SetPtEtaPhiE(tree->jetPt_->at(jetInd),tree->jetEta_->at(jetInd),tree->jetPhi_->at(jetInd),tree->jetEn_->at(jetInd));
-		// 	tMET += tJet;
-		// 	double JECUnc = tree->jetJECUnc_->at(jetInd);
-		// 	if (JECsystLevel==0){
-		// 		tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd)*(1-JECUnc);
-		// 		tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd)*(1-JECUnc);
-		// 	}
-		// 	if (JECsystLevel==2){
-		// 		tree->jetPt_->at(jetInd) = tree->jetPt_->at(jetInd)*(1+JECUnc);
-		// 		tree->jetEn_->at(jetInd) = tree->jetEn_->at(jetInd)*(1+JECUnc);
-		// 	}
-		// 	tJet.SetPtEtaPhiE(tree->jetPt_->at(jetInd),tree->jetEta_->at(jetInd),tree->jetPhi_->at(jetInd),tree->jetEn_->at(jetInd));
-		// 	tMET -= tJet;
-		// }
 
 		double jetSmear = 1.;
 		double pt = tree->jetPt_->at(jetInd);
@@ -493,6 +475,14 @@ void Selector::filter_jets(){
 						  passDR_pho_jet
 						  );
 
+	        bool fwdjetPresel = (pt> jet_Pt_cut && jetID_pass && TMath::Abs(eta)<3.0 && TMath::Abs(eta)>2.5 &&
+                                                  passDR_lep_jet &&
+                                                  passDR_pho_jet
+                                                  );
+
+                if(fwdjetPresel){
+			FwdJets.push_back(jetInd);
+		}
 
 
 		if( jetPresel){

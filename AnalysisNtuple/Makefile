@@ -1,12 +1,17 @@
 .PHONY: JEC
 
-all: JEC Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple makeCutflows checkOverlap
+all: JEC Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple makeCutflows makeCutflows_gen2 checkOverlap
 
 makeSkim: Selector.o EventPick.o EventTree.o  makeSkim.cpp OverlapRemove.cpp
 	g++ -o makeSkim `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o EventPick.o Selector.o  OverlapRemove.cpp makeSkim.cpp 
 
 makeCutflows: Selector.o EventPick.o EventTree.o  makeCutflows.cpp OverlapRemove.cpp BTagCalibrationStandalone.o PUReweight.cpp PUReweight.h ScaleFactors.h
 	g++ -o makeCutflows `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o EventPick.o Selector.o  OverlapRemove.cpp makeCutflows.cpp BTagCalibrationStandalone.o PUReweight.cpp
+
+
+makeCutflows_gen2: Selector_gen.o EventPick_gen.o EventTree.o  makeCutflows_gen2.cpp OverlapRemove.cpp BTagCalibrationStandalone.o PUReweight.cpp PUReweight.h ScaleFactors.h
+	g++ -o makeCutflows_gen2 `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o EventPick_gen.o Selector_gen.o  OverlapRemove.cpp makeCutflows_gen2.cpp BTagCalibrationStandalone.o PUReweight.cpp
+
 
 checkOverlap: EventTree.o  checkOverlap.cpp OverlapRemove.cpp Selector.o
 	g++ -o checkOverlap `root-config --libs` -I`root-config --incdir` -std=c++11 EventTree.o Selector.o OverlapRemove.cpp checkOverlap.cpp 
@@ -28,6 +33,13 @@ Selector.o: EventTree.o Selector.cpp Selector.h
 
 EventPick.o: Selector.o EventPick.cpp EventPick.h
 	g++ -c -I `root-config --incdir` -std=c++11 EventPick.cpp 
+
+
+Selector_gen.o: EventTree.o Selector_gen.cpp Selector.h
+	g++ -c -I`root-config --incdir` -std=c++11 Selector_gen.cpp
+
+EventPick_gen.o: Selector_gen.o EventPick_gen.cpp EventPick.h
+	g++ -c -I `root-config --incdir` -std=c++11 EventPick_gen.cpp 
 
 clean:
 	rm EventTree.o Selector.o EventPick.o BTagCalibrationStandalone.o

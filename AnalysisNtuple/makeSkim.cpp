@@ -61,7 +61,6 @@ int main(int ac, char** av){
 
 	evtPick->SkimNjet_ge = 2;
 	evtPick->SkimNBjet_ge = 0;
-
 	std::string channel(av[1]);
 
 	if (channel=="ele"){

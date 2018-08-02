@@ -338,6 +338,14 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	
 	chain->SetBranchStatus("nJet",1);
 	chain->SetBranchAddress("nJet", &nJet_);
+ 
+
+	chain->SetBranchStatus("nfwdJet",1);
+	chain->SetBranchStatus("nfwdJet",&nfwdJet_);
+
+        jetPt_ = new vector<float>;
+        chain->SetBranchStatus("fwdJetPt",1);
+        chain->SetBranchAddress("fwdJetPt", &fwdJetPt_);
 
 	jetPt_ = new vector<float>;
 	chain->SetBranchStatus("jetPt",1);
@@ -507,6 +515,14 @@ EventTree::EventTree(int nFiles, char** fileNames){
 	jetGenJetPt_ = new vector<float>;
 	chain->SetBranchStatus("jetGenJetPt",1);
 	chain->SetBranchAddress("jetGenJetPt", &jetGenJetPt_);
+
+	jetGenJetEta_ = new vector<float>;
+        chain->SetBranchStatus("jetGenJetEta",1);
+        chain->SetBranchAddress("jetGenJetEta", &jetGenJetEta_);
+
+	jetGenJetPhi_ = new vector<float>;
+        chain->SetBranchStatus("jetGenJetPhi",1);
+        chain->SetBranchAddress("jetGenJetPhi", &jetGenJetPhi_);
 
 	jetGenPt_ = new vector<float>;
 	chain->SetBranchStatus("jetGenPt",1);

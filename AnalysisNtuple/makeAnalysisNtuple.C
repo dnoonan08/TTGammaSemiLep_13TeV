@@ -70,6 +70,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	selector = new Selector();
 
 	evtPick = new EventPick("");
+        
 
 	selector->pho_applyPhoID = false;
 	selector->looseJetID = false;
@@ -124,7 +125,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	bool skipOverlap = false;
 	applypdfweight = false;
 	applyqsquare  = false;
-	if( sampleType == "TTbarPowheg" || sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
+	if( sampleType == "TTbarPowheg" || sampleType=="TTbarPowheg_isrUp" || sampleType=="TTbarPowheg_fsrUp"|| sampleType=="TTbarPowheg_isrDown"|| sampleType=="TTbarPowheg_fsrDown"|| sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
 
 	if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50") doOverlapRemoval_WZ = true;
 
@@ -412,11 +413,15 @@ void makeAnalysisNtuple::FillEvent()
 	_nMuLoose            = selector->MuonsLoose.size();
 	_nMu		     = selector->Muons.size();
 	_nJet            = selector->Jets.size();
+        _nfwdJet         = selector->FwdJets.size();
 	_nBJet           = selector->bJets.size();
 	_nMC             = tree->nMC_;
         _pdfWeight       = tree->pdfWeight_;	
 	double ht = 0.0;
         ht += tree->pfMET_;
+
+
+	
         for( int i_jet = 0; i_jet < _nJet; i_jet++)
                 ht += tree->jetPt_->at(i_jet);
 	
@@ -731,7 +736,12 @@ void makeAnalysisNtuple::FillEvent()
 
 	}
 
-
+        for (int i_jet = 0; i_jet < _nfwdJet; i_jet++){
+	      // std::cout <<"Number of fwd jets in th event"<<_nfwdJet<<std::endl;	
+               int jetInd = selector->FwdJets.at(i_jet);
+               _fwdJetPt.push_back(tree->jetPt_->at(jetInd));
+	       //std::cout <<"Jet Pt"<<tree->jetPt_->at(jetInd)<<std::endl;	
+             }
 	for (int i_jet = 0; i_jet <_nJet; i_jet++){
 		
 		int jetInd = selector->Jets.at(i_jet);

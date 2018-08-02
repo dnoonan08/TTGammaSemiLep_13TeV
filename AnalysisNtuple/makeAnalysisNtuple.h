@@ -236,8 +236,10 @@ private :
 	std::vector<float>   _muPFRelIso;
 	
 	Int_t                _nJet;
+        Int_t                _nfwdJet;
 	Int_t                _nBJet;
 	std::vector<float>   _jetPt;
+        std::vector<float>   _fwdJetPt;
 	std::vector<float>   _jetEn;
 	std::vector<float>   _jetEta;
 	std::vector<float>   _jetPhi;
@@ -482,8 +484,10 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("muPFRelIso"                  , &_muPFRelIso                 );
     
 	outputTree->Branch("nJet"                        , &_nJet                       ); 
+        outputTree->Branch("nfwdJet"                        , &_nfwdJet                       );
 	outputTree->Branch("nBJet"                       , &_nBJet                      ); 
 	outputTree->Branch("jetPt"                       , &_jetPt                      );
+        outputTree->Branch("fwdJetPt"                       , &_fwdJetPt                      );
 	outputTree->Branch("jetEn"                       , &_jetEn                      );
 	outputTree->Branch("jetEta"                      , &_jetEta                     ); 
 	outputTree->Branch("jetPhi"                      , &_jetPhi                     ); 
@@ -576,7 +580,8 @@ void makeAnalysisNtuple::InitVariables()
 	_nMu		     = -9999;
 	_nMuLoose 	     = -9999;
 	_nEleLoose           = -9999;
-	_nJet            = -9999;    
+	_nJet            = -9999;  
+        _nfwdJet         =-9999;  
 	_nBJet           = -9999;    
 
 	_passPresel_Ele  = false;
@@ -704,6 +709,7 @@ void makeAnalysisNtuple::InitVariables()
 	_loosePhotonIsHadronicFake.clear();
 
 	_jetPt.clear();
+        _fwdJetPt.clear();
 	_jetEn.clear();
 	_jetEta.clear();
 	_jetPhi.clear();
