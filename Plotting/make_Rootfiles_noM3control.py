@@ -54,10 +54,10 @@ for s in samples:
 	_file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s/%s.root"%(finalState,dir_,s))
 	_file_CR[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s0b/%s.root"%(finalState,dir_,s))
 
-misIDEleSF = 2.31883 
+misIDEleSF = 2.48745 
 #misIDEleSF_0b = 1.65556 ## -0.0872607/+0.0848595
 #misIDEleSF_0b_unc = 0.052
-misIDEle_unc = 0.084
+misIDEle_unc = 0.083
 if finalState=="mu":
 	ZJetsSF=1.17514
 	ZJetsSF_0b=0.992145

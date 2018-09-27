@@ -41,6 +41,10 @@ parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection",de
                   help="Use 2j at least 1t control region selection")
 parser.add_option("--LooseCR2e1","--looseCR2e1", dest="isLooseCR2e1Selection",default=False,action="store_true",
                   help="Use 2j at least 1t control region selection")
+parser.add_option("--LooseCR3g0","--looseCR3g0", dest="isLooseCR3g0Selection",default=False,action="store_true",
+                  help="Use exactly 3j and 0btag")
+parser.add_option("--LooseCRe2g1","--looseCRe2g1", dest="isLooseCRe2g1Selection",default=False,action="store_true",
+                  help="Use ==2j and >=1 btag ")
 parser.add_option("--NLO","--NLO", dest="isNLO",default=False,action="store_true",
                   help="Use ZJets NLO sample")
 
@@ -49,9 +53,10 @@ parser.add_option("--NLO","--NLO", dest="isNLO",default=False,action="store_true
 (options, args) = parser.parse_args()
 TightSelection = options.isTightSelection
 TightSelection0b = options.isTightSelection0b
-LooseCR2g1Selection = options.isLooseCR2g1Selection
+LooseCRe2g1Selection = options.isLooseCRe2g1Selection
 LooseCRe3g1Selection = options.isLooseCRe3g1Selection
-LooseCR2e1Selection = options.isLooseCR2e1Selection
+LooseCR3g0Selection = options.isLooseCR3g0Selection
+
 finalState = options.channel
 isNLO=options.isNLO
 
@@ -130,17 +135,17 @@ if LooseCRe3g1Selection:
 		ext="e3jets1tag"
         	_file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/dilephists_looseCRe3g1/%s.root"%(finalState,s))
 
-elif LooseCR2g1Selection:
+elif LooseCR3g0Selection:
 	for s in samples:
-		 _extratext="==2jets,>=1btag"
-		 ext="loose"
-		 _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/dilephists_looseCR2g1/%s.root"%(finalState,s))
+		 _extratext="==3jets,==0btag"
+		 ext="loose3jets0b"
+		 _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/dilephists_looseCRe3g0/%s.root"%(finalState,s))
 
-elif LooseCR2e1Selection:
+elif LooseCRe2g1Selection:
         for s in samples:
-                 _extratext=">=2jets,==1btag"
-                 ext="2jete1tag"
-                 _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/dilephists_looseCR2e1/%s.root"%(finalState,s))
+                 _extratext="==2jets,>=1btag"
+                 ext="2jets1tag"
+                 _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/dilephists_looseCRe2g1/%s.root"%(finalState,s))
 
 
 elif TightSelection:
@@ -208,10 +213,10 @@ if finalState=="ele":
 	datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists/DataEle.root")
 	if LooseCRe3g1Selection:
 		datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_looseCRe3g1/DataEle.root")
-	elif LooseCR2g1Selection:	
-		datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_looseCR2g1/DataEle.root")
-	elif LooseCR2e1Selection:
-                datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_looseCR2e1/DataEle.root")
+	elif LooseCR3g0Selection:	
+		datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_looseCRe3g0/DataEle.root")
+	elif LooseCRe2g1Selection:
+                datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_looseCRe2g1/DataEle.root")
 	elif TightSelection:
 		datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_tight/DataEle.root")
 	elif TightSelection0b:

@@ -27,10 +27,13 @@ parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,ac
                      help="Use 4j1t selection" )
 parser.add_option("--Tight0b","--tight0b", dest="isTightSelection0b", default=False,action="store_true",
                      help="Use 4j0t selection" )
-parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection",default=False,action="store_true",
-                  help="Use 2j exactly 1t control region selection" )
+parser.add_option("--LooseCRe2g1","--looseCRe2g1", dest="isLooseCRe2g1Selection",default=False,action="store_true",
+                  help="Use ==2j,>= 1t control region selection" )
 parser.add_option("--LooseCRe3g1","--looseCRe3g1", dest="isLooseCRe3g1Selection",default=False,action="store_true",
                   help="Use exactly 3 jets and >=1btag control region selection" )
+
+parser.add_option("--LooseCR3g0","--looseCR3g0", dest="isLooseCR3g0Selection",default=False,action="store_true",
+                  help="Use 3j exactly 0t control region selection" )
 parser.add_option("--NLO","--NLO", dest="isNLO",default=False,action="store_true",
                   help="Use ZJets NLO sample instead" )
 parser.add_option("--onlybarrel","--onlybarrel", dest="isonlybarrel",default=False,action="store_true",
@@ -41,8 +44,9 @@ parser.add_option("--onlybarrel","--onlybarrel", dest="isonlybarrel",default=Fal
 finalState = options.channel
 TightSelection = options.isTightSelection
 TightSelection0b = options.isTightSelection0b
-isLooseCR2g1Selection = options.isLooseCR2g1Selection
+isLooseCR2eg1Selection = options.isLooseCRe2g1Selection
 isLooseCRe3g1Selection = options.isLooseCRe3g1Selection
+isLooseCR3g0Selection = options.isLooseCR3g0Selection
 isNLO=options.isNLO
 isonlybarrel=options.isonlybarrel
 
@@ -71,6 +75,14 @@ elif isLooseCRe3g1Selection:
 	else:
 		ZJetsSF=1.309
         bkgZJets_SF=1.
+elif isLooseCR2eg1Selection:
+	dir_="_looseCRe2g1"
+	ZJetsSF=1.26128
+	bkgZJets_SF=1
+elif isLooseCR3g0Selection:
+	dir_="_looseCRe3g0"
+        ZJetsSF=1.08725
+        bkgZJets_SF=1
  
 canvas = TCanvas('c1','c1',W,H)
 canvas.SetFillColor(0)
@@ -156,7 +168,10 @@ process=["TTGamma","TTbar","TTV","TGJets","SingleTop","WJets","ZJets%s"%zjets,"W
 
 
 for s in samples:
-        	_file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s/%s.root"%(finalState,dir_,s))
+		if isNLO and s=="QCD_DD":
+			 _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s/%s_NLO.root"%(finalState,dir_,s))
+		else:
+        		_file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s/%s.root"%(finalState,dir_,s))
 
 HistDict={}
 misIDEle=1.
@@ -215,6 +230,23 @@ print "ZJets bkg error:",err
 
 
 for obs in observables:
+        HistDict[obs]={}
+        HistDict[obs]["TTGamma"] = _file["TTGamma"].Get("%s_TTGamma"%(observables[obs][0])).Clone("%s_TTGamma"%(obs))
+        for s in process[1:]:
+		if "ZJets" in s:continue
+
+                HistDict[obs]["TTGamma"].Add(_file[s].Get("%s_%s"%(observables[obs][0],s)),samples[s][0])
+        HistDict[obs]["TTGamma"]=HistDict[obs]["TTGamma"].Rebin(len(bins_)-1,"",array('d',bins_))
+
+err=Double(0.0)
+yield_sig = HistDict["signal"]["TTGamma"].IntegralAndError(-1,-1,err)
+print "signal not from ZJets", yield_sig,"+/-",err
+
+err=Double(0.0)
+yield_bkg = HistDict["bkg"]["TTGamma"].IntegralAndError(-1,-1,err)
+print "Bkg not from ZJets", yield_bkg,"+/-",err
+
+for obs in observables:
 	HistDict[obs]={}
         HistDict[obs]["TTGamma"] = _file["TTGamma"].Get("%s_TTGamma"%(observables[obs][0])).Clone("%s_TTGamma"%(obs))
 	for s in process[1:]:
@@ -246,7 +278,7 @@ else:
         data =  datafile.Get("phosel_MassEGamma_DataMu").Clone("DataMu")
 data.Sumw2()
 data=data.Rebin(len(bins_)-1,"",array('d',bins_))
-data.GetYaxis().SetRangeUser(0.,700.)
+#data.GetYaxis().SetRangeUser(0.,700.)
 if isonlybarrel:
 	outputFile = TFile("Combine_MisIDEle%s%s_barrel.root"%(dir_,zjets),"recreate")
 else:
@@ -257,7 +289,7 @@ outputFile.cd("MisIDEle/data_obs")
 data.Write("nominal")
 outputFile.mkdir("MisIDEle/signal")
 outputFile.cd("MisIDEle/signal")
-print "signal in the root output file:", HistDict["signal"]["TTGamma"].Integral(-1,-1)
+#print "signal in the root output file:", HistDict["signal"]["TTGamma"].Integral(-1,-1)
 
 HistDict["signal"]["TTGamma"].Write("nominal")
 outputFile.mkdir("MisIDEle/bkg")
@@ -285,7 +317,7 @@ sum_.Add(outputFile.Get("MisIDEle/bkg/nominal"))
 sum_.SetLineColor(kRed)
 sum_.SetMarkerColor(kRed)
 data.Sumw2()
-data_.GetYaxis().SetRange(0,170)
+#data_.GetYaxis().SetRange(0,170)
 data_.Draw('E,X0')
 data_.SetMarkerStyle(8)
 data_.SetMarkerSize(1.0)
@@ -327,13 +359,17 @@ print "total signal:",yield_
 print "signal error:",err
 
 
-err=Double(0.0)
+err2=Double(0.0)
 
 
-yield_=(float(bkg_.IntegralAndError(-1,-1,err)))
+yield2_=(float(bkg_.IntegralAndError(-1,-1,err2)))
 
-print "total bkg:",yield_ #total_
-print "bkg error:",err #error
+print "total bkg:",yield2_ #total_
+print "bkg error:",err2 #error
+
+
+print "signal+bkg:",yield_+yield2_
+print "total error:",(err**2+err**2)**0.5
 
 sum_.Draw('hist,same')
 sig_.Draw('hist,same')
