@@ -17,13 +17,13 @@ if finalState in ["Mu","mu"]:
     outputFileName = "histograms/mu/qcdTransferFactors.root"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdmuons/V08_00_26_07"
     preselCut = "passPresel_Mu"
-    qcdRelIsoCut = "muPFRelIso>0.3 && "
+    qcdRelIsoCut = "muPFRelIso>0.15 && muPFRelIso<0.3 && "
 elif finalState in ["Ele","ele","e"]:
     sample = "QCDEle"
     outputFileName = "histograms/ele/qcdTransferFactors.root"
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/qcdelectrons/V08_00_26_07"
     preselCut = "passPresel_Ele"
-    qcdRelIsoCut = ""
+    qcdRelIsoCut = "elePFRelIso>0.01 &&"
 else:
     print "Unknown final state"
     sys.exit()
@@ -63,7 +63,7 @@ histCR2Pho = TH1F("pho_histNjet_QCDcr2","pho_histNjet_QCDcr2",15,0,15)
 tree.Draw("nJet>>histNjet_QCDcr2",extraCuts+weights)
 tree.Draw("nJet>>pho_histNjet_QCDcr2",extraCutsPhoton+weights)
 outputFile.cd()
-histCR.Write()
+histCR2.Write()
 
 if finalState in ["Mu","mu"]:
     analysisNtupleLocation = "root://cmseos.fnal.gov//store/user/lpctop/TTGamma/13TeV_AnalysisNtuples/muons/V08_00_26_07"
@@ -91,6 +91,8 @@ hist0Pho = TH1F("pho_histNjet_0b","pho_histNjet_0b",15,0,15)
 tree.Draw("nJet>>histNjet_0b",extraCuts+weights)
 tree.Draw("nJet>>pho_histNjet_0b",extraCutsPhoton+weights)
 outputFile.cd()
+
+print hist0.Integral(4,-1), hist0.GetBinContent(1)
 hist0.Write()
 
 nJets  = 2
@@ -152,10 +154,11 @@ hist_TF = TH1F("TransferFactors","TransferFactors",3,0,3)
 hist_TFCR = TH1F("TransferFactorsCR","TransferFactorsCR",3,0,3)
 
 histCR.Rebin(15)
+print hist0.GetBinContent(1)
 hist0.Rebin(15)
 hist1.Rebin(15)
 hist2.Rebin(15)
-
+print hist0.GetBinContent(1), hist1.GetBinContent(1), hist2.GetBinContent(1)
 hist_TF.SetBinContent(1,hist0.GetBinContent(1))
 hist_TF.SetBinError(1,hist0.GetBinError(1))
 
@@ -173,10 +176,10 @@ hist_TFCR.SetBinError(2,histCR.GetBinError(1))
 
 hist_TFCR.SetBinContent(3,histCR.GetBinContent(1))
 hist_TFCR.SetBinError(3,histCR.GetBinError(1))
-
+print hist_TF.Integral(), hist_TFCR.Integral()
 hist_TF.Divide(hist_TFCR)
 hist_TF.Write()
-
+print hist_TF.GetBinContent(1)
 
 
 hist_TFPho = TH1F("TransferFactorsPho","TransferFactorsPho",3,0,3)
