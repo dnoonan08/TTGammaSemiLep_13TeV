@@ -95,6 +95,7 @@ void Selector::process_objects(EventTree* inp_tree){
 
 void Selector::clear_vectors(){
 	Photons.clear();
+
 	PhoPassChHadIso.clear();
 	PhoPassPhoIso.clear();
 	PhoPassSih.clear();
@@ -198,10 +199,13 @@ void Selector::filter_photons(){
 		bool isEndCap = (absEta > 1.479);
 
 		bool phoPresel = (et > pho_Et_cut &&
-						  abs(eta) < pho_Eta_cut &&
+						  absSCEta < pho_Eta_cut &&
 						  passEtaOverlap &&
 						  passDR_lep_pho && 
 						  !hasPixelSeed);
+		bool phoSel = (et > pho_Et_cut && passDR_lep_pho && !hasPixelSeed);
+
+
 
 		if(phoPresel && passMediumPhotonID){
 			Photons.push_back(phoInd);

@@ -125,9 +125,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	bool skipOverlap = false;
 	applypdfweight = false;
 	applyqsquare  = false;
-	if( sampleType == "TTbarPowheg" || sampleType=="TTbarPowheg_isrUp" || sampleType=="TTbarPowheg_fsrUp"|| sampleType=="TTbarPowheg_isrDown"|| sampleType=="TTbarPowheg_fsrDown"|| sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
+	if( sampleType == "TTbarPowheg" || sampleType=="isr_up_TTbarPowheg" || sampleType=="fsr_up_TTbarPowheg"|| sampleType=="isr_down_TTbarPowheg"|| sampleType=="fsr_down_TTbarPowheg"|| sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
 
-	if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50") doOverlapRemoval_WZ = true;
+	if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50" || sampleType=="DYjetsM10to50_MLM" || sampleType=="DYjetsM50_MLM") doOverlapRemoval_WZ = true;
 
 	if( sampleType == "ST_t-channel" || sampleType == "ST_tbar-channel") doOverlapRemoval_Tchannel = true;
 	if(doOverlapRemoval || doOverlapRemoval_WZ || doOverlapRemoval_Tchannel) std::cout << "########## Will apply overlap removal ###########" << std::endl;
@@ -327,8 +327,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				if (evtPick->passPresel_mu) {
 					int muInd_ = selector->Muons.at(0);
 					_muEffWeight    = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),1);
+					//std::cout << "nominal:"<<_muEffWeight<<std::endl;
 					_muEffWeight_Do = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),0);
+					 //std::cout << "down:"<<_muEffWeight_Do<<std::endl;
 					_muEffWeight_Up = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),2);
+					 //std::cout << "Up:"<<_muEffWeight_Up<<std::endl;
 					_eleEffWeight    = 1.;
 					_eleEffWeight_Up = 1.;
 					_eleEffWeight_Do = 1.;
@@ -527,7 +530,8 @@ void makeAnalysisNtuple::FillEvent()
 
 	int countMediumIDPho = 0;
 	int countTightIDPho = 0;
-
+	_nPhoBarrel=0.;
+	_nPhoEndcap=0.;
 	int parentPID = -1;
 	for (int i_pho = 0; i_pho <_nPho; i_pho++){
 		int phoInd = selector->Photons.at(i_pho);
@@ -536,6 +540,7 @@ void makeAnalysisNtuple::FillEvent()
 							   tree->phoPhi_->at(phoInd),
 							   0.0);
 	//	std::cout << "separate" << phoVector.M()<<std::endl;
+		_phoR9.push_back(tree->phoR9_->at(phoInd));		
 		_phoEt.push_back(tree->phoEt_->at(phoInd));
 		_phoEta.push_back(tree->phoEta_->at(phoInd));
 		
@@ -548,7 +553,15 @@ void makeAnalysisNtuple::FillEvent()
 		_phoPFChIso.push_back( selector->PhoChHadIso_corr.at(phoInd));
 		_phoPFNeuIso.push_back(selector->PhoNeuHadIso_corr.at(phoInd));
 		_phoPFPhoIso.push_back(selector->PhoPhoIso_corr.at(phoInd));
+		if (abs(tree->phoSCEta_->at(phoInd))<1.47){
+		//	 std::cout<<"event number is :" <<tree->event_<<std::endl;
+		//	 std::cout<<"initial barrel pho number:"<< _nPhoBarrel<<std::endl;
 
+			_nPhoBarrel++;
+		//	 std::cout<<" barrel pho :"<< _nPhoBarrel<<std::endl;
+		}else{
+			_nPhoEndcap++;
+		} 
 		if (tree->isData_){
 			_phoEffWeight.push_back(1.);
 			_phoEffWeight_Do.push_back(1.);
@@ -778,6 +791,7 @@ void makeAnalysisNtuple::FillEvent()
 
 	//Compute M3
 	_M3 = -1.;
+        _M3_gamma =-1;
 	double maxPt = -1;
 	if (_nJet>2) {
 		TLorentzVector jet1;
@@ -797,6 +811,10 @@ void makeAnalysisNtuple::FillEvent()
 
 					if ((jet1 + jet2 + jet3).Pt()>maxPt){
 						_M3 = (jet1 + jet2 + jet3).M();
+						if (_nPho>0) {
+			
+                                                	_M3_gamma = (jet1 + jet2 + jet3 + phoVector ).M();
+						}
 						maxPt=(jet1 + jet2 + jet3).Pt();
 					}
 
@@ -882,6 +900,7 @@ void makeAnalysisNtuple::FillEvent()
 		_Mt_blgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (blep + lepVector + phoVector).Pt(),2) + pow( (blep + lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((blep + lepVector + phoVector + METVector ).Pt(),2) );
 		_Mt_lgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (lepVector + phoVector).Pt(),2) + pow( (lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((lepVector + phoVector + METVector ).Pt(),2) );
 		_M_bjj = ( bhad + Wj1 + Wj2 ).M();
+                _M_bjjgamma = ( bhad + Wj1 + Wj2 + phoVector).M();
 		_M_jj  = ( Wj1 + Wj2 ).M();
 
 

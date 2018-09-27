@@ -112,6 +112,7 @@ private :
 	Float_t         _Mt_blgammaMET;
 	Float_t         _Mt_lgammaMET;
 	Float_t         _M_bjj;
+	Float_t         _M_bjjgamma;
 	Float_t         _M_jj;
 	Bool_t          _MassCuts;
 
@@ -121,7 +122,10 @@ private :
 	Float_t         _DilepDelR;
 
 	Int_t           _nPho;
+	Int_t           _nPhoBarrel;
+	Int_t           _nPhoEndcap;
 	std::vector<float>   _phoEt;
+	std::vector<float>   _phoR9;
 	std::vector<float>   _phoEta;
 	std::vector<float>   _phoSCEta;
 	std::vector<float>   _phoPhi;
@@ -270,6 +274,7 @@ private :
 	std::vector<int>     _mcParentage;
 
 	double               _M3;
+	double               _M3_gamma;
 	double               _HT;
 	
 	bool  _passPresel_Ele;
@@ -394,6 +399,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("Mt_blgammaMET"              , &_Mt_blgammaMET               );
 	outputTree->Branch("Mt_lgammaMET"               , &_Mt_lgammaMET                );
 	outputTree->Branch("M_bjj"                      , &_M_bjj                       );
+        outputTree->Branch("M_bjjgamma"                 , &_M_bjjgamma                  );
 	outputTree->Branch("M_jj"                       , &_M_jj                        );
 	outputTree->Branch("MassCuts"                   , &_MassCuts                    );
 
@@ -401,8 +407,11 @@ void makeAnalysisNtuple::InitBranches(){
    	outputTree->Branch("DilepMass"                  , &_DilepMass       			);
 	outputTree->Branch("DilepDelR"                  , &_DilepDelR                   );
 	outputTree->Branch("nPho"                       , &_nPho                        ); 
+	outputTree->Branch("nPhoBarrel"                 , &_nPhoBarrel                        );
+	outputTree->Branch("nPhoEndcap"                 , &_nPhoEndcap                        );
 	outputTree->Branch("phoEt"                      , &_phoEt                       );
-	outputTree->Branch("phoEta"                     , &_phoEta                      ); 
+	outputTree->Branch("phoEta"                     , &_phoEta                      );
+	outputTree->Branch("phoR9"                      , &_phoR9                       ); 
 	outputTree->Branch("phoSCEta"                   , &_phoSCEta                    ); 
 	outputTree->Branch("phoPhi"                     , &_phoPhi                      ); 
 	outputTree->Branch("phoIsBarrel"                , &_phoIsBarrel                 ); 
@@ -527,8 +536,9 @@ void makeAnalysisNtuple::InitBranches(){
 		outputTree->Branch("genScaleSystWeights"        , &_genScaleSystWeights         );
 	}
 
-    outputTree->Branch("M3"                          , &_M3                         ); 
-    outputTree->Branch("HT"                          , &_HT                         ); 
+    	outputTree->Branch("M3"                          , &_M3                         ); 
+        outputTree->Branch("M3_gamma"                    , &_M3_gamma                         );
+	outputTree->Branch("HT"                          , &_HT                         ); 
 
 	outputTree->Branch("passPresel_Ele"              , &_passPresel_Ele             ); 
 	outputTree->Branch("passPresel_Mu"               , &_passPresel_Mu              );
@@ -568,6 +578,7 @@ void makeAnalysisNtuple::InitVariables()
 	_Mt_blgammaMET   = -9999;
 	_Mt_lgammaMET    = -9999;
 	_M_bjj           = -9999;
+        _M_bjjgamma      = -9999;
 	_M_jj            = -9999;
 	_MassCuts        = false;
 
@@ -575,7 +586,9 @@ void makeAnalysisNtuple::InitVariables()
 	_DilepMass	 = -9999;
 	_DilepDelR	 = -9999;
 	_DiphoMass       = -9999;
-	_nPho		     = -9999;
+	_nPho		 = -9999;
+	//_nPhoBarrel      = -9999;
+	//_nPhoEndcap      = -9999;
 	_nEle		     = -9999;
 	_nMu		     = -9999;
 	_nMuLoose 	     = -9999;
@@ -635,6 +648,7 @@ void makeAnalysisNtuple::InitVariables()
 	_muPFRelIso.clear();
 
 	_phoEt.clear();
+	_phoR9.clear();
 	_phoEta.clear();
 	_phoSCEta.clear();
 	_phoPhi.clear();
