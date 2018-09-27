@@ -134,8 +134,8 @@ process_list ={"TTGamma":["TTGamma"],
 	       "TTbar":  ["TTbar"],
 	       "VGamma":["ZGamma", "WGamma"],
 	       "VJets":["WJets", "ZJets"],
-	       "SingleTop":["SingleTop"],
-	       "Other":[ "TTV", "Diboson","QCD"],
+#	       "SingleTop":["SingleTop"],
+	       "Other":[ "TTV", "Diboson","QCD","SingleTop"],
 	       }	
 
 
@@ -184,14 +184,14 @@ totalPromptErr = totalPromptErr**0.5
 totalNonPromptErr = totalNonPromptErr**0.5
 totalerr = totalerr **0.5
 
-process_list = ["TTGamma", "TTbar", "VGamma", "SingleTop","VJets","Other"]
+process_list = ["TTGamma", "TTbar", "VGamma","Other"]
 
-process_latexNames = {"TTGamma":"\\ttgamma",
-		      "TTbar":"\\ttbar",
-		      "VGamma":"\\Vgamma",
-		      "SingleTop":"Single top",
-		      "VJets":"\\VJets",
-		      "Other":"Other",
+process_latexNames = {"TTGamma":r"$t\bar{t}$+$\gamma$",
+		      "TTbar":r"$t\bar{t}$",
+		      "VGamma":r"$V\gamma",
+		      "SingleTop":r"$Single top$",
+		      "VJets":r"$VJets$",
+		      "Other":r"$Other$",
 		      }
 print
 print
@@ -230,4 +230,5 @@ table += '\\end{tabular} \n'
 table = table.replace("$0.0 \pm 0.0$","---")
 
 print table
+
 

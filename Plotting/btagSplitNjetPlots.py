@@ -155,7 +155,7 @@ if finalState=="Mu":
 
 if finalState=="Ele":
 	_file = TFile("histograms/ele/JetBjetMultiplicityHists.root","read")
-        _qcdInputFile = TFile("histograms/mu/qcdTransferFactors.root","read")
+        _qcdInputFile = TFile("histograms/ele/qcdTransferFactors.root","read")
         outputDir = "plots_ele"
 	samples = ['TTGamma',	  
                    'TTbar',
@@ -174,7 +174,8 @@ if finalState=="Ele":
 
 histograms = []
 
-for s in samples:    
+for s in samples:   
+    print s 
     if useZero:
         histograms.append(TH1F("jbMult_%s"%s,"jbMult_%s"%s,15,0,15))
     else:
@@ -198,6 +199,8 @@ for s in samples:
             h2 = _file.Get("QCD%s/phoselnjets0Tag_QCD_DD"%finalState).Clone("pho_histNjet_2b")
 
         hTR = _qcdInputFile.Get("TransferFactors")
+	print hTR.GetBinContent(1), hTR.GetBinContent(2), hTR.GetBinContent(3)
+        print "original:", h0.Integral(4,-1)
         h0.Scale(hTR.GetBinContent(1))
         h1.Scale(hTR.GetBinContent(2))
         h2.Scale(hTR.GetBinContent(3))
@@ -218,7 +221,7 @@ for s in samples:
 
             histograms[-1].SetBinError(i+1,h1.GetBinError(3+i))
             histograms[-1].SetBinError(i+6,h2.GetBinError(3+i))
-
+   
 
     errorVal = Double(0)
     if useZero:

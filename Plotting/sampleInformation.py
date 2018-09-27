@@ -53,20 +53,31 @@ samples = {"TTGamma"   : [["TTGamma_SingleLeptFromTbar_AnalysisNtuple.root",
                           "W+jets",
                           isMC
                           ],
-           "ZJets"     : [["DYjetsM10to50_AnalysisNtuple.root",
-                           "DYjetsM50_AnalysisNtuple.root",
+           "ZJets"     : [["DYjetsM10to50_MLM_AnalysisNtuple.root",#"DYjetsM10to50_MLM_AnalysisNtuple.root",
+                           "DYjetsM50_MLM_AnalysisNtuple.root",#"DYjetsM50_MLM_AnalysisNtuple.root",
                            ],
                           kCyan-5,
                           "Z+jets",
                           isMC
                           ],
-           "WGamma"    : [["WGamma_AnalysisNtuple.root",
+
+
+
+	   "ZJets_NLO" : [["DYjetsM10to50_AnalysisNtuple.root",#"DYjetsM10to50_MLM_AnalysisNtuple.root",
+                           "DYjetsM50_AnalysisNtuple.root",#"DYjetsM50_MLM_AnalysisNtuple.root",
+                           ],
+                          kCyan-5,
+                          "Z+jets",
+                          isMC
+                          ],
+
+           "WGamma"    : [["WGamma_01J_5f_AnalysisNtuple.root",
                            ],
                           kBlue-4,
                           "W+#gamma",
                           isMC
                           ],
-           "ZGamma"    : [["ZGamma_AnalysisNtuple.root",
+           "ZGamma"    : [["ZGamma_01J_5f_AnalysisNtuple.root",
                            ],
                           kBlue-2,
                           "Z+#gamma",
@@ -192,6 +203,7 @@ sampleList = ["TTGamma",
               "SingleTop",
               "WJets",
               "ZJets",
+              #"ZJets_NLO",
               "WGamma",
               "ZGamma",
               "Diboson",

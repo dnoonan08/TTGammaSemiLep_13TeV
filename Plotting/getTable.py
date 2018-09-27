@@ -52,9 +52,10 @@ if isLooseCR3e0Selection: _fileDir  = "histograms/%s/hists_looseCR3e0/"%channel
 
 
 
-list_ = ['TTGamma', 'TTbar', 'TGJets','ST-tW','ST-tch','ST-sch', 'WGamma','ZGamma','WJets', 'ZJets', 'TTV', 'Diboson']
+#list_ = ['TTGamma', 'TTbar', 'TGJets','ST-tW','ST-tch','ST-sch', 'WGamma','ZGamma','WJets', 'ZJets', 'TTV', 'Diboson']
 list_ = ['TTGamma', 'TTbar', 'TGJets','SingleTop', 'WGamma','ZGamma','WJets', 'ZJets', 'TTV', 'Diboson']
 #list_=["ZGamma"]
+#list_=['TTGamma', 'TTbar']
 gROOT.SetBatch(True)
 
 yield_ = {}
@@ -69,33 +70,39 @@ for l in list_:
 	err_s[l] = 0
 
 for sample in list_:
+	print sample, _fileDir, "phosel_PhotonCategory_barrel_%s"%(sample)
 	_file = TFile("%s/%s.root"%(_fileDir,sample),"read")
-	hist=_file.Get("phosel_PhotonCategory_%s"%(sample))	
+	hist=_file.Get("phosel_PhotonCategory_barrel_%s"%(sample))	
 	for i in range(1,5):
                 err = Double(0.0)
-                err_[sample].append(err)            
+#                err_[sample].append(err)     
+		       
         	yield_[sample].append(float(hist.IntegralAndError(i,i,err)))
+		err_[sample].append(err)
+
+
 
 
 for i in range(4):
+	if list_==['TTGamma', 'TTbar']:continue
 	yield_['SingleTop'][i] += yield_['TGJets'][i]
 	err_['SingleTop'][i] = (err_['SingleTop'][i]**2 + err_['TGJets'][i]**2)**0.5
 
-list_.remove('TGJets')
+#list_.remove('TGJets')
 
 _file = TFile("%s/Data%s.root"%(_fileDir,finalState),"read")
 hist=_file.Get("phosel_M3_Data%s"%(finalState))
 data = hist.Integral(-1,-1)
 
-_file = TFile("%s/QCD_DD.root"%(_fileDir),"read")
-hist=_file.Get("phosel_M3_QCD_DD")
-yield_['QCD'] = [0,0,0,0]
-err_['QCD'] = [0,0,0,0]
-err = Double(0.0)
-yield_['QCD'][3] = hist.IntegralAndError(-1,-1, err)
-err_['QCD'][3] = err
+#_file = TFile("%s/QCD_DD.root"%(_fileDir),"read")
+#hist=_file.Get("phosel_M3_QCD_DD")
+#yield_['QCD'] = [0,0,0,0]
+#err_['QCD'] = [0,0,0,0]
+#err = Double(0.0)
+#yield_['QCD'][3] = hist.IntegralAndError(-1,-1, err)
+#err_['QCD'][3] = err
 
-list_.append('QCD')
+#list_.append('QCD')
 
 sum_=[]
 total_=0
@@ -148,20 +155,20 @@ percentage_err.append((HadPho_error/total_)*100)
 percentage_err.append((HadFake_error/total_)*100)
 
 
-process_latexNames = {"TTGamma":"\\ttgamma",
-		      "TTbar":"\\ttbar",
-		      "VGamma":"\\Vgamma",
-		      "WGamma":"\\Wgamma",
-		      "ZGamma":"\\Zgamma",
-		      "SingleTop":"Single top",
-		      "ST-tW":"Single top tW",
-		      "ST-tch":"Single top t-ch.",
-		      "ST-sch":"Single top s-ch.",
-		      "TGJets":"Single top t-ch.+$\gamma$",
-		      "VJets":"\\VJets",
-		      "WJets":"\\WJets",
-		      "ZJets":"\\ZJets",
-		      "TTV":"\\ttbarV",
+process_latexNames = {"TTGamma":r"\ttgamma",
+		      "TTbar":r"\ttbar",
+		      "VGamma":r"\V$",
+		      "WGamma":r"\Wgamma",
+		      "ZGamma":r"\Zgamma",
+		      "SingleTop":r"Single Top",
+		      "ST-tW":r"$Single top tW$",
+		      "ST-tch":"$Single top t-ch$",
+		      "ST-sch":r"$Single top s-ch$",
+		      "TGJets":r"$Single top t-ch$+$\gamma$",
+		      "VJets":r"\VJets",
+		      "WJets":r"\WJets",
+		      "ZJets":r"\ZJets",
+		      "TTV":r"\TTV",
 		      "Diboson":"Diboson",
 		      "QCD":"QCD",
 		      "Other":"Other",
@@ -178,8 +185,6 @@ table +=  '\\hline\n'
 for sample in list_:
 	table += '%s & $%.1f \pm %.1f$  & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f\%%$   \\\\ \n' % (process_latexNames[sample], yield_[sample][0], err_[sample][0], yield_[sample][1], err_[sample][1], yield_[sample][2], err_[sample][2], yield_[sample][3], err_[sample][3], sum_s[sample], err_s[sample],100.*sum_s[sample]/total_)
 
-#	total += yield_[sample][0]+yield_[sample][1]+yield_[sample][2]+yield_[sample][3]
-#	totalErr += (err_[sample][0]+err_[sample][1]+err_[sample][2]+err_[sample][3])**0.5
 table += '\\hline \n'
 table += "MC Totals & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ & $%.1f \\pm %.1f$ &\\\\ \n" %(genuine_,genuine_error,misID_,misID_error,HadPho_,HadPho_error,HadFake_,HadFake_error, total_, error)
 table += "Data & --- & --- & --- & --- & $%.1f$ &\\\\ \n" %(data)

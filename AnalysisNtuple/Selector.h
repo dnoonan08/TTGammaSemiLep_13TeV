@@ -53,7 +53,6 @@ public:
 	
 	void process_objects(EventTree* inp_tree);
 	
-	// selected object indices
 	std::vector<int> Photons;
 	std::vector<bool> PhoPassChHadIso;
 	std::vector<bool> PhoPassPhoIso;
@@ -66,8 +65,8 @@ public:
 	std::vector<int> MuonsLoose;
 	std::vector<int> Jets;
 	std::vector<int> bJets;
+        std::vector<int> FwdJets;
 	
-	// calculated rho corrected PF isolations
 	std::vector<double> EleRelIso_corr;
 	std::vector<double> MuRelIso_corr;
 
@@ -76,12 +75,6 @@ public:
 	std::vector<double> PhoPhoIso_corr;
 	std::vector<std::vector<float>> PhoRandConeChHadIso_corr;
 
-	/* std::vector<double> Pho03ChHadSCRIso; */
-	/* std::vector<double> Pho03PhoSCRIso; */
-	/* std::vector<double> Pho03RandPhoIso; */
-	/* std::vector<double> Pho03RandChHadIso; */
-	
-	// jets
 	double jet_Pt_cut;
 	double jet_Eta_cut;
 	double btag_cut;
@@ -166,4 +159,89 @@ private:
 	bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso);
 };
 
+class Selector_gen{
+public:
+        Selector_gen();
+        ~Selector_gen();
+
+        void process_objects(EventTree* inp_tree);
+
+        std::vector<int> Photons;
+        std::vector<bool> PhoPassChHadIso;
+        std::vector<bool> PhoPassPhoIso;
+        std::vector<bool> PhoPassSih;
+        std::vector<int> LoosePhotons;
+        std::vector<int> Electrons;
+        std::vector<int> ElectronsLoose;
+        std::vector<int> ElectronsMedium;
+        std::vector<int> Muons;
+        std::vector<int> MuonsLoose;
+        std::vector<int> Jets;
+        std::vector<int> bJets;
+        std::vector<int> FwdJets;
+
+        std::vector<double> EleRelIso_corr;
+        std::vector<double> MuRelIso_corr;
+
+        std::vector<double> PhoChHadIso_corr;
+        std::vector<double> PhoNeuHadIso_corr;
+        std::vector<double> PhoPhoIso_corr;
+        std::vector<std::vector<float>> PhoRandConeChHadIso_corr;
+
+        double jet_Pt_cut;
+        double jet_Eta_cut;
+        double btag_cut;
+        double btag_cut_DeepCSV;
+        bool   useDeepCSVbTag;
+        double veto_lep_jet_dR;
+        double veto_pho_jet_dR;
+        double veto_lep_pho_dR;
+        double veto_jet_pho_dR;
+	double ele_Pt_cut;
+        double ele_PtLoose_cut;
+        double ele_Eta_cut;
+        double ele_EtaLoose_cut;
+        double mu_Eta_loose;
+        double mu_Eta_tight;
+        double mu_Pt_cut;
+        double mu_RelIso_tight;
+        double mu_RelIso_loose;
+        double ele_Ptmedium_cut;
+        double ele_RelIso_range[2];
+        double ele_RelIsoLoose_cut;
+        double ele_MVA_range[2];
+        double ele_cutbased_range[2];
+        double ele_MVALoose_cut;
+        double ele_Dxy_cut;
+        int    ele_MissInnHit_cut;
+        bool   ele_Iso_MVA_invert;
+
+	double pho_Et_cut;
+        double pho_Eta_cut;
+	double mu_PtLoose_cut;
+        double mu_RelIsoLoose_cut;
+        double mu_RelIso_range[2];
+        double mu_MVA_range[2];
+        bool   mu_Iso_invert;
+
+        void clear_vectors();
+	EventTree* tree;
+        void filter_photons();
+        void filter_electrons();
+        void filter_muons();
+        void filter_jets();
+        void filter_photons_jetsDR();
+	 double eleEffArea03(double SCEta);
+        double muEffArea04(double muEta);
+        double phoEffArea03ChHad(double phoSCEta);
+        double phoEffArea03NeuHad(double phoSCEta);
+        double phoEffArea03Pho(double phoSCEta);
+        int egammaRegion(double absEta);
+
+        bool passEleTightID(int eleInd, bool doRelisoCut);
+        bool passEleVetoID(int eleInd, bool doRelisoCut);
+        bool passPhoMediumID(int phoInd);
+        bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso);
+};
+       
 #endif

@@ -967,10 +967,12 @@ public:
 	
 	// Jet
 	Int_t    nJet_;
+        Int_t    nfwdJet_;
 	vector<ULong_t>* jetTrg_;
 	vector<int>*    jetAlgo_;
 	vector<float>*  jetEn_;
 	vector<float>*  jetPt_;
+        vector<float>*  fwdJetPt_;
 	vector<float>*  jetEta_;
 	vector<float>*  jetPhi_;
 	vector<float>*  jetEt_;
