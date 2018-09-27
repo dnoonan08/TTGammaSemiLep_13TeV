@@ -123,8 +123,8 @@ else:
     tree.Draw("nJet>>njets1Tag_%s"%sample,      "(%s && nBJet==1)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[1]"%preselCut)
     tree.Draw("nJet>>njets2Tag_%s"%sample,      "(%s && nBJet==2)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]"%preselCut)
     tree.Draw("nJet>>phoselnjets0Tag_%s"%sample,"(nPho>=1 && nBJet==0 && %s)*evtWeight*PUweight*muEffWeight*eleEffWeight*phoEffWeight[0]*btagWeight[0]"%preselCut)
-    tree.Draw("nJet>>phoselnjets1Tag_%s"%sample,"(nPho>=1 && nBJet==1 && %s)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[1]"%preselCut)
-    tree.Draw("nJet>>phoselnjets2Tag_%s"%sample,"(nPho>=1 && nBJet==2 && %s)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[2]"%preselCut)
+    tree.Draw("nJet>>phoselnjets1Tag_%s"%sample,"(nPho>=1 && nBJet==1 && %s)*evtWeight*PUweight*muEffWeight*eleEffWeight*phoEffWeight[0]*btagWeight[1]"%preselCut)
+    tree.Draw("nJet>>phoselnjets2Tag_%s"%sample,"(nPho>=1 && nBJet==2 && %s)*evtWeight*PUweight*muEffWeight*eleEffWeight*phoEffWeight[0]*btagWeight[2]"%preselCut)
 
 # elif not "Data" in sample:
 #     tree.Draw("nJet>>njets0Tag_%s"%sample,      "(%s)*evtWeight*PUweight*muEffWeight*eleEffWeight*btagWeight[0]"%preselCut)

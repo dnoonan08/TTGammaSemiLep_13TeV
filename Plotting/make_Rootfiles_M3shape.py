@@ -22,12 +22,29 @@ parser.add_option("-c", "--channel", dest="channel", default="mu",type='str',
                   help="Specify which channel mu or ele? default is mu" )
 parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,action="store_true",
                      help="Use 4j2t selection" )
+parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection",default=False,action="store_true",
+                  help="Use 2j at least 1t control region selection")
+parser.add_option("--LooseCR3e0","--looseCR3e0", dest="isLooseCR3e0Selection",default=False,action="store_true",
+                  help="Use 3j exactly 0t control region selection" )
 
 (options, args) = parser.parse_args()
 
 
 finalState = options.channel
 TightSelection = options.isTightSelection
+isLooseCR2g1Selection = options.isLooseCR2g1Selection
+isLooseCR3e0Selection = options.isLooseCR3e0Selection
+
+
+if isLooseCR3e0Selection:
+
+        dir_ = "_looseCR3e0"
+elif isLooseCR2g1Selection:
+        dir_ = "_looseCR2g1"
+else:
+        dir_= ""
+
+
 
 samples =["TTGamma","TTbar","TTV","TGJets","SingleTop","WJets","ZJets","WGamma","ZGamma","Diboson","QCD_DD"]
 if finalState=="mu":
@@ -35,13 +52,8 @@ if finalState=="mu":
 else:
 	samples.append("DataEle")
 
-if TightSelection:
-	for s in samples:
-        	_file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists_tight/%s.root"%(finalState,s))
-else:
-	for s in samples:
-		#print s
-                _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists/%s.root"%(finalState,s))
+for s in samples:
+	_file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s/%s.root"%(finalState,dir_,s))
 
 #exit()
 misIDEleSF = 1.68
@@ -69,9 +81,9 @@ WJets_do={}
 _file_up={}
 _file_do={}
 if finalState=="mu":
-	systematics = ["JER","JECTotal","JECSubTotalPileUp","JECSubTotalRelative","JECSubTotalPt","JECSubTotalScale","JECSubTotalAbsolute","JECSubTotalMC","phosmear","phoscale","BTagSF","Q2","Pdf","PU","MuEff","PhoEff"]
+	systematics = ["JER","JECTotal","phosmear","phoscale","BTagSF","Q2","Pdf","PU","MuEff","PhoEff"]
 else:
-	systematics = ["JER","JECTotal","JECSubTotalPileUp","JECSubTotalRelative","JECSubTotalPt","JECSubTotalScale","JECSubTotalAbsolute","JECSubTotalMC","phosmear","phoscale","elesmear","elescale","BTagSF","Q2","Pdf","PU","EleEff","PhoEff"]
+	systematics = ["JER","JECTotal","phosmear","phoscale","BTagSF","Q2","Pdf","PU","EleEff","PhoEff","elesmear","elescale"]
 
 systematics2 = ["isr","fsr"]
 
@@ -85,27 +97,20 @@ for sys in systematics:
       
        _file_up[sys]={}
        _file_do[sys]={}
-       if TightSelection:
-		for s in samples:
-			if s=="DataMu" or s=="DataEle":continue
-			_file_up[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up_tight/%s.root"%(finalState,sys,s))
-			_file_do[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down_tight/%s.root"%(finalState,sys,s))
-       else:					
-       		for s in samples:
-			if s=="DataMu" or s=="DataEle":continue
-               		_file_up[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up/%s.root"%(finalState,sys,s))
-               		_file_do[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down/%s.root"%(finalState,sys,s))
-if TightSelection:
-	for sys in systematics2:
+       for s in samples:
+		if s=="DataMu" or s=="DataEle":continue
+		_file_up[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up%s/%s.root"%(finalState,sys,dir_,s))
+		_file_do[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down%s/%s.root"%(finalState,sys,dir_,s))
 
-		_file_up[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up_tight/TTGamma.root"%(finalState,sys))
-        	_file_do[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down_tight/TTGamma.root"%(finalState,sys))
-else:
-	for sys in systematics2:
-		_file_up[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up/TTGamma.root"%(finalState,sys))
-        	_file_do[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down/TTGamma.root"%(finalState,sys))
-		_file_up[sys]["TTbar"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up/TTbar.root"%(finalState,sys))
-                _file_do[sys]["TTbar"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down/TTbar.root"%(finalState,sys))
+
+for sys in systematics2:
+	_file_up[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up%s/TTGamma.root"%(finalState,sys,dir_))
+	_file_do[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down%s/TTGamma.root"%(finalState,sys,dir_))
+	_file_up[sys]["TTbar"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up%s/TTbar.root"%(finalState,sys,dir_))
+	_file_do[sys]["TTbar"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down%s/TTbar.root"%(finalState,sys,dir_))
+
+
+
 
 
 binsM3=[]
@@ -114,8 +119,10 @@ binsChHad = [0.,0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 11.0, 13.0, 15
 #for i in binsChHad:
 #	print i
 
-binsM3=[60., 80., 100, 110., 120., 130., 140., 150., 160., 170., 180., 190., 200., 210., 220., 230., 240., 250., 260., 270., 280., 290., 300., 310., 320., 330., 340., 350., 360., 370., 380., 390., 400., 420., 440., 460., 480., 500.]#, 520., 540., 560., 580., 600.]
-#print len(binsM3)
+#binsM3=[60., 80., 100, 110., 120., 130., 140., 150., 160., 170., 180., 190., 200., 210., 220., 230., 240., 250., 260., 270., 280., 290., 300., 310., 320., 330., 340., 350., 360., 220., 380., 390., 400., 420., 440., 460., 480., 500.]#, 520., 540., 560., 580., 600.]
+binsM3=[60., 80., 100, 120., 140., 160., 180., 200., 220., 240., 260., 280., 300., 320., 340., 360., 380., 400., 420., 440., 460., 480., 500.]
+
+print len(binsM3)
 #exit()
 #for i in range(-10,300,10):
 #	binsM3.append(i+10.)
@@ -138,7 +145,7 @@ observables={"M3": ["M3",binsM3],
 
 #print sorted(observables.keys())[:2]
 
-
+`
 process_signal = {"TTGamma_Prompt":["TTGamma"],
 	   "TTGamma_NonPrompt":["TTGamma"],
            "TTbar_Prompt": ["TTbar"],
@@ -147,8 +154,10 @@ process_signal = {"TTGamma_Prompt":["TTGamma"],
            "VGamma_NonPrompt":["ZGamma","WGamma"],
            "VJets_Prompt":["ZJets", "WJets"],
            "VJets_NonPrompt":["ZJets", "WJets"],
-           "Other_Prompt":["TTV", "Diboson", "TGJets", "SingleTop"],
-           "Other_NonPrompt":["TTV", "Diboson","TGJets", "SingleTop"],
+           "SingleTop_Prompt":["TGJets", "SingleTop"],
+           "SingleTop_NonPrompt":["TGJets", "SingleTop"],
+           "Other_Prompt":["TTV", "Diboson","QCD_DD"],
+           "Other_NonPrompt":["TTV", "Diboson","QCD_DD"],
 	}
 
 
@@ -162,7 +171,8 @@ process_control ={"TTGamma":["TTGamma"],
 		  "TTbar":  ["TTbar"],
 		  "VGamma":["ZGamma", "WGamma"],
 		  "VJets":["WJets", "ZJets"],
-		  "Other":[ "TTV", "Diboson","TGJets", "SingleTop","QCD_DD"],
+                  "SingleTop":["TGJets", "SingleTop"],
+		  "Other":[ "TTV", "Diboson","QCD_DD"],
 		}	
 
 
@@ -221,19 +231,19 @@ for obs in observables:
 					if sys=="Q2":continue
 					HistDict_up[obs][p][sys].Add(_file_up[sys][s].Get("presel_%s_%s"%(observables[obs][0],s)))
 					HistDict_do[obs][p][sys].Add(_file_do[sys][s].Get("presel_%s_%s"%(observables[obs][0],s)))
-			HistDict[obs][p]=HistDict[obs][p].Rebin(37,"",array('d',binsM3))
+			HistDict[obs][p]=HistDict[obs][p].Rebin(22,"",array('d',binsM3))
 
 		
 			for sys in systematics:
 				if sys=="MisIDEleshape":continue
-                                HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+                                HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
 		for sys in systematics2:
 			for p in sub_control:
 				HistDict_up[obs][p][sys] = _file_up[sys][p].Get("presel_%s_%s"%(observables[obs][0],p)).Clone("%s_%s"%(obs,p))
-				HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
+				HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
                         	HistDict_do[obs][p][sys] = _file_do[sys][p].Get("presel_%s_%s"%(observables[obs][0],p)).Clone("%s_%s"%(obs,p))
-				HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(37,"",array('d',binsM3))	
+				HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(22,"",array('d',binsM3))	
 
 	
 	elif obs=="M3":
@@ -302,15 +312,15 @@ for obs in observables:
 							HistDict_do[obs][p][sys] = _file_do[sys][s].Get("phosel_%s_GenuinePhoton_barrel_%s"%(observables[obs][0],s)).Clone("%s_%s"%(obs,p))
 							HistDict_do[obs][p][sys].Add(_file_do[sys][s].Get("phosel_%s_MisIDEle_barrel_%s"%(observables[obs][0],s)),misIDEleSF)
 				
-				 HistDict[obs][p]=HistDict[obs][p].Rebin(37,"",array('d',binsM3))
+				 HistDict[obs][p]=HistDict[obs][p].Rebin(22,"",array('d',binsM3))
 				 for sys in systematics:
 					if "NonPrompt" in p and sys=="MisIDEleshape":continue
-					HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-					HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+					HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+					HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
 
 	
 			else:
-				if "NonPrompt" in p:
+				if "_NonPrompt" in p:
 					Temp[obs][p]   = _file[s].Get("phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s)).Clone("%s_%s"%(obs,p))
                                         Temp[obs][p].Add(_file[s].Get("phosel_%s_HadronicFake_barrel_%s"%(observables[obs][0],s)))
                                         
@@ -320,13 +330,14 @@ for obs in observables:
 					if s=="ZJets":
                                         	Temp[obs][p].Scale(ZJetsSF)
                                                 HistDict[obs][p].Scale(ZJetsSF)
-						Temp[obs][p]=Temp[obs][p].Rebin(37,"",array('d',binsM3))
-						HistDict[obs][p]=HistDict[obs][p].Rebin(37,"",array('d',binsM3))
+						Temp[obs][p]=Temp[obs][p].Rebin(22,"",array('d',binsM3))
+						HistDict[obs][p]=HistDict[obs][p].Rebin(22,"",array('d',binsM3))
 						HistDict[obs][p].Scale(Temp[obs][p].Integral()/HistDict[obs][p].Integral())
 					if s=="ZGamma" or s=="ZJets": print "only Z:",HistDict[obs][p].Integral(), s
 						
-				
+						
 					for sys in systematics:
+						print sys
                                          	if sys=="MisIDEleshape":continue
                                          	if "AntiSIEIE" in observables[obs][0]:continue
 						if sys=="Q2":continue
@@ -343,17 +354,20 @@ for obs in observables:
                                                         HistDict_do[obs][p][sys] = _file_do[sys][s].Get("presel_M3_control_%s"%(s)).Clone("%s_%s"%(obs,p))
 
                                                         if s=="ZJets":
-								
+								print "s is ZJets"	
 								Temp_up[obs][p][sys].Scale(ZJetsSF)
 								HistDict_up[obs][p][sys].Scale(ZJetsSF)
                                                                 Temp_do[obs][p][sys].Scale(ZJetsSF)
                                                                 HistDict_do[obs][p][sys].Scale(ZJetsSF)
-								Temp_up[obs][p][sys]=Temp_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-								HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
+								Temp_up[obs][p][sys]=Temp_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+								HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
 								HistDict_up[obs][p][sys].Scale(Temp_up[obs][p][sys].Integral()/HistDict_up[obs][p][sys].Integral())
-								Temp_do[obs][p][sys]=Temp_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                                                HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+								Temp_do[obs][p][sys]=Temp_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                                                HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
                                                                 HistDict_do[obs][p][sys].Scale(Temp_do[obs][p][sys].Integral()/HistDict_do[obs][p][sys].Integral())
+								if sys=="PU":
+									print "doing PU"
+									print HistDict_do[obs][p][sys].Integral(), HistDict_up[obs][p][sys].Integral(), sys
 
 
 				if "_Prompt" in p:
@@ -364,8 +378,8 @@ for obs in observables:
                                         if s=="ZJets":
                                                 HistDict[obs][p].Scale(ZJetsSF)
                                                 Temp[obs][p].Scale(ZJetsSF)
-						Temp[obs][p]=Temp[obs][p].Rebin(37,"",array('d',binsM3))
-                                                HistDict[obs][p]=HistDict[obs][p].Rebin(37,"",array('d',binsM3))
+						Temp[obs][p]=Temp[obs][p].Rebin(22,"",array('d',binsM3))
+                                                HistDict[obs][p]=HistDict[obs][p].Rebin(22,"",array('d',binsM3))
                                                 HistDict[obs][p].Scale(Temp[obs][p].Integral()/HistDict[obs][p].Integral())
 					
 					for sys in systematics:
@@ -389,11 +403,11 @@ for obs in observables:
                                                                 HistDict_do[obs][p][sys].Scale(ZJetsSF)
 								Temp_up[obs][p][sys].Scale(ZJetsSF)
                                                                 Temp_do[obs][p][sys].Scale(ZJetsSF)
-								Temp_up[obs][p][sys]=Temp_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                                                HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
+								Temp_up[obs][p][sys]=Temp_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                                                HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
                                                                 HistDict_up[obs][p][sys].Scale(Temp_up[obs][p][sys].Integral()/HistDict_up[obs][p][sys].Integral())
-                                                                Temp_do[obs][p][sys]=Temp_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                                                HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+                                                                Temp_do[obs][p][sys]=Temp_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                                                HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
                                                                 HistDict_do[obs][p][sys].Scale(Temp_do[obs][p][sys].Integral()/HistDict_do[obs][p][sys].Integral())
 							
 
@@ -411,11 +425,11 @@ for obs in observables:
                                                                 HistDict_up[obs][p][sys].Scale(ZJetsSF)
                                                                 Temp_do[obs][p][sys].Scale(ZJetsSF)
                                                                 HistDict_do[obs][p][sys].Scale(ZJetsSF)
-								Temp_up[obs][p][sys]=Temp_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                                                HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
+								Temp_up[obs][p][sys]=Temp_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                                                HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
                                                                 HistDict_up[obs][p][sys].Scale(Temp_up[obs][p][sys].Integral()/HistDict_up[obs][p][sys].Integral())
-                                                                Temp_do[obs][p][sys]=Temp_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                                                HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+                                                                Temp_do[obs][p][sys]=Temp_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                                                HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
                                                                 HistDict_do[obs][p][sys].Scale(Temp_do[obs][p][sys].Integral()/HistDict_do[obs][p][sys].Integral())
 
 
@@ -427,8 +441,8 @@ for obs in observables:
 							WJetstemp[obs][p] = _file[s].Get("phosel_%s_GenuinePhoton_barrel_%s"%(observables[obs][0],s))
 							WJetstemp[obs][p].Add(_file[s].Get("phosel_%s_MisIDEle_barrel_%s"%(observables[obs][0],s)),misIDEleSF)
 							WJets[obs][p]=_file[s].Get("presel_M3_control_%s"%(s))
-							WJetstemp[obs][p]=  WJetstemp[obs][p].Rebin(37,"",array('d',binsM3))
-							WJets[obs][p] = WJets[obs][p].Rebin(37,"",array('d',binsM3))
+							WJetstemp[obs][p]=  WJetstemp[obs][p].Rebin(22,"",array('d',binsM3))
+							WJets[obs][p] = WJets[obs][p].Rebin(22,"",array('d',binsM3))
 							WJets[obs][p].Scale(WJetstemp[obs][p].Integral()/WJets[obs][p].Integral())
 						else:
 						
@@ -451,12 +465,12 @@ for obs in observables:
 
                                                                          WJets_do[obs][p][sys]=_file[s].Get("presel_M3_control_%s"%(s))
 									 
-									 WJetstemp_up[obs][p][sys]=  WJetstemp_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-									 WJets_up[obs][p][sys] = WJets_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
+									 WJetstemp_up[obs][p][sys]=  WJetstemp_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+									 WJets_up[obs][p][sys] = WJets_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
 									 WJets_up[obs][p][sys].Scale(WJetstemp_up[obs][p][sys].Integral()/WJets_up[obs][p][sys].Integral())
 									
-                                                                         WJetstemp_do[obs][p][sys]=  WJetstemp_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                                                         WJets_do[obs][p][sys] = WJets_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+                                                                         WJetstemp_do[obs][p][sys]=  WJetstemp_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                                                         WJets_do[obs][p][sys] = WJets_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
                                                                          WJets_do[obs][p][sys].Scale(WJetstemp_do[obs][p][sys].Integral()/WJets_do[obs][p][sys].Integral())
 								else:
 									Temp_up[obs][p][sys].Add(_file[s].Get("phosel_%s_GenuinePhoton_barrel_%s"%(observables[obs][0],s)))
@@ -471,19 +485,20 @@ for obs in observables:
 
 							else:
 								if "VJets" in p:
+									 if finalState=="mu":continue
                                                                          WJetstemp_up[obs][p][sys] = _file_up[sys][s].Get("phosel_%s_GenuinePhoton_barrel_%s"%(observables[obs][0],s))
                                                                          WJetstemp_up[obs][p][sys].Add(_file_up[sys][s].Get("phosel_%s_MisIDEle_barrel_%s"%(observables[obs][0],s)),misIDEleSF)
                                                                          WJets_up[obs][p][sys]= _file_up[sys][s].Get("presel_M3_control_%s"%(s))
                                                                          WJetstemp_do[obs][p][sys] = _file_do[sys][s].Get("phosel_%s_GenuinePhoton_barrel_%s"%(observables[obs][0],s))
                                                                          WJetstemp_do[obs][p][sys].Add(_file_do[sys][s].Get("phosel_%s_MisIDEle_barrel_%s"%(observables[obs][0],s)),misIDEleSF)
-
+									 #print sys, _file_up[sys][s], WJetstemp_up[obs][p][sys].Integral(), WJets_up[obs][p][sys].Integral()
                                                                          WJets_do[obs][p][sys]=_file_do[sys][s].Get("presel_M3_control_%s"%(s))
-                                                                         WJetstemp_up[obs][p][sys]=  WJetstemp_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                                                         WJets_up[obs][p][sys] = WJets_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
+                                                                         WJetstemp_up[obs][p][sys]=  WJetstemp_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                                                         WJets_up[obs][p][sys] = WJets_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
                                                                          WJets_up[obs][p][sys].Scale(WJetstemp_up[obs][p][sys].Integral()/WJets_up[obs][p][sys].Integral())
                                                                          
-                                                                         WJetstemp_do[obs][p][sys]=  WJetstemp_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                                                         WJets_do[obs][p][sys] = WJets_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+                                                                         WJetstemp_do[obs][p][sys]=  WJetstemp_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                                                         WJets_do[obs][p][sys] = WJets_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
                                                                          WJets_do[obs][p][sys].Scale(WJetstemp_do[obs][p][sys].Integral()/WJets_do[obs][p][sys].Integral())
 								else:
 									Temp_up[obs][p][sys].Add(_file_up[sys][s].Get("phosel_%s_GenuinePhoton_barrel_%s"%(observables[obs][0],s)))
@@ -497,29 +512,30 @@ for obs in observables:
 
 					if "_NonPrompt" in p:
 						if "VJets" in p:
-							print s
+							
                                                         WJetstemp[obs][p] = _file[s].Get("phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s))
                                                         WJetstemp[obs][p].Add(_file[s].Get("phosel_%s_HadronicFake_barrel_%s"%(observables[obs][0],s)))
                                                         WJets[obs][p]=_file[s].Get("presel_M3_control_%s"%(s))
-                                                        WJetstemp[obs][p]=  WJetstemp[obs][p].Rebin(37,"",array('d',binsM3))
-                                                        WJets[obs][p] = WJets[obs][p].Rebin(37,"",array('d',binsM3))
+                                                        WJetstemp[obs][p]=  WJetstemp[obs][p].Rebin(22,"",array('d',binsM3))
+                                                        WJets[obs][p] = WJets[obs][p].Rebin(22,"",array('d',binsM3))
                                                         WJets[obs][p].Scale(WJetstemp[obs][p].Integral()/WJets[obs][p].Integral())
 						#3	print "should be same:",p, WJets[obs][p].Integral(), WJetstemp[obs][p].Integral()
                                                 else:
-							print s
+					#		print s
 
 							Temp[obs][p].Add(_file[s].Get("phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s)))
 							Temp[obs][p].Add(_file[s].Get("phosel_%s_HadronicFake_barrel_%s"%(observables[obs][0],s)))
 							HistDict[obs][p].Add(_file[s].Get("presel_M3_control_%s"%(s)))
 						
 
-						if s=="WJets": print "now ZJets:",HistDict[obs][p].Integral(), p
+					#	if s=="WJets": print "now ZJets:",HistDict[obs][p].Integral(), p
 						
 						for sys in systematics:
 							if "AntiSIEIE" in observables[obs][0]:continue
 							if sys=="Q2":continue
 							if sys=="MisIDEleshape":continue
 							if "VJets" in p:
+									
                                                                          WJetstemp_up[obs][p][sys] = _file_up[sys][s].Get("phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s))
                                                                          WJetstemp_up[obs][p][sys].Add(_file_up[sys][s].Get("phosel_%s_HadronicFake_barrel_%s"%(observables[obs][0],s)))
                                                                          WJets_up[obs][p][sys]=_file_up[sys][s].Get("presel_M3_control_%s"%(s))
@@ -528,13 +544,14 @@ for obs in observables:
 
                                                                          WJets_do[obs][p][sys]=_file_do[sys][s].Get("presel_M3_control_%s"%(s))
 
-                                                                         WJetstemp_up[obs][p][sys]=  WJetstemp_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                                                         WJets_up[obs][p][sys] = WJets_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
+                                                                         WJetstemp_up[obs][p][sys]=  WJetstemp_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                                                         WJets_up[obs][p][sys] = WJets_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+									 print WJets_up[obs][p][sys].Integral(), WJetstemp_up[obs][p][sys].Integral()
                                                                          WJets_up[obs][p][sys].Scale(WJetstemp_up[obs][p][sys].Integral()/WJets_up[obs][p][sys].Integral())
-									# print "should be same:",p, WJets_up[obs][p][sys].Integral(), WJetstemp_up[obs][p][sys].Integral()
+									 print "should be same:",p, WJets_up[obs][p][sys].Integral(), WJetstemp_up[obs][p][sys].Integral()
 
-                                                                         WJetstemp_do[obs][p][sys]=  WJetstemp_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                                                         WJets_do[obs][p][sys] = WJets_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+                                                                         WJetstemp_do[obs][p][sys]=  WJetstemp_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                                                         WJets_do[obs][p][sys] = WJets_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
                                                                          WJets_do[obs][p][sys].Scale(WJetstemp_do[obs][p][sys].Integral()/WJets_do[obs][p][sys].Integral())                       
 							else:
 									Temp_up[obs][p][sys].Add(_file_up[sys][s].Get("phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s)))
@@ -553,14 +570,14 @@ for obs in observables:
 				if "VJets" in p:
 				#	print "ZJets:", HistDict[obs][p].Integral(), "WJets:", WJets[obs][p].Integral()
                                         HistDict[obs][p].Add(WJets[obs][p])
-					print p, "nominal",HistDict[obs][p].Integral()
+					print p, HistDict[obs][p].Integral()
 				else:
 			
-					HistDict[obs][p]=HistDict[obs][p].Rebin(37,"",array('d',binsM3))
-					Temp[obs][p]=Temp[obs][p].Rebin(37,"",array('d',binsM3))
+					HistDict[obs][p]=HistDict[obs][p].Rebin(22,"",array('d',binsM3))
+					Temp[obs][p]=Temp[obs][p].Rebin(22,"",array('d',binsM3))
 					#print p, Temp[obs][p].Integral(), HistDict[obs][p].Integral(), "nominal"      
 					HistDict[obs][p].Scale(Temp[obs][p].Integral()/HistDict[obs][p].Integral())
-					print p, "nominal",HistDict[obs][p].Integral()
+				#	print p, "nominal",HistDict[obs][p].Integral()
 					
 				for sys in systematics:
 					if sys=="isr" or sys=="fsr":continue	
@@ -568,15 +585,15 @@ for obs in observables:
 					if sys=="Q2":continue
 					if sys=="MisIDEleshape" and "_NonPrompt" in p:continue
 					if "VJets" in p:
-	
+						#if finalState=="mu":continue	
 						HistDict_up[obs][p][sys].Add(WJets_up[obs][p][sys])
 						HistDict_do[obs][p][sys].Add(WJets_do[obs][p][sys])
 						print p, sys, HistDict_up[obs][p][sys].Integral(),HistDict_do[obs][p][sys].Integral()
 					else:
-						HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
-						HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-						Temp_up[obs][p][sys]=Temp_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-						Temp_do[obs][p][sys]=Temp_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+						HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
+						HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+						Temp_up[obs][p][sys]=Temp_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+						Temp_do[obs][p][sys]=Temp_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
                                         	
 						HistDict_up[obs][p][sys].Scale(Temp_up[obs][p][sys].Integral()/HistDict_up[obs][p][sys].Integral())
 						HistDict_do[obs][p][sys].Scale(Temp_do[obs][p][sys].Integral()/HistDict_do[obs][p][sys].Integral())
@@ -630,7 +647,8 @@ for obs in observables:
                                                 HistDict_do[obs][p][sys].Add(_file_do[sys][s].Get("phosel_%s_HadronicFake_barrel_%s"%(observables[obs][0],s)))
                                 	        total_do= HistDict_do[obs][p][sys].Integral()
                                         	HistDict_do[obs][p][sys].Scale(HistDict[obs][p].Integral()/total_do)
-					 else:  
+					 else: 
+						print obs, sys, s
 					 	HistDict_up[obs][p][sys] = _file_up[sys][s].Get("phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s)).Clone("%s_%s"%(obs,p))
 					 	HistDict_up[obs][p][sys].Add(_file_up[sys][s].Get("phosel_%s_HadronicFake_barrel_%s"%(observables[obs][0],s)))
 
@@ -759,9 +777,9 @@ for sys in systematics2:
 	for p in sub_signal:
 #		print p,sys
 		HistDict_up["ChHad"][p][sys]= HistDict_up["ChHad"][p][sys].Rebin(15,"",array('d',binsChHad))
-		HistDict_up["M3"][p][sys]=HistDict_up["M3"][p][sys].Rebin(37,"",array('d',binsM3))
+		HistDict_up["M3"][p][sys]=HistDict_up["M3"][p][sys].Rebin(22,"",array('d',binsM3))
 		HistDict_do["ChHad"][p][sys]= HistDict_do["ChHad"][p][sys].Rebin(15,"",array('d',binsChHad))
-                HistDict_do["M3"][p][sys]=HistDict_do["M3"][p][sys].Rebin(37,"",array('d',binsM3))
+                HistDict_do["M3"][p][sys]=HistDict_do["M3"][p][sys].Rebin(22,"",array('d',binsM3))
 
 
 
@@ -875,11 +893,8 @@ for p in process_control:
 
 
 ##make DataDriven templates root file with actual data###
-if TightSelection:
-        outputFile = TFile("Combine_withDDTemplateData_v2_%s_tight.root"%(finalState),"recreate")
 
-else:
-        outputFile = TFile("Combine_withDDTemplateData_v2_%s.root"%(finalState),"recreate")
+outputFile = TFile("Combine_withDDTemplateData_v2_%s%s.root"%(finalState,dir_),"recreate")
 
 
 
@@ -893,25 +908,25 @@ for obs in observables:
 	if finalState=="mu":
 		if obs=="M3_control":
 			HistDict[obs]["data"]=_file["DataMu"].Get("presel_%s_DataMu"%(observables[obs][0])).Clone("%s_DataMu"%(obs))
-			HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(37,"",array('d',binsM3))
+			HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(22,"",array('d',binsM3))
 			print "just rebinned for M3_control"
 			HistDict[obs]["data"].Write("nominal")
 		else:
 			HistDict[obs]["data"]=_file["DataMu"].Get("phosel_%s_barrel_DataMu"%(observables[obs][0])).Clone("%s_DataMu"%(obs))
 			if obs=="M3":
-				HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(37,"",array('d',binsM3))
+				HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(22,"",array('d',binsM3))
 			else:
 				HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(15,"",array('d',binsChHad))
         		HistDict[obs]["data"].Write("nominal")
 	else:
 		if obs=="M3_control":
                         HistDict[obs]["data"]=_file["DataEle"].Get("presel_%s_DataEle"%(observables[obs][0])).Clone("%s_DataEle"%(obs))
-			HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(37,"",array('d',binsM3))
+			HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(22,"",array('d',binsM3))
                         HistDict[obs]["data"].Write("nominal")
 		else:
 			HistDict[obs]["data"]=_file["DataEle"].Get("phosel_%s_barrel_DataEle"%(observables[obs][0])).Clone("%s_DataEle"%(obs))
 			if obs=="M3":
-                                HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(37,"",array('d',binsM3))
+                                HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(22,"",array('d',binsM3))
                         else:
                                 HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(15,"",array('d',binsChHad))
 
@@ -989,6 +1004,28 @@ for obs in observables:
 		for sys in systematics2:
                         HistDict_up[obs]["TTbar_Prompt"][sys].Write("%sUp"%(sys))
                         HistDict_do[obs]["TTbar_Prompt"][sys].Write("%sDown"%(sys))
+
+
+bins=TFile("binned.root","read")
+outputFile.mkdir("binned_3CR/data_obs")
+outputFile.cd("binned_3CR/data_obs")
+hist_data= bins.Get("data")
+hist_data.Write("nominal")
+sample=["TTGamma","TTbar","WGamma","ZGamma","WJets","ZJets","SingleTop","TGJets","TTV","Diboson","QCD_DD"]
+for s in sample:
+	outputFile.mkdir("binned_3CR/%s"%s)
+	outputFile.cd("binned_3CR/%s"%s)
+	hist= bins.Get("binnedCR_%s"%s)
+	hist.Write("nominal")
+	outputFile.mkdir("binned_3CR/%s_Prompt"%s)
+        outputFile.cd("binned_3CR/%s_Prompt"%s)
+        hist= bins.Get("binned1CR_%s"%s)
+        hist.Write("nominal")
+	outputFile.mkdir("binned_3CR/%s_NonPrompt"%s)
+        outputFile.cd("binned_3CR/%s_NonPrompt"%s)
+        hist= bins.Get("binned2CR_%s"%s)
+        hist.Write("nominal")
+	
 
 
 outputFile.Close()

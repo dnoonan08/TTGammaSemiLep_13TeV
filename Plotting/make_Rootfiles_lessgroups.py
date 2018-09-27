@@ -22,30 +22,44 @@ parser.add_option("-c", "--channel", dest="channel", default="mu",type='str',
                   help="Specify which channel mu or ele? default is mu" )
 parser.add_option("--Tight","--tight", dest="isTightSelection", default=False,action="store_true",
                      help="Use 4j2t selection" )
+parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection",default=False,action="store_true",
+                  help="Use 2j at least 1t control region selection")
+parser.add_option("--LooseCR3e0","--looseCR3e0", dest="isLooseCR3e0Selection",default=False,action="store_true",
+                  help="Use 3j exactly 0t control region selection" )
+
+
+
 
 (options, args) = parser.parse_args()
 
-
+isLooseCR2g1Selection = options.isLooseCR2g1Selection
+isLooseCR3e0Selection = options.isLooseCR3e0Selection
 finalState = options.channel
 TightSelection = options.isTightSelection
+if isLooseCR3e0Selection:
+	
+	dir_ = "_looseCR3e0"
+elif isLooseCR2g1Selection:
+	dir_ = "_looseCR2g1"
+else:
+	dir_= ""
+
+
+
+
+print "hist%s"%(dir_)
 
 samples =["TTGamma","TTbar","TTV","TGJets","SingleTop","WJets","ZJets","WGamma","ZGamma","Diboson","QCD_DD"]
+
 if finalState=="mu":
 	samples.append("DataMu")
 else:
 	samples.append("DataEle")
 
-if TightSelection:
-	for s in samples:
-        	_file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists_tight/%s.root"%(finalState,s))
-else:
-	for s in samples:
-		print s
-                _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists/%s.root"%(finalState,s))
+for s in samples:
+	_file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s/%s.root"%(finalState,dir_,s))
 
-#exit()
 misIDEleSF = 1.68
-#misIDEleSF=1.0
 misIDEle_unc = 0.071
 if finalState=="mu":
 	ZJetsSF=1.07
@@ -58,9 +72,9 @@ HistDict_do={}
 _file_up={}
 _file_do={}
 if finalState=="mu":
-	systematics = ["JER","JECTotal","JECSubTotalPileUp","JECSubTotalRelative","JECSubTotalPt","JECSubTotalScale","JECSubTotalAbsolute","JECSubTotalMC","phosmear","phoscale","BTagSF","Q2","Pdf","PU","MuEff","PhoEff"]
+	systematics = ["JER","JECTotal","phosmear","phoscale","BTagSF","Q2","Pdf","PU","MuEff","PhoEff"]
 else:
-	systematics = ["JER","JECTotal","JECSubTotalPileUp","JECSubTotalRelative","JECSubTotalPt","JECSubTotalScale","JECSubTotalAbsolute","JECSubTotalMC","phosmear","phoscale","elesmear","elescale","BTagSF","Q2","Pdf","PU","EleEff","PhoEff"]
+	systematics = ["JER","JECTotal","phosmear","phoscale","BTagSF","Q2","Pdf","PU","EleEff","PhoEff","elesmear","elescale"]
 
 systematics2 = ["isr","fsr"]
 
@@ -69,52 +83,34 @@ for sys in systematics2:
 	_file_up[sys]={}
         _file_do[sys]={}
 
-
 for sys in systematics:
-      
-       _file_up[sys]={}
-       _file_do[sys]={}
-       if TightSelection:
-		for s in samples:
-			if s=="DataMu" or s=="DataEle":continue
-			_file_up[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up_tight/%s.root"%(finalState,sys,s))
-			_file_do[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down_tight/%s.root"%(finalState,sys,s))
-       else:					
-       		for s in samples:
-			if s=="DataMu" or s=="DataEle":continue
-               		_file_up[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up/%s.root"%(finalState,sys,s))
-               		_file_do[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down/%s.root"%(finalState,sys,s))
-if TightSelection:
-	for sys in systematics2:
+        print sys 
+        _file_up[sys]={}
+        _file_do[sys]={}
 
-		_file_up[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up_tight/TTGamma.root"%(finalState,sys))
-        	_file_do[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down_tight/TTGamma.root"%(finalState,sys))
-else:
-	for sys in systematics2:
-		_file_up[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up/TTGamma.root"%(finalState,sys))
-        	_file_do[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down/TTGamma.root"%(finalState,sys))
-		_file_up[sys]["TTbar"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up/TTbar.root"%(finalState,sys))
-                _file_do[sys]["TTbar"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down/TTbar.root"%(finalState,sys))
+	for s in samples:
+		if s=="DataMu" or s=="DataEle":continue
+		_file_up[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up%s/%s.root"%(finalState,sys,dir_,s))
+		_file_do[sys][s]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down%s/%s.root"%(finalState,sys,dir_,s))
+
+
+
+for sys in systematics2:
+	
+	_file_up[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up%s/TTGamma.root"%(finalState,sys,dir_))
+	_file_do[sys]["TTGamma"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down%s/TTGamma.root"%(finalState,sys,dir_))
+	_file_up[sys]["TTbar"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_up%s/TTbar.root"%(finalState,sys,dir_))
+	_file_do[sys]["TTbar"]=TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s_down%s/TTbar.root"%(finalState,sys,dir_))
+
 
 
 binsM3=[]
 binsChHad = [0.,0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 11.0, 13.0, 15.0, 17.0, 20.0]
-print len(binsChHad)
-for i in binsChHad:
-	print i
 
-binsM3=[60., 80., 100, 110., 120., 130., 140., 150., 160., 170., 180., 190., 200., 210., 220., 230., 240., 250., 260., 270., 280., 290., 300., 310., 320., 330., 340., 350., 360., 370., 380., 390., 400., 420., 440., 460., 480., 500.]#, 520., 540., 560., 580., 600.]
-print len(binsM3)
-#exit()
-#for i in range(-10,300,10):
-#	binsM3.append(i+10.)
+#binsM3=[60., 80., 100, 110., 120., 130., 140., 150., 160., 170., 180., 190., 200., 210., 220., 230., 240., 250., 260., 270., 280., 290., 300., 310., 320., 330., 340., 350., 360., 370., 380., 390., 400., 420., 440., 460., 480., 500.]#, 520., 540., 560., 580., 600.]
 
-
-#for i in range(300,595,20):
-#	binsM3.append(i+20.)
-print len(binsM3)
-print binsM3
-
+binsM3=[60., 80., 100., 120., 140., 160., 180., 200., 220., 240., 260., 280., 300., 320., 340., 360., 380., 400., 420., 440., 460., 480., 500.]
+#print len(binsM3)
 #exit()
 
 
@@ -123,6 +119,14 @@ observables={"M3": ["M3",binsM3],
 	     "ChHad":["noCut_ChIso",binsChHad],
              "AntiSIEIE":["AntiSIEIE_ChIso",binsChHad],
 	     "M3_control":["M3_control",binsM3]
+           }
+
+
+if isLooseCR2g1Selection:
+	observables={"WtransMass": ["WtransMass",binsM3],
+             "ChHad":["noCut_ChIso",binsChHad],
+            # "AntiSIEIE":["AntiSIEIE_ChIso",binsChHad],
+            # "M3_control":["M3_control",binsM3]
            }
 
 #print sorted(observables.keys())[:2]
@@ -156,7 +160,7 @@ process_control ={"TTGamma":["TTGamma"],
 
 
 
-
+print _file_up["JER"]["TTGamma"]
 
 ##### Make Prompt and NonPrompt MC templates#######
 process={}
@@ -199,19 +203,19 @@ for obs in observables:
 					if sys=="Q2":continue
 					HistDict_up[obs][p][sys].Add(_file_up[sys][s].Get("presel_%s_%s"%(observables[obs][0],s)))
 					HistDict_do[obs][p][sys].Add(_file_do[sys][s].Get("presel_%s_%s"%(observables[obs][0],s)))
-			HistDict[obs][p]=HistDict[obs][p].Rebin(37,"",array('d',binsM3))
+			HistDict[obs][p]=HistDict[obs][p].Rebin(22,"",array('d',binsM3))
 
 		
 			for sys in systematics:
 				if sys=="MisIDEleshape":continue
-                                HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-                                HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+                                HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+                                HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
 		for sys in systematics2:
 			for p in sub_control:
 				HistDict_up[obs][p][sys] = _file_up[sys][p].Get("presel_%s_%s"%(observables[obs][0],p)).Clone("%s_%s"%(obs,p))
-				HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
+				HistDict_up[obs][p][sys]=HistDict_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
                         	HistDict_do[obs][p][sys] = _file_do[sys][p].Get("presel_%s_%s"%(observables[obs][0],p)).Clone("%s_%s"%(obs,p))
-				HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(37,"",array('d',binsM3))	
+				HistDict_do[obs][p][sys]=HistDict_do[obs][p][sys].Rebin(22,"",array('d',binsM3))	
 
 	else:
 		
@@ -222,6 +226,8 @@ for obs in observables:
 			
 		 	s = process_signal[p][0]
 			if "NonPrompt" in p:
+				 
+				 print p, _file[s], "phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s)
 				 HistDict[obs][p]   = _file[s].Get("phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s)).Clone("%s_%s"%(obs,p))
 				 HistDict[obs][p].Add(_file[s].Get("phosel_%s_HadronicFake_barrel_%s"%(observables[obs][0],s)))
 				 if s=="ZJets":
@@ -238,7 +244,9 @@ for obs in observables:
                                                 HistDict_do[obs][p][sys].Add(_file_do[sys][s].Get("phosel_%s_HadronicFake_barrel_%s"%(observables[obs][0],s)))
                                 	        total_do= HistDict_do[obs][p][sys].Integral()
                                         	HistDict_do[obs][p][sys].Scale(HistDict[obs][p].Integral()/total_do)
-					 else:  
+					 else:
+						 
+						print obs,p,sys,s, "phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s) 
 					 	HistDict_up[obs][p][sys] = _file_up[sys][s].Get("phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s)).Clone("%s_%s"%(obs,p))
 					 	HistDict_up[obs][p][sys].Add(_file_up[sys][s].Get("phosel_%s_HadronicFake_barrel_%s"%(observables[obs][0],s)))
 						
@@ -340,13 +348,13 @@ for obs in observables:
 						HistDict_up[obs][p][sys] = HistDict_up[obs][p][sys].Rebin(15,"",array('d',binsChHad))
 						HistDict_do[obs][p][sys] = HistDict_do[obs][p][sys].Rebin(15,"",array('d',binsChHad))
 			else:
-				HistDict[obs][p]= HistDict[obs][p].Rebin(37,"",array('d',binsM3))
+				HistDict[obs][p]= HistDict[obs][p].Rebin(22,"",array('d',binsM3))
 				for sys in systematics:
 					 if sys=="MisIDEleshape"and "NonPrompt" in p:continue
 					 elif (finalState=="mu") and ("VJets_Prompt" in p):continue
 					 else:
-						HistDict_up[obs][p][sys]= HistDict_up[obs][p][sys].Rebin(37,"",array('d',binsM3))
-						HistDict_do[obs][p][sys]= HistDict_do[obs][p][sys].Rebin(37,"",array('d',binsM3))
+						HistDict_up[obs][p][sys]= HistDict_up[obs][p][sys].Rebin(22,"",array('d',binsM3))
+						HistDict_do[obs][p][sys]= HistDict_do[obs][p][sys].Rebin(22,"",array('d',binsM3))
 		
 
 		for sys in systematics2:
@@ -371,9 +379,9 @@ for obs in observables:
 for sys in systematics2:
 	for p in sub_signal:
 		HistDict_up["ChHad"][p][sys]= HistDict_up["ChHad"][p][sys].Rebin(15,"",array('d',binsChHad))
-		HistDict_up["M3"][p][sys]=HistDict_up["M3"][p][sys].Rebin(37,"",array('d',binsM3))
+		HistDict_up["M3"][p][sys]=HistDict_up["M3"][p][sys].Rebin(22,"",array('d',binsM3))
 		HistDict_do["ChHad"][p][sys]= HistDict_do["ChHad"][p][sys].Rebin(15,"",array('d',binsChHad))
-                HistDict_do["M3"][p][sys]=HistDict_do["M3"][p][sys].Rebin(37,"",array('d',binsM3))
+                HistDict_do["M3"][p][sys]=HistDict_do["M3"][p][sys].Rebin(22,"",array('d',binsM3))
 
 
 
@@ -520,164 +528,11 @@ for p in process_control:
 		HistDict_do["ChHad"]["%s_DD"%p]["shapeDD"].SetBinContent(bin_+1,do)
 
 
-if TightSelection:
-	outputFile = TFile("Combine_withMCTemplate_v2_%s_tight.root"%(finalState),"recreate")
-
-else:
-	outputFile = TFile("Combine_withMCTemplate_v2_%s.root"%(finalState),"recreate")
-
-for obs in observables:
-	if obs=="AntiSIEIE":continue
-        outputFile.mkdir("%s/%s"%(obs,"data_obs"))
-        outputFile.cd("%s/%s"%(obs,"data_obs"))
-        HistDict[obs]["data_obs"].Write("nominal")
-        outputFile.mkdir(obs)
-        if obs=="M3_control":
-                 for p in process_control.keys():
-                         outputFile.mkdir("%s/%s"%(obs,p))
-                         outputFile.cd("%s/%s"%(obs,p))
-                         HistDict[obs][p].Write("nominal")
-                         for sys in systematics:
-				if sys=="Q2" and ("TTbar" not in p or "TTGamma" not in p): continue
-				if sys=="MisIDEleshape":continue
-                                HistDict_up[obs][p][sys].Write("%sUp"%(sys))
-                                HistDict_do[obs][p][sys].Write("%sDown"%(sys))
-		 outputFile.cd("%s/TTGamma"%(obs))
-		 for sys in systematics2:
-			HistDict_up[obs]["TTGamma"][sys].Write("%sUp"%(sys))
-                        HistDict_do[obs]["TTGamma"][sys].Write("%sDown"%(sys))
-	else :
-		 for p in process_signal.keys():
-                        outputFile.mkdir("%s/%s"%(obs,p))
-                        outputFile.cd("%s/%s"%(obs,p))
-                        
-                        HistDict[obs][p].Write("nominal")
-                        for sys in systematics:
-				if finalState=="mu" and "VJets_Prompt" in p:continue
-				if sys=="Q2" and ("TTbar" not in p or "TTGamma" not in p): continue
-				if (sys=="MisIDEleshape" and "NonPrompt" in p):continue
-                                HistDict_up[obs][p][sys].Write("%sUp"%(sys))
-                                HistDict_do[obs][p][sys].Write("%sDown"%(sys))
-		 outputFile.cd("%s/TTGamma_Prompt"%(obs))
-		 for sys in systematics2:
-                        HistDict_up[obs]["TTGamma_Prompt"][sys].Write("%sUp"%(sys))
-                        HistDict_do[obs]["TTGamma_Prompt"][sys].Write("%sDown"%(sys))
-
-		 outputFile.cd("%s/TTGamma_NonPrompt"%(obs))
-		
-		 for sys in systematics2:
-			HistDict_up[obs]["TTGamma_NonPrompt"][sys].Write("%sUp"%(sys))
-                        HistDict_do[obs]["TTGamma_NonPrompt"][sys].Write("%sDown"%(sys))
-
-outputFile.Close()
-
-for c in HistDict:
-        if c =="ChHad":
-                HistDict = makePseudoData(HistDict,process_DDtemplates.keys(),["ChHad"])
-
-print "Made pseudo data for DD ChIso"
-c1 = TCanvas('c1','c1',1000,1000)
-c1.SetFillColor(0)
-c1.cd()
-
-
-
-print "Total pseudo data for DD ChHad: ", HistDict["ChHad"]["data_obs"].Integral()
-print "Total MC+DD in ChHad:",HistDict["ChHad"]["TTGamma_Prompt"].Integral()+HistDict["ChHad"]["TTGamma_DD"].Integral()+HistDict["ChHad"]["TTbar_Prompt"].Integral()+HistDict["ChHad"]["TTbar_DD"].Integral()+HistDict["ChHad"]["VGamma_Prompt"].Integral()+HistDict["ChHad"]["VGamma_DD"].Integral()+HistDict["ChHad"]["VJets_DD"].Integral()+HistDict["ChHad"]["Other_Prompt"].Integral()+HistDict["ChHad"]["Other_DD"].Integral()
-
-
-if TightSelection:
-        outputFile = TFile("Combine_withDDTemplate_v2_%s_tight.root"%(finalState),"recreate")
-
-else:
-	outputFile = TFile("Combine_withDDTemplate_v2_%s.root"%(finalState),"recreate")
-
-for obs in observables:
-	if obs=="AntiSIEIE":continue
-        outputFile.mkdir("%s/%s"%(obs,"data_obs"))
-        outputFile.cd("%s/%s"%(obs,"data_obs"))
-        HistDict[obs]["data_obs"].Write("nominal")
-        outputFile.mkdir(obs)
-        if obs=="M3_control":
-                 for p in process_control.keys():
-                         outputFile.mkdir("%s/%s"%(obs,p))
-                         outputFile.cd("%s/%s"%(obs,p))
-                         HistDict[obs][p].Write("nominal")
-                         for sys in systematics:
-			#	print sys, obs, p
-				if sys=="MisIDEleshape":continue
-				HistDict_up[obs][p][sys].Write("%sUp"%(sys))
-                                HistDict_do[obs][p][sys].Write("%sDown"%(sys))
-		
-
-		 outputFile.cd("%s/TTGamma"%(obs))
-
-		 for sys in systematics2:
-                        HistDict_up[obs]["TTGamma"][sys].Write("%sUp"%(sys))
-                        HistDict_do[obs]["TTGamma"][sys].Write("%sDown"%(sys))
-
-	elif obs=="M3":
-		for p in process_signal.keys():	
-			 outputFile.mkdir("%s/%s"%(obs,p))
-                         outputFile.cd("%s/%s"%(obs,p))
-                         HistDict[obs][p].Write("nominal")
-                         for sys in systematics:
-				if sys=="MisIDEleshape" and "NonPrompt" in p:continue
-				if finalState=="mu" and p=="VJets_Prompt":continue
-				# if sys=="Q2" and (("TTGamma" not in p) or ("TTbar" not in p)):continue
-				HistDict_up[obs][p][sys].Write("%sUp"%(sys))
-				HistDict_do[obs][p][sys].Write("%sDown"%(sys))
-		outputFile.cd("%s/TTGamma_Prompt"%(obs))
-		for sys in systematics2:
-                        HistDict_up[obs]["TTGamma_Prompt"][sys].Write("%sUp"%(sys))
-                        HistDict_do[obs]["TTGamma_Prompt"][sys].Write("%sDown"%(sys))
-		
-		outputFile.cd("%s/TTGamma_NonPrompt"%(obs))
-		
-		for sys in systematics2:
-                        HistDict_up[obs]["TTGamma_NonPrompt"][sys].Write("%sUp"%(sys))
-                        HistDict_do[obs]["TTGamma_NonPrompt"][sys].Write("%sDown"%(sys))
-        else:
-
-                for p in process_DDtemplates.keys():
-			if "DD" in p:
-                                p1=p.strip("DD")
-                                p1= p1.strip("_")
-
-                                outputFile.mkdir("%s/%s_NonPrompt"%(obs,p1))
-                                outputFile.cd("%s/%s_NonPrompt"%(obs,p1))
-			else:
-                        	outputFile.mkdir("%s/%s"%(obs,p))
-                        	outputFile.cd("%s/%s"%(obs,p))
-			
-		
-                        HistDict[obs][p].Write("nominal")
-			if "_DD" in p:
-				HistDict_up["ChHad"][p]["shapeDD"].Write("shapeDDUp")
-				HistDict_do["ChHad"][p]["shapeDD"].Write("shapeDDDown")
-			
-		
-                        for sys in systematics:
-				if "_DD" in p:continue
-                                print sys, obs, p
-				if finalState=="mu" and p=="VJets_Prompt":continue
-				HistDict_up[obs][p][sys].Write("%sUp"%(sys))
-				HistDict_do[obs][p][sys].Write("%sDown"%(sys))
-		
-		outputFile.cd("%s/TTGamma_Prompt"%(obs))
-	  	for sys in systematics2:
-                        HistDict_up[obs]["TTGamma_Prompt"][sys].Write("%sUp"%(sys))
-                        HistDict_do[obs]["TTGamma_Prompt"][sys].Write("%sDown"%(sys))
-
-
-
-outputFile.Close()
 ##make DataDriven templates root file with actual data###
-if TightSelection:
-        outputFile = TFile("Combine_withDDTemplateData_v2_%s_tight.root"%(finalState),"recreate")
 
-else:
-        outputFile = TFile("Combine_withDDTemplateData_v2_%s.root"%(finalState),"recreate")
+outputFile = TFile("Combine_withDDTemplateData_v2_%s%s.root"%(finalState,dir_),"recreate")
+
+
 
 
 
@@ -691,25 +546,25 @@ for obs in observables:
 	if finalState=="mu":
 		if obs=="M3_control":
 			HistDict[obs]["data"]=_file["DataMu"].Get("presel_%s_DataMu"%(observables[obs][0])).Clone("%s_DataMu"%(obs))
-			HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(37,"",array('d',binsM3))
+			HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(22,"",array('d',binsM3))
 			print "just rebinned for M3_control"
 			HistDict[obs]["data"].Write("nominal")
 		else:
 			HistDict[obs]["data"]=_file["DataMu"].Get("phosel_%s_barrel_DataMu"%(observables[obs][0])).Clone("%s_DataMu"%(obs))
 			if obs=="M3":
-				HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(37,"",array('d',binsM3))
+				HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(22,"",array('d',binsM3))
 			else:
 				HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(15,"",array('d',binsChHad))
         		HistDict[obs]["data"].Write("nominal")
 	else:
 		if obs=="M3_control":
                         HistDict[obs]["data"]=_file["DataEle"].Get("presel_%s_DataEle"%(observables[obs][0])).Clone("%s_DataEle"%(obs))
-			HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(37,"",array('d',binsM3))
+			HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(22,"",array('d',binsM3))
                         HistDict[obs]["data"].Write("nominal")
 		else:
 			HistDict[obs]["data"]=_file["DataEle"].Get("phosel_%s_barrel_DataEle"%(observables[obs][0])).Clone("%s_DataEle"%(obs))
 			if obs=="M3":
-                                HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(37,"",array('d',binsM3))
+                                HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(22,"",array('d',binsM3))
                         else:
                                 HistDict[obs]["data"]=HistDict[obs]["data"].Rebin(15,"",array('d',binsChHad))
 
