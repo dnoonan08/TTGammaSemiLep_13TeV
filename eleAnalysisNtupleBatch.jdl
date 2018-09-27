@@ -13,8 +13,56 @@ Requirements          = (OpSys == "LINUX" && (Arch != "DUMMY"))
 x509userproxy = $ENV(X509_USER_PROXY)
 # important, number of instances (jobs) of script
 
-Arguments = "$(process)"
-Queue 50
+Arguments = "$(process) JER"
+Queue 39
+
+Arguments = "$(process)-39 JEC1"
+Queue 39
+
+Arguments = "$(process)-78 phosmear"
+Queue 39
+
+Arguments = "$(process)-117 phoscale"
+Queue 39
+
+
+Arguments = "$(process)-156 elescale"
+Queue 39
+
+Arguments = "$(process)-195 elesmear"
+Queue 39
+
+
+
+
+
+
+
+
+
+
+#Arguments = "$(process)+16 JEC7"
+#Queue 4
+
+
+
+#Arguments = "$(process)+12 JECTotal"
+#Queue 4
+
+
+#Arguments = "$(process)+8 phosmear"
+#Queue 4
+
+#Arguments = "$(process)+4 phoscale"
+#Queue 4
+
+#Arguments = "$(process) elesmear"
+#Queue 4
+
+#Arguments = "$(process)-4 elescale"
+#Queue 4
+
+
 
 ###This is an example of how to start at a certain point, 
 ###it starts with job 27 (QCD samples in this case) and goes from there
@@ -23,30 +71,37 @@ Queue 50
 
 
 ####This section can be used to submit analysis ntuple jobs for systematic uncertainties
-# Arguments = "$(process) JEC1"
-# Queue 43
+#Arguments = "$(process) JEC1"
+#Queue 43
 
-# Arguments = "$(process)-43 JEC2"
-# Queue 43
+#Arguments = "$(process) JEC6"
+#Queue 43
 
-# Arguments = "$(process)-86 JEC3"
-# Queue 43
+#Arguments = "$(process)-43 JEC7"
+#Queue 43
+#Arguments = "$(process)-93 JEC2"
+#Queue 43
 
-# Arguments = "$(process)-129 JEC4"
-# Queue 43
+#Arguments = "$(process)-136 JEC3"
+#Queue 43
 
-# Arguments = "$(process)-172 JER"
-# Queue 43
+#Arguments = "$(process)-179 JEC4"
+#Queue 43
 
-# Arguments = "$(process)-215 phoscale"
-# Queue 43
+#Arguments = "$(process)-222 JER"
+#Queue 43
 
-# Arguments = "$(process)-258 phosmear"
-# Queue 43
+#3Arguments = "$(process)-265 phoscale"
+#Queue 43
 
-# Arguments = "$(process)-301 elescale"
-# Queue 43
+#Arguments = "$(process)-308 phosmear"
+#Queue 43
 
-# Arguments = "$(process)-344 elesmear"
-# Queue 43
+#Arguments = "$(process)-349 elescale"
+#Queue 43
 
+#Arguments = "$(process)-392 elesmear"
+#Queue 43
+
+#Arguments = "$(process)-435 JECTotal"
+#Queue 43
