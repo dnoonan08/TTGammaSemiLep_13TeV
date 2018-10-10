@@ -23,6 +23,8 @@ parser.add_option("--Tight0b","--tight0b", dest="isTight0bSelection", default=Fa
 		  help="Use >=4j exactly 0t control region selection" )
 parser.add_option("--LooseCRe3g1","--looseCRe3g1", dest="isLooseCRe3g1Selection", default=False,action="store_true",
 		  help="Use 3j exactly 0t control region selection" )
+parser.add_option("--LooseCRe3g0","--looseCRe3g0", dest="isLooseCRe3g0Selection", default=False,action="store_true",
+                  help="Use exactly 3j with 0btag control region selection" )
 parser.add_option("--LooseCR2g0","--looseCR2g0", dest="isLooseCR2g0Selection", default=False,action="store_true",
 		  help="Use 2j at least 0t control region selection" )
 parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection", default=False,action="store_true",
@@ -43,12 +45,10 @@ parser.add_option("--noQCD",dest="noQCD", default=False, action="store_true",
 		  help="")
 parser.add_option("--useQCDCR",dest="useQCDCR", default=False, action="store_true",
                   help="to make plots in QCDCR region")
-
 parser.add_option("--reorderTop", dest="newStackListTop",action="append",
 		  help="New order for stack list (which plots will be put on top of the stack)" )
 parser.add_option("--reorderBot", dest="newStackListBot",action="append",
 		  help="New order for stack list (which plots will be put on top of the stack)" )
-
 parser.add_option("--dilepmassPlots","--dilepmassPlots", dest="Dilepmass",action="store_true",default=False,
                      help="Make only plots for ZJetsSF fits" )
 
@@ -60,6 +60,7 @@ isTight0bSelection = options.isTight0bSelection
 isLooseCR2g0Selection = options.isLooseCR2g0Selection
 isLooseCR2g1Selection = options.isLooseCR2g1Selection
 isLooseCRe3g1Selection = options.isLooseCRe3g1Selection
+isLooseCRe3g0Selection = options.isLooseCRe3g0Selection
 plotList = options.plotList
 
 newStackListTop = options.newStackListTop
@@ -87,6 +88,7 @@ if finalState=='Mu':
 		_fileDir = "histograms/mu/qcdhistsCR_tight"
 		plotDirectory = "plots_mu_QCDCR"
 		regionText = ", QCD CR"
+
 if finalState=="Ele":
 	_fileDir = "histograms/ele/hists"
         plotDirectory = "plots_ele"
@@ -129,6 +131,12 @@ if isLooseCRe3g1Selection:
 	dir_="_looseCRe3g1"
 	regionText = ", N_{j}=3, N_{b}#geq1"
 
+if isLooseCRe3g0Selection:
+        plotDirectory =  plotDirectory+"_looseCRe3g0"
+        _fileDir = "histograms/ele/hists_looseCRe3g0"
+        dir_="_looseCRe3g0"
+        regionText = ", N_{j}=3, N_{b}=0"
+
 if not inputFile is None:
 	_fileDir = "histograms/%s/%s"%(channel,inputFile)
 	if not _file.IsOpen():
@@ -139,19 +147,23 @@ if finalState=='DiMu':
         _fileDir = "histograms/mu/dilephists"
         plotDirectory = "plots_mu"
         regionText = ", N_{j}#geq3, N_{b}#geq1"
+	dir_=""
         channel = 'mu'
         if isTightSelection:
                 _fileDir = "histograms/mu/dilephists_tight"
+		_dir="_tight"
                 plotDirectory = "tightplots_mu"
                 regionText = ", N_{j}#geq4, N_{b}#geq1"
 
 if finalState=="DiEle":
         _fileDir = "histograms/ele/dilephists"
+	_dir=""
         plotDirectory = "plots_ele"
         regionText = ", N_{j}#geq3, N_{b}#geq1"
         channel = 'ele'
         if isTightSelection:
                 _fileDir = "histograms/ele/dilephists_tight"
+		_dir="_tight"
                 plotDirectory = "tightplots_ele"
                 regionText = ", N_{j}#geq4, N_{b}#geq1"
 
@@ -512,24 +524,24 @@ else:
         systematics = ["JER","JECTotal","phosmear","phoscale","BTagSF","Q2","Pdf","PU","EleEff","PhoEff","elesmear","elescale","isr","fsr"]
 
 
-if finalState=="mu":
+if finalState=="Mu" or "DiMu":
 	if isTightSelection:
-        	ZJetsSF=1.17514
+        	ZJetsSF=0.582
                 bkgSF=1.
         elif isTight0bSelection:
-        	ZJetsSF_0b=0.992
+        	ZJetsSF_0b=0.488
                 bkgSF=1.
                 
 
 else:
 	if isTightSelection:
-        	ZJetsSF=1.13957
+        	ZJetsSF=0.578#1.13957
 		bkgSF=1.
 	elif isTight0bSelection:
-        	ZJetsSF=0.995
+        	ZJetsSF=0.486
                 bkgSF=1.
-        elif isLooseCRe3g1Selection:
-		ZJetsSF=1.309
+        elif isLooseCRe3g0Selection:
+		ZJetsSF=0.557
                 bkgSF=1.
         
 
