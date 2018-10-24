@@ -132,7 +132,7 @@ if isLooseCRe3g1Selection:
 	regionText = ", N_{j}=3, N_{b}#geq1"
 
 if isLooseCRe3g0Selection:
-        plotDirectory =  plotDirectory+"_looseCRe3g0"
+        plotDirectory =  "plots_looseCRe3g0"
         _fileDir = "histograms/ele/hists_looseCRe3g0"
         dir_="_looseCRe3g0"
         regionText = ", N_{j}=3, N_{b}=0"
@@ -245,7 +245,7 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [30,400]
               "phosel_M3_gamma"                : ["M3(ttbar+#gamma) GeV"       ,"Events",10,[50,1000],regionText,  NoLog, " "],
               "phosel_Mbjj_gamma"              : ["Reconstructed Top quark mass+#gamma GeV" ,"Events",10,[50,1000],regionText,  YesLog, " "],
 	      "phosel_M3"                      : ["M_{3} (GeV)" , "<Events/GeV>", [60., 80., 100, 110., 120., 130., 140., 150., 160., 170., 180., 190., 200., 210., 220., 230., 240., 250.,260.,270.,280.,290.,300.,310.,320.,330.,340.,350.,360.,370.,380.,390. ,400., 420.,440.,460., 480., 500.], [-1,-1],regionText,  NoLog, " "],   
-	      "phosel_M3_barrel"               : ["M_{3} (GeV)"                , "<Events/GeV>", [60., 80., 100, 110., 120., 130., 140., 150., 160., 170., 180., 190., 200., 210., 220., 230., 240., 250.,260.,270.,280.,290.,300.,310.,320.,330.,340.,350.,360.,370.,380.,390., 400., 420.,440.,460., 480., 500.], [60,500],regionText,  NoLog, " "],   
+	      "phosel_M3_barrel"               : ["M_{3} (GeV)"                , "Events/20 GeV", [60., 80., 100, 110., 120., 130., 140., 150., 160., 170., 180., 190., 200., 210., 220., 230., 240., 250.,260.,270.,280.,290.,300.,310.,320.,330.,340.,350.,360.,370.,380.,390., 400., 420.,440.,460., 480., 500.], [60,500],regionText,  NoLog, " "],   
 	      "phosel_M3_endcap"               : ["M_{3} (GeV)"                , "<Events/GeV>", [60., 90., 100, 110., 120., 130., 140., 150., 160., 180., 200., 220., 240., 260., 280., 300., 350., 400., 450., 500.], [-1,-1], regionText,  NoLog, " "],   
 	      "phosel_M3_GenuinePhoton"        : ["M_{3} (GeV)"                , "<Events/GeV>", [60., 90., 100, 110., 120., 130., 140., 150., 160., 180., 200., 220., 240., 260., 280., 300., 350., 400., 450., 500.], [-1,-1],regionText,  NoLog, "Genuine Photon"],   
 	      "phosel_M3_MisIDEle"             : ["M_{3} (GeV)"                , "<Events/GeV>", [60., 90., 100, 110., 120., 130., 140., 150., 160., 180., 200., 220., 240., 260., 280., 300., 350., 400., 450., 500.], [-1,-1], regionText,  NoLog, "MisIDEle"],
@@ -348,8 +348,8 @@ histograms = {"presel_jet1Pt"   : ["Leading Jet Pt (GeV)", "Events", 5, [30,400]
 	      "phosel_mcMomPIDHadFake"         : ["ParentPID of HadronicFake", "Events", 1, [-1,-1], regionText,  YesLog, "Hadronic Fake"],
 	    #  "phosel_RandomCone"              : ["RandomConeIsolation GeV"  , "Events", 1, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_PhotonCategory_barrel"          : ["Photon Category","Events", 1, [-1,-1], regionText,  NoLog, " "],
-	      "phosel_MassEGamma_barrel"       : ["m_{e,#gamma} GeV"  , "<Events/GeV>", [25, 35, 45, 55, 65, 75, 85, 95, 105, 115, 125, 135, 145, 155, 165, 175], [-1,-1], regionText,  NoLog, " "],
-	      "phosel_MassEGamma"              : ["m_{e,#gamma} GeV"  , "<Events/GeV>", [25, 35, 45, 55, 65, 75, 85, 95, 105, 115, 125, 135, 145, 155, 165, 175], [-1,-1], regionText,  NoLog, " "],
+	      "phosel_MassEGamma_barrel"       : ["m_{e,#gamma} GeV"  , "Events/10 GeV", [25, 35, 45, 55, 65, 75, 85, 95, 105, 115, 125, 135, 145, 155, 165, 175, 185], [25,185], regionText,  NoLog, " "],
+	      "phosel_MassEGamma"              : ["m_{e,#gamma} GeV"  , "Events/10 GeV", [25, 35, 45, 55, 65, 75, 85, 95, 105, 115, 125, 135, 145, 155, 165, 175], [-1,-1], regionText,  NoLog, " "],
 	      "phosel_MassLepGamma"            : ["m_{lepton,#gamma} GeV"    , "Events", 5, [-1,-1], regionText,  NoLog, " "],
 	      "phosel_R9_barrel"  :["R9","Events",1,[-1,-1],regionText,  NoLog, " "],
 	      }
@@ -492,7 +492,7 @@ legend.SetNColumns(2)
 #legendR = TLegend(0.71, 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*(len(legList)+1), 0.99-(R/W), 0.99-(T/H)/(1.-padRatio+padOverlap))
 
 
-legendR = TLegend(2*legendStart - legendEnd , 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*round((len(legList)+1)/2.), legendEnd, 0.99-(T/H)/(1.-padRatio+padOverlap))
+legendR = TLegend(2*legendStart - legendEnd , 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*round((len(legList)+1)/2.)-0.1, legendEnd, 0.99-(T/H)/(1.-padRatio+padOverlap))
 
 legendR.SetNColumns(2)
 
@@ -518,6 +518,8 @@ if useQCDCR:
 
 
 
+print isLooseCRe3g0Selection
+
 if finalState=="Mu":
         systematics = ["JER","JECTotal","phosmear","phoscale","BTagSF","Q2","Pdf","PU","MuEff","PhoEff","isr","fsr"]
 else:
@@ -526,28 +528,30 @@ else:
 
 if finalState=="Mu" or "DiMu":
 	if isTightSelection:
-        	ZJetsSF=0.582
+        	ZJetsSF=1.17252 
                 bkgSF=1.
         elif isTight0bSelection:
-        	ZJetsSF_0b=0.488
+        	ZJetsSF=0.982913
                 bkgSF=1.
                 
 
 else:
 	if isTightSelection:
-        	ZJetsSF=0.578#1.13957
+        	ZJetsSF=1.17005 #1.13957
 		bkgSF=1.
 	elif isTight0bSelection:
-        	ZJetsSF=0.486
+        	ZJetsSF=0.970013 
                 bkgSF=1.
         elif isLooseCRe3g0Selection:
-		ZJetsSF=0.557
+		print "in CR"
+		ZJetsSF=1.11696 
                 bkgSF=1.
         
 
 systematics2 = ["isr","fsr"]
 
-
+if isLooseCRe3g0Selection:
+	 ZJetsSF=1.11696
 
 if finalState=="Mu":
 	channel="mu"
@@ -584,6 +588,7 @@ histName = plotList[0]
 
 #print "%s_DataMu"%(histName)
 if finalState=='Ele':
+    print _file["DataEle"], "%s_DataEle"%(histName)
     dataHist = _file["DataEle"].Get("%s_DataEle"%(histName))
 elif finalState=='Mu':
     dataHist = _file["DataMu"].Get("%s_DataMu"%(histName))
@@ -760,8 +765,8 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 
 	if type(plotInfo[2]) is type(list()):
 		hist = hist.Rebin(len(plotInfo[2])-1,"",array('d',plotInfo[2]))
-	#	print "scaling"
-		hist.Scale(1.,"width")
+		if "MassEGamma" not in histName:
+			hist.Scale(1.,"width")
 	else:
 		hist.Rebin(plotInfo[2])
 		#print "number of bins:  ",plotInfo[2], hist.GetNbinsX(), sample
@@ -821,7 +826,8 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 	    dataHist.Sumw2()
 	    if type(plotInfo[2]) is type(list()):	
 		    dataHist = dataHist.Rebin(len(plotInfo[2])-1,"",array('d',plotInfo[2]))
-		    dataHist.Scale(1.,"width")
+		    if "MassEGamma" not in histName:
+		    	dataHist.Scale(1.,"width")
 	    else:
 		    dataHist.Rebin(plotInfo[2])
             #        print "number of bins in data:  ",plotInfo[2], hist.GetNbinsX()
@@ -922,7 +928,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
                         h1_do[sample][sys].Scale(total/h1_do[sample][sys].Integral())
 			
 		else:
-			#print sample, sys, _filesys_up[sample][sys], histName
+		#	print sample, sys, _filesys_down[sample][sys], histName
 			h1_up[sample][sys]=_filesys_up[sample][sys].Get("%s_%s"%(histName,sample)).Clone("%s_%s_up"%(sys,sample))
 			h1_do[sample][sys]=_filesys_down[sample][sys].Get("%s_%s"%(histName,sample)).Clone("%s_%s_do"%(sys,sample))
 
@@ -1084,7 +1090,7 @@ def drawHist(histName,plotInfo, plotDirectory, _file):
 
 	#maxRatio = 1.5
         #minRatio = 0.5	
-	ratio.GetYaxis().SetRangeUser(0.5,1.5)
+	ratio.GetYaxis().SetRangeUser(0.7,1.3)
 	ratio.GetYaxis().SetNdivisions(504)
 	ratio.GetXaxis().SetTitle(plotInfo[0])
 	ratio.GetYaxis().SetTitle("Data/MC")

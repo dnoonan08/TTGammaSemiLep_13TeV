@@ -32,8 +32,10 @@ parser.add_option("--LooseCRe2g1","--looseCRe2g1", dest="isLooseCRe2g1Selection"
 parser.add_option("--LooseCRe3g1","--looseCRe3g1", dest="isLooseCRe3g1Selection",default=False,action="store_true",
                   help="Use exactly 3 jets and >=1btag control region selection" )
 
-parser.add_option("--LooseCR3g0","--looseCR3g0", dest="isLooseCR3g0Selection",default=False,action="store_true",
-                  help="Use 3j exactly 0t control region selection" )
+#parser.add_option("--LooseCRe3g1","--looseCRe3g1", dest="isLooseCRe3g1Selection",default=False,action="store_true",
+ #                 help="Use atleats 3j exactly 0t control region selection" )
+parser.add_option("--LooseCRe3g0","--looseCRe3g0", dest="isLooseCRe3g0Selection",default=False,action="store_true",
+                  help="Use exactly 3j exactly 0t control region selection" )
 parser.add_option("--NLO","--NLO", dest="isNLO",default=False,action="store_true",
                   help="Use ZJets NLO sample instead" )
 parser.add_option("--onlybarrel","--onlybarrel", dest="isonlybarrel",default=False,action="store_true",
@@ -46,8 +48,9 @@ TightSelection = options.isTightSelection
 TightSelection0b = options.isTightSelection0b
 isLooseCR2eg1Selection = options.isLooseCRe2g1Selection
 isLooseCRe3g1Selection = options.isLooseCRe3g1Selection
-isLooseCR3g0Selection = options.isLooseCR3g0Selection
+#isLooseCR3g0Selection = options.isLooseCR3g0Selection
 isNLO=options.isNLO
+isLooseCRe3g0Selection=options.isLooseCRe3g0Selection
 isonlybarrel=options.isonlybarrel
 
 CMS_lumi.writeChannelText = True
@@ -70,20 +73,30 @@ elif TightSelection0b:
         ZJetsSF=1.10457
 elif isLooseCRe3g1Selection:
 	dir_="_looseCRe3g1"
-	if isNLO:
-		ZJetsSF=1.069 
-	else:
-		ZJetsSF=1.309
+#	if isNLO:
+#		ZJetsSF=1.069 
+#	else:
+	ZJetsSF=1.23473#1.309
         bkgZJets_SF=1.
 elif isLooseCR2eg1Selection:
 	dir_="_looseCRe2g1"
 	ZJetsSF=1.26128
 	bkgZJets_SF=1
 elif isLooseCR3g0Selection:
-	dir_="_looseCRe3g0"
+	dir_="_looseCR3g0"
         ZJetsSF=1.08725
         bkgZJets_SF=1
- 
+elif isLooseCRe2g1Selection:
+	dir_="_looseCRe2g1"
+	ZJetsSF=1.261
+	
+elif isLooseCRe3g0Selection:
+        dir_="_looseCRe3g0"
+        ZJetsSF=  1.11696 #1.11341
+        bkgZJets_SF=1
+
+
+print ZJetsSF 
 canvas = TCanvas('c1','c1',W,H)
 canvas.SetFillColor(0)
 canvas.SetBorderMode(0)
@@ -145,7 +158,7 @@ pad2.Draw()
 canvas.cd()
 canvas.ResetDrawn()
 
-
+bkgZJets_SF=1
 if isNLO:
 	zjets="_NLO"
 else:
@@ -346,7 +359,7 @@ pad2.Draw()
 
 pad1.cd()
 data_.GetYaxis().SetTitle("Events")
-data_.Draw('E,X0')
+#data_.Draw('E,X0')
 
 
 
@@ -371,7 +384,8 @@ print "bkg error:",err2 #error
 print "signal+bkg:",yield_+yield2_
 print "total error:",(err**2+err**2)**0.5
 
-sum_.Draw('hist,same')
+sum_.Draw('hist')
+data_.Draw('E,X0,same')
 sig_.Draw('hist,same')
 bkg_.Draw('hist,same')
 legend.Draw("same")

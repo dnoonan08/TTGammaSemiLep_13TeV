@@ -42,6 +42,8 @@ parser.add_option("--LooseCR2g1","--looseCR2g1", dest="isLooseCR2g1Selection",de
 parser.add_option("--LooseCR2e1","--looseCR2e1", dest="isLooseCR2e1Selection",default=False,action="store_true",
                   help="Use 2j at least 1t control region selection")
 parser.add_option("--LooseCR3g0","--looseCR3g0", dest="isLooseCR3g0Selection",default=False,action="store_true",
+                  help="Use atleast 3j and 0btag")
+parser.add_option("--LooseCRe3g0","--looseCRe3g0", dest="isLooseCRe3g0Selection",default=False,action="store_true",
                   help="Use exactly 3j and 0btag")
 parser.add_option("--LooseCRe2g1","--looseCRe2g1", dest="isLooseCRe2g1Selection",default=False,action="store_true",
                   help="Use ==2j and >=1 btag ")
@@ -56,6 +58,7 @@ TightSelection0b = options.isTightSelection0b
 LooseCRe2g1Selection = options.isLooseCRe2g1Selection
 LooseCRe3g1Selection = options.isLooseCRe3g1Selection
 LooseCR3g0Selection = options.isLooseCR3g0Selection
+LooseCRe3g0Selection=options.isLooseCRe3g0Selection
 
 finalState = options.channel
 isNLO=options.isNLO
@@ -137,9 +140,16 @@ if LooseCRe3g1Selection:
 
 elif LooseCR3g0Selection:
 	for s in samples:
-		 _extratext="==3jets,==0btag"
+		 _extratext=">=3jets,==0btag"
 		 ext="loose3jets0b"
-		 _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/dilephists_looseCRe3g0/%s.root"%(finalState,s))
+		 _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/dilephists_looseCR3g0/%s.root"%(finalState,s))
+
+
+elif LooseCRe3g0Selection:
+        for s in samples:
+                 _extratext="==3jets,==0btag"
+                 ext="e3jets0b"
+                 _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/dilephists_looseCRe3g0/%s.root"%(finalState,s))
 
 elif LooseCRe2g1Selection:
         for s in samples:
@@ -164,7 +174,7 @@ elif TightSelection0b:
 else:
 	for s in samples:
 		 _extratext=">=3jets,>=1btag"
-		 ext="signal"
+		 ext="g3g1"
                  _file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/dilephists/%s.root"%(finalState,s))
 
 misIDEleSF = 1.
@@ -214,7 +224,9 @@ if finalState=="ele":
 	if LooseCRe3g1Selection:
 		datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_looseCRe3g1/DataEle.root")
 	elif LooseCR3g0Selection:	
-		datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_looseCRe3g0/DataEle.root")
+		datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_looseCR3g0/DataEle.root")
+	elif LooseCRe3g0Selection:
+                datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_looseCRe3g0/DataEle.root")
 	elif LooseCRe2g1Selection:
                 datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/ele/dilephists_looseCRe2g1/DataEle.root")
 	elif TightSelection:
@@ -229,8 +241,8 @@ else:
 	datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/mu/dilephists/DataMu.root")
 	if LooseCRe3g1Selection:
                 datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/mu/dilephists_looseCRe3g1/DataMu.root")
-	elif LooseCR2g1Selection:   
-                datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/mu/dilephists_looseCR2g1/DataMu.root")
+	#elif LooseCR2g1Selection:   
+         #       datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/mu/dilephists_looseCR2g1/DataMu.root")
         elif TightSelection:
 		datafile= TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/mu/dilephists_tight/DataMu.root")
         elif TightSelection0b:
@@ -279,7 +291,7 @@ sum_.SetMarkerColor(kRed)
 legend.AddEntry(sum_,"Sum",'lp')
 legend.AddEntry(sig_,"Z+Jets",'lp')
 legend.AddEntry(bkg_,"Background",'lp')
-data_.Draw('E,X0')
+#data_.Draw('E,X0')
 data_.SetMarkerStyle(8)
 data_.SetMarkerSize(1.0)
 #sum_.Draw('hist,same')
@@ -305,9 +317,15 @@ err=Double(0.0)
 yield_ = sig_.IntegralAndError(-1,-1,err)
 
 
-print "total:",yield_
-print "error:",err
+print "Signal ZJets:",yield_
+print "error on ZJets:",err
 
+err=Double(0.0)
+yield_ = bkg_.IntegralAndError(-1,-1,err)
+
+
+print "Bkg:",yield_
+print "error on bkg:",err
 
 
 pad1.cd()
@@ -315,9 +333,11 @@ data_.Scale(1.,"width")
 sum_.Scale(1.,"width")
 sig_.Scale(1.,"width")
 bkg_.Scale(1.,"width")
-data_.Draw('E,X0')
+#data_.Draw('E,X0')
 data_.GetYaxis().SetTitle("<Events/GeV>")
 
+#sum_.Draw('hist')
+data_.Draw('E,X0')
 sum_.Draw('hist,same')
 sig_.Draw('hist,same')
 bkg_.Draw('hist,same')
