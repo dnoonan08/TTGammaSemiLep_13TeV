@@ -154,6 +154,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		// evtPick->NBjet_ge = 1;	
 		isSystematicRun = true;
 	}
+
+	bool isTTGamma = false;
+
+	size_t ttgamma_pos = sampleType.find("TTGamma");
+	if (ttgamma_pos != std::string::npos){
+		isTTGamma = true;
+	}
 		
 	// if( systematicType=="JEC_up")       {jecvar012_g = 2; selector->JECsystLevel=2;}
 	// if( systematicType=="JEC_down")     {jecvar012_g = 0; selector->JECsystLevel=0;}
@@ -217,7 +224,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 
 	_lumiWeight = getEvtWeight(sampleType);
-	
+	_lumiWeightAlt = _lumiWeight;
+
+	if (isTTGamma){
+		_lumiWeightAlt = getEvtWeight("alt_"+sampleType);
+	}
+
+
 	_PUweight       = 1.;
 	_muEffWeight    = 1.;
 	_muEffWeight_Do = 1.;
@@ -406,6 +419,7 @@ void makeAnalysisNtuple::FillEvent()
 	_rho		     = tree->rho_;
 
 	_evtWeight       = _lumiWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
+	_evtWeightAlt    = _lumiWeightAlt *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
 
 	if (_isData) {_evtWeight= 1.;}
 	_genMET		     = tree->genMET_;

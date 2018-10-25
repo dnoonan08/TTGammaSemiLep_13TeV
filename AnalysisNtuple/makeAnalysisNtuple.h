@@ -103,6 +103,8 @@ private :
 
 	Float_t         _evtWeight;
 	Float_t         _lumiWeight;
+	Float_t         _evtWeightAlt;
+	Float_t         _lumiWeightAlt;
 
 	Int_t           _nVtx;
 	Int_t           _nGoodVtx;
@@ -393,6 +395,7 @@ void makeAnalysisNtuple::InitBranches(){
 	}
 
 	outputTree->Branch("evtWeight"                  , &_evtWeight                   );      
+	outputTree->Branch("evtWeightAlt"               , &_evtWeightAlt                );      
 	outputTree->Branch("nVtx"                       , &_nVtx                        ); 
 	outputTree->Branch("nGoodVtx"                   , &_nGoodVtx                    ); 
 	outputTree->Branch("isPVGood"                   , &_isPVGood                    ); 
