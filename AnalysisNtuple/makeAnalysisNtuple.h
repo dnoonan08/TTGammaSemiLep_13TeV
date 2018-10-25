@@ -82,12 +82,16 @@ private :
 
 
 	std::vector<float> _btagWeight;
-	std::vector<float> _btagWeight_Up;
-	std::vector<float> _btagWeight_Do;
+	std::vector<float> _btagWeight_b_Up;
+	std::vector<float> _btagWeight_b_Do;
+	std::vector<float> _btagWeight_l_Up;
+	std::vector<float> _btagWeight_l_Do;
 
 	std::vector<float> _btagSF;
-	std::vector<float> _btagSF_Up;
-	std::vector<float> _btagSF_Do;
+	std::vector<float> _btagSF_b_Up;
+	std::vector<float> _btagSF_b_Do;
+	std::vector<float> _btagSF_l_Up;
+	std::vector<float> _btagSF_l_Do;
 
 	Float_t         _muEffWeight;
 	Float_t         _muEffWeight_Up;
@@ -350,8 +354,10 @@ void makeAnalysisNtuple::InitBranches(){
 	}
 	outputTree->Branch("btagWeight"                 , &_btagWeight                  );
 	if (!isSystematicRun){
-		outputTree->Branch("btagWeight_Up"              , &_btagWeight_Up               );
-		outputTree->Branch("btagWeight_Do"              , &_btagWeight_Do               );
+		outputTree->Branch("btagWeight_b_Up"              , &_btagWeight_b_Up               );
+		outputTree->Branch("btagWeight_b_Do"              , &_btagWeight_b_Do               );
+		outputTree->Branch("btagWeight_l_Up"              , &_btagWeight_l_Up               );
+		outputTree->Branch("btagWeight_l_Do"              , &_btagWeight_l_Do               );
 	}
 	outputTree->Branch("btagSF"                     , &_btagSF                      );
 	outputTree->Branch("muEffWeight"                , &_muEffWeight                 );
@@ -630,12 +636,16 @@ void makeAnalysisNtuple::InitVariables()
 	_loosePhoEffWeight_Up.clear();
 
 	_btagWeight.clear();
-	_btagWeight_Up.clear();
-	_btagWeight_Do.clear();
+	_btagWeight_b_Up.clear();
+	_btagWeight_b_Do.clear();
+	_btagWeight_l_Up.clear();
+	_btagWeight_l_Do.clear();
 
 	_btagSF.clear();
-	_btagSF_Up.clear();
-	_btagSF_Do.clear();
+	_btagSF_b_Up.clear();
+	_btagSF_b_Do.clear();
+	_btagSF_l_Up.clear();
+	_btagSF_l_Do.clear();
 
 	_elePt.clear();
 	_elePhi.clear();

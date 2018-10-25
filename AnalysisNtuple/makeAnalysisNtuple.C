@@ -184,6 +184,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		std::cout << "  Systematic Run : Dropping genMC variables from tree" << endl;
 	}
 	std::string outputDirectory(av[2]);
+
 	std::string outputFileName = outputDirectory + "/" + sampleType+"_AnalysisNtuple.root";
 	// char outputFileName[100];
 	cout << av[2] << " " << sampleType << " " << systematicType << endl;
@@ -234,7 +235,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		nEntr = 1000;
 		saveAllEntries = true;
 	}
-	//nEntr = 10000;
+	nEntr = 10000;
 
 	int dumpFreq = 1;
 	if (nEntr >50)     { dumpFreq = 5; }
@@ -320,9 +321,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				_PUweight_Up = PUweighterUp->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
 				_PUweight_Do = PUweighterDown->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
 
-				_btagWeight    = getBtagSF("central", reader, _btagSF);
-				_btagWeight_Up = getBtagSF("up", reader, _btagSF_Up);
-				_btagWeight_Do = getBtagSF("down", reader, _btagSF_Do);				
+				_btagWeight      = getBtagSF("central", reader, _btagSF);
+				_btagWeight_b_Up = getBtagSF("b_up",    reader, _btagSF_b_Up);
+				_btagWeight_b_Do = getBtagSF("b_down",  reader, _btagSF_b_Do);				
+				_btagWeight_l_Up = getBtagSF("l_up",    reader, _btagSF_l_Up);
+				_btagWeight_l_Do = getBtagSF("l_down",  reader, _btagSF_l_Do);				
 				
 				if (evtPick->passPresel_mu) {
 					int muInd_ = selector->Muons.at(0);
@@ -1029,6 +1032,18 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 	int jetflavor;
 	double SFb;
 	double SFb2;
+	
+	string b_sysType = "central";
+	string l_sysType = "central";
+	if (sysType=="b_up"){
+		b_sysType = "up";
+	} else if (sysType=="b_down"){
+		b_sysType = "down";
+	} else if (sysType=="l_up"){
+		l_sysType = "up";
+	} else if (sysType=="l_down"){
+		l_sysType = "down";
+	}	
 
 
 	for(std::vector<int>::const_iterator bjetInd = selector->bJets.begin(); bjetInd != selector->bJets.end(); bjetInd++){
@@ -1036,17 +1051,12 @@ vector<float> makeAnalysisNtuple::getBtagSF(string sysType, BTagCalibrationReade
 		jeteta = fabs(tree->jetEta_->at(*bjetInd));
 		jetflavor = abs(tree->jetHadFlvr_->at(*bjetInd));
 		
-		if (jetflavor == 5) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_B, jeteta, jetpt); 
-		else if(jetflavor == 4) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
+		if (jetflavor == 5) SFb = reader.eval_auto_bounds(b_sysType, BTagEntry::FLAV_B, jeteta, jetpt); 
+		else if(jetflavor == 4) SFb = reader.eval_auto_bounds(b_sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
 		else {
-			SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
-			//			if (sysType=="central") cout << tree->event_ << " " << *bjetInd << " " << jetpt << " " << jeteta << " " << jetflavor << " " << SFb<<endl;
+			SFb = reader.eval_auto_bounds(l_sysType, BTagEntry::FLAV_UDSG, jeteta, jetpt); 
 		}
 
-		// if 
-		// if (SFb==0 && sysType=="central"){
-		// 	cout << tree->event_ << " " << *bjetInd << " " << jetpt << " " << jeteta << " " << jetflavor << endl;
-		// }
 		btagSF.push_back(SFb);
 	}
 
