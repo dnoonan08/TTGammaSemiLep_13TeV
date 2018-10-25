@@ -54,17 +54,17 @@ for s in samples:
 	_file[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s/%s.root"%(finalState,dir_,s))
 	_file_CR[s] = TFile("/uscms_data/d3/troy2012/CMSSW_8_0_26_patch1/src/TTGammaSemiLep_13TeV/Plotting/histograms/%s/hists%s0b/%s.root"%(finalState,dir_,s))
 
-misIDEleSF = 2.48745 
+misIDEleSF = 2.27436#2.48745 
 #misIDEleSF_0b = 1.65556 ## -0.0872607/+0.0848595
 #misIDEleSF_0b_unc = 0.052
-misIDEle_unc = 0.083
+misIDEle_unc = 0.225#0.083
 if finalState=="mu":
-	ZJetsSF=1.17514
-	ZJetsSF_0b=0.992145
+	ZJetsSF=1.17252#1.17514
+	ZJetsSF_0b=0.982913 #0.992145
 
 else:
-	ZJetsSF=1.13957
-	ZJetsSF_0b=0.995392
+	ZJetsSF=1.17005#1.13957
+	ZJetsSF_0b=0.970013 #0.995392
 
 HistDict={}
 HistDict_up={}
@@ -291,7 +291,7 @@ for obs in observables:
                                          #       print sys, "do", HistDict_do[obs][p][sys].Integral()
 			if "_NonPrompt" in p:	
 				print "now doing nonprompt"
-				#print _file_CR[s], "phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s)
+				print _file_CR[s], "phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s)
 				HistDict[obs][p] = _file_CR[s].Get("phosel_%s_HadronicPhoton_barrel_%s"%(observables[obs][0],s)).Clone("%s_%s"%(obs,p))
                                 HistDict[obs][p].Add(_file_CR[s].Get("phosel_%s_HadronicFake_barrel_%s"%(observables[obs][0],s)))
 
@@ -1039,7 +1039,7 @@ process_DDtemplates = {"TTGamma_Prompt":[kOrange,"TTGamma"],
 ###We need MC NonPrompt templates in fit region for shape uncertainty on DataDriven templates
 
 nbins = HistDict["ChHad"]["TTGamma_NonPrompt"].GetNbinsX()
-
+print nbins
 if nbins != HistDict["AntiSIEIE"]["TTGamma_NonPrompt"].GetNbinsX():
 	print "binsChHad not equal in two regions !! abort !!"
 	exit()
@@ -1065,6 +1065,7 @@ for bin_ in range(nbins):
 
 
 for p in process_control:
+	print p
 	HistDict_up["ChHad"]["%s_DD"%p] ={}
 	HistDict_do["ChHad"]["%s_DD"%p] ={}
 	HistDict_up["ChHad"]["%s_DD"%p]["shapeDD"] = TH1F("%s_shapeDD"%p,"%s_shapeDD"%p,14,0,20)
@@ -1080,6 +1081,15 @@ for p in process_control:
 		HistDict_up["ChHad"]["%s_DD"%p]["shapeDD"].SetBinContent(bin_+1,up)
 		HistDict_do["ChHad"]["%s_DD"%p]["shapeDD"].SetBinContent(bin_+1,do)
 
+	##all three templates:up/down/nominal should have the same number of events, only difference in shape######
+	HistDict_up["ChHad"]["%s_DD"%p]["shapeDD"].Scale(float(HistDict["ChHad"]["%s_DD"%p].Integral()/HistDict_up["ChHad"]["%s_DD"%p]["shapeDD"].Integral()))
+	HistDict_do["ChHad"]["%s_DD"%p]["shapeDD"].Scale(float(HistDict["ChHad"]["%s_DD"%p].Integral()/HistDict_do["ChHad"]["%s_DD"%p]["shapeDD"].Integral()))
+
+
+#print HistDict_up["ChHad"]["TTbar_DD"]["shapeDD"].Integral()
+#print HistDict["ChHad"]["TTbar_DD"].Integral()
+#print HistDict_do["ChHad"]["TTbar_DD"]["shapeDD"].Integral()
+
 
 
 outputFile = TFile("Combine_withDDTemplateData_v6_%s%s_binned_PDF.root"%(finalState,dir_),"recreate")
@@ -1089,8 +1099,12 @@ outputFile = TFile("Combine_withDDTemplateData_v6_%s%s_binned_PDF.root"%(finalSt
 
 for obs in observables:
 	if obs=="AntiSIEIE":continue
-        outputFile.mkdir("%s/%s"%(obs,"data_obs"))
-        outputFile.cd("%s/%s"%(obs,"data_obs"))
+	if obs=="Njet":
+		outputFile.mkdir("%s/%s"%("btag","data_obs"))
+        	outputFile.cd("%s/%s"%("btag","data_obs"))
+	else:
+        	outputFile.mkdir("%s/%s"%(obs,"data_obs"))
+        	outputFile.cd("%s/%s"%(obs,"data_obs"))
 	if finalState=="mu":
 		if obs=="M3_control":
 			HistDict[obs]["data"]=_file["DataMu"].Get("presel_%s_DataMu"%(observables[obs][0])).Clone("%s_DataMu"%(obs))
@@ -1127,7 +1141,10 @@ for obs in observables:
 
 
 			HistDict[obs]["data"].Write("nominal")
-        outputFile.mkdir(obs)
+	if obs=="Njet":
+		outputFile.mkdir("btag")
+	else:
+        	outputFile.mkdir(obs)
 	
         if obs=="M3_control":
                  for p in process_control.keys():
@@ -1159,25 +1176,47 @@ for obs in observables:
                         	HistDict_do[obs][p][sys].Write("%sDown"%(sys))
 
         elif obs=="M3" or obs=="Njet":
-                for p in process_signal.keys():
-                         outputFile.mkdir("%s/%s"%(obs,p))
-                         outputFile.cd("%s/%s"%(obs,p))
-                         HistDict[obs][p].Write("nominal")
-                         for sys in systematics:
-				if sys=="MisIDEleshape" and "NonPrompt" in p:continue
-				elif sys=="BTagSF" and obs=="Njet":continue
-                               # elif finalState=="mu" and p=="VJets_Prompt" and (dir_==""):continue
-                                elif  sys=="Q2" and "TT" not in p:continue
-                                elif sys=="Pdf" and "TTGamma" in p:
-                                        HistDict_up[obs][p][sys].Write("%ssignalUp"%(sys))
-                                        HistDict_do[obs][p][sys].Write("%ssignalDown"%(sys))
-				else:
-					HistDict_up[obs][p][sys].Write("%sUp"%(sys))
-					HistDict_do[obs][p][sys].Write("%sDown"%(sys))
+		if obs=="Njet":
+			for p in process_signal.keys():
+                         	outputFile.mkdir("%s/%s"%("btag",p))
+                         	outputFile.cd("%s/%s"%("btag",p))
+				HistDict[obs][p].Write("nominal")
+				for sys in systematics:
+	                                print sys,obs
+                                        if sys=="MisIDEleshape" and "NonPrompt" in p:continue
+                                        elif sys=="BTagSF" and obs=="Njet":continue
+                                        elif  sys=="Q2" and "TT" not in p:continue
+                                        elif sys=="Pdf" and "TTGamma" in p:
+                                                HistDict_up[obs][p][sys].Write("%ssignalUp"%(sys))
+                                                HistDict_do[obs][p][sys].Write("%ssignalDown"%(sys))
+                                        else:
+                                                HistDict_up[obs][p][sys].Write("%sUp"%(sys))
+                                                HistDict_do[obs][p][sys].Write("%sDown"%(sys))
+
+		else:
+                	for p in process_signal.keys():
+                        	outputFile.mkdir("%s/%s"%(obs,p))
+                         	outputFile.cd("%s/%s"%(obs,p))
+                         	HistDict[obs][p].Write("nominal")
+                
+				for sys in systematics:
+					#print sys,obs
+					if sys=="MisIDEleshape" and "NonPrompt" in p:continue
+					elif sys=="BTagSF" and obs=="Njet":continue
+                                	elif  sys=="Q2" and "TT" not in p:continue
+                                	elif sys=="Pdf" and "TTGamma" in p:
+                                        	HistDict_up[obs][p][sys].Write("%ssignalUp"%(sys))
+                                        	HistDict_do[obs][p][sys].Write("%ssignalDown"%(sys))
+					else:
+						HistDict_up[obs][p][sys].Write("%sUp"%(sys))
+						HistDict_do[obs][p][sys].Write("%sDown"%(sys))
                 
                 for sys in systematics2:
 			for p in sub_signal:
-				outputFile.cd("%s/%s"%(obs,p))
+				if obs=="Njet":
+					outputFile.cd("%s/%s"%("btag",p))
+				else:
+					outputFile.cd("%s/%s"%(obs,p))
                         	HistDict_up[obs][p][sys].Write("%sUp"%(sys))
                         	HistDict_do[obs][p][sys].Write("%sDown"%(sys))
 
@@ -1215,10 +1254,15 @@ for obs in observables:
 					HistDict_up[obs][p][sys].Write("%sUp"%(sys))
 					HistDict_do[obs][p][sys].Write("%sDown"%(sys))
 
-                outputFile.cd("%s/TTGamma_Prompt"%(obs))
+                if obs=="Njet":
+			outputFile.cd("btag/TTGamma_Prompt")
+		else:
+			outputFile.cd("%s/TTGamma_Prompt"%(obs))
                 for sys in systematics2:
                         HistDict_up[obs]["TTGamma_Prompt"][sys].Write("%sUp"%(sys))
                         HistDict_do[obs]["TTGamma_Prompt"][sys].Write("%sDown"%(sys))
+		if obs=="Njet":
+			outputFile.cd("btag/TTbar_Prompt")
 		outputFile.cd("%s/TTbar_Prompt"%(obs))
 		for sys in systematics2:
                         HistDict_up[obs]["TTbar_Prompt"][sys].Write("%sUp"%(sys))
