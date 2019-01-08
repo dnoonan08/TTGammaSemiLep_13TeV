@@ -2,6 +2,7 @@
 makeAnalysisNtuple
 makeSkim
 makeCutflows
+makeCutflows_gen2
 checkOverlap
 *.root
 *.pdf

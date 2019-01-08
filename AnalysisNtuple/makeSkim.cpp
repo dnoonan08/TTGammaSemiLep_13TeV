@@ -21,9 +21,27 @@ int main(int ac, char** av){
 		std::cout << "usage: ./makeSkim channel outputFileName inputFile[s]" << std::endl;
 		return -1;
 	}
+
+	std::cout << "Starting" << std::endl;
+
 	// input: dealing with TTree first
 	bool isMC = true;
-	EventTree* tree = new EventTree(ac-3, av+3);
+	bool xRootDAccess = false;
+	//check for xrootd argument before file list
+	//
+	if (std::string(av[3])=="xrootd"){
+	    xRootDAccess=true;
+	    std::cout << "Will access files from xRootD" << std::endl;
+	}
+
+	EventTree* tree;
+	if (xRootDAccess){
+	    tree = new EventTree(ac-4, xRootDAccess, av+4);
+	} else {
+	    tree = new EventTree(ac-3, xRootDAccess, av+3);
+	}
+
+
 	Selector* selector = new Selector();
 
 	selector->smearJetPt = false;
@@ -43,11 +61,6 @@ int main(int ac, char** av){
 	// 	selector->mu_RelIso_range[0] = 0.25; 
 	// 	selector->mu_RelIso_range[1] = 1.;
 	// 	selector->mu_Iso_invert = true;
-	// }
-
-	// if( outDirName.find("TTgamma") != std::string::npos){
-	// 	std::cout << "Skipping Trigger Selection for TTGamma" << std::endl;
-	// 	evtPick->no_trigger = true;
 	// }
 
 	// reduce the pt cuts by 10% in the skim, so that energy corrections can still be done on same skims
@@ -117,12 +130,13 @@ int main(int ac, char** av){
 	startClock = clock();
 
 	TFile* outFile = TFile::Open( av[2] ,"RECREATE" );
-	TDirectory* ggDir = outFile->mkdir("ggNtuplizer","ggNtuplizer");
-	ggDir->cd();
+	///	TDirectory* ggDir = outFile->mkdir("ggNtuplizer","ggNtuplizer");
+	//	ggDir->cd();
 	TTree* newTree = tree->chain->CloneTree(0);
 
 	Long64_t nEntr = tree->GetEntries();
 
+	std::cout << "Sample has "<<nEntr << " entries" << std::endl;
 	if( outDirName.find("Test") != std::string::npos || outDirName.find("test") != std::string::npos || outDirName.find("TEST") != std::string::npos){
 		if (selector->QCDselect){
 			std::cout << "-------------------------------------------------------------------------" << std::endl;
@@ -134,7 +148,7 @@ int main(int ac, char** av){
 			std::cout << "-------------------------------------------------------------------------" << std::endl;
 			std::cout << "Since this is a Test (based on output name) only running on 10,000 events" << std::endl;
 			std::cout << "-------------------------------------------------------------------------" << std::endl;
-			nEntr = 100000;
+			nEntr = 10000;
 		}
 	}
 
@@ -147,6 +161,11 @@ int main(int ac, char** av){
 	if (nEntr >5000000){ dumpFreq = 1000000; }
 	
 
+
+	TH1F* hPU_        = new TH1F("hPU",        "number of pileup",      200,  0, 200);
+	TH1F* hPUTrue_    = new TH1F("hPUTrue",    "number of true pilepu", 1000, 0, 200);
+
+
 	for(Long64_t entry= 0; entry < nEntr; entry++){
 	//	for(Long64_t entry= 0; entry < 300; entry++){ 	
 		if(entry%dumpFreq == 0) {
@@ -156,8 +175,8 @@ int main(int ac, char** av){
 		}
 		tree->GetEntry(entry);
 
-		isMC = !(tree->isData_);
-
+		hPU_->Fill(tree->nPU_);
+		hPUTrue_->Fill(tree->nPUTrue_);
 
 		//selector->process_objects(tree);
 		selector->clear_vectors();
@@ -172,34 +191,36 @@ int main(int ac, char** av){
 	}
 
 	newTree->Write();
+	hPU_->Write();
+	hPUTrue_->Write();
 
-	std::map<std::string, TH1F*> histMap;
+	// std::map<std::string, TH1F*> histMap;
 	// copy histograms
-	for(int fileInd = 3; fileInd < ac; ++fileInd){
-		TFile* tempFile = TFile::Open(av[fileInd], "READ");
-		TIter next(((TDirectory*)tempFile->Get("ggNtuplizer"))->GetListOfKeys());
-		TObject* obj;
-		while ((obj = next())){
-			std::string objName(obj->GetName());
-			if( objName != "EventTree"){
-				TH1F* hist = (TH1F*)tempFile->Get(("ggNtuplizer/"+objName).c_str());
-				if( histMap.find(objName) != histMap.end() ){
-					histMap[objName]->Add(hist);
-				}
-				else {
-					hist->SetDirectory(0);
-					histMap[objName] = hist;
-				}
-			}
-		}
-		tempFile->Close();
-	}
+	// for(int fileInd = 3; fileInd < ac; ++fileInd){
+	// 	TFile* tempFile = TFile::Open(av[fileInd], "READ");
+	// 	TIter next(((TDirectory*)tempFile->Get("ggNtuplizer"))->GetListOfKeys());
+	// 	TObject* obj;
+	// 	while ((obj = next())){
+	// 		std::string objName(obj->GetName());
+	// 		if( objName != "EventTree"){
+	// 			TH1F* hist = (TH1F*)tempFile->Get(("ggNtuplizer/"+objName).c_str());
+	// 			if( histMap.find(objName) != histMap.end() ){
+	// 				histMap[objName]->Add(hist);
+	// 			}
+	// 			else {
+	// 				hist->SetDirectory(0);
+	// 				histMap[objName] = hist;
+	// 			}
+	// 		}
+	// 	}
+	// 	tempFile->Close();
+	// }
 	
-	ggDir->cd();
-	for(std::map<std::string, TH1F*>::iterator it = histMap.begin(); it!= histMap.end(); ++it){
-		it->second->SetDirectory(ggDir);
-		it->second->Write();
-	}
+	// ggDir->cd();
+	// for(std::map<std::string, TH1F*>::iterator it = histMap.begin(); it!= histMap.end(); ++it){
+	// 	it->second->SetDirectory(ggDir);
+	// 	it->second->Write();
+	// }
 	outFile->Close();
 
 	
