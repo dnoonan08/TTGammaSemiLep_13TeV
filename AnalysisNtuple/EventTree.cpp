@@ -513,6 +513,9 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, char** fileNames){
 	chain->SetBranchStatus("Photon_hoe",1);
 	chain->SetBranchAddress("Photon_hoe", &phoHoverE_);
 
+	chain->SetBranchStatus("Photon_genPartIdx",1);
+	chain->SetBranchAddress("Photon_genPartIdx", &phoGenPartIdx_);
+
 	// phoCalibE_ = new vector<float>;	
 	// chain->SetBranchStatus("phoCalibE",1);
 	// chain->SetBranchAddress("phoCalibE", &phoCalibE_);

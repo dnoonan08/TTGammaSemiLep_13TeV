@@ -315,14 +315,14 @@ class makeAnalysisNtuple {
 
     void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
     /* int findPhotonParentage(int phoInd, EventTree* tree); */
-    int findPhotonGenMatch(int phoInd, EventTree* tree);
+    //    int findPhotonGenMatch(int phoInd, EventTree* tree);
 
     vector<bool> passPhoMediumID(int phoInd);
     vector<bool> passPhoTightID(int phoInd);
     /* bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso); */
 
-    int minDrIndex(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
-    double minDr(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
+    //    int minDrIndex(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
+    //    double minDr(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis);
 
     /* bool isSignalPhoton(EventTree* tree, int mcInd, int recoPhoInd); */
     /* bool isGoodElectron(EventTree* tree, int mcInd, int recoPhoInd); */

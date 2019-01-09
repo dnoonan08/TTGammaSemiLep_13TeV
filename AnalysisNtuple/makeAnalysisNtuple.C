@@ -603,36 +603,18 @@ void makeAnalysisNtuple::FillEvent()
 	int phoGenMatchInd = -1.;
 
 	// TODO needs to be reimplemented with NANOAOD
-	// if (!tree->isData_){
-	//     phoGenMatchInd = findPhotonGenMatch(phoInd, tree);
+	if (!tree->isData_){
+	    phoGenMatchInd = tree->phoGenPartIdx_[phoInd];
 
-	//     _phoGenMatchInd.push_back(phoGenMatchInd);
+	    _phoGenMatchInd.push_back(phoGenMatchInd);
 
-	//     findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
-	//     _photonIsGenuine.push_back(isGenuine);
-	//     _photonIsMisIDEle.push_back(isMisIDEle);
-	//     _photonIsHadronicPhoton.push_back(isHadronicPhoton);
-	//     _photonIsHadronicFake.push_back(isHadronicFake);
-	// }
-	
-	// parentPID = -888;
-	// int gparentPID = -888;
-	// int parentage = -1;
+	    findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+	    _photonIsGenuine.push_back(isGenuine);
+	    _photonIsMisIDEle.push_back(isMisIDEle);
+	    _photonIsHadronicPhoton.push_back(isHadronicPhoton);
+	    _photonIsHadronicFake.push_back(isHadronicFake);
+	}
 
-	// if (!tree->isData_ && phoGenMatchInd!=-1){
-	//     parentPID = tree->mcMomPID->at(phoGenMatchInd);
-	//     gparentPID = tree->mcGMomPID->at(phoGenMatchInd);
-	//     // photon parentage for event categorization
-	//     // -1 is unmatched photon; 0 is matched, but not top/W/lepton, 1 is top parent or ISR parent, 2 is W parent, 3 is lepton parent,
-	//     if (abs(parentPID)==22 || abs(parentPID)<6 && gparentPID==-999) parentage = 1;
-	//     else if (abs(parentPID)==6) parentage = 2;
-	//     else if (abs(parentPID)==24 || abs(parentPID)==11 || abs(parentPID)==13 || abs(parentPID)==15) parentage = 3;
-	//     else if (parentPID!=-999) parentage = 0;
-	// }
-	
-	// _photonParentage.push_back(parentage);
-	// _photonParentPID.push_back(parentPID);
-	
 	_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
 	_MPhotonLepton.push_back((phoVector+lepVector).M());
 	_AnglePhotonLepton.push_back(phoVector.Angle(lepVector.Vect())); 
@@ -1155,81 +1137,92 @@ void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, boo
 	*hadronicfake   = false;
 
         // TODO needs to be reimplemented with NANOAOD                                                                                                      
-	// // If no match, it's hadronic fake
-	// if (mcMatchInd== -1) {
-	// 	*hadronicfake = true;
-	// 	return;
-	// }
+	// If no match, it's hadronic fake
+	if (mcMatchInd== -1) {
+		*hadronicfake = true;
+		return;
+	}
+
+	int mcMatchPDGID = tree->GenPart_pdgId_[mcMatchInd];
+
+	Int_t parentIdx = mcMatchInd;
+	int maxPDGID = 0;
+	int motherPDGID = 0;
+	while (parentIdx != -1){
+	    motherPDGID = std::abs(tree->GenPart_pdgId_[parentIdx]);
+	    maxPDGID = std::max(maxPDGID,motherPDGID);
+	    parentIdx = tree->GenPart_genPartIdxMother_[parentIdx];
+	}
+
+	bool parentagePass = maxPDGID < 37;
 
 	// //	mcMatchInd = findPhotonGenMatch(int phoInd, EventTree* tree);
 	// bool parentagePass = (fabs(tree->mcMomPID->at(mcMatchInd))<37 || tree->mcMomPID->at(mcMatchInd) == -999);
 
-	// if (tree->mcPID->at(mcMatchInd) == 22){
-	// 	//bool parentagePass = (fabs(tree->mcMomPID->at(mcMatchInd))<37 || tree->mcMomPID->at(mcMatchInd) == -999);
-	// 	//parentagePass = tree->mcParentage->at(mcMatchInd)==2 || tree->mcParentage->at(mcMatchInd)==10 || tree->mcParentage->at(mcMatchInd)==26;
-	// 	bool drotherPass = minGenDr(mcMatchInd, tree) > 0.2;
-	// 	if (parentagePass && drotherPass){ 
-	// 		*genuine = true;
-	// 	}
-	// 	else {
-	// 		*hadronicphoton = true;
-	// 	}
-	// }
-	// else if ( abs(tree->mcPID->at(mcMatchInd) ) == 11 && parentagePass && minGenDr(mcMatchInd, tree) > 0.2 ) {
-	// 	*misIDele = true;
-	// } 
-	// else {
-	// 	*hadronicfake = true;
-	// }
-
+	if (mcMatchPDGID==22){
+	    bool drotherPass = minGenDr(mcMatchInd, tree) > 0.2;
+	    if (parentagePass && drotherPass){ 
+		*genuine = true;
+	    }
+	    else {
+		*hadronicphoton = true;
+	    }
+	}
+	else if ( abs(mcMatchPDGID ) == 11 && parentagePass && minGenDr(mcMatchInd, tree) > 0.2 ) {
+	    *misIDele = true;
+	} 
+	else {
+	    *hadronicfake = true;
+	}
+	
 
 }
 			
-int makeAnalysisNtuple::findPhotonGenMatch(int phoInd, EventTree* tree){
+// int makeAnalysisNtuple::findPhotonGenMatch(int phoInd, EventTree* tree){
 
-	double minDR = 999.;
-	int matchInd = -1;
+// 	double minDR = 999.;
+// 	int matchInd = -1;
 
-        // TODO needs to be reimplemented with NANOAOD                                                                                                      
-	// for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
-	// 	if (tree->mcStatus->at(mcInd) == 1 || tree->mcStatus->at(mcInd) == 71){ 
-	// 		double dRValue = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd));
-	// 		if (dRValue < minDR){
-	// 			if ( (fabs(tree->phoEt_->at(phoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd)) < 0.5 ){
-	// 				minDR = dRValue;
-	// 				matchInd = mcInd;
-	// 			}
-	// 		}
-	// 	}
-	// }
+//         // TODO needs to be reimplemented with NANOAOD                                                                                                      
+// 	// for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
+// 	// 	if (tree->mcStatus->at(mcInd) == 1 || tree->mcStatus->at(mcInd) == 71){ 
+// 	// 		double dRValue = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd));
+// 	// 		if (dRValue < minDR){
+// 	// 			if ( (fabs(tree->phoEt_->at(phoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd)) < 0.5 ){
+// 	// 				minDR = dRValue;
+// 	// 				matchInd = mcInd;
+// 	// 			}
+// 	// 		}
+// 	// 	}
+// 	// }
 
-	// if (minDR > 0.1){	matchInd = -1.; }  //Only consider matches with dR < 0.1
+// 	// if (minDR > 0.1){	matchInd = -1.; }  //Only consider matches with dR < 0.1
 
-	return matchInd;
-}
-
-
+// 	return matchInd;
+// }
 
 
-int makeAnalysisNtuple::minDrIndex(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis){
-	double mindr = 999.0;
-	double dr;
-	int bestInd = -1;
-	for( std::vector<int>::iterator it = Inds.begin(); it != Inds.end(); ++it){
-		dr = dR(myEta, myPhi, etas->at(*it), phis->at(*it));
-		if( mindr > dr ) {
-			mindr = dr;
-			bestInd = *it;
-		}
-	}
-	return bestInd;
-}
 
-double makeAnalysisNtuple::minDr(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis){
-	int ind = minDrIndex(myEta, myPhi, Inds, etas, phis);
-	if(ind>=0) return dR(myEta, myPhi, etas->at(ind), phis->at(ind));
-	else return 999.0;
-}
+
+// int makeAnalysisNtuple::minDrIndex(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis){
+// 	double mindr = 999.0;
+// 	double dr;
+// 	int bestInd = -1;
+// 	for( std::vector<int>::iterator it = Inds.begin(); it != Inds.end(); ++it){
+// 		dr = dR(myEta, myPhi, etas->at(*it), phis->at(*it));
+// 		if( mindr > dr ) {
+// 			mindr = dr;
+// 			bestInd = *it;
+// 		}
+// 	}
+// 	return bestInd;
+// }
+
+// double makeAnalysisNtuple::minDr(double myEta, double myPhi, std::vector<int> Inds, std::vector<float> *etas, std::vector<float> *phis){
+// 	int ind = minDrIndex(myEta, myPhi, Inds, etas, phis);
+// 	if(ind>=0) return dR(myEta, myPhi, etas->at(ind), phis->at(ind));
+// 	else return 999.0;
+// }
 
 
 

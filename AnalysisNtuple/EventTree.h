@@ -342,6 +342,7 @@ public:
 	Float_t         phoSIEIE_[10];
 	Float_t         phoHoverE_[10];
 
+	Int_t           phoGenPartIdx_[10];
 
 /* 	Int_t    nPho_; */
 /* 	vector<ULong_t>* phoTrg_; */
