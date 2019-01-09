@@ -25,10 +25,15 @@ public:
 	Int_t    lumis_;
 
 	Float_t  genWeight_;
-	Float_t  pdf_[7];
-	Float_t  pthat_;
-	Float_t  processID_;
+	/* Float_t  pdf_[7]; */
+	/* Float_t  pthat_; */
+	/* Float_t  processID_; */
 
+	UInt_t nLHEScaleWeight_;
+	Float_t LHEScaleWeight_[200];
+
+	UInt_t nLHEPdfWeight_;
+	Float_t LHEPdfWeight_[200];
 
 	bool isData_;
 

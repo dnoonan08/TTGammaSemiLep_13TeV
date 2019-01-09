@@ -854,58 +854,61 @@ void makeAnalysisNtuple::FillEvent()
     
     if (isMC){
 
+	// Float_t LHE scale variation weights (w_var / w_nominal); 
+	// [0] is mur=0.5 muf=0.5 ; 
+	// [1] is mur=0.5 muf=1 ; 
+	// [2] is mur=0.5 muf=2 ; 
+	// [3] is mur=1 muf=0.5 ; 
+	// [4] is mur=1 muf=1 ; 
+	// [5] is mur=1 muf=2 ; 
+	// [6] is mur=2 muf=0.5 ; 
+	// [7] is mur=2 muf=1 ; 
+	// [8] is mur=2 muf=2 
 
-	// TODO needs to be reimplemented with NANOAOD
-	// if (applyqsquare){
-			
-	//     for (int i=0;i<9;i++){
-	// 	if(i==5||i==7){continue;}
-	// 	if (getGenScaleWeights){
-	// 	    _genScaleSystWeights.push_back(tree->genScaleSystWeights_->at(i));
-	// 	}
-	// 	else{
-	// 	    _genScaleSystWeights.push_back(1.);
-	// 	}
-	//     }
-	//     _q2weight_Up = *max_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());		
-	//     _q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());
-	//     _q2weight_nominal = tree->genScaleSystWeights_->at(0);
-	// }
+	_q2weight_Up = 1.;
+	_q2weight_Do = 1.;
 
-	// if(applypdfweight){
-	//     double mean=0.;
-	//     for (int i=9;i<tree->pdfSystWeight_->size();i++){
-	// 	_pdfSystWeight.push_back(tree->pdfSystWeight_->at(i));
-	// 	if (i<109){
-	// 	    mean += tree->pdfSystWeight_->at(i);
-	// 	}
-	//     }
-
-	//     mean = mean/100.;
-
-	//     double sum=0.;
-	//     for (int j=0;j<100;j++){
-	// 	sum+=pow((_pdfSystWeight[j]-mean),2.);
-	//     }
-	//     _pdfuncer = sqrt(sum/100.);
-
-	//     _pdfweight_Up = (_pdfWeight + _pdfuncer)/_pdfWeight;
-	//     _pdfweight_Do = (_pdfWeight - _pdfuncer)/_pdfWeight;
-	// }
-
-			
-	for (int i_mc = 0; i_mc <_nGenPart; i_mc++){
-	    _genPt.push_back(tree->GenPart_pt_[i_mc]);
-	    _genPhi.push_back(tree->GenPart_phi_[i_mc]);
-	    _genEta.push_back(tree->GenPart_eta_[i_mc]);
-	    _genMass.push_back(tree->GenPart_mass_[i_mc]);
-	    _genStatus.push_back(tree->GenPart_status_[i_mc]);
-	    _genStatusFlag.push_back(tree->GenPart_statusFlags_[i_mc]);
-	    _genPDGID.push_back(tree->GenPart_pdgId_[i_mc]);
-	    _genMomIdx.push_back(tree->GenPart_genPartIdxMother_[i_mc]);
-	    // _genMomPID.push_back(tree->mcMomPID[i_mc]);
-	    // _genGMomPID.push_back(tree->mcGMomPID[i_mc]);
+	if (tree->nLHEScaleWeight_==9){
+	    for (int i = 0; i < 9; i++){
+		if(i==2||i==6){continue;}
+		_genScaleSystWeights.push_back(tree->LHEScaleWeight_[i]);
+	    }
+	    _q2weight_Up = *max_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end())/tree->LHEScaleWeight_[4];
+	    _q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end())/tree->LHEScaleWeight_[4];
 	}
+
+	_pdfWeight = tree->LHEPdfWeight_[0];
+	double pdfMean = 0.;
+	for (int j=1; j < tree->nLHEPdfWeight_; j++ ){
+	    _pdfSystWeight.push_back(tree->LHEPdfWeight_[j]);
+	    pdfMean += tree->LHEPdfWeight_[j];
+	}
+	pdfMean = pdfMean/_pdfSystWeight.size();
+	    
+	double pdfVariance = 0.;
+	for (int j=0; j < _pdfSystWeight.size(); j++){
+	    pdfVariance += pow((_pdfSystWeight[j]-pdfMean),2.);
+	}
+
+	_pdfuncer = sqrt(pdfVariance/_pdfSystWeight.size());
+	_pdfweight_Up = (_pdfWeight + _pdfuncer)/_pdfWeight;
+	_pdfweight_Do = (_pdfWeight - _pdfuncer)/_pdfWeight;
+
+    }
+
+    
+    
+    for (int i_mc = 0; i_mc <_nGenPart; i_mc++){
+	_genPt.push_back(tree->GenPart_pt_[i_mc]);
+	_genPhi.push_back(tree->GenPart_phi_[i_mc]);
+	_genEta.push_back(tree->GenPart_eta_[i_mc]);
+	_genMass.push_back(tree->GenPart_mass_[i_mc]);
+	_genStatus.push_back(tree->GenPart_status_[i_mc]);
+	_genStatusFlag.push_back(tree->GenPart_statusFlags_[i_mc]);
+	_genPDGID.push_back(tree->GenPart_pdgId_[i_mc]);
+	_genMomIdx.push_back(tree->GenPart_genPartIdxMother_[i_mc]);
+	// _genMomPID.push_back(tree->mcMomPID[i_mc]);
+	// _genGMomPID.push_back(tree->mcGMomPID[i_mc]);
     }
 
 }
