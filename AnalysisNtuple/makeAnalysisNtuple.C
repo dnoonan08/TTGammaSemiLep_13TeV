@@ -915,10 +915,7 @@ void makeAnalysisNtuple::FillEvent()
 
 // https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
 double makeAnalysisNtuple::SFtop(double pt){
-    // TODO needs to be reimplemented with NANOAOD
-    // if(top_sample_g==1) return exp(0.159 - 0.00141*pt);
-    // if(top_sample_g==2) return exp(0.148 - 0.00129*pt);
-    return 1.0;
+    return exp(0.0615 - 0.0005*pt);
 }
 
 double makeAnalysisNtuple::topPtWeight(){
@@ -927,10 +924,10 @@ double makeAnalysisNtuple::topPtWeight(){
     double weight = 1.0;
 
     // TODO needs to be reimplemented with NANOAOD
-    // for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
-    // 	if(tree->mcPID->at(mcInd)==6) toppt = tree->mcPt->at(mcInd);
-    // 	if(tree->mcPID->at(mcInd)==-6) antitoppt = tree->mcPt->at(mcInd);
-    // }
+    for(int mcInd=0; mcInd<tree->nGenPart_; ++mcInd){
+    	if(tree->GenPart_pdgId_[mcInd]==6  && tree->GenPart_statusFlags_[mcInd]>>13&1) toppt = tree->mcPt->at(mcInd);
+    	if(tree->GenPart_pdgId_[mcInd]==-6 && tree->GenPart_statusFlags_[mcInd]>>13&1) antitoppt = tree->mcPt->at(mcInd);
+    }
     if(toppt > 0.001 && antitoppt > 0.001)
 	weight = sqrt( SFtop(toppt) * SFtop(antitoppt) );
     
@@ -1025,36 +1022,17 @@ vector<bool> makeAnalysisNtuple::passPhoMediumID(int phoInd){
     bool passNeuIso  = false;
     bool passPhoIso  = false;
 	
-    // TODO needs to be reimplemented with NANOAOD                                                                                                      
+    //    *         | Int_t VID compressed bitmap (MinPtCut,PhoSCEtaMultiRangeCut,PhoSingleTowerHadOverEmCut,PhoFull5x5SigmaIEtaIEtaCut,PhoAnyPFIsoWithEACut,PhoAnyPFIsoWithEAAndQuadScalingCut,PhoAnyPFIsoWithEACut), 2 bits per cut*
 
-    // double pt = tree->phoEt_[phoInd];
-    // double eta = TMath::Abs(tree->phoEta_[phoInd]);
 
-    // int region = 0;
-    // if( eta >= 1.0  ) region++;
-    // if( eta >= 1.479) region++;
-    // if( eta >= 2.0  ) region++;
-    // if( eta >= 2.2  ) region++;
-    // if( eta >= 2.3  ) region++;
-    // if( eta >= 2.4  ) region++;
+    Int_t bitMap = tree->Photon_vidNestedWPBitmap_[phoInd];
 
-    // double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_[phoInd]  - photonEA[region][0] *tree->rho_);
-    // double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_[phoInd] - photonEA[region][1] *tree->rho_);
-    // double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_[phoInd] - photonEA[region][2] *tree->rho_);
+    passHoverE  = (bitMap>>4&3)  >= 2;
+    passSIEIE   = (bitMap>>6&3)  >= 2;
+    passChIso   = (bitMap>>8&3)  >= 2;
+    passNeuIso  = (bitMap>>10&3) >= 2;
+    passPhoIso  = (bitMap>>12&3) >= 2;
 
-    // if (eta < 1.47){
-    // 	if (tree->phoHoverE_[phoInd] < 0.0396 )               passHoverE = true;
-    // 	if (tree->phoSIEIE_[phoInd] < 0.01022) passSIEIE  = true;
-    // 	if (rhoCorrPFChIso  < 0.441  )                            passChIso  = true;
-    // 	if (rhoCorrPFNeuIso < 2.725+0.0148*pt+0.000017*pt*pt)     passNeuIso = true;
-    // 	if (rhoCorrPFPhoIso < 2.571+0.0047*pt)                    passPhoIso = true;
-    // } else {
-    // 	if (tree->phoHoverE_[phoInd] < 0.0219 )                passHoverE = true;
-    // 	if (tree->phoSIEIE_[phoInd]  < 0.03001) passSIEIE  = true;
-    // 	if (rhoCorrPFChIso < 0.442) 							   passChIso  = true;
-    // 	if (rhoCorrPFNeuIso < 1.715+0.0163*pt+0.000014*pt*pt)	   passNeuIso = true;
-    // 	if (rhoCorrPFPhoIso < 3.863+0.0034*pt)					   passPhoIso = true;
-    // }
 
     passMediumID = passHoverE && passSIEIE && passChIso && passNeuIso && passPhoIso;
 
@@ -1073,49 +1051,33 @@ vector<bool> makeAnalysisNtuple::passPhoMediumID(int phoInd){
 
 vector<bool> makeAnalysisNtuple::passPhoTightID(int phoInd){
 
-    bool passTightID = false;
-    
+    bool passTightId = false;
     bool passHoverE = false;
     bool passSIEIE  = false;
     bool passChIso  = false;
     bool passNeuIso  = false;
     bool passPhoIso  = false;
 	
-    // TODO needs to be reimplemented with NANOAOD                                                                                                      
-	
-    // double pt = tree->phoEt_[phoInd];
-    // double eta = TMath::Abs(tree->phoEta_[phoInd]);
+    //    *         | Int_t VID compressed bitmap (MinPtCut,PhoSCEtaMultiRangeCut,PhoSingleTowerHadOverEmCut,PhoFull5x5SigmaIEtaIEtaCut,PhoAnyPFIsoWithEACut,PhoAnyPFIsoWithEAAndQuadScalingCut,PhoAnyPFIsoWithEACut), 2 bits per cut*
 
-    // int region = 0;
-    // if( eta >= 1.0  ) region++;
-    // if( eta >= 1.479) region++;
-    // if( eta >= 2.0  ) region++;
-    // if( eta >= 2.2  ) region++;
-    // if( eta >= 2.3  ) region++;
-    // if( eta >= 2.4  ) region++;
+    // 0 = fail all
+    // 1 = pass loose
+    // 2 = pass medium
+    // 3 = pass tight
 
-    // double rhoCorrPFChIso  = max(0.0, tree->phoPFChIso_[phoInd]  - photonEA[region][0] *tree->rho_);
-    // double rhoCorrPFNeuIso = max(0.0, tree->phoPFNeuIso_[phoInd] - photonEA[region][1] *tree->rho_);
-    // double rhoCorrPFPhoIso = max(0.0, tree->phoPFPhoIso_[phoInd] - photonEA[region][2] *tree->rho_);
+    Int_t bitMap = tree->Photon_vidNestedWPBitmap_[phoInd];
 
-    // if (eta < 1.47){
-    // 	if (tree->phoHoverE_[phoInd] < 0.0269 )               passHoverE = true;
-    // 	if (tree->phoSIEIE_[phoInd] < 0.00994) passSIEIE  = true;
-    // 	if (rhoCorrPFChIso  < 0.202  )                            passChIso  = true;
-    // 	if (rhoCorrPFNeuIso < 0.264+0.0148*pt+0.000017*pt*pt)     passNeuIso = true;
-    // 	if (rhoCorrPFPhoIso < 2.362+0.0047*pt)                    passPhoIso = true;
-    // } else {
-    // 	if (tree->phoHoverE_[phoInd] < 0.0213 )                passHoverE = true;
-    // 	if (tree->phoSIEIE_[phoInd]  < 0.03000) passSIEIE  = true;
-    // 	if (rhoCorrPFChIso < 0.034) 							   passChIso  = true;
-    // 	if (rhoCorrPFNeuIso < 0.586+0.0163*pt+0.000014*pt*pt)	   passNeuIso = true;
-    // 	if (rhoCorrPFPhoIso < 2.617+0.0034*pt)					   passPhoIso = true;
-    // }
-    
-    passTightID = passHoverE && passSIEIE && passChIso && passNeuIso && passPhoIso;
+    passHoverE  = (bitMap>>4&3)  >= 3;
+    passSIEIE   = (bitMap>>6&3)  >= 3;
+    passChIso   = (bitMap>>8&3)  >= 3;
+    passNeuIso  = (bitMap>>10&3) >= 3;
+    passPhoIso  = (bitMap>>12&3) >= 3;
+
+
+    passTightId = passHoverE && passSIEIE && passChIso && passNeuIso && passPhoIso;
 
     vector<bool> cuts;
-    cuts.push_back(passTightID);
+    cuts.push_back(passTightId);
     cuts.push_back(passHoverE);
     cuts.push_back(passSIEIE);
     cuts.push_back(passChIso);
