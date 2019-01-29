@@ -36,15 +36,26 @@ bool overlapRemovalTT(EventTree* tree){
     for(int mcInd=0; mcInd<tree->nGenPart_; ++mcInd){
         if(tree->GenPart_pdgId_[mcInd]==22 &&
            tree->GenPart_pt_[mcInd] > Et_cut &&
-           fabs(tree->GenPart_eta_[mcInd]) < Eta_cut// &&
-           //(fabs(tree->mcMomPID[mcInd])<37 || tree->mcMomPID[mcInd] == -999)  && (fabs(tree->mcGMomPID[mcInd])<37 || tree->mcGMomPID[mcInd] -999)  
-           ) {
-          double minDR = minGenDr(mcInd, tree);
+           fabs(tree->GenPart_eta_[mcInd]) < Eta_cut){
+	    
+	    Int_t parentIdx = mcInd;
+	    int maxPDGID = 0;
+	    int motherPDGID = 0;
+	    while (parentIdx != -1){
+		motherPDGID = std::abs(tree->GenPart_pdgId_[parentIdx]);
+		maxPDGID = std::max(maxPDGID,motherPDGID);
+		parentIdx = tree->GenPart_genPartIdxMother_[parentIdx];
+	    }
+
+	    bool parentagePass = maxPDGID < 37;
+	    if (parentagePass) {
+		double minDR = minGenDr(mcInd, tree);
 			
-          if(minDR > 0.2) {
-            haveOverlap = true;
-          }
-        }
+		if(minDR > 0.2) {
+		    haveOverlap = true;
+		}
+	    }
+	}
     }
     return haveOverlap;
 }
@@ -56,38 +67,63 @@ bool overlapRemovalWZ(EventTree* tree){
     for(int mcInd=0; mcInd<tree->nGenPart_; ++mcInd){
         if(tree->GenPart_pdgId_[mcInd]==22 &&
            tree->GenPart_pt_[mcInd] > Et_cut &&
-           fabs(tree->GenPart_eta_[mcInd]) < Eta_cut// &&
-           // (fabs(tree->mcMomPID[mcInd])<37 || tree->mcMomPID[mcInd] == -999)  && (fabs(tree->mcGMomPID[mcInd])<37 || tree->mcGMomPID[mcInd] -999) 
-           ) {
-          if(minGenDr(mcInd, tree) > 0.2) {
-              haveOverlap = true;
-          }
+           fabs(tree->GenPart_eta_[mcInd]) < Eta_cut) {
+
+	    Int_t parentIdx = mcInd;
+	    int maxPDGID = 0;
+	    int motherPDGID = 0;
+	    while (parentIdx != -1){
+		motherPDGID = std::abs(tree->GenPart_pdgId_[parentIdx]);
+		maxPDGID = std::max(maxPDGID,motherPDGID);
+		parentIdx = tree->GenPart_genPartIdxMother_[parentIdx];
+	    }
+
+	    bool parentagePass = maxPDGID < 37;
+	    
+	    if (parentagePass) {
+		if(minGenDr(mcInd, tree) > 0.2) {
+		    haveOverlap = true;
+		}
+	    }
         }
     }
     return haveOverlap;
 }
 
 
-// bool overlapRemoval_Tchannel(EventTree* tree){
-//     const double Et_cut = 10;
-//     const double Eta_cut = 2.6;
-//     bool haveOverlap = false;
-//     for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
-// 		if(tree->mcPID[mcInd]==22 &&
-// 		   tree->mcPt[mcInd] > Et_cut &&
-// 		   fabs(tree->GenPart_eta[mcInd]) < Eta_cut &&
-// 		   (tree->mcParentage[mcInd]==2 || tree->mcParentage[mcInd]==10) ) {
-// 			// TGJets doesn't include photons from top decay, so if gmom is top continue (don't remove)
-// 			if( (abs(tree->mcGMomPID[mcInd])==6) ||abs(tree->mcGMomPID[mcInd])==24){
-// 			//	if (abs(tree->mcGMomPID[mcInd])==24) {
-// 			//		std::cout << "the event number is :"<< tree->event_<<std::endl;
-// 			//	}
-// 				continue;
-// 			}
-// 			else if(minGenDr(mcInd, tree) > 0.05) {
-// 				haveOverlap = true;
-// 			}
-// 		}
-// 	}
-// 	return haveOverlap;
-// }
+bool overlapRemoval_Tchannel(EventTree* tree){
+    const double Et_cut = 10;
+    const double Eta_cut = 2.6;
+    bool haveOverlap = false;
+    for(int mcInd=0; mcInd<tree->nGenPart_; ++mcInd){
+	if(tree->GenPart_pdgId_[mcInd]==22 &&
+	   tree->GenPart_pt_[mcInd] > Et_cut &&
+	   fabs(tree->GenPart_eta_[mcInd]) < Eta_cut) {
+	    
+	    // TGJets doesn't include photons from top decay, so if gmom is top continue (don't remove)
+	    
+	    Int_t parentIdx = tree->GenPart_genPartIdxMother_[mcInd];
+	    bool fromTopDecay = false;
+	    int maxPDGID = 0;
+
+	    if (parentIdx>-1) {	    
+		int motherPDGID = tree->GenPart_pdgId_[parentIdx];
+		maxPDGID = abs(motherPDGID);
+		while (parentIdx != -1){
+		    motherPDGID = std::abs(tree->GenPart_pdgId_[parentIdx]);
+		    maxPDGID = std::max(maxPDGID,motherPDGID);
+		    parentIdx = tree->GenPart_genPartIdxMother_[parentIdx];
+		    //if photon is coming from a 
+		    if ( abs(motherPDGID)==6 ){
+			fromTopDecay = true;
+		    }
+		}
+	    }
+	    bool parentagePass = maxPDGID < 37;
+	    if(parentagePass && !fromTopDecay && minGenDr(mcInd, tree) > 0.05) {
+		haveOverlap = true;
+	    }
+	}
+    }
+    return haveOverlap;
+}
