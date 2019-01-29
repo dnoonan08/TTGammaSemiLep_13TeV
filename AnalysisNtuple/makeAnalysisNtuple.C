@@ -438,6 +438,7 @@ void makeAnalysisNtuple::FillEvent()
     _nBJet           = selector->bJets.size();
 
     _nGenPart        = tree->nGenPart_;
+    _nGenJet         = tree->nGenJet_;
 
     //TODO
     //        _pdfWeight       = tree->pdfWeight_;	
@@ -720,7 +721,7 @@ void makeAnalysisNtuple::FillEvent()
 	
 	jetVector.SetPtEtaPhiM(tree->jetPt_[jetInd], tree->jetEta_[jetInd], tree->jetPhi_[jetInd], tree->jetMass_[jetInd]);
 	
-
+	_jetGenJetIdx.push_back(tree->jetGenJetIdx_[jetInd]);
 	// TODO Reimplement with NANOAOD
 	// if (!tree->isData_){
 	//     _jetPartonID.push_back(tree->jetPartonID_[jetInd]);
@@ -911,6 +912,13 @@ void makeAnalysisNtuple::FillEvent()
 	// _genGMomPID.push_back(tree->mcGMomPID[i_mc]);
     }
 
+    for (int i_genJet = 0; i_genJet < _nGenJet; i_genJet++){
+	_genJetPt.push_back(tree->GenJet_pt_[i_genJet]);
+	_genJetEta.push_back(tree->GenJet_eta_[i_genJet]);
+	_genJetPhi.push_back(tree->GenJet_phi_[i_genJet]);
+	_genJetMass.push_back(tree->GenJet_mass_[i_genJet]);
+    }
+
 }
 
 // https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
@@ -925,8 +933,8 @@ double makeAnalysisNtuple::topPtWeight(){
 
     // TODO needs to be reimplemented with NANOAOD
     for(int mcInd=0; mcInd<tree->nGenPart_; ++mcInd){
-    	if(tree->GenPart_pdgId_[mcInd]==6  && tree->GenPart_statusFlags_[mcInd]>>13&1) toppt = tree->mcPt->at(mcInd);
-    	if(tree->GenPart_pdgId_[mcInd]==-6 && tree->GenPart_statusFlags_[mcInd]>>13&1) antitoppt = tree->mcPt->at(mcInd);
+    	if(tree->GenPart_pdgId_[mcInd]==6  && tree->GenPart_statusFlags_[mcInd]>>13&1) toppt = tree->GenPart_pt_[mcInd];
+    	if(tree->GenPart_pdgId_[mcInd]==-6 && tree->GenPart_statusFlags_[mcInd]>>13&1) antitoppt = tree->GenPart_pt_[mcInd];
     }
     if(toppt > 0.001 && antitoppt > 0.001)
 	weight = sqrt( SFtop(toppt) * SFtop(antitoppt) );
@@ -1025,7 +1033,7 @@ vector<bool> makeAnalysisNtuple::passPhoMediumID(int phoInd){
     //    *         | Int_t VID compressed bitmap (MinPtCut,PhoSCEtaMultiRangeCut,PhoSingleTowerHadOverEmCut,PhoFull5x5SigmaIEtaIEtaCut,PhoAnyPFIsoWithEACut,PhoAnyPFIsoWithEAAndQuadScalingCut,PhoAnyPFIsoWithEACut), 2 bits per cut*
 
 
-    Int_t bitMap = tree->Photon_vidNestedWPBitmap_[phoInd];
+    Int_t bitMap = tree->phoVidWPBitmap_[phoInd];
 
     passHoverE  = (bitMap>>4&3)  >= 2;
     passSIEIE   = (bitMap>>6&3)  >= 2;
@@ -1065,7 +1073,7 @@ vector<bool> makeAnalysisNtuple::passPhoTightID(int phoInd){
     // 2 = pass medium
     // 3 = pass tight
 
-    Int_t bitMap = tree->Photon_vidNestedWPBitmap_[phoInd];
+    Int_t bitMap = tree->phoVidWPBitmap_[phoInd];
 
     passHoverE  = (bitMap>>4&3)  >= 3;
     passSIEIE   = (bitMap>>6&3)  >= 3;

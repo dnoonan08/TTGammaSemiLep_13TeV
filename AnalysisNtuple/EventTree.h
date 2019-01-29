@@ -100,6 +100,14 @@ public:
         Int_t     GenPart_status_[200];
         Int_t     GenPart_statusFlags_[200];
 
+
+        Int_t    nGenJet_;
+        
+        Float_t   GenJet_pt_[200];
+        Float_t   GenJet_eta_[200];
+        Float_t   GenJet_phi_[200];
+        Float_t   GenJet_mass_[200];
+
 	/* Int_t    nMC_; */
 	/* vector<int>* mcPID; */
 	/* vector<float>* mcVtx_x; */
@@ -1010,6 +1018,8 @@ public:
 	Float_t         jetBtagDeepFlavB_[40];
 
 	Int_t           jetHadFlvr_[40];
+
+	Int_t           jetGenJetIdx_[40];
 	
 	/* // Jet */
 	/* Int_t    nJet_; */

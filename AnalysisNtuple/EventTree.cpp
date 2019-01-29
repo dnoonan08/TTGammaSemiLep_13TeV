@@ -364,6 +364,9 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, char** fileNames){
 	chain->SetBranchStatus("Jet_hadronFlavour",1);
 	chain->SetBranchAddress("Jet_hadronFlavour", &jetHadFlvr_);
 
+	chain->SetBranchStatus("Jet_genJetIdx",1);
+	chain->SetBranchAddress("Jet_genJetIdx", &jetGenJetIdx_);
+
 
 	// jetP4Smear_ = new vector<float>;
 	// chain->SetBranchStatus("jetP4Smear",1);
@@ -683,6 +686,24 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, char** fileNames){
 
         chain->SetBranchStatus("GenPart_statusFlags",1);
         chain->SetBranchAddress("GenPart_statusFlags", &GenPart_statusFlags_);
+
+
+        chain->SetBranchStatus("nGenJet",1);
+        chain->SetBranchAddress("nGenJet", &nGenJet_);
+
+        chain->SetBranchStatus("GenJet_pt",1);
+        chain->SetBranchAddress("GenJet_pt", &GenJet_pt_);
+
+        chain->SetBranchStatus("GenJet_eta",1);
+        chain->SetBranchAddress("GenJet_eta", &GenJet_eta_);
+
+        chain->SetBranchStatus("GenJet_phi",1);
+        chain->SetBranchAddress("GenJet_phi", &GenJet_phi_);
+
+        chain->SetBranchStatus("GenJet_mass",1);
+        chain->SetBranchAddress("GenJet_mass", &GenJet_mass_);
+
+
 
 	// // MC gen particles
 	

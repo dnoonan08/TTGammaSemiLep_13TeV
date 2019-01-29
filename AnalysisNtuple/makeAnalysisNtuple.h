@@ -241,12 +241,20 @@ class makeAnalysisNtuple {
     std::vector<float>   _jetDeepB;
     std::vector<float>   _jetDeepC;
 
-    std::vector<int>     _jetPartonID;
-    std::vector<float>   _jetGenJetPt;
-    std::vector<int>     _jetGenPartonID;
-    std::vector<float>   _jetGenPt;
-    std::vector<float>   _jetGenEta;
-    std::vector<float>   _jetGenPhi;
+    std::vector<Int_t>   _jetGenJetIdx;
+
+    /* std::vector<int>     _jetPartonID; */
+    /* std::vector<float>   _jetGenJetPt; */
+    /* std::vector<int>     _jetGenPartonID; */
+    /* std::vector<float>   _jetGenPt; */
+    /* std::vector<float>   _jetGenEta; */
+    /* std::vector<float>   _jetGenPhi; */
+
+    Int_t                _nGenJet;
+    std::vector<float>   _genJetPt;
+    std::vector<float>   _genJetEta;
+    std::vector<float>   _genJetPhi;
+    std::vector<float>   _genJetMass;
 
     Int_t                _nfwdJet;
     std::vector<float>   _fwdJetPt;
@@ -478,15 +486,17 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("jetCSVV2"  , &_jetCSVV2 );
     outputTree->Branch("jetDeepB"  , &_jetDeepB );
     outputTree->Branch("jetDeepC"  , &_jetDeepC );
+
+    outputTree->Branch("jetGenJetIdx"  , &_jetGenJetIdx );
 	
-    if (!tree->isData_){
-	outputTree->Branch("jetPartonID"                 , &_jetPartonID                ); 
-	outputTree->Branch("jetGenJetPt"                 , &_jetGenJetPt                ); 
-	outputTree->Branch("jetGenPartonID"              , &_jetGenPartonID             ); 
-	outputTree->Branch("jetGenPt"                    , &_jetGenPt                   ); 
-	outputTree->Branch("jetGenEta"                   , &_jetGenEta                  );
-	outputTree->Branch("jetGenPhi"                   , &_jetGenPhi                  );
-    }		
+    /* if (!tree->isData_){ */
+    /* 	outputTree->Branch("jetPartonID"                 , &_jetPartonID                );  */
+    /* 	outputTree->Branch("jetGenJetPt"                 , &_jetGenJetPt                );  */
+    /* 	outputTree->Branch("jetGenPartonID"              , &_jetGenPartonID             );  */
+    /* 	outputTree->Branch("jetGenPt"                    , &_jetGenPt                   );  */
+    /* 	outputTree->Branch("jetGenEta"                   , &_jetGenEta                  ); */
+    /* 	outputTree->Branch("jetGenPhi"                   , &_jetGenPhi                  ); */
+    /* }		 */
 
 
     outputTree->Branch("fwdJetPt"                       , &_fwdJetPt                      );
@@ -501,23 +511,28 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("AnglePhotonLepton"           , &_AnglePhotonLepton         );
 
     if (!tree->isData_ && !isSystematicRun){
-	outputTree->Branch("nGenPart"  	                     , &_nGenPart	                ); 
-	outputTree->Branch("genPt"	                     , &_genPt	   	                );
-	outputTree->Branch("genEta"	                     , &_genEta	                    ); 
-	outputTree->Branch("genPhi"	                     , &_genPhi	                    ); 
-	outputTree->Branch("genMass"	                     , &_genMass	                    ); 
-	outputTree->Branch("genStatus"                    , &_genStatus                   );
-	outputTree->Branch("genStatusFlag"                , &_genStatusFlag               );
-	outputTree->Branch("genPDGID"	                     , &_genPDGID	                    ); 
-	outputTree->Branch("genMomIdx"                    , &_genMomIdx                   );
-	/* outputTree->Branch("mcMomPID"                    , &_mcMomPID                   ); */
-	/* outputTree->Branch("mcGMomPID"                   , &_mcGMomPID                  ); */
-	/* outputTree->Branch("mcParentage"                 , &_mcParentage                ); */
-	outputTree->Branch("genScaleSystWeights"        , &_genScaleSystWeights         );
+	outputTree->Branch("nGenPart"  	                , &_nGenPart                ); 
+	outputTree->Branch("genPt"	                , &_genPt	            );
+	outputTree->Branch("genEta"	                , &_genEta	            ); 
+	outputTree->Branch("genPhi"	                , &_genPhi	            ); 
+	outputTree->Branch("genMass"	                , &_genMass	            ); 
+	outputTree->Branch("genStatus"                  , &_genStatus               );
+	outputTree->Branch("genStatusFlag"              , &_genStatusFlag           );
+	outputTree->Branch("genPDGID"	                , &_genPDGID	            ); 
+	outputTree->Branch("genMomIdx"                  , &_genMomIdx               );
+	outputTree->Branch("genScaleSystWeights"        , &_genScaleSystWeights     );
+
+
+	outputTree->Branch("nGenJet"  	                     , &_nGenJet	         ); 
+	outputTree->Branch("genJetPt"	                     , &_genJetPt	         );
+	outputTree->Branch("genJetEta"	                     , &_genJetEta	         ); 
+	outputTree->Branch("genJetPhi"	                     , &_genJetPhi	         ); 
+	outputTree->Branch("genJetMass"	                     , &_genJetMass	         ); 
+
     }
 
     outputTree->Branch("M3"                          , &_M3                         ); 
-    outputTree->Branch("M3_gamma"                    , &_M3_gamma                         );
+    outputTree->Branch("M3_gamma"                    , &_M3_gamma                   );
     outputTree->Branch("HT"                          , &_HT                         ); 
 
     outputTree->Branch("passPresel_Ele"              , &_passPresel_Ele             ); 
@@ -577,6 +592,9 @@ void makeAnalysisNtuple::InitVariables()
     _nJet            = -9999;  
     _nfwdJet         =-9999;  
     _nBJet           = -9999;    
+
+    _nGenPart        = -9999;
+    _nGenJet         = -9999;
 
     _passPresel_Ele  = false;
     _passPresel_Mu   = false;
@@ -698,12 +716,15 @@ void makeAnalysisNtuple::InitVariables()
     _jetCSVV2.clear();
     _jetDeepB.clear();
     _jetDeepC.clear();
-    _jetPartonID.clear();
-    _jetGenJetPt.clear();
-    _jetGenPartonID.clear();
-    _jetGenPt.clear();
-    _jetGenEta.clear();
-    _jetGenPhi.clear();
+
+    _jetGenJetIdx.clear();
+
+    /* _jetPartonID.clear(); */
+    /* _jetGenJetPt.clear(); */
+    /* _jetGenPartonID.clear(); */
+    /* _jetGenPt.clear(); */
+    /* _jetGenEta.clear(); */
+    /* _jetGenPhi.clear(); */
 
     _dRPhotonJet.clear();
     _dRPhotonLepton.clear();
@@ -724,6 +745,11 @@ void makeAnalysisNtuple::InitVariables()
     /* _mcMomPID.clear(); */
     /* _mcGMomPID.clear(); */
     /* _mcParentage.clear(); */
+
+    _genJetPt.clear();
+    _genJetEta.clear();
+    _genJetPhi.clear();
+    _genJetMass.clear();
 
 
 }
