@@ -165,6 +165,8 @@ int main(int ac, char** av){
 	TH1F* hPU_        = new TH1F("hPU",        "number of pileup",      200,  0, 200);
 	TH1F* hPUTrue_    = new TH1F("hPUTrue",    "number of true pilepu", 1000, 0, 200);
 
+	TH1F* hEvents_    = new TH1F("hEvents",    "number of events (+/- event weight)",      3,  -1.5, 1.5);
+
 
 	for(Long64_t entry= 0; entry < nEntr; entry++){
 	//	for(Long64_t entry= 0; entry < 300; entry++){ 	
@@ -177,6 +179,8 @@ int main(int ac, char** av){
 
 		hPU_->Fill(tree->nPU_);
 		hPUTrue_->Fill(tree->nPUTrue_);
+
+		hEvents_->Fill(tree->genWeight_/abs(tree->genWeight_));
 
 		//selector->process_objects(tree);
 		selector->clear_vectors();
@@ -193,6 +197,7 @@ int main(int ac, char** av){
 	newTree->Write();
 	hPU_->Write();
 	hPUTrue_->Write();
+	hEvents_->Write();
 
 	// std::map<std::string, TH1F*> histMap;
 	// copy histograms
