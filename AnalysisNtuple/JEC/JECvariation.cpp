@@ -39,50 +39,50 @@ void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
 	//bool JECapplied false; 
 
 	TLorentzVector tMET;
-	tMET.SetPtEtaPhiM(tree->pfMET_,0.0,tree->pfMETPhi_,0.0);
+	tMET.SetPtEtaPhiM(tree->MET_pt_,0.0,tree->MET_phi_,0.0);
 
 	//	double before = tree->jetPt_->at(0);
 
 	for(int jetInd = 0; jetInd < tree->nJet_ ; ++jetInd){
-		if(tree->jetPt_->at(jetInd) < 10) continue;
-		if(fabs(tree->jetEta_->at(jetInd)) > 5.2) continue;
-		JetCorrector->setJetEta(tree->jetEta_->at(jetInd));
-		JetCorrector->setJetPt(tree->jetRawPt_->at(jetInd));
-		JetCorrector->setJetA(tree->jetArea_->at(jetInd));
+		if(tree->jetPt_[jetInd] < 10) continue;
+		if(fabs(tree->jetEta_[jetInd]) > 5.2) continue;
+		JetCorrector->setJetEta(tree->jetEta_[jetInd]);
+		JetCorrector->setJetPt(tree->jetPt_[jetInd] / tree->jetRawFactor_[jetInd]);
+		JetCorrector->setJetA(tree->jetArea_[jetInd]);
 		JetCorrector->setRho(tree->rho_);
 		
 		double correction = JetCorrector->getCorrection();
 		// std::cout << scaleDownNormUp012 << std::endl;
-		// std::cout << tree->jetPt_->at(jetInd) << "  " << tree->jetRawPt_->at(jetInd) << "  " << tree->jetPt_->at(jetInd)/tree->jetRawPt_->at(jetInd) << "  " << correction << std::endl;
+		// std::cout << tree->jetPt_[jetInd] << "  " << tree->jetRawPt_[jetInd] << "  " << tree->jetPt_[jetInd]/tree->jetRawPt_[jetInd] << "  " << correction << std::endl;
 		// assume jets are corrected, no need to change unless we want Up Down variation
-		//tree->jetPt_->at(jetInd) = tree->jetRawPt_->at(jetInd) * correction;
-		//tree->jetEn_->at(jetInd) = tree->jetRawEn_->at(jetInd) * correction;
+		//tree->jetPt_[jetInd] = tree->jetRawPt_[jetInd] * correction;
+		//tree->jetEn_[jetInd] = tree->jetRawEn_[jetInd] * correction;
 
 
 		TLorentzVector tjet;
-		tjet.SetPtEtaPhiM(tree->jetPt_->at(jetInd), tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), 0.0);
+		tjet.SetPtEtaPhiM(tree->jetPt_[jetInd], tree->jetEta_[jetInd], tree->jetPhi_[jetInd], 0.0);
 		tMET+=tjet;
 
 		
-		jecUnc->setJetEta(tree->jetEta_->at(jetInd));
-		jecUnc->setJetPt(tree->jetPt_->at(jetInd)); // here you must use the CORRECTED jet pt
+		jecUnc->setJetEta(tree->jetEta_[jetInd]);
+		jecUnc->setJetPt(tree->jetPt_[jetInd]); // here you must use the CORRECTED jet pt
 
-		//		std::cout << jetInd << "  " << tree->jetPt_->at(jetInd) << "  " << tree->jetEta_->at(jetInd) << std::endl;
+		//		std::cout << jetInd << "  " << tree->jetPt_[jetInd] << "  " << tree->jetEta_[jetInd] << std::endl;
 		double unc = jecUnc->getUncertainty(true);
 		//std::cout << "unc " << unc << std::endl;
 		if(scaleDownNormUp012==0) correction-=unc;
 		//		if(scaleDownNormUp012==1) continue;
 		if(scaleDownNormUp012==2) correction+=unc;
 		
-		tree->jetPt_->at(jetInd) = tree->jetRawPt_->at(jetInd) * correction;
-		//tree->jetEn_->at(jetInd) = tree->jetRawEn_->at(jetInd) * correction;
+		tree->jetPt_[jetInd] = tree->jetPt_[jetInd] / tree->jetRawFactor_[jetInd] * correction;
+		//tree->jetEn_[jetInd] = tree->jetRawEn_[jetInd] * correction;
 		
-		tjet.SetPtEtaPhiM(tree->jetPt_->at(jetInd), tree->jetEta_->at(jetInd), tree->jetPhi_->at(jetInd), 0.0);		       
+		tjet.SetPtEtaPhiM(tree->jetPt_[jetInd], tree->jetEta_[jetInd], tree->jetPhi_[jetInd], 0.0);		       
 		tMET-=tjet;
 		
 	}
-	tree->pfMET_ = tMET.Pt();
-	tree->pfMETPhi_ = tMET.Phi();
+	tree->MET_pt_ = tMET.Pt();
+	tree->MET_phi_ = tMET.Phi();
 
 	// double after = tree->jetPt_->at(0);
 	// std::cout << before << " " << after << std::endl;
