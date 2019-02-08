@@ -4,17 +4,16 @@ clean:
 	rm FactorizedJetCorrector.o JetCorrectorParameters.o SimpleJetCorrector.o JetCorrectionUncertainty.o SimpleJetCorrectionUncertainty.o JECvariation.o
 
 JECvariation.o: FactorizedJetCorrector.o JetCorrectorParameters.o SimpleJetCorrector.o JetCorrectionUncertainty.o JECvariation.cpp
-	g++ -c `root-config --libs` -I`root-config --incdir` -std=c++11 JECvariation.cpp
+	g++ -c `root-config --libs` -I`root-config --incdir` -std=c++17 JECvariation.cpp
 
 FactorizedJetCorrector.o: FactorizedJetCorrector.cpp FactorizedJetCorrector.h JetCorrectorParameters.h SimpleJetCorrector.h Utilities.cc
-	g++ -c `root-config --libs` -I`root-config --incdir` -std=c++11 FactorizedJetCorrector.cpp
+	g++ -c `root-config --libs` -I`root-config --incdir` -std=c++17 FactorizedJetCorrector.cpp
 
 JetCorrectorParameters.o: JetCorrectorParameters.cpp JetCorrectorParameters.h 
-	g++ -c `root-config --libs` -I`root-config --incdir` -std=c++11 JetCorrectorParameters.cpp
+	g++ -c `root-config --libs` -I`root-config --incdir` -std=c++17 JetCorrectorParameters.cpp
 
 SimpleJetCorrector.o: JetCorrectorParameters.cpp JetCorrectorParameters.h SimpleJetCorrector.h
-	g++ -c `root-config --libs` -I`root-config --incdir` -std=c++11 SimpleJetCorrector.cpp 
+	g++ -c `root-config --libs` -I`root-config --incdir` -std=c++17 SimpleJetCorrector.cpp 
 
 JetCorrectionUncertainty.o: JetCorrectionUncertainty.cpp JetCorrectionUncertainty.h SimpleJetCorrectionUncertainty.cpp SimpleJetCorrectionUncertainty.h
-	g++ -c `root-config --libs` -I`root-config --incdir` -std=c++11 JetCorrectionUncertainty.cpp SimpleJetCorrectionUncertainty.cpp 
- 
+	g++ -c `root-config --libs` -I`root-config --incdir` -std=c++17 JetCorrectionUncertainty.cpp SimpleJetCorrectionUncertainty.cpp 

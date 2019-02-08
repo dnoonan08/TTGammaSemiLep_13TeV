@@ -7,6 +7,7 @@
 
 EventPick::EventPick(std::string titleIn){
 	title = titleIn;
+	year = "2016";
 	saveCutflows = false;
 
 	cutFlow_ele = new TH1D("cut_flow_ele","cut flow e+jets",15,-0.5,14.5);
@@ -76,8 +77,17 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 	passAll_mu = false;
 
 
-	bool Pass_trigger_mu  = (tree->HLT_IsoMu24_ || tree->HLT_IsoTkMu24_) || no_trigger;
-	bool Pass_trigger_ele = tree->HLT_Ele32_eta2p1_WPTight_Gsf_ || no_trigger;
+	bool Pass_trigger_mu  = false;
+	bool Pass_trigger_ele = false;
+
+	if (year=="2016") {
+	    Pass_trigger_mu = (tree->HLT_IsoMu24_ || tree->HLT_IsoTkMu24_) || no_trigger;
+	    Pass_trigger_ele = tree->HLT_Ele32_eta2p1_WPTight_Gsf_ || no_trigger;
+	}
+	if (year=="2017"){
+	    Pass_trigger_mu = (tree->HLT_IsoMu24_eta2p1_ || tree->HLT_IsoMu27_) || no_trigger;
+	    Pass_trigger_ele = tree->HLT_Ele32_WPTight_Gsf_L1DoubleEG_ || no_trigger;
+	}
 
 	if (saveCutflows) {
 		cutFlow_ele->Fill(0.0); // Input events

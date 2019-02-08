@@ -12,6 +12,8 @@ double dR(double eta1, double phi1, double eta2, double phi2){
 
 TRandom* generator = new TRandom3(0);
 Selector::Selector(){
+
+        year = "2016";
 	// jets
 	jet_Pt_cut = 30;
 	jet_Eta_cut = 2.4;

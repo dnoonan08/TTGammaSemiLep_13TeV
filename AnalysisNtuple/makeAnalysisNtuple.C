@@ -16,10 +16,6 @@
 #include <cmath>
 #include "elemuSF.h"
 
-std::string PUfilename = "PileupHists/Data_2016BCDGH_Pileup.root";
-std::string PUfilename_up = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
-std::string PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
-
 int jecvar012_g = 1; // 0:down, 1:norm, 2:up
 int jervar012_g = 1; // 0:down, 1:norm, 2:up
 int phosmear012_g = 1; // 0:down, 1:norm, 2:up 
@@ -31,7 +27,7 @@ int elescale012_g = 1;
 
 bool overlapRemovalTT(EventTree* tree);
 bool overlapRemovalWZ(EventTree* tree);
-//bool overlapRemoval_Tchannel(EventTree* tree);
+bool overlapRemoval_Tchannel(EventTree* tree);
 double getJetResolution(double, double, double);
 
 bool dileptonsample;
@@ -42,9 +38,10 @@ double duration;
 makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 {
     startClock = clock();
-    tree = new EventTree(ac-3, false, av+3);
+    std::string year(av[1]);
+    tree = new EventTree(ac-4, false, year, av+4);
 
-    sampleType = av[1];
+    sampleType = av[2];
     systematicType = "";
     cout << sampleType << endl;
     
@@ -66,11 +63,28 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	return;
     }
     
+    std::string PUfilename; 
+    std::string PUfilename_up;
+    std::string PUfilename_down;
+
+    if (year=="2016"){
+	PUfilename      = "PileupHists/Data_2016BCDGH_Pileup.root";
+	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
+    }
+    if (year=="2017"){
+	//THIS NEEDS TO BE UPDATED WITH 2017 PILEUP FILES
+	PUfilename      = "PileupHists/Data_2016BCDGH_Pileup.root";
+	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
+    }
 
     selector = new Selector();
     
     evtPick = new EventPick("");
     
+    selector->year = year;
+    evtPick->year = year;
     
     selector->pho_applyPhoID = false;
     selector->looseJetID = false;
@@ -79,16 +93,21 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     
     // selector->veto_pho_jet_dR = -1.; //remove jets which have a photon close to them 
     selector->veto_jet_pho_dR = -1.; //remove photons which have a jet close to them (after having removed jets too close to photon from above cut)
-    
+
+
+    if (year=="2016") selector->btag_cut_DeepCSV = 0.6324;
+    if (year=="2017") selector->btag_cut_DeepCSV = 0.4941;
     
     //	selector->jet_Pt_cut = 40.;
     evtPick->Njet_ge = 2;	
     evtPick->NBjet_ge = 0;	
     BTagCalibration calib;
     if (!selector->useDeepCSVbTag){
-	calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
+	if (year=="2016") calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
+	if (year=="2017") calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
     } else {
-	calib = BTagCalibration("deepcsv", "DeepCSV_Moriond17_B_H.csv");
+	if (year=="2016"){ calib = BTagCalibration("deepcsv", "DeepCSV_Moriond17_B_H.csv");}
+	if (year=="2017"){ calib = BTagCalibration("deepcsb", "DeepCSV_94XSF_V3_B_F.csv");}
     }
     
     BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
@@ -111,10 +130,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		BTagEntry::FLAV_UDSG,    // btag flavour
 		"incl");               // measurement type
     
-    getGenScaleWeights = false;
-    if( sampleType.substr(0,5)=="TTbar" || sampleType.substr(0,7)=="TTGamma"){
-	getGenScaleWeights = true;
-    }
+    // getGenScaleWeights = false;
+    // if( sampleType.substr(0,5)=="TTbar" || sampleType.substr(0,7)=="TTGamma"){
+    // 	getGenScaleWeights = true;
+    // }
     
     bool doOverlapRemoval = false;
     bool doOverlapRemoval_WZ = false;	
@@ -123,20 +142,20 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     bool invertOverlap = false;
     
     bool skipOverlap = false;
-    applypdfweight = false;
-    applyqsquare  = false;
+    //    applypdfweight = false;
+    //    applyqsquare  = false;
     if( sampleType == "TTbarPowheg" || sampleType=="isr_up_TTbarPowheg" || sampleType=="fsr_up_TTbarPowheg"|| sampleType=="isr_down_TTbarPowheg"|| sampleType=="fsr_down_TTbarPowheg"|| sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
     
     if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50" || sampleType=="DYjetsM10to50_MLM" || sampleType=="DYjetsM50_MLM") doOverlapRemoval_WZ = true;
     
     if( sampleType == "ST_t-channel" || sampleType == "ST_tbar-channel") doOverlapRemoval_Tchannel = true;
     if(doOverlapRemoval || doOverlapRemoval_WZ || doOverlapRemoval_Tchannel) std::cout << "########## Will apply overlap removal ###########" << std::endl;
-    if( sampleType == "TTbarPowheg" || sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType=="TTGamma_Dilepton" || sampleType == "TTGamma_SingleLeptFromT" || sampleType == "TTGamma_SingleLeptFromTbar" || sampleType == "TTGamma_Hadronic" || sampleType == "TTGJets"){
-	applypdfweight = true; 	
-	applyqsquare = true;
-    }
+    // if( sampleType == "TTbarPowheg" || sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType=="TTGamma_Dilepton" || sampleType == "TTGamma_SingleLeptFromT" || sampleType == "TTGamma_SingleLeptFromTbar" || sampleType == "TTGamma_Hadronic" || sampleType == "TTGJets"){
+    // 	applypdfweight = true; 	
+    // 	applyqsquare = true;
+    // }
     
-    if (applypdfweight||applyqsquare)  std::cout<<"###### Will apply pdfWeights and Q2 weights ######"<< std::endl;
+    // if (applypdfweight||applyqsquare)  std::cout<<"###### Will apply pdfWeights and Q2 weights ######"<< std::endl;
     
     dileptonsample = false;
     string JECsystLevel = "";
@@ -150,8 +169,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 	if (systematicType.substr(pos+1,2)=="up"){ jecvar012_g = 2; }
 	if (systematicType.substr(pos+1,2)=="do"){ jecvar012_g = 0; }
-	// evtPick->Njet_ge = 3;	
-	// evtPick->NBjet_ge = 1;	
 	isSystematicRun = true;
     }
     
@@ -190,24 +207,24 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (isSystematicRun){
 	std::cout << "  Systematic Run : Dropping genMC variables from tree" << endl;
     }
-    std::string outputDirectory(av[2]);
+    std::string outputDirectory(av[3]);
 
-    std::string outputFileName = outputDirectory + "/" + sampleType+"_AnalysisNtuple.root";
+    std::string outputFileName = outputDirectory + "/" + sampleType+"_"+year+"_AnalysisNtuple.root";
     // char outputFileName[100];
-    cout << av[2] << " " << sampleType << " " << systematicType << endl;
+    cout << av[3] << " " << sampleType << " " << systematicType << endl;
     //	outputFileName = sprintf("%s_AnalysisNtuple.root",sampleType);
     if (systematicType!=""){
 	outputFileName = outputDirectory + "/"+systematicType + "_" +sampleType+"_AnalysisNtuple.root";
-	//		sprintf(outputFileName,"%s/%s_%s_AnalysisNtuple.root",av[2],systematicType,sampleType);
+	//		sprintf(outputFileName,"%s/%s_%s_AnalysisNtuple.root",av[3],systematicType,sampleType);
     }
-    cout << av[2] << " " << sampleType << " " << systematicType << endl;
+    cout << av[3] << " " << sampleType << " " << systematicType << endl;
     cout << outputFileName << endl;
     TFile *outputFile = new TFile(outputFileName.c_str(),"recreate");
     outputTree = new TTree("AnalysisTree","AnalysisTree");
 
-    PUReweight* PUweighter = new PUReweight(ac-3, av+3, PUfilename);
-    PUReweight* PUweighterUp = new PUReweight(ac-3, av+3, PUfilename_up);
-    PUReweight* PUweighterDown = new PUReweight(ac-3, av+3, PUfilename_down);
+    PUReweight* PUweighter = new PUReweight(ac-4, av+4, PUfilename);
+    PUReweight* PUweighterUp = new PUReweight(ac-4, av+4, PUfilename_up);
+    PUReweight* PUweighterDown = new PUReweight(ac-4, av+4, PUfilename_down);
     tree->GetEntry(0);
         
     isMC = tree->nGenPart_>0;
@@ -222,7 +239,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (isMC && jecvar012_g!=1) {
 	//		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, "Total");//SubTotalAbsolute");
 	cout << "Applying JEC uncertainty variations : " << JECsystLevel << endl;
-	jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);//SubTotalAbsolute");
+	if (year=="2016") jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);
+	// THIS NEEDS TO BE UPDATED TO GET 2017 JEC FILES
+	if (year=="2017") jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);
     }
 
     _lumiWeight = getEvtWeight(sampleType);
@@ -245,9 +264,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
     bool saveAllEntries = false;
 
-    if (sampleType=="Test") nEntr = 10000;
+    if (sampleType=="Test") {
+	if (nEntr > 10000) nEntr = 10000;
+    }
     if (sampleType=="TestAll") {
-	nEntr = 1000;
+	if (nEntr > 1000) nEntr = 1000;
 	saveAllEntries = true;
     }
     //nEntr = 10000;
@@ -283,13 +304,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	    if (!invertOverlap){
 		if (overlapRemovalTT(tree)){	
 		    count_overlapTTbar++;			
-		    //	cout << "removing event " << entry << endl;
 		    continue;
 		}
 	    } else {
 		if (!overlapRemovalTT(tree)){	
 		    count_overlapTTbar++;			
-		    //	cout << "removing event " << entry << endl;
 		    continue;
 		}
 	    }
@@ -300,12 +319,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
-	// if( isMC && doOverlapRemoval_Tchannel){
-	// 	if (overlapRemoval_Tchannel(tree)){
-	// 		count_overlapTchannel++;
-	// 		continue;
-	// 	}
-	// }
+	if( isMC && doOverlapRemoval_Tchannel){
+	    if (overlapRemoval_Tchannel(tree)){
+		count_overlapTchannel++;
+		continue;
+	    }
+	}
 
 	// //		Apply systematics shifts where needed
 	if( isMC ){
@@ -314,15 +333,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	    }
 	}
 
-	
-				
-
-	//		selector->process_objects(tree);
 	selector->clear_vectors();
 
 	evtPick->process_event(tree, selector, _PUweight);
 
-	//    cout << "HERE" << endl;
 	if ( evtPick->passPresel_ele || evtPick->passPresel_mu || saveAllEntries) {
 
 	    InitVariables();
@@ -356,8 +370,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		    _eleEffWeight    = getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
 		    _eleEffWeight_Do = getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],0);
 		    _eleEffWeight_Up = getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],2);
-		    //               std::cout<<"done with Ele scaling"<<std::endl;
-                                     
 		}
 
 	    }
@@ -380,7 +392,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		}				
 	    }
 	    outputTree->Fill();
-	    //		std::cout<<"done with filling"<<std::endl;
 	}
     }
     if (doOverlapRemoval){
@@ -723,14 +734,6 @@ void makeAnalysisNtuple::FillEvent()
 	
 	_jetGenJetIdx.push_back(tree->jetGenJetIdx_[jetInd]);
 	// TODO Reimplement with NANOAOD
-	// if (!tree->isData_){
-	//     _jetPartonID.push_back(tree->jetPartonID_[jetInd]);
-	//     _jetGenJetPt.push_back(tree->jetGenJetPt_[jetInd]);
-	//     _jetGenPartonID.push_back(tree->jetGenPartonID_[jetInd]);
-	//     _jetGenPt.push_back(tree->jetGenPt_[jetInd]);
-	//     _jetGenEta.push_back(tree->jetGenEta_[jetInd]);
-	//     _jetGenPhi.push_back(tree->jetGenPhi_[jetInd]);
-	// }
 
 	// double resolution = getJetResolution(tree->jetPt_[jetInd], tree->jetEta_[jetInd], tree->rho_);
 	// if (tree->jetDeepCSVTags_b_[jetInd] + tree->jetDeepCSVTags_bb_[jetInd] > selector->btag_cut_DeepCSV){
@@ -1202,8 +1205,8 @@ void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, boo
 #endif
 
 int main(int ac, char** av){
-  if(ac != 4){
-    std::cout << "usage: ./makeAnalysisNtuple sampleName outputFileDir inputFile[s]" << std::endl;
+  if(ac != 5){
+    std::cout << "usage: ./makeAnalysisNtuple year sampleName outputFileDir inputFile[s]" << std::endl;
     return -1;
   }
 

@@ -1,8 +1,11 @@
 #include<iostream>
 #include"EventTree.h"
 
-EventTree::EventTree(int nFiles, bool xRootDAccess, char** fileNames){
+EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileNames){
 	chain = new TChain("Events");
+
+	//std::cout << chain->GetCacheSize() << std::endl;
+	chain->SetCacheSize(50*1024*1024);
 	if (xRootDAccess){
 	    string dir = "root://cms-xrd-global.cern.ch/";
 	    for(int fileI=0; fileI<nFiles; fileI++){
@@ -504,8 +507,15 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, char** fileNames){
 	chain->SetBranchStatus("Photon_isScEtaEE",1);
 	chain->SetBranchAddress("Photon_isScEtaEE", &phoIsEE_);
 
-	chain->SetBranchStatus("Photon_cutBased",1);
-	chain->SetBranchAddress("Photon_cutBased", &phoIDcutbased_);
+	if (year=="2016"){
+	    chain->SetBranchStatus("Photon_cutBased",1);
+	    chain->SetBranchAddress("Photon_cutBased", &phoIDcutbased_);
+	}
+	if (year=="2017"){
+	    chain->SetBranchStatus("Photon_cutBasedBitmap",1);
+	    chain->SetBranchAddress("Photon_cutBasedBitmap", &phoIDcutbased_);
+	}
+	
 
 	chain->SetBranchStatus("Photon_pfRelIso03_all",1);
 	chain->SetBranchAddress("Photon_pfRelIso03_all", &phoPFRelIso_);
@@ -787,14 +797,30 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, char** fileNames){
 
         //TRIGGERS
 
-        chain->SetBranchStatus("HLT_Ele32_eta2p1_WPTight_Gsf",1);
-        chain->SetBranchAddress("HLT_Ele32_eta2p1_WPTight_Gsf",&HLT_Ele32_eta2p1_WPTight_Gsf_);
+	if (year=="2016"){
+	    chain->SetBranchStatus("HLT_Ele32_eta2p1_WPTight_Gsf",1);
+	    chain->SetBranchAddress("HLT_Ele32_eta2p1_WPTight_Gsf",&HLT_Ele32_eta2p1_WPTight_Gsf_);
 
-        chain->SetBranchStatus("HLT_IsoMu24",1);
-        chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
+	    chain->SetBranchStatus("HLT_IsoMu24",1);
+	    chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
 
-        chain->SetBranchStatus("HLT_IsoTkMu24",1);
-        chain->SetBranchAddress("HLT_IsoTkMu24",&HLT_IsoTkMu24_);
+	    chain->SetBranchStatus("HLT_IsoTkMu24",1);
+	    chain->SetBranchAddress("HLT_IsoTkMu24",&HLT_IsoTkMu24_);
+
+	}
+	
+	if (year=="2017"){
+	    chain->SetBranchStatus("HLT_Ele32_WPTight_Gsf_L1DoubleEG",1);
+	    chain->SetBranchAddress("HLT_Ele32_WPTight_Gsf_L1DoubleEG",&HLT_Ele32_WPTight_Gsf_L1DoubleEG_);
+
+	    chain->SetBranchStatus("HLT_IsoMu24_eta2p1",1);
+	    chain->SetBranchAddress("HLT_IsoMu24_eta2p1",&HLT_IsoMu24_eta2p1_);
+
+	    chain->SetBranchStatus("HLT_IsoMu27",1);
+	    chain->SetBranchAddress("HLT_IsoMu27",&HLT_IsoMu27_);
+
+	}
+
 
         chain->SetBranchStatus("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL",1);
         chain->SetBranchAddress("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL",&HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_);

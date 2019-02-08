@@ -133,6 +133,8 @@ public:
  	double mu_MVA_range[2];
 	bool   mu_Iso_invert;
 
+	std::string year;
+
 	void clear_vectors();
 
 private:

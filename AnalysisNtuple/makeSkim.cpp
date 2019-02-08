@@ -18,7 +18,7 @@
 
 int main(int ac, char** av){
 	if(ac < 4){
-		std::cout << "usage: ./makeSkim channel outputFileName inputFile[s]" << std::endl;
+		std::cout << "usage: ./makeSkim year channel outputFileName inputFile[s]" << std::endl;
 		return -1;
 	}
 
@@ -27,18 +27,21 @@ int main(int ac, char** av){
 	// input: dealing with TTree first
 	bool isMC = true;
 	bool xRootDAccess = false;
+
+	std::string year(av[1]);	
+
 	//check for xrootd argument before file list
 	//
-	if (std::string(av[3])=="xrootd"){
+	if (std::string(av[4])=="xrootd"){
 	    xRootDAccess=true;
 	    std::cout << "Will access files from xRootD" << std::endl;
 	}
 
 	EventTree* tree;
 	if (xRootDAccess){
-	    tree = new EventTree(ac-4, xRootDAccess, av+4);
+	    tree = new EventTree(ac-5, xRootDAccess, year, av+5);
 	} else {
-	    tree = new EventTree(ac-3, xRootDAccess, av+3);
+	    tree = new EventTree(ac-4, xRootDAccess, year, av+4);
 	}
 
 
@@ -52,9 +55,14 @@ int main(int ac, char** av){
 	selector->scaleEle = false;
 	selector->scalePho = false;
 
+	selector->year = year;
+
 	EventPick* evtPick = new EventPick("nominal");
 	evtPick->MET_cut = -1.0;	
-	std::string outDirName(av[2]);
+
+	evtPick->year = year;
+
+	std::string outDirName(av[3]);
 	// antiselection for QCD fit
 	// if( outDirName.find("QCD") != std::string::npos){
 	// 	std::cout << "muon antiselection is on" << std::endl;
@@ -74,7 +82,7 @@ int main(int ac, char** av){
 
 	evtPick->SkimNjet_ge = 2;
 	evtPick->SkimNBjet_ge = 0;
-	std::string channel(av[1]);
+	std::string channel(av[2]);
 
 	if (channel=="ele"){
 		evtPick->skimEle = true;
@@ -103,36 +111,20 @@ int main(int ac, char** av){
 		evtPick->Nele_eq = 2;
 		selector->QCDselect = true;
 	}else {
-		cout << av[1] << endl;
-		cout << (av[1]=="ele") << endl;
+		cout << av[2] << endl;
+		cout << (av[2]=="ele") << endl;
 		cout << (channel=="ele") << endl;
 		cout << "please specify either ele or mu for the skim channel (or diele/dimu)" << endl;
 		return -1;		
 	}
 
-	// TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",1000,500);
-	// c1->SetFillColor(42);
-	// c1->SetGrid();
-
-	// TCanvas *c2 = new TCanvas("c2","A Simple Graph Example",1000,500);
-	// c2->SetFillColor(42);
-	// c2->SetGrid();
-	
-
-	// TCanvas *c3 = new TCanvas("c3","A Simple Graph Example",1000,500);
-	// c3->SetFillColor(42);
-	// c3->SetGrid();
-	
-	//TFile *theFile = TFile::Open("root://cmsxrootd.fnal.gov//store/user/troy2012/rootFile.root");
-
 	std::clock_t startClock;
 	double duration;
 	startClock = clock();
 
-	TFile* outFile = TFile::Open( av[2] ,"RECREATE" );
-	///	TDirectory* ggDir = outFile->mkdir("ggNtuplizer","ggNtuplizer");
-	//	ggDir->cd();
+	TFile* outFile = TFile::Open( av[3] ,"RECREATE" );
 	TTree* newTree = tree->chain->CloneTree(0);
+	newTree->SetCacheSize(50*1024*1024);
 
 	Long64_t nEntr = tree->GetEntries();
 
@@ -146,9 +138,9 @@ int main(int ac, char** av){
 		}
 		else{
 			std::cout << "-------------------------------------------------------------------------" << std::endl;
-			std::cout << "Since this is a Test (based on output name) only running on 10,000 events" << std::endl;
+			std::cout << "Since this is a Test (based on output name) only running on 50,001 events" << std::endl;
 			std::cout << "-------------------------------------------------------------------------" << std::endl;
-			nEntr = 10000;
+			nEntr = 50001;
 		}
 	}
 

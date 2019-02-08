@@ -25,7 +25,8 @@ public:
 	
 	bool saveCutflows;
 
-	
+	std::string year;
+
 	// cuts as parameters, to modify easily
 	double MET_cut;
 	bool no_trigger;
