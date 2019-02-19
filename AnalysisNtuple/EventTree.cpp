@@ -511,7 +511,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	    chain->SetBranchStatus("Photon_cutBased",1);
 	    chain->SetBranchAddress("Photon_cutBased", &phoIDcutbased_);
 	}
-	if (year=="2017"){
+	if (year=="2017" || year=="2018"){
 	    chain->SetBranchStatus("Photon_cutBasedBitmap",1);
 	    chain->SetBranchAddress("Photon_cutBasedBitmap", &phoIDcutbased_);
 	}
@@ -813,6 +813,12 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	    chain->SetBranchStatus("HLT_Ele32_WPTight_Gsf_L1DoubleEG",1);
 	    chain->SetBranchAddress("HLT_Ele32_WPTight_Gsf_L1DoubleEG",&HLT_Ele32_WPTight_Gsf_L1DoubleEG_);
 
+	    chain->SetBranchStatus("HLT_IsoMu24",1);
+	    chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
+
+	    chain->SetBranchStatus("HLT_IsoTkMu24",1);
+	    chain->SetBranchAddress("HLT_IsoTkMu24",&HLT_IsoTkMu24_);
+
 	    chain->SetBranchStatus("HLT_IsoMu24_eta2p1",1);
 	    chain->SetBranchAddress("HLT_IsoMu24_eta2p1",&HLT_IsoMu24_eta2p1_);
 
@@ -821,6 +827,20 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 
 	}
 
+	if (year=="2018"){
+            chain->SetBranchStatus("HLT_Ele32_WPTight_Gsf",1);
+            chain->SetBranchAddress("HLT_Ele32_WPTight_Gsf",&HLT_Ele32_WPTight_Gsf_);
+
+            chain->SetBranchStatus("HLT_Ele35_WPTight_Gsf",1);
+            chain->SetBranchAddress("HLT_Ele35_WPTight_Gsf",&HLT_Ele35_WPTight_Gsf_);
+
+            chain->SetBranchStatus("HLT_Ele38_WPTight_Gsf",1);
+            chain->SetBranchAddress("HLT_Ele38_WPTight_Gsf",&HLT_Ele38_WPTight_Gsf_);
+
+	    chain->SetBranchStatus("HLT_IsoMu24",1);
+	    chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
+
+	}	
 
         chain->SetBranchStatus("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL",1);
         chain->SetBranchAddress("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL",&HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_);

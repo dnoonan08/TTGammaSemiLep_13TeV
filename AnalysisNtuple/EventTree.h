@@ -1220,6 +1220,10 @@ public:
         Bool_t   HLT_IsoMu24_eta2p1_;
         Bool_t   HLT_IsoMu27_;
 
+        Bool_t   HLT_Ele32_WPTight_Gsf_;
+        Bool_t   HLT_Ele35_WPTight_Gsf_;
+        Bool_t   HLT_Ele38_WPTight_Gsf_;
+
         Bool_t   HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_;
         Bool_t   HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_;
         Bool_t   HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_;
