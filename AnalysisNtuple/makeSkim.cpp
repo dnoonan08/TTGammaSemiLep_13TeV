@@ -118,9 +118,11 @@ int main(int ac, char** av){
 		return -1;		
 	}
 
-	std::clock_t startClock;
-	double duration;
-	startClock = clock();
+	auto startClock = std::chrono::high_resolution_clock::now();
+
+	// std::clock_t startClock;
+	// double duration;
+	// startClock = clock();
 
 	TFile* outFile = TFile::Open( av[3] ,"RECREATE" );
 	TTree* newTree = tree->chain->CloneTree(0);
@@ -163,9 +165,18 @@ int main(int ac, char** av){
 	for(Long64_t entry= 0; entry < nEntr; entry++){
 	//	for(Long64_t entry= 0; entry < 300; entry++){ 	
 		if(entry%dumpFreq == 0) {
-			duration =  ( clock() - startClock ) / (double) CLOCKS_PER_SEC;
-			std::cout << "processing entry " << entry << " out of " << nEntr << " : " << duration << " seconds since last progress" << std::endl;
-			startClock = clock();
+		    
+			// duration =  ( clock() - startClock ) / (double) CLOCKS_PER_SEC;
+			// std::cout << "processing entry " << entry << " out of " << nEntr << " : " << duration << " seconds since last progress" << std::endl;
+			// startClock = clock();
+
+			std::cout << "processing entry " << entry << " out of " << nEntr << " : " 
+				  << std::chrono::duration<double>(std::chrono::high_resolution_clock::now()-startClock).count()
+				  << " seconds since last progress" << std::endl;
+
+			startClock = std::chrono::high_resolution_clock::now();			
+
+
 		}
 		tree->GetEntry(entry);
 

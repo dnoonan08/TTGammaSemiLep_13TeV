@@ -31,13 +31,16 @@ bool overlapRemoval_Tchannel(EventTree* tree);
 double getJetResolution(double, double, double);
 
 bool dileptonsample;
-std::clock_t startClock;
-double duration;
+
+auto startClock = std::chrono::high_resolution_clock::now();
+
+//std::clock_t startClock;
+//double duration;
 
 #ifdef makeAnalysisNtuple_cxx
 makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 {
-    startClock = clock();
+    startClock = std::chrono::high_resolution_clock::now();
     std::string year(av[1]);
     tree = new EventTree(ac-4, false, year, av+4);
 
@@ -271,7 +274,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	if (nEntr > 1000) nEntr = 1000;
 	saveAllEntries = true;
     }
-    //nEntr = 10000;
+    //    nEntr = 4000;
 
     int dumpFreq = 1;
     if (nEntr >50)     { dumpFreq = 5; }
@@ -292,9 +295,15 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
     for(Long64_t entry=0; entry<nEntr; entry++){
 	if(entry%dumpFreq == 0){
-	    duration =  ( clock() - startClock ) / (double) CLOCKS_PER_SEC;
-	    std::cout << "processing entry " << entry << " out of " << nEntr << " : " << duration << " seconds since last progress" << std::endl;
-	    startClock = clock();
+	    // duration =  ( clock() - startClock ) / (double) CLOCKS_PER_SEC;
+	    // std::cout << "processing entry " << entry << " out of " << nEntr << " : " << duration << " seconds since last progress" << std::endl;
+	    // startClock = clock();
+
+	    std::cout << "processing entry " << entry << " out of " << nEntr << " : " 
+		      << std::chrono::duration<double>(std::chrono::high_resolution_clock::now()-startClock).count()
+		      << " seconds since last progress" << std::endl;
+	    
+	    startClock = std::chrono::high_resolution_clock::now();			
 
 	}
 	//  cout << entry << endl;

@@ -706,7 +706,6 @@ void makeAnalysisNtuple::InitVariables()
     _loosePhotonIsHadronicFake.clear();
 
     _jetPt.clear();
-    _fwdJetPt.clear();
     /* _jetEn.clear(); */
     _jetEta.clear();
     _jetPhi.clear();
@@ -718,6 +717,12 @@ void makeAnalysisNtuple::InitVariables()
     _jetDeepC.clear();
 
     _jetGenJetIdx.clear();
+
+    _fwdJetPt.clear();
+    _fwdJetEta.clear();
+    _fwdJetPhi.clear();
+    _fwdJetMass.clear();
+
 
     /* _jetPartonID.clear(); */
     /* _jetGenJetPt.clear(); */
