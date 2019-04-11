@@ -208,8 +208,6 @@ int main(int ac, char** av){
 				  << " seconds since last progress" << std::endl;
 
 			startClock = std::chrono::high_resolution_clock::now();			
-
-			cout << tree->event_ << endl;
 		}
 		tree->GetEntry(entry);
 

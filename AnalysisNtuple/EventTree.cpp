@@ -163,17 +163,25 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
  	chain->SetBranchStatus("Electron_pfRelIso03_all",1);
  	chain->SetBranchAddress("Electron_pfRelIso03_all", &elePFRelIso_);
 	
-	chain->SetBranchStatus("Electron_cutBased",1);
-	chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
+	// chain->SetBranchStatus("Electron_cutBased",1);
+	// chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
 	
 	if (year=="2016"){
 	    chain->SetBranchStatus("Electron_cutBased_Sum16",1);
 	    chain->SetBranchAddress("Electron_cutBased_Sum16", &eleIDcutbased_);
+
+	    chain->SetBranchStatus("Electron_vidNestedWPBitmapSum16",1);
+	    chain->SetBranchAddress("Electron_vidNestedWPBitmapSum16", &eleVidWPBitmap_);
+
 	}
 	if (year=="2017" || year=="2018"){
 
 	    chain->SetBranchStatus("Electron_cutBased",1);
 	    chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
+
+	    chain->SetBranchStatus("Electron_vidNestedWPBitmap",1);
+	    chain->SetBranchAddress("Electron_vidNestedWPBitmap", &eleVidWPBitmap_);
+	
 	}
 
  	chain->SetBranchStatus("Electron_dxy",1);
@@ -182,8 +190,6 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
  	chain->SetBranchStatus("Electron_dz",1);
  	chain->SetBranchAddress("Electron_dz", &eleDz_);
 
- 	chain->SetBranchStatus("Electron_vidNestedWPBitmap",1);
- 	chain->SetBranchAddress("Electron_vidNestedWPBitmap", &eleVidWPBitmap_);
 
  	chain->SetBranchStatus("Electron_dr03EcalRecHitSumEt",1);
  	chain->SetBranchAddress("Electron_dr03EcalRecHitSumEt", &eleEcalSumEtDr03_);

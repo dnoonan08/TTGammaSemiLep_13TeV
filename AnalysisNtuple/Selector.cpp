@@ -291,10 +291,10 @@ void Selector::filter_electrons(){
         
 
         // D0 and Dz cuts are different for barrel and endcap
-        bool passD0 = ((absEta < 1.479 && tree->eleD0_[eleInd] < 0.05) ||
-                       (absEta > 1.479 && tree->eleD0_[eleInd] < 0.1));
-        bool passDz = ((absEta < 1.479 && tree->eleDz_[eleInd] < 0.1) ||
-                       (absEta > 1.479 && tree->eleDz_[eleInd] < 0.2));
+        bool passD0 = ((absEta < 1.479 && abs(tree->eleD0_[eleInd]) < 0.05) ||
+                       (absEta > 1.479 && abs(tree->eleD0_[eleInd]) < 0.1));
+        bool passDz = ((absEta < 1.479 && abs(tree->eleDz_[eleInd]) < 0.1) ||
+                       (absEta > 1.479 && abs(tree->eleDz_[eleInd]) < 0.2));
         
         
 
@@ -355,7 +355,11 @@ void Selector::filter_electrons(){
         
         
 	if (tree->event_==printEvent){
-	    cout << "-- " << eleInd << " eleSel=" <<  eleSel << " looseSel=" <<  looseSel << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->elePhi_[eleInd]<< " eleID="<<eleID << " passD0="<<passD0<< " passDz="<<passDz<< endl;
+	    cout << "-- " << eleInd << " eleSel=" <<  eleSel << " looseSel=" <<  looseSel << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->elePhi_[eleInd]<< " eleID="<<eleID << " passD0="<<passD0<< "("<<tree->eleD0_[eleInd]<<") passDz="<<passDz<< "("<<tree->eleD0_[eleInd]<<")"<< endl;
+	    std::cout << std::setbase(8);
+	    cout << "            idBits="<<tree->eleVidWPBitmap_[eleInd] << endl;
+	    std::cout << std::setbase(10);
+
 	} 
         
 	
@@ -366,6 +370,15 @@ void Selector::filter_electrons(){
             ElectronsLoose.push_back(eleInd);
         }
     }
+
+    if (tree->event_==printEvent){
+	if (year=="2016"){
+	    cout << "            idBits :   MinPtCut, GsfEleSCEtaMultiRangeCut, GsfEleDEtaInSeedCut, GsfEleDPhiInCut, GsfEleFull5x5SigmaIEtaIEtaCut, GsfEleHadronicOverEMCut, GsfEleEInverseMinusPInverseCut, GsfEleEffAreaPFIsoCut, GsfEleConversionVetoCut, GsfEleMissingHitsCut" << endl;
+	} else {
+	    cout << "            idBits :   MinPtCut, GsfEleSCEtaMultiRangeCut, GsfEleDEtaInSeedCut, GsfEleDPhiInCut, GsfEleFull5x5SigmaIEtaIEtaCut, GsfEleHadronicOverEMEnergyScaledCut, GsfEleEInverseMinusPInverseCut, GsfEleRelPFIsoScaledCut, GsfEleConversionVetoCut, GsfEleMissingHitsCut" << endl;
+	}
+    }
+
 }
 
 
