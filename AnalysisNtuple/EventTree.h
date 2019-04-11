@@ -181,7 +181,7 @@ public:
 	Float_t         eleMass_[10];
 	Float_t         elePFRelIso_[10];
 	Float_t         elePFRelChIso_[10];
-	Bool_t          eleIDcutbased_[10];
+	Int_t           eleIDcutbased_[10];
 	Float_t         eleD0_[10];
 	Float_t         eleDz_[10];
 
@@ -632,8 +632,10 @@ public:
 	Float_t         muMass_[10];
 	Float_t         muPFRelIso_[10];
 	Bool_t          muMediumId_[10];
-	Bool_t          muSoftId_[10];
 	Bool_t          muTightId_[10];
+	Bool_t          muIsPFMuon_[10];
+	Bool_t          muIsGlobal_[10];
+	Bool_t          muIsTracker_[10];
 
 	/* Int_t nMu_; */
 	/* vector<Int_t>*    muCharge_; */

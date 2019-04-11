@@ -10,6 +10,8 @@ EventPick::EventPick(std::string titleIn){
 	year = "2016";
 	saveCutflows = false;
 
+	printEvent = -1;
+
 	cutFlow_ele = new TH1D("cut_flow_ele","cut flow e+jets",15,-0.5,14.5);
 	cutFlow_ele->SetDirectory(0);
 	set_cutflow_labels_ele(cutFlow_ele); 
@@ -76,6 +78,9 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 	passAll_ele = false;
 	passAll_mu = false;
 
+	if (tree->event_==printEvent){
+	    cout << "Found Event Number " << printEvent << endl;
+	}
 
 	bool Pass_trigger_mu  = false;
 	bool Pass_trigger_ele = false;
@@ -100,6 +105,11 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 		cutFlowWeight_mu->Fill(0.0,weight);
 	}
 
+	if (tree->event_==printEvent){
+	    cout << "TriggerMu "<< Pass_trigger_mu << endl;
+	    cout << "TriggerEle "<< Pass_trigger_ele << endl;
+	}
+
 
 	passPresel_mu  = true;
 	passPresel_ele = true;
@@ -107,9 +117,18 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 
 
         bool isPVGood = (tree->pvNDOF_>4 && 
-                         sqrt(tree->pvX_ * tree->pvX_ + tree->pvY_ * tree->pvY_)<2 &&
-                         abs(tree->pvZ_) < 2);
+                         sqrt(tree->pvX_ * tree->pvX_ + tree->pvY_ * tree->pvY_)<2. &&
+                         abs(tree->pvZ_) < 24.);
 
+	if (tree->event_==printEvent){
+	    cout << "PV "<< isPVGood << endl;
+	    if (!isPVGood){
+		cout << "    ndof="<<tree->pvNDOF_ << "   (>4)" << endl;
+		cout << "    pX="<<tree->pvX_ <<  "   (<2)" << endl;
+		cout << "    pY="<<tree->pvY_ <<  "   (<2)" << endl;
+		cout << "    pZ="<<tree->pvZ_ <<  "   (<2)" << endl;
+	    }
+	}
 
 	// Cut events that fail ele trigger
 	if( passPresel_mu &&  Pass_trigger_mu) { if (saveCutflows) {cutFlow_mu->Fill(1); cutFlowWeight_mu->Fill(1,weight); } }
@@ -131,6 +150,15 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
           return;
 	}
 
+
+	if (tree->event_==printEvent){
+	    cout << "Muons "<< selector->Muons.size() << endl;
+	    cout << "  MuonsLoose "<< selector->MuonsLoose.size() << endl;
+	    cout << "Electrons "<< selector->Electrons.size() << endl;
+	    cout << "  ElectronsLoose "<< selector->ElectronsLoose.size() << endl;
+	    cout << "Jets "<< selector->Jets.size() << endl;
+	    cout << "BJets "<< selector->bJets.size() << endl;
+	}
 
 	// Cut on events with ==1 muon, no loose muons, no loose or tight electrons
 	if( passPresel_mu && selector->Muons.size() == Nmu_eq){
@@ -203,6 +231,11 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 
 
 
+	if (tree->event_==printEvent){
+	    cout << "PassLepMu  "<< passPresel_mu << endl;
+	    cout << "PassLepEle "<< passPresel_ele << endl;
+	}
+
 	// NJet cuts for muons
 	// Implemented in this way (with a loop) to check for numbers failing each level of cut < Njet cut, and filling cutflow histo
 	// cutflow histo will not be filled for bins where the cut is > Njet_ge (ex, if cut is at 3, Njet>=4 bin is left empty)
@@ -210,6 +243,12 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
           if(passPresel_mu && selector->Jets.size() >= ijetCut ) { if (saveCutflows) {cutFlow_mu->Fill(5+ijetCut); cutFlowWeight_mu->Fill(5+ijetCut,weight);}}
           else passPresel_mu = false;
 	}
+
+	if (tree->event_==printEvent){
+	    cout << "PassJetMu  "<< passPresel_mu << endl;
+	    cout << "PassJetEle "<< passPresel_ele << endl;
+	}
+
 
 	// Nbtag cuts for muons
 	if (!ZeroBExclusive){
@@ -219,6 +258,14 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
           }
 	} else {
           if(passPresel_mu && selector->bJets.size() !=0) passPresel_mu = false;
+	}
+
+	if (tree->event_==printEvent){
+	    cout << "PassBMu  "<< passPresel_mu << endl;
+	    cout << "PassBEle "<< passPresel_ele << endl;
+
+	    exit (EXIT_FAILURE);
+
 	}
 
 

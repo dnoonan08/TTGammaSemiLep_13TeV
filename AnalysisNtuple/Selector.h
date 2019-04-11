@@ -135,6 +135,8 @@ public:
 
 	std::string year;
 
+	int printEvent;
+
 	void clear_vectors();
 
 private:

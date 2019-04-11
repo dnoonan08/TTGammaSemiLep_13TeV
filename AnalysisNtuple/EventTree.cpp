@@ -162,9 +162,19 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 
  	chain->SetBranchStatus("Electron_pfRelIso03_all",1);
  	chain->SetBranchAddress("Electron_pfRelIso03_all", &elePFRelIso_);
+	
+	chain->SetBranchStatus("Electron_cutBased",1);
+	chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
+	
+	if (year=="2016"){
+	    chain->SetBranchStatus("Electron_cutBased_Sum16",1);
+	    chain->SetBranchAddress("Electron_cutBased_Sum16", &eleIDcutbased_);
+	}
+	if (year=="2017" || year=="2018"){
 
- 	chain->SetBranchStatus("Electron_cutBased",1);
- 	chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
+	    chain->SetBranchStatus("Electron_cutBased",1);
+	    chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
+	}
 
  	chain->SetBranchStatus("Electron_dxy",1);
  	chain->SetBranchAddress("Electron_dxy", &eleD0_);
@@ -309,8 +319,8 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	chain->SetBranchStatus("Muon_mass",1);
 	chain->SetBranchAddress("Muon_mass", &muMass_);
 
-	chain->SetBranchStatus("Muon_pfRelIso03_all",1);
-	chain->SetBranchAddress("Muon_pfRelIso03_all", &muPFRelIso_);
+	chain->SetBranchStatus("Muon_pfRelIso04_all",1);
+	chain->SetBranchAddress("Muon_pfRelIso04_all", &muPFRelIso_);
 
         chain->SetBranchStatus("Muon_tightId",1);
         chain->SetBranchAddress("Muon_tightId", &muTightId_);
@@ -318,8 +328,14 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
         chain->SetBranchStatus("Muon_mediumId",1);
         chain->SetBranchAddress("Muon_mediumId", &muMediumId_);
 
-        chain->SetBranchStatus("Muon_softId",1);
-        chain->SetBranchAddress("Muon_softId", &muSoftId_);
+        chain->SetBranchStatus("Muon_isPFcand",1);
+        chain->SetBranchAddress("Muon_isPFcand", &muIsPFMuon_);
+
+        chain->SetBranchStatus("Muon_isGlobal",1);
+        chain->SetBranchAddress("Muon_isGlobal", &muIsGlobal_);
+
+        chain->SetBranchStatus("Muon_isTracker",1);
+        chain->SetBranchAddress("Muon_isTracker", &muIsTracker_);
 
 
 	// jets

@@ -41,10 +41,33 @@ auto startClock = std::chrono::high_resolution_clock::now();
 makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 {
     startClock = std::chrono::high_resolution_clock::now();
+
+    int eventNum = -1;
+    std::string eventStr = "-1";
+
+    //TEMP
+    if (std::string(av[1])=="event"){
+	
+	std::string tempEventStr(av[2]);
+	eventNum = std::stoi(tempEventStr);
+	for (int i = 1; i < ac-2; i++){
+	    av[i] = av[i+2];
+	    //cout << av[i] << " ";
+	}
+	ac = ac-2;
+	//	cout  << endl;
+	eventStr = tempEventStr;
+	//cout << eventStr << "  "  << eventNum << endl;
+    }
+    
     std::string year(av[1]);
     tree = new EventTree(ac-4, false, year, av+4);
 
-    sampleType = av[2];
+    // //TEMP
+    // sampleType = av[2];
+    // int eventNum =  std::stoi(sampleType);
+
+    // sampleType = "Test";
     systematicType = "";
     cout << sampleType << endl;
     
@@ -81,6 +104,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
 	PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
     }
+    if (eventNum > -1) {
+	string cut = "event=="+eventStr;
+	cout << "Selecting only entries with " << cut << endl;
+	tree->chain = (TChain*) tree->chain->CopyTree(cut.c_str());
+    }
 
     selector = new Selector();
     
@@ -89,6 +117,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     selector->year = year;
     evtPick->year = year;
     
+    selector->printEvent = eventNum;
+    evtPick->printEvent = eventNum;
+
+    
+
     selector->pho_applyPhoID = false;
     selector->looseJetID = false;
     
@@ -268,7 +301,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     bool saveAllEntries = false;
 
     if (sampleType=="Test") {
-	if (nEntr > 10000) nEntr = 10000;
+	if (nEntr > 20000) nEntr = 20000;
     }
     if (sampleType=="TestAll") {
 	if (nEntr > 1000) nEntr = 1000;

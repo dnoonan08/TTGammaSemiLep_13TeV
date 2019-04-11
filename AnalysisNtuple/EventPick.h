@@ -27,6 +27,8 @@ public:
 
 	std::string year;
 
+	int printEvent;
+
 	// cuts as parameters, to modify easily
 	double MET_cut;
 	bool no_trigger;

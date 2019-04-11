@@ -18,6 +18,8 @@ Selector::Selector(){
 	jet_Pt_cut = 30;
 	jet_Eta_cut = 2.4;
 
+	printEvent = -1;
+
 	looseJetID = true;
 	veto_lep_jet_dR = 0.4; // remove jets with a lepton closer than this cut level
 	veto_pho_jet_dR = 0.1; // remove jets with a photon closer than this cut level
@@ -75,7 +77,6 @@ Selector::Selector(){
 
 void Selector::process_objects(EventTree* inp_tree){
 	tree = inp_tree;
-
 	clear_vectors();
 	//	cout << "before selector muons" << endl;
 	filter_muons();
@@ -125,6 +126,10 @@ void Selector::clear_vectors(){
 }
 
 void Selector::filter_photons(){
+    if (tree->event_==printEvent){
+	cout << "Found Event Staring Photons" << endl;
+	cout << " nPho=" << tree->nPho_ << endl;
+    }
     for(int phoInd = 0; phoInd < tree->nPho_; ++phoInd){
 
         double et = tree->phoEt_[phoInd];
@@ -132,6 +137,7 @@ void Selector::filter_photons(){
         double absEta = TMath::Abs(eta);
         double phi = tree->phoPhi_[phoInd];
 
+	
         bool isEB = tree->phoIsEB_[phoInd];
         bool isEE = tree->phoIsEE_[phoInd];
         
@@ -188,6 +194,10 @@ void Selector::filter_photons(){
                           passDR_lep_pho && 
                           !hasPixelSeed);
 
+	if (tree->event_==printEvent){
+	    cout << "-- " << phoInd << " pt="<<et<< " eta="<<eta<< " phi="<<phi<< " presel="<< phoPresel<< " drlepgamma="<<passDR_lep_pho<< " medID="<<passMediumPhotonID<<endl;
+	} 
+
         if(phoPresel && passMediumPhotonID){
             Photons.push_back(phoInd);
         }
@@ -242,6 +252,10 @@ void Selector::filter_photons_jetsDR(){
 }
 
 void Selector::filter_electrons(){
+    if (tree->event_==printEvent){
+	cout << "Found Event, Starting Electrons" << endl;
+	cout << " nEle=" << tree->nEle_ << endl;
+    }
 
     for(int eleInd = 0; eleInd < tree->nEle_; ++eleInd){
 
@@ -331,8 +345,7 @@ void Selector::filter_electrons(){
                        passTightID &&
                        passD0 &&
                        passDz);
-        
-	
+
         bool looseSel = (passEtaEBEEGap &&
                          absEta < ele_EtaLoose_cut &&
                          pt > ele_PtLoose_cut &&
@@ -341,6 +354,11 @@ void Selector::filter_electrons(){
                          passDz);
         
         
+	if (tree->event_==printEvent){
+	    cout << "-- " << eleInd << " eleSel=" <<  eleSel << " looseSel=" <<  looseSel << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->elePhi_[eleInd]<< " eleID="<<eleID << " passD0="<<passD0<< " passDz="<<passDz<< endl;
+	} 
+        
+	
         if( eleSel ){
             Electrons.push_back(eleInd);
         }
@@ -354,6 +372,10 @@ void Selector::filter_electrons(){
 
 
 void Selector::filter_muons(){
+    if (tree->event_==printEvent){
+	cout << "Found Event, Starting Muons" << endl;
+	cout << " nMu=" << tree->nMuon_ << endl;
+    }
     for(int muInd = 0; muInd < tree->nMuon_; ++muInd){
 
 	double eta = tree->muEta_[muInd];
@@ -361,7 +383,7 @@ void Selector::filter_muons(){
 
 	double PFrelIso_corr = tree->muPFRelIso_[muInd];
 
-	bool looseMuonID = tree->muSoftId_[muInd];
+	bool looseMuonID = tree->muIsPFMuon_[muInd] && (tree->muIsTracker_[muInd] || tree->muIsGlobal_[muInd]);
 	bool mediumMuonID = tree->muMediumId_[muInd];
 	bool tightMuonID = tree->muTightId_[muInd];
 
@@ -374,8 +396,12 @@ void Selector::filter_muons(){
 	bool passLoose = (pt > mu_PtLoose_cut &&
 			  TMath::Abs(eta) < mu_Eta_loose &&
 			  looseMuonID &&
-			  (!QCDselect ? (PFrelIso_corr < mu_RelIso_loose): PFrelIso_corr > mu_RelIso_tight)
+			  (!QCDselect ? (PFrelIso_corr < mu_RelIso_loose): PFrelIso_corr > mu_RelIso_loose)
 			  );
+
+	if (tree->event_==printEvent){
+	    cout << "-- " << muInd << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->muPhi_[muInd]<< " passTight="<<passTight<< " passLoose="<<passLoose << " pfRelIso="<<PFrelIso_corr << endl;
+	} 
 	
 	if(passTight){
 	  Muons.push_back(muInd);
@@ -389,6 +415,9 @@ void Selector::filter_muons(){
 
 void Selector::filter_jets(){
   //    TLorentzVector tMET;
+    if (tree->event_==printEvent){
+	cout << "Found Event Staring Jets" << endl;
+    }
 
     for(int jetInd = 0; jetInd < tree->nJet_; ++jetInd){
         double pt = tree->jetPt_[jetInd];
@@ -396,6 +425,8 @@ void Selector::filter_jets(){
         double phi = tree->jetPhi_[jetInd];
 
         bool jetID_pass = (tree->jetID_[jetInd]>>0 & 1 && looseJetID) || (tree->jetID_[jetInd]>>1 & 1);
+
+
         
 
 // 		double jetSmear = 1.;
@@ -425,8 +456,11 @@ void Selector::filter_jets(){
         bool passDR_pho_jet = true;
         //loop over selected photons
         for(std::vector<int>::const_iterator phoInd = Photons.begin(); phoInd != Photons.end(); phoInd++) {
-          if (dR(eta, phi, tree->phoEta_[*phoInd], tree->phoPhi_[*phoInd]) < veto_pho_jet_dR) passDR_pho_jet = false;
-        }
+	    if (tree->event_==printEvent){
+		cout << "       phoInd=" << *phoInd << "   dR=" << dR(eta, phi, tree->phoEta_[*phoInd], tree->phoPhi_[*phoInd]) << "  phoEta=" << tree->phoEta_[*phoInd] << "  phoPhi=" << tree->phoPhi_[*phoInd] << endl;
+	    }
+	    if (dR(eta, phi, tree->phoEta_[*phoInd], tree->phoPhi_[*phoInd]) < veto_pho_jet_dR) passDR_pho_jet = false;
+	}
 
         bool jetPresel = (pt > jet_Pt_cut &&
                           TMath::Abs(eta) < jet_Eta_cut &&
@@ -434,6 +468,19 @@ void Selector::filter_jets(){
                           passDR_lep_jet &&
                           passDR_pho_jet
                           );
+
+	if (tree->event_==printEvent){
+	    cout << "   pt=" << pt << "  eta=" << eta << " phi=" << phi << "  jetID=" << jetID_pass << endl;
+	    cout << "         presel=" << jetPresel << endl;
+	    cout << "              pt=" << (pt > jet_Pt_cut) <<endl;
+	    cout << "              eta=" << (TMath::Abs(eta) < jet_Eta_cut) <<endl;
+	    cout << "              jetID=" << jetID_pass <<endl;
+	    cout << "              dRLep=" << passDR_lep_jet <<endl;
+	    cout << "              dRPho=" << passDR_pho_jet << endl;
+	    cout << "              btag="<<(tree->jetBtagDeepB_[jetInd] > btag_cut_DeepCSV) << endl; 
+
+	}
+
         
         bool fwdjetPresel = (pt> jet_Pt_cut && jetID_pass && TMath::Abs(eta)<3.0 && TMath::Abs(eta)>2.5 &&
                              passDR_lep_jet &&

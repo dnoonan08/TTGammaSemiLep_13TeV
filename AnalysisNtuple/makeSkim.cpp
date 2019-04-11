@@ -22,13 +22,32 @@ int main(int ac, char** av){
 		return -1;
 	}
 
+	int eventNum = -1;
+	std::string eventStr = "-1";
+
 	std::cout << "Starting" << std::endl;
 
 	// input: dealing with TTree first
 	bool isMC = true;
 	bool xRootDAccess = false;
 
+	//TEMP
+        if (std::string(av[1])=="event"){
+
+	    std::string tempEventStr(av[2]);
+	    eventNum = std::stoi(tempEventStr);
+	    for (int i = 1; i < ac-2; i++){
+		av[i] = av[i+2];
+		//cout << av[i] << " ";
+	    }
+	    ac = ac-2;
+	    //cout  << endl;
+	    eventStr = tempEventStr;
+	    //cout << eventStr << "  "  << eventNum << endl;
+	}
+
 	std::string year(av[1]);	
+
 
 	//check for xrootd argument before file list
 	//
@@ -45,6 +64,12 @@ int main(int ac, char** av){
 	}
 
 
+	if (eventNum > -1) {
+	    string cut = "event=="+eventStr;
+	    cout << "Selecting only entries with "<<cut << endl;
+	    tree->chain = (TChain*) tree->chain->CopyTree(cut.c_str());
+	}
+
 	Selector* selector = new Selector();
 
 	selector->smearJetPt = false;
@@ -55,12 +80,18 @@ int main(int ac, char** av){
 	selector->scaleEle = false;
 	selector->scalePho = false;
 
+
+
 	selector->year = year;
 
 	EventPick* evtPick = new EventPick("nominal");
 	evtPick->MET_cut = -1.0;	
 
 	evtPick->year = year;
+
+	selector->printEvent = eventNum;
+	evtPick->printEvent = eventNum;
+
 
 	std::string outDirName(av[3]);
 	// antiselection for QCD fit
@@ -142,7 +173,9 @@ int main(int ac, char** av){
 			std::cout << "-------------------------------------------------------------------------" << std::endl;
 			std::cout << "Since this is a Test (based on output name) only running on 50,001 events" << std::endl;
 			std::cout << "-------------------------------------------------------------------------" << std::endl;
-			nEntr = 50001;
+			if (nEntr>50001){
+			    nEntr = 50001;
+			}
 		}
 	}
 
@@ -176,10 +209,12 @@ int main(int ac, char** av){
 
 			startClock = std::chrono::high_resolution_clock::now();			
 
-
+			cout << tree->event_ << endl;
 		}
 		tree->GetEntry(entry);
 
+		//		if (tree->event_!=year) continue;
+		
 		hPU_->Fill(tree->nPU_);
 		hPUTrue_->Fill(tree->nPUTrue_);
 
