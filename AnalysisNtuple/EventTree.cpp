@@ -162,6 +162,9 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 
  	chain->SetBranchStatus("Electron_pfRelIso03_all",1);
  	chain->SetBranchAddress("Electron_pfRelIso03_all", &elePFRelIso_);
+
+	chain->SetBranchStatus("Electron_sieie",1);
+ 	chain->SetBranchAddress("Electron_sieie", &eleSIEIE_);
 	
 	// chain->SetBranchStatus("Electron_cutBased",1);
 	// chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
@@ -834,6 +837,9 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	if (year=="2017"){
 	    chain->SetBranchStatus("HLT_Ele32_WPTight_Gsf_L1DoubleEG",1);
 	    chain->SetBranchAddress("HLT_Ele32_WPTight_Gsf_L1DoubleEG",&HLT_Ele32_WPTight_Gsf_L1DoubleEG_);
+
+	    chain->SetBranchStatus("HLT_Ele35_WPTight_Gsf",1);
+	    chain->SetBranchAddress("HLT_Ele35_WPTight_Gsf",&HLT_Ele35_WPTight_Gsf_);
 
 	    chain->SetBranchStatus("HLT_IsoMu24",1);
 	    chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);

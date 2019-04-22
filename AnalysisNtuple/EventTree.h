@@ -184,6 +184,7 @@ public:
 	Int_t           eleIDcutbased_[10];
 	Float_t         eleD0_[10];
 	Float_t         eleDz_[10];
+	Float_t         eleSIEIE_[10];
 
 	Int_t           eleVidWPBitmap_[10];
 	Float_t         eleEcalSumEtDr03_[10];

@@ -355,7 +355,10 @@ void Selector::filter_electrons(){
         
         
 	if (tree->event_==printEvent){
-	    cout << "-- " << eleInd << " eleSel=" <<  eleSel << " looseSel=" <<  looseSel << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->elePhi_[eleInd]<< " eleID="<<eleID << " passD0="<<passD0<< "("<<tree->eleD0_[eleInd]<<") passDz="<<passDz<< "("<<tree->eleD0_[eleInd]<<")"<< endl;
+	    cout << "-- " << eleInd << " eleSel=" <<  eleSel << " looseSel=" <<  looseSel << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->elePhi_[eleInd]<< " eleID="<<eleID << " passD0="<<passD0<< "("<<tree->eleD0_[eleInd]<<") passDz="<<passDz<< "("<<tree->eleDz_[eleInd]<<")"<< endl;
+	    cout << "            ";
+	    cout << "sieie="<<tree->eleSIEIE_[eleInd];
+	    cout << endl;
 	    std::cout << std::setbase(8);
 	    cout << "            idBits="<<tree->eleVidWPBitmap_[eleInd] << endl;
 	    std::cout << std::setbase(10);
