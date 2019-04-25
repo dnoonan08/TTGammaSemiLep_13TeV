@@ -90,7 +90,8 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 	    Pass_trigger_ele = tree->HLT_Ele32_eta2p1_WPTight_Gsf_ || no_trigger;
 	}
 	if (year=="2017"){
-	    Pass_trigger_mu = (tree->HLT_IsoMu24_ || tree->HLT_IsoTkMu24_ || tree->HLT_IsoMu24_eta2p1_ || tree->HLT_IsoMu27_) || no_trigger;
+	    //	    Pass_trigger_mu = (tree->HLT_IsoMu24_ || tree->HLT_IsoTkMu24_ || tree->HLT_IsoMu24_eta2p1_ || tree->HLT_IsoMu27_) || no_trigger;
+	    Pass_trigger_mu = (tree->HLT_IsoMu27_) || no_trigger;
 	    Pass_trigger_ele = tree->HLT_Ele35_WPTight_Gsf_ || no_trigger;
 	}
 	if (year=="2018"){
@@ -107,6 +108,7 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 
 	if (tree->event_==printEvent){
 	    cout << "TriggerMu "<< Pass_trigger_mu << endl;
+	    cout << "    HLT_IsoMu27" << tree->HLT_IsoMu27_ << endl;
 	    cout << "TriggerEle "<< Pass_trigger_ele << endl;
 	}
 

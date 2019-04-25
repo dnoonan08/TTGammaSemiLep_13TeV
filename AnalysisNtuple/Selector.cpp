@@ -20,7 +20,7 @@ Selector::Selector(){
 
 	printEvent = -1;
 
-	looseJetID = true;
+	looseJetID = false;
 	veto_lep_jet_dR = 0.4; // remove jets with a lepton closer than this cut level
 	veto_pho_jet_dR = 0.1; // remove jets with a photon closer than this cut level
 
@@ -416,7 +416,7 @@ void Selector::filter_muons(){
 			  );
 
 	if (tree->event_==printEvent){
-	    cout << "-- " << muInd << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->muPhi_[muInd]<< " passTight="<<passTight<< " passLoose="<<passLoose << " pfRelIso="<<PFrelIso_corr << endl;
+	    cout << "-- " << muInd << " passTight="<<passTight<< " passLoose="<<passLoose << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->muPhi_[muInd]<< " tightID="<<tightMuonID<< " looseID="<<looseMuonID << " pfRelIso="<<PFrelIso_corr << endl;
 	} 
 	
 	if(passTight){
@@ -432,7 +432,7 @@ void Selector::filter_muons(){
 void Selector::filter_jets(){
   //    TLorentzVector tMET;
     if (tree->event_==printEvent){
-	cout << "Found Event Staring Jets" << endl;
+    	cout << "Found Event Staring Jets" << endl;
     }
 
     for(int jetInd = 0; jetInd < tree->nJet_; ++jetInd){
@@ -440,9 +440,11 @@ void Selector::filter_jets(){
         double eta = tree->jetEta_[jetInd];
         double phi = tree->jetPhi_[jetInd];
 
-        bool jetID_pass = (tree->jetID_[jetInd]>>0 & 1 && looseJetID) || (tree->jetID_[jetInd]>>1 & 1);
+	//tight ID for 2016 (bit 1), tightLeptVeto for 2017 (bit 2)
+	int jetID_cutBit = 2;
+	if (year=="2016"){ jetID_cutBit = 1; }
 
-
+        bool jetID_pass = (tree->jetID_[jetInd]>>0 & 1 && looseJetID) || (tree->jetID_[jetInd]>>jetID_cutBit & 1);
         
 
 // 		double jetSmear = 1.;

@@ -177,8 +177,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	    chain->SetBranchAddress("Electron_vidNestedWPBitmapSum16", &eleVidWPBitmap_);
 
 	}
-	if (year=="2017" || year=="2018"){
-
+	if (year=="2017"){
 	    chain->SetBranchStatus("Electron_cutBased",1);
 	    chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
 
