@@ -26,7 +26,7 @@
 #include "TopEventCombinatorics.h"
 
 // Header file that includes all of the event luminosity scaling
-#include "ScaleFactors.h"
+#include "ScaleFactorFunction.h"
 
 
 #include "JEC/UncertaintySourcesList.h"
@@ -311,7 +311,7 @@ class makeAnalysisNtuple {
 
 
     void InitVariables();
-    void FillEvent();
+    void FillEvent(std::string year);
     void InitBranches();
 
     double SFtop(double pt);
@@ -323,7 +323,7 @@ class makeAnalysisNtuple {
 
     void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
     /* int findPhotonParentage(int phoInd, EventTree* tree); */
-    //    int findPhotonGenMatch(int phoInd, EventTree* tree);
+        int findPhotonGenMatch(int phoInd, EventTree* tree);
 
     vector<bool> passPhoMediumID(int phoInd);
     vector<bool> passPhoTightID(int phoInd);

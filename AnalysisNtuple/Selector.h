@@ -68,7 +68,6 @@ public:
 	std::vector<int> bJets;
         std::vector<int> FwdJets;
 	
-	std::vector<double> EleRelIso_corr;
 	std::vector<double> MuRelIso_corr;
 
 	std::vector<double> PhoChHadIso_corr;
@@ -185,7 +184,6 @@ public:
         std::vector<int> bJets;
         std::vector<int> FwdJets;
 
-        std::vector<double> EleRelIso_corr;
         std::vector<double> MuRelIso_corr;
 
         std::vector<double> PhoChHadIso_corr;

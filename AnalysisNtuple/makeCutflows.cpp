@@ -10,7 +10,8 @@
 #include<TH1F.h>
 #include<TCanvas.h>
 
-std::string PUfilename = "Data_2016BCDGH_Pileup.root";
+std::string PUfilename = "Data_2017BCDEF.root";
+//std::string PUfilename = "Data_2016BCDGH_Pileup.root";
 std::string PUfilename_up = "Data_2016BCDGH_Pileup_scaledUp.root";
 std::string PUfilename_down = "Data_2016BCDGH_Pileup_scaledDown.root";
 
@@ -65,7 +66,11 @@ int main(int ac, char** av){
 	if(doOverlapRemoval || doOverlapRemoval_WZ) std::cout << "########## Will apply overlap removal ###########" << std::endl;
 
 
-	EventTree* tree = new EventTree(ac-3, av+3);
+//	EventTree* tree = new EventTree(ac-3, av+3);
+//	EventTree* tree = new EventTree(ac-4, false, year, av+4);
+	EventTree* tree = new EventTree(ac-3, false, "2017", av+3);
+	//EventTree* tree = new EventTree(ac-4, false, "2017", av[3]);
+       // cout<<"tree arg"<<av[3]<<endl;
 	Selector* selector = new Selector();
 	double _evtWeight = getEvtWeight(sampleType);
 
@@ -75,20 +80,20 @@ int main(int ac, char** av){
 	// evtPick->MET_cut = 0;
 
 	evtPick->saveCutflows = true;
-
-	selector->looseJetID = false;
+        evtPick->year="2017";
+	//selector->looseJetID = false;
 
 	selector->useDeepCSVbTag = true;
 
-	evtPick->Njet_ge = 3;	
+	evtPick->Njet_ge = 4;	
 	evtPick->NBjet_ge = 1;	
-
+        evtPick->Npho_ge = 1;
 	//	selector->veto_jet_pho_dR = -1.;
 	//	selector->veto_pho_jet_dR = -1.;
 
 
 	bool dileptonsample = false;
-	if( systematicType=="Dilep")     {
+/*	if( systematicType=="Dilep")     {
 		dileptonsample =true; 
 		evtPick->Nmu_eq=2; 
 		evtPick->Nele_eq=2;
@@ -97,14 +102,15 @@ int main(int ac, char** av){
 	}
 	std::cout << "Dilepton Sample :" << dileptonsample << std::endl;
 
-
+*/
 
 	
 	BTagCalibration calib;
 	if (!selector->useDeepCSVbTag){
 		calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
 	} else {
-		calib = BTagCalibration("deepcsv", "DeepCSV_Moriond17_B_H.csv");
+	//	calib = BTagCalibration("deepcsv", "DeepCSV_Moriond17_B_H.csv");
+		calib = BTagCalibration("deepcsv", "DeepCSV_94XSF_V3_B_F.csv");
 	}
 
 	BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
@@ -167,18 +173,21 @@ int main(int ac, char** av){
 		double weight = 1.;
 		if (isMC){
 			weight = _evtWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);
-			_PUweight    = PUweighter->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
+                         _PUweight    = PUweighter->getWeight(tree->nPUTrue_);
+		//	_PUweight    = PUweighter->getWeight(tree->nPUInfo_, tree->puBX_, tree->puTrue_);
+	//	_PUweight=1;	
 			weight *= _PUweight;
 
 			if (selector->Muons.size()==1) {
 				int muInd_ = selector->Muons.at(0);
-				_muWeight    = getMuSF(tree->muPt_->at(muInd_),tree->muEta_->at(muInd_),1);
+				_muWeight    = getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1);
 				weight *= _muWeight;
 			}
 
 			if (selector->Electrons.size()==1) {
 				int eleInd_ = selector->Electrons.at(0);
-				_eleWeight    = getEleSF(tree->elePt_->at(eleInd_),tree->eleSCEta_->at(eleInd_),1);
+				//_eleWeight    = getEleSF(tree->elePt_[eleInd_],tree->eleSCEta_[eleInd_],1);
+				_eleWeight    = getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_],1);
 				weight *= _eleWeight;
 			}
 
@@ -264,9 +273,10 @@ double getBtagSF(EventTree *tree, Selector *selector,  string sysType, BTagCalib
 	// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1c_Event_reweighting_using_scale
 
 	for(std::vector<int>::const_iterator bjetInd = selector->bJets.begin(); bjetInd != selector->bJets.end(); bjetInd++){
-		jetpt = tree->jetPt_->at(*bjetInd);
-		jeteta = fabs(tree->jetEta_->at(*bjetInd));
-		jetflavor = abs(tree->jetPartonID_->at(*bjetInd));
+		jetpt = tree->jetPt_[*bjetInd];
+		jeteta = fabs(tree->jetEta_[*bjetInd]);
+		//jetflavor = abs(tree->jetPartonID_[*bjetInd]);
+		jetflavor = tree->jetHadFlvr_[*bjetInd];
 		
 		if (jetflavor == 5) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_B, jeteta, jetpt); 
 		else if(jetflavor == 4) SFb = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 
@@ -281,9 +291,10 @@ double getBtagSF(EventTree *tree, Selector *selector,  string sysType, BTagCalib
 			for(std::vector<int>::const_iterator bjetInd2 = selector->bJets.begin(); bjetInd2 != selector->bJets.end(); bjetInd2++){
 				if (*bjetInd==*bjetInd2) continue;
 
-				jetpt = tree->jetPt_->at(*bjetInd2);
-				jeteta = fabs(tree->jetEta_->at(*bjetInd2));
-				jetflavor = abs(tree->jetPartonID_->at(*bjetInd2));
+				jetpt = tree->jetPt_[*bjetInd2];
+				jeteta = fabs(tree->jetEta_[*bjetInd2]);
+				//jetflavor = abs(tree->jetPartonID_[*bjetInd2]);
+		                jetflavor = tree->jetHadFlvr_[*bjetInd];
 
 				if (jetflavor == 5) SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_B, jeteta, jetpt); 
 				else if(jetflavor == 4) SFb2 = reader.eval_auto_bounds(sysType, BTagEntry::FLAV_C, jeteta, jetpt); 

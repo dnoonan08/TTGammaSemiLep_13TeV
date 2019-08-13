@@ -99,7 +99,6 @@ void Selector_gen::clear_vectors(){
 	Jets.clear();
 	bJets.clear();
 	
-	EleRelIso_corr.clear();
 	MuRelIso_corr.clear();
 	PhoChHadIso_corr.clear();
 	PhoNeuHadIso_corr.clear();

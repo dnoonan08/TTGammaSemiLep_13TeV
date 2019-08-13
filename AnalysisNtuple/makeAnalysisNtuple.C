@@ -14,7 +14,9 @@
 #include"JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
 #include <cmath>
-#include "elemuSF.h"
+#include "elemuSF_2018.h"
+#include "elemuSF_2017.h"
+#include "elemuSF_2016.h"
 
 int jecvar012_g = 1; // 0:down, 1:norm, 2:up
 int jervar012_g = 1; // 0:down, 1:norm, 2:up
@@ -45,7 +47,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     int eventNum = -1;
     std::string eventStr = "-1";
 
-    //TEMP
+    if(ac < 5){
+	std::cout << "usage: ./makeAnalysisNtuple year sampleName outputFileDir inputFile[s]" << std::endl;
+	return;
+    }
+
+
     if (std::string(av[1])=="event"){
 	
 	std::string tempEventStr(av[2]);
@@ -59,19 +66,17 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	eventStr = tempEventStr;
 	//cout << eventStr << "  "  << eventNum << endl;
     }
-    
+
     std::string year(av[1]);
     tree = new EventTree(ac-4, false, year, av+4);
 
-    // //TEMP
-    // sampleType = av[2];
-    // int eventNum =  std::stoi(sampleType);
+    sampleType = av[2];
 
-    // sampleType = "Test";
     systematicType = "";
     cout << sampleType << endl;
     
     isSystematicRun = false;
+
     
     size_t pos = sampleType.find("__");
     if (pos != std::string::npos){
@@ -100,7 +105,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
     if (year=="2017"){
 	//THIS NEEDS TO BE UPDATED WITH 2017 PILEUP FILES
-	PUfilename      = "PileupHists/Data_2016BCDGH_Pileup.root";
+	PUfilename      = "PileupHists/Data_2017BCDEF.root";
+	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
+    }
+    if (year=="2018"){
+	//THIS NEEDS TO BE UPDATED WITH 2018 PILEUP FILES
+	PUfilename      = "PileupHists/Data_2018pileup.root";
 	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
 	PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
     }
@@ -131,8 +142,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     selector->veto_jet_pho_dR = -1.; //remove photons which have a jet close to them (after having removed jets too close to photon from above cut)
 
 
-    if (year=="2016") selector->btag_cut_DeepCSV = 0.6324;
+    if (year=="2016") selector->btag_cut_DeepCSV = 0.6321;
     if (year=="2017") selector->btag_cut_DeepCSV = 0.4941;
+    if (year=="2018") selector->btag_cut_DeepCSV = 0.4184;
     
     //	selector->jet_Pt_cut = 40.;
     evtPick->Njet_ge = 2;	
@@ -140,10 +152,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     BTagCalibration calib;
     if (!selector->useDeepCSVbTag){
 	if (year=="2016") calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
-	if (year=="2017") calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
+	if (year=="2017") calib = BTagCalibration("csvv2", "CSVv2_94XSF_V2_B_F.csv");
+	if (year=="2018") calib = BTagCalibration("csvv2", "CSVv2_94XSF_V2_B_F.csv");
     } else {
 	if (year=="2016"){ calib = BTagCalibration("deepcsv", "DeepCSV_Moriond17_B_H.csv");}
-	if (year=="2017"){ calib = BTagCalibration("deepcsb", "DeepCSV_94XSF_V3_B_F.csv");}
+	if (year=="2017"){ calib = BTagCalibration("deepcsv", "DeepCSV_94XSF_V3_B_F.csv");}
+	if (year=="2018"){ calib = BTagCalibration("deepcsv", "DeepCSV_102XSF_V1.csv");} //DeepCSV_102XSF_V1.csv
     }
     
     BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
@@ -166,11 +180,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		BTagEntry::FLAV_UDSG,    // btag flavour
 		"incl");               // measurement type
     
-    // getGenScaleWeights = false;
-    // if( sampleType.substr(0,5)=="TTbar" || sampleType.substr(0,7)=="TTGamma"){
-    // 	getGenScaleWeights = true;
-    // }
-    
     bool doOverlapRemoval = false;
     bool doOverlapRemoval_WZ = false;	
     bool doOverlapRemoval_Tchannel = false;	
@@ -186,13 +195,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     
     if( sampleType == "ST_t-channel" || sampleType == "ST_tbar-channel") doOverlapRemoval_Tchannel = true;
     if(doOverlapRemoval || doOverlapRemoval_WZ || doOverlapRemoval_Tchannel) std::cout << "########## Will apply overlap removal ###########" << std::endl;
-    // if( sampleType == "TTbarPowheg" || sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType=="TTGamma_Dilepton" || sampleType == "TTGamma_SingleLeptFromT" || sampleType == "TTGamma_SingleLeptFromTbar" || sampleType == "TTGamma_Hadronic" || sampleType == "TTGJets"){
-    // 	applypdfweight = true; 	
-    // 	applyqsquare = true;
-    // }
     
-    // if (applypdfweight||applyqsquare)  std::cout<<"###### Will apply pdfWeights and Q2 weights ######"<< std::endl;
-    
+
     dileptonsample = false;
     string JECsystLevel = "";
     if( systematicType.substr(0,3)=="JEC" ){
@@ -238,7 +242,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->ZeroBExclusive=true;}
     std::cout << "Dilepton Sample :" << dileptonsample << std::endl;
     std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << " eleScale "<< elescale012_g << " phoScale" << phoscale012_g << "   ";
-    std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << endl;
+    std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << std::endl;
 
     if (isSystematicRun){
 	std::cout << "  Systematic Run : Dropping genMC variables from tree" << endl;
@@ -276,17 +280,34 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	//		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, "Total");//SubTotalAbsolute");
 	cout << "Applying JEC uncertainty variations : " << JECsystLevel << endl;
 	if (year=="2016") jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);
-	// THIS NEEDS TO BE UPDATED TO GET 2017 JEC FILES
+	// THIS NEEDS TO BE UPDATED TO GET 2017 JEC FILES ///it will be Fall17_17NOV_2017_V*
 	if (year=="2017") jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);
+	if (year=="2018") jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);
     }
 
-    _lumiWeight = getEvtWeight(sampleType);
+    double luminosity = 1.;
+    if (year=="2016") luminosity=35860;
+    if (year=="2017") luminosity=41529;
+    if (year=="2018") luminosity=58877;
+
+    double nMC_total = 0.;
+    char** fileNames = av+4;
+    for(int fileI=0; fileI<ac-4; fileI++){
+	TFile *_file = TFile::Open(fileNames[fileI],"read");
+	TH1D *hEvents = (TH1D*) _file->Get("hEvents");
+	nMC_total += (hEvents->GetBinContent(3) - hEvents->GetBinContent(1));
+    }
+	
+    if (nMC_total==0){
+	nMC_total=1;
+    }
+
+    _lumiWeight = getEvtWeight(sampleType, luminosity, nMC_total);
     _lumiWeightAlt = _lumiWeight;
 
     if (isTTGamma){
-	_lumiWeightAlt = getEvtWeight("alt_"+sampleType);
+	_lumiWeightAlt = getEvtWeight("alt_"+sampleType, luminosity, nMC_total);
     }
-
 
     _PUweight       = 1.;
     _muEffWeight    = 1.;
@@ -382,7 +403,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	if ( evtPick->passPresel_ele || evtPick->passPresel_mu || saveAllEntries) {
 
 	    InitVariables();
-	    FillEvent();
+	    FillEvent(year);
 
 	    if(isMC) {
 		_PUweight    = PUweighter->getWeight(tree->nPUTrue_);
@@ -397,9 +418,21 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				
 		if (evtPick->passPresel_mu) {
 		    int muInd_ = selector->Muons.at(0);
-		    _muEffWeight    = getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1);
-		    _muEffWeight_Do = getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0);
-		    _muEffWeight_Up = getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2);
+		    if (year=="2016"){    
+			_muEffWeight    = get2016MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1);
+			_muEffWeight_Do = get2016MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0);
+			_muEffWeight_Up = get2016MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2);
+		    }
+		    if (year=="2017"){    
+			_muEffWeight    = get2017MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1);
+			_muEffWeight_Do = get2017MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0);
+			_muEffWeight_Up = get2017MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2);
+		    }
+                    if(year=="2018"){
+			_muEffWeight    = get2018MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1);
+			_muEffWeight_Do = get2018MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0);
+			_muEffWeight_Up = get2018MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2);
+		    }
 		    _eleEffWeight    = 1.;
 		    _eleEffWeight_Up = 1.;
 		    _eleEffWeight_Do = 1.;
@@ -409,11 +442,22 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		    _muEffWeight    = 1.;
 		    _muEffWeight_Do = 1.;
 		    _muEffWeight_Up = 1.;
-		    _eleEffWeight    = getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
-		    _eleEffWeight_Do = getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],0);
-		    _eleEffWeight_Up = getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],2);
+		    if(year=="2016"){
+			_eleEffWeight    = get2016EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
+			_eleEffWeight_Do = get2016EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],0);
+			_eleEffWeight_Up = get2016EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],2);
+                    }
+		    if(year=="2017"){
+			_eleEffWeight    = get2017EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
+			_eleEffWeight_Do = get2017EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],0);
+			_eleEffWeight_Up = get2017EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],2);
+                    }
+		    if(year=="2018"){
+			_eleEffWeight    = get2018EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
+			_eleEffWeight_Do = get2018EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],0);
+			_eleEffWeight_Up = get2018EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],2);
+                    }
 		}
-
 	    }
 
 	    if (!isMC){
@@ -455,7 +499,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 }
 
 
-void makeAnalysisNtuple::FillEvent()
+void makeAnalysisNtuple::FillEvent(std::string year)
 {
 
     _run             = tree->run_;
@@ -474,18 +518,18 @@ void makeAnalysisNtuple::FillEvent()
 	_evtWeight= 1.;
 	_evtWeightAlt= 1.;
     }
-
+    
     _genMET		     = tree->GenMET_pt_;
     _pfMET		     = tree->MET_pt_;
     _pfMETPhi    	     = tree->MET_phi_;
-
+    
     _nPho		     = selector->Photons.size();
     _nLoosePho	             = selector->LoosePhotons.size();
     _nEle		     = selector->Electrons.size();
     _nEleLoose               = selector->ElectronsLoose.size();
     _nMu		     = selector->Muons.size();
     _nMuLoose                = selector->MuonsLoose.size();
-
+    
     _nJet            = selector->Jets.size();
     _nfwdJet         = selector->FwdJets.size();
     _nBJet           = selector->bJets.size();
@@ -502,7 +546,7 @@ void makeAnalysisNtuple::FillEvent()
 
     for( int i_jet = 0; i_jet < _nJet; i_jet++)
 	ht += tree->jetPt_[i_jet];
-	
+    
     _HT = ht; 
 
 
@@ -639,11 +683,22 @@ void makeAnalysisNtuple::FillEvent()
 	    _phoEffWeight_Do.push_back(1.);
 	    _phoEffWeight_Up.push_back(1.);
 	} else {
-	    _phoEffWeight.push_back(getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
-	    _phoEffWeight_Do.push_back(getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
-	    _phoEffWeight_Up.push_back(getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
+                 if(year=="2016"){ 
+	  	 _phoEffWeight.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
+	    	 _phoEffWeight_Do.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
+	         _phoEffWeight_Up.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
+           		 }
+         	if(year=="2017"){ 
+	   	 _phoEffWeight.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
+	    	_phoEffWeight_Do.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
+	        _phoEffWeight_Up.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
+			}
+           	if(year=="2018"){
+	   	 _phoEffWeight.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
+	   	 _phoEffWeight_Do.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
+	   	 _phoEffWeight_Up.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
+                    }
 	}
-	
 	_phoTightID.push_back(tree->phoIDcutbased_[phoInd]>=3);
 	_phoMediumID.push_back(tree->phoIDcutbased_[phoInd]>=2);
 
@@ -662,20 +717,22 @@ void makeAnalysisNtuple::FillEvent()
 
 	    _phoGenMatchInd.push_back(phoGenMatchInd);
 
-	    findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+	    findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake); //as we are using phogenmatch defined in nanontuple
+	  //  findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake); //In order to use our own phogenmatch defined 
+
 	    _photonIsGenuine.push_back(isGenuine);
 	    _photonIsMisIDEle.push_back(isMisIDEle);
 	    _photonIsHadronicPhoton.push_back(isHadronicPhoton);
 	    _photonIsHadronicFake.push_back(isHadronicFake);
 	}
-
+	
 	_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
 	_MPhotonLepton.push_back((phoVector+lepVector).M());
 	_AnglePhotonLepton.push_back(phoVector.Angle(lepVector.Vect())); 
 	
     }
-
-
+    
+    
     for (int i_pho = 0; i_pho <_nLoosePho; i_pho++){
 	int phoInd = selector->LoosePhotons.at(i_pho);
 	phoVector.SetPtEtaPhiM(tree->phoEt_[phoInd],
@@ -701,12 +758,24 @@ void makeAnalysisNtuple::FillEvent()
 	    _loosePhoEffWeight_Do.push_back(1.);
 	    _loosePhoEffWeight_Up.push_back(1.);
 	} else {
-	    _loosePhoEffWeight.push_back(getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
-	    _loosePhoEffWeight_Do.push_back(getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
-	    _loosePhoEffWeight_Up.push_back(getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
+	    if(year=="2016"){ 
+		_loosePhoEffWeight.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
+		_loosePhoEffWeight_Do.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
+		_loosePhoEffWeight_Up.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
+	    }
+	    if(year=="2017"){ 
+		_loosePhoEffWeight.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
+	    	_loosePhoEffWeight_Do.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
+	        _loosePhoEffWeight_Up.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
+	    }
+	    if(year=="2018"){
+		_loosePhoEffWeight.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
+		_loosePhoEffWeight_Do.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
+		_loosePhoEffWeight_Up.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
+	    }
 	}
 	
-
+	
 	_loosePhoTightID.push_back(tree->phoIDcutbased_[phoInd]>=3);
 	_loosePhoMediumID.push_back(tree->phoIDcutbased_[phoInd]>=2);
 	_loosePhoLooseID.push_back(tree->phoIDcutbased_[phoInd]>=1);
@@ -838,11 +907,11 @@ void makeAnalysisNtuple::FillEvent()
 	
     metZ.SetMET(METVector);
 
-    TLorentzVector tempLep;
-    tempLep.SetPtEtaPhiM(lepVector.Pt(),
-			 lepVector.Eta(),
-			 lepVector.Phi(),
-			 0.1056);
+    // TLorentzVector tempLep;
+    // tempLep.SetPtEtaPhiM(lepVector.Pt(),
+    // 			 lepVector.Eta(),
+    // 			 lepVector.Phi(),
+    // 			 0.1056);
 
     double _met_px = METVector.Px();
     double _met_py = METVector.Py();
@@ -953,8 +1022,6 @@ void makeAnalysisNtuple::FillEvent()
 	_genStatusFlag.push_back(tree->GenPart_statusFlags_[i_mc]);
 	_genPDGID.push_back(tree->GenPart_pdgId_[i_mc]);
 	_genMomIdx.push_back(tree->GenPart_genPartIdxMother_[i_mc]);
-	// _genMomPID.push_back(tree->mcMomPID[i_mc]);
-	// _genGMomPID.push_back(tree->mcGMomPID[i_mc]);
     }
 
     for (int i_genJet = 0; i_genJet < _nGenJet; i_genJet++){
@@ -1147,13 +1214,16 @@ vector<bool> makeAnalysisNtuple::passPhoTightID(int phoInd){
 double minGenDr(int myInd, const EventTree* tree);
 
 
-void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){
+//void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){ // to use our own phoGenMatch
+void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){ // to use official phoGenMatch
 
 	*genuine        = false;
 	*misIDele       = false;
 	*hadronicphoton = false;
 	*hadronicfake   = false;
 
+//	int mcMatchInd = findPhotonGenMatch( phoInd, tree); //to use our own phoGenMatch 
+	       
         // TODO needs to be reimplemented with NANOAOD                                                                                                      
 	// If no match, it's hadronic fake
 	if (mcMatchInd== -1) {
@@ -1174,7 +1244,6 @@ void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, boo
 
 	bool parentagePass = maxPDGID < 37;
 
-	// //	mcMatchInd = findPhotonGenMatch(int phoInd, EventTree* tree);
 	// bool parentagePass = (fabs(tree->mcMomPID->at(mcMatchInd))<37 || tree->mcMomPID->at(mcMatchInd) == -999);
 
 	if (mcMatchPDGID==22){
@@ -1195,29 +1264,31 @@ void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, boo
 	
 
 }
+
+//our own pho Gen Match code
 			
-// int makeAnalysisNtuple::findPhotonGenMatch(int phoInd, EventTree* tree){
+ int makeAnalysisNtuple::findPhotonGenMatch(int phoInd, EventTree* tree){
 
-// 	double minDR = 999.;
-// 	int matchInd = -1;
+ 	double minDR = 999.;
+ 	int matchInd = -1;
 
-//         // TODO needs to be reimplemented with NANOAOD                                                                                                      
-// 	// for(int mcInd=0; mcInd<tree->nMC_; ++mcInd){
-// 	// 	if (tree->mcStatus->at(mcInd) == 1 || tree->mcStatus->at(mcInd) == 71){ 
-// 	// 		double dRValue = dR(tree->mcEta->at(mcInd),tree->mcPhi->at(mcInd),tree->phoEta_->at(phoInd),tree->phoPhi_->at(phoInd));
-// 	// 		if (dRValue < minDR){
-// 	// 			if ( (fabs(tree->phoEt_->at(phoInd) - tree->mcPt->at(mcInd)) / tree->mcPt->at(mcInd)) < 0.5 ){
-// 	// 				minDR = dRValue;
-// 	// 				matchInd = mcInd;
-// 	// 			}
-// 	// 		}
-// 	// 	}
-// 	// }
+         // TODO needs to be reimplemented with NANOAOD                                                                                                      
+ 	 for(int mcInd=0; mcInd<tree->nGenPart_; ++mcInd){
+ 	 	if (tree->GenPart_status_[mcInd] == 1 || tree->GenPart_status_[mcInd] == 71){ 
+ 	 		double dRValue = dR(tree->GenPart_eta_[mcInd],tree->GenPart_phi_[mcInd],tree->phoEta_[phoInd],tree->phoPhi_[phoInd]);
+	 		if (dRValue < minDR){
+ 	 			if ( (fabs(tree->phoEt_[phoInd] - tree->GenPart_pt_[mcInd]) / tree->GenPart_pt_[mcInd]) < 0.5 ){
+ 					minDR = dRValue;
+ 					matchInd = mcInd;
+ 				}
+ 			}
+ 		}
+	}
 
-// 	// if (minDR > 0.1){	matchInd = -1.; }  //Only consider matches with dR < 0.1
+ 	 if (minDR > 0.3){	matchInd = -1.; }  //Only consider matches with dR < 0.1
 
-// 	return matchInd;
-// }
+ 	return matchInd;
+ }
 
 
 
@@ -1247,10 +1318,6 @@ void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, boo
 #endif
 
 int main(int ac, char** av){
-  if(ac != 5){
-    std::cout << "usage: ./makeAnalysisNtuple year sampleName outputFileDir inputFile[s]" << std::endl;
-    return -1;
-  }
 
   makeAnalysisNtuple(ac, av);
 
