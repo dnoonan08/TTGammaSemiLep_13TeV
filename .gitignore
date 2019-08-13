@@ -4,6 +4,7 @@ makeSkim
 makeCutflows
 makeCutflows_gen2
 checkOverlap
+testLepSF
 *.root
 *.pdf
 *.pyc

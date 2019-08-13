@@ -1,6 +1,9 @@
 .PHONY: JEC
 
-all: JEC Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple makeCutflows 
+all: JEC Selector.o EventTree.o EventPick.o makeSkim makeAnalysisNtuple makeCutflows testLepSF
+
+testLepSF: testLepSF.cpp elemuSF_reader.h
+	g++ -o testLepSF `root-config --libs` -I`root-config --incdir` -std=c++17 elemuSF_reader.h testLepSF.cpp 
 
 makeSkim: Selector.o EventPick.o EventTree.o  makeSkim.cpp OverlapRemove.cpp
 	g++ -o makeSkim `root-config --libs` -I`root-config --incdir` -std=c++17 EventTree.o EventPick.o Selector.o  OverlapRemove.cpp makeSkim.cpp 
