@@ -95,6 +95,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     std::string PUfilename_up;
     std::string PUfilename_down;
 
+
+
     if (year=="2016"){
 	PUfilename      = "PileupHists/Data_2016BCDGH_Pileup.root";
 	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
@@ -102,15 +104,15 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
     if (year=="2017"){
 	//THIS NEEDS TO BE UPDATED WITH 2017 PILEUP FILES
-	PUfilename      = "PileupHists/Data_2017BCDEF.root";
-	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
-	PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
+	PUfilename      = "PileupHists/Data_2017BCDEF_Pileup.root";
+	PUfilename_up   = "PileupHists/Data_2017BCDEF_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2017BCDEF_Pileup_scaledDown.root";
     }
     if (year=="2018"){
 	//THIS NEEDS TO BE UPDATED WITH 2018 PILEUP FILES
-	PUfilename      = "PileupHists/Data_2018pileup.root";
-	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
-	PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
+	PUfilename      = "PileupHists/Data_2018ABCD_Pileup.root";
+	PUfilename_up   = "PileupHists/Data_2018ABCD_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2018ABCD_Pileup_scaledDown.root";
     }
     if (eventNum > -1) {
 	string cut = "event=="+eventStr;
@@ -148,13 +150,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     evtPick->NBjet_ge = 0;	
     BTagCalibration calib;
     if (!selector->useDeepCSVbTag){
-	if (year=="2016") calib = BTagCalibration("csvv2", "CSVv2_Moriond17_B_H.csv");
-	if (year=="2017") calib = BTagCalibration("csvv2", "CSVv2_94XSF_V2_B_F.csv");
-	if (year=="2018") calib = BTagCalibration("csvv2", "CSVv2_94XSF_V2_B_F.csv");
+	if (year=="2016") calib = BTagCalibration("csvv2", "BtagSF/CSVv2_Moriond17_B_H.csv");
+	if (year=="2017") calib = BTagCalibration("csvv2", "BtagSF/CSVv2_94XSF_V2_B_F.csv");
+	if (year=="2018") calib = BTagCalibration("csvv2", "BtagSF/CSVv2_94XSF_V2_B_F.csv");
     } else {
-	if (year=="2016"){ calib = BTagCalibration("deepcsv", "DeepCSV_Moriond17_B_H.csv");}
-	if (year=="2017"){ calib = BTagCalibration("deepcsv", "DeepCSV_94XSF_V3_B_F.csv");}
-	if (year=="2018"){ calib = BTagCalibration("deepcsv", "DeepCSV_102XSF_V1.csv");} //DeepCSV_102XSF_V1.csv
+	if (year=="2016"){ calib = BTagCalibration("deepcsv", "BtagSF/DeepCSV_2016LegacySF_V1.csv");}
+	if (year=="2017"){ calib = BTagCalibration("deepcsv", "BtagSF/DeepCSV_94XSF_V3_B_F.csv");}
+	if (year=="2018"){ calib = BTagCalibration("deepcsv", "BtagSF/DeepCSV_102XSF_V1.csv");} //DeepCSV_102XSF_V1.csv
     }
     
     BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
@@ -357,12 +359,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	
 	
     } else if (year=="2018") {
-	
-	muSFa = new MuonSF("MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ID.root",  "NUM_TightID_DEN_genTracks_pt_abseta",
+
+	muSFa = new MuonSF("MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ID.root",  "NUM_TightID_DEN_TrackerMuons_pt_abseta",
 			   "MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ISO.root", "NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta",
 			   "MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_BeforeMuonHLTUpdate.root", "IsoMu24_PtEtaBins/abseta_pt_ratio");
 	
-	muSFb = new MuonSF("MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ID.root",  "NUM_TightID_DEN_genTracks_pt_abseta",
+	muSFb = new MuonSF("MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ID.root",  "NUM_TightID_DEN_TrackerMuons_pt_abseta",
 			   "MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ISO.root", "NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta",
 			   "MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_AfterMuonHLTUpdate.root", "IsoMu24_PtEtaBins/abseta_pt_ratio");
 

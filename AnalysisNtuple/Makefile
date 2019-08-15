@@ -28,7 +28,7 @@ BTagCalibrationStandalone.o: BTagCalibrationStandalone.cpp BTagCalibrationStanda
 JEC: JEC/FactorizedJetCorrector.cpp JEC/JetCorrectorParameters.cpp JEC/SimpleJetCorrector.cpp JEC/JetCorrectionUncertainty.cpp JEC/SimpleJetCorrectionUncertainty.cpp
 	$(MAKE) -C JEC
 
-makeAnalysisNtuple: Selector.o EventPick.o EventTree.o makeAnalysisNtuple.C makeAnalysisNtuple.h OverlapRemove.cpp JetResolutions.h PUReweight.cpp PUReweight.h BTagCalibrationStandalone.o ScaleFactors.h ScaleFactorFunction.h JEC/JECvariation.o TopEventCombinatorics.cpp
+makeAnalysisNtuple: Selector.o EventPick.o EventTree.o makeAnalysisNtuple.C makeAnalysisNtuple.h OverlapRemove.cpp JetResolutions.h PUReweight.cpp PUReweight.h BTagCalibrationStandalone.o ScaleFactors.h ScaleFactorFunction.h JEC/JECvariation.o TopEventCombinatorics.cpp muSF_reader.h eleSF_reader.h phoSF_reader.h
 	g++ -o makeAnalysisNtuple `root-config --libs` -I`root-config --incdir` -std=c++17 makeAnalysisNtuple.C EventTree.o EventPick.o Selector.o  OverlapRemove.cpp  PUReweight.cpp BTagCalibrationStandalone.o JEC/FactorizedJetCorrector.o JEC/JetCorrectorParameters.o JEC/SimpleJetCorrector.o JEC/JetCorrectionUncertainty.o JEC/SimpleJetCorrectionUncertainty.o JEC/JECvariation.o METzCalculator.cpp TopEventCombinatorics.cpp
 
 Selector.o: EventTree.o Selector.cpp Selector.h
