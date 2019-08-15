@@ -66,17 +66,17 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchAddress("PV_npvsGood", &nGoodVtx_);
 
 
-    chain->SetBranchStatus("nLHEScaleWeight",1);
-    chain->SetBranchAddress("nLHEScaleWeight", &nLHEScaleWeight_);
+    // chain->SetBranchStatus("nLHEScaleWeight",1);
+    // chain->SetBranchAddress("nLHEScaleWeight", &nLHEScaleWeight_);
 
-    chain->SetBranchStatus("LHEScaleWeight",1);
-    chain->SetBranchAddress("LHEScaleWeight", &LHEScaleWeight_);
+    // chain->SetBranchStatus("LHEScaleWeight",1);
+    // chain->SetBranchAddress("LHEScaleWeight", &LHEScaleWeight_);
 
-    chain->SetBranchStatus("nLHEPdfWeight",1);
-    chain->SetBranchAddress("nLHEPdfWeight", &nLHEPdfWeight_);
+    // chain->SetBranchStatus("nLHEPdfWeight",1);
+    // chain->SetBranchAddress("nLHEPdfWeight", &nLHEPdfWeight_);
 
-    chain->SetBranchStatus("LHEPdfWeight",1);
-    chain->SetBranchAddress("LHEPdfWeight", &LHEPdfWeight_);
+    // chain->SetBranchStatus("LHEPdfWeight",1);
+    // chain->SetBranchAddress("LHEPdfWeight", &LHEPdfWeight_);
 
 
     // MET
@@ -273,8 +273,8 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchAddress("Photon_isScEtaEE", &phoIsEE_);
 
     if (year=="2016"){
-	chain->SetBranchStatus("Photon_cutBased",1);
-	chain->SetBranchAddress("Photon_cutBased", &phoIDcutbased_);
+	chain->SetBranchStatus("Photon_cutBasedBitmap",1);
+	chain->SetBranchAddress("Photon_cutBasedBitmap", &phoIDcutbased_);
     }
     if (year=="2017" || year=="2018"){
 	chain->SetBranchStatus("Photon_cutBasedBitmap",1);
@@ -384,8 +384,8 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	chain->SetBranchStatus("HLT_Ele27_WPTight_Gsf",1);
 	chain->SetBranchAddress("HLT_Ele27_WPTight_Gsf",&HLT_Ele27_WPTight_Gsf_);
 
-	chain->SetBranchStatus("HLT_Ele32_eta2p1_WPTight_Gsf",1);
-	chain->SetBranchAddress("HLT_Ele32_eta2p1_WPTight_Gsf",&HLT_Ele32_eta2p1_WPTight_Gsf_);
+	// chain->SetBranchStatus("HLT_Ele32_eta2p1_WPTight_Gsf",1);
+	// chain->SetBranchAddress("HLT_Ele32_eta2p1_WPTight_Gsf",&HLT_Ele32_eta2p1_WPTight_Gsf_);
 
 	chain->SetBranchStatus("HLT_IsoMu24",1);
 	chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
@@ -434,8 +434,8 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 
     }	
 
-    chain->SetBranchStatus("rho",1);
-    chain->SetBranchAddress("rho", &rho_);
+    chain->SetBranchStatus("fixedGridRhoFastjetAll",1);
+    chain->SetBranchAddress("fixedGridRhoFastjetAll", &rho_);
 
     // chain->SetBranchStatus("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL",1);
     // chain->SetBranchAddress("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL",&HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_);
