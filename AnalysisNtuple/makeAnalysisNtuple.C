@@ -1,5 +1,5 @@
-#define makeAnalysisNtuple_cxx
 #include "makeAnalysisNtuple.h"
+#define makeAnalysisNtuple_cxx
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -14,9 +14,6 @@
 #include"JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
 #include <cmath>
-#include "elemuSF_2018.h"
-#include "elemuSF_2017.h"
-#include "elemuSF_2016.h"
 
 int jecvar012_g = 1; // 0:down, 1:norm, 2:up
 int jervar012_g = 1; // 0:down, 1:norm, 2:up
@@ -330,6 +327,52 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
     //    nEntr = 4000;
 
+
+
+    if (year=="2016"){
+	muSFa = new MuonSF("MuEGammaScaleFactors/mu2016/EfficienciesStudies_2016_legacy_rereco_rootfiles_RunBCDEF_SF_ID.root", "NUM_TightID_DEN_genTracks_eta_pt",
+			   "MuEGammaScaleFactors/mu2016/EfficienciesStudies_2016_legacy_rereco_rootfiles_RunBCDEF_SF_ISO.root", "NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt",
+			   "MuEGammaScaleFactors/mu2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunBtoF.root", "IsoMu24_OR_IsoTkMu24_PtEtaBins/abseta_pt_ratio");
+	
+	muSFb = new MuonSF("MuEGammaScaleFactors/mu2016/EfficienciesStudies_2016_legacy_rereco_rootfiles_RunGH_SF_ID.root", "NUM_TightID_DEN_genTracks_eta_pt",
+			   "MuEGammaScaleFactors/mu2016/EfficienciesStudies_2016_legacy_rereco_rootfiles_RunGH_SF_ISO.root", "NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt",
+			   "MuEGammaScaleFactors/mu2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunGtoH.root", "IsoMu24_OR_IsoTkMu24_PtEtaBins/abseta_pt_ratio");
+	
+	eleSF = new ElectronSF("MuEGammaScaleFactors/ele2016/2016LegacyReReco_ElectronTight_Fall17V2.root",
+			       "MuEGammaScaleFactors/ele2016/egammaEffi.txt_EGM2D_runBCDEF_passingRECO.root");
+	
+	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2016/Fall17V2_2016_Tight_photons.root");
+
+
+    } else if (year=="2017") {
+	
+	muSFa = new MuonSF("MuEGammaScaleFactors/mu2017/RunBCDEF_SF_ID.root", "NUM_TightID_DEN_genTracks_pt_abseta",
+			   "MuEGammaScaleFactors/mu2017/RunBCDEF_SF_ISO.root", "NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta",
+			   "MuEGammaScaleFactors/mu2017/EfficienciesAndSF_RunBtoF_Nov17Nov2017.root", "IsoMu27_PtEtaBins/abseta_pt_ratio");
+	
+	eleSF = new ElectronSF("MuEGammaScaleFactors/ele2017/2017_ElectronTight.root",
+			       "MuEGammaScaleFactors/ele2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO.root");
+	
+	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2017/2017_PhotonsTight.root");
+	
+	
+    } else if (year=="2018") {
+	
+	muSFa = new MuonSF("MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ID.root",  "NUM_TightID_DEN_genTracks_pt_abseta",
+			   "MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ISO.root", "NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta",
+			   "MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_BeforeMuonHLTUpdate.root", "IsoMu24_PtEtaBins/abseta_pt_ratio");
+	
+	muSFb = new MuonSF("MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ID.root",  "NUM_TightID_DEN_genTracks_pt_abseta",
+			   "MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ISO.root", "NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta",
+			   "MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_AfterMuonHLTUpdate.root", "IsoMu24_PtEtaBins/abseta_pt_ratio");
+
+	eleSF = new ElectronSF("MuEGammaScaleFactors/ele2018/2018_ElectronTight.root",
+			       "MuEGammaScaleFactors/ele2018/egammaEffi.txt_EGM2D_updatedAll.root");
+
+	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2018/2018_PhotonsTight.root");
+
+    }
+
     int dumpFreq = 1;
     if (nEntr >50)     { dumpFreq = 5; }
     if (nEntr >100)     { dumpFreq = 10; }
@@ -418,20 +461,32 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 				
 		if (evtPick->passPresel_mu) {
 		    int muInd_ = selector->Muons.at(0);
-		    if (year=="2016"){    
-			_muEffWeight    = get2016MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1);
-			_muEffWeight_Do = get2016MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0);
-			_muEffWeight_Up = get2016MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2);
+		    if (year=="2016"){
+			_muEffWeight    = (muSFa->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1, 2016) * 19.656062760/35.882515396 + 
+					   muSFb->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1, 2016) * 16.226452636/35.882515396);
+
+			_muEffWeight_Do = (muSFa->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0, 2016) * 19.656062760/35.882515396 + 
+					   muSFb->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0, 2016) * 16.226452636/35.882515396);
+
+			_muEffWeight_Up = (muSFa->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2, 2016) * 19.656062760/35.882515396 + 
+					   muSFb->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2, 2016) * 16.226452636/35.882515396);
+
 		    }
 		    if (year=="2017"){    
-			_muEffWeight    = get2017MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1);
-			_muEffWeight_Do = get2017MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0);
-			_muEffWeight_Up = get2017MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2);
+			_muEffWeight    = (muSFa->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1, 2017));
+			_muEffWeight_Do = (muSFa->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0, 2017));
+			_muEffWeight_Up = (muSFa->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2, 2017));
 		    }
                     if(year=="2018"){
-			_muEffWeight    = get2018MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1);
-			_muEffWeight_Do = get2018MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0);
-			_muEffWeight_Up = get2018MuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2);
+			_muEffWeight    = (muSFa->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1, 2018) * 8.950818835/59.688059536 + 
+					   muSFb->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],1, 2018) * 50.737240701/59.688059536);
+
+			_muEffWeight_Do = (muSFa->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0, 2018) * 8.950818835/59.688059536 + 
+					   muSFb->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],0, 2018) * 50.737240701/59.688059536);
+
+			_muEffWeight_Up = (muSFa->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2, 2018) * 8.950818835/59.688059536 + 
+					   muSFb->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2, 2018) * 50.737240701/59.688059536);
+
 		    }
 		    _eleEffWeight    = 1.;
 		    _eleEffWeight_Up = 1.;
@@ -442,21 +497,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		    _muEffWeight    = 1.;
 		    _muEffWeight_Do = 1.;
 		    _muEffWeight_Up = 1.;
-		    if(year=="2016"){
-			_eleEffWeight    = get2016EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
-			_eleEffWeight_Do = get2016EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],0);
-			_eleEffWeight_Up = get2016EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],2);
-                    }
-		    if(year=="2017"){
-			_eleEffWeight    = get2017EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
-			_eleEffWeight_Do = get2017EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],0);
-			_eleEffWeight_Up = get2017EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],2);
-                    }
-		    if(year=="2018"){
-			_eleEffWeight    = get2018EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
-			_eleEffWeight_Do = get2018EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],0);
-			_eleEffWeight_Up = get2018EleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],2);
-                    }
+
+		    _eleEffWeight    = eleSF->getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
+		    _eleEffWeight_Do = eleSF->getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],0);
+		    _eleEffWeight_Up = eleSF->getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
+
 		}
 	    }
 
@@ -683,21 +728,9 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	    _phoEffWeight_Do.push_back(1.);
 	    _phoEffWeight_Up.push_back(1.);
 	} else {
-                 if(year=="2016"){ 
-	  	 _phoEffWeight.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
-	    	 _phoEffWeight_Do.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
-	         _phoEffWeight_Up.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
-           		 }
-         	if(year=="2017"){ 
-	   	 _phoEffWeight.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
-	    	_phoEffWeight_Do.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
-	        _phoEffWeight_Up.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
-			}
-           	if(year=="2018"){
-	   	 _phoEffWeight.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
-	   	 _phoEffWeight_Do.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
-	   	 _phoEffWeight_Up.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
-                    }
+	    _phoEffWeight.push_back(phoSF->getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
+	    _phoEffWeight_Do.push_back(phoSF->getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
+	    _phoEffWeight_Up.push_back(phoSF->getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
 	}
 	_phoTightID.push_back(tree->phoIDcutbased_[phoInd]>=3);
 	_phoMediumID.push_back(tree->phoIDcutbased_[phoInd]>=2);
@@ -758,21 +791,11 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	    _loosePhoEffWeight_Do.push_back(1.);
 	    _loosePhoEffWeight_Up.push_back(1.);
 	} else {
-	    if(year=="2016"){ 
-		_loosePhoEffWeight.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
-		_loosePhoEffWeight_Do.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
-		_loosePhoEffWeight_Up.push_back(get2016PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
-	    }
-	    if(year=="2017"){ 
-		_loosePhoEffWeight.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
-	    	_loosePhoEffWeight_Do.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
-	        _loosePhoEffWeight_Up.push_back(get2017PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
-	    }
-	    if(year=="2018"){
-		_loosePhoEffWeight.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
-		_loosePhoEffWeight_Do.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
-		_loosePhoEffWeight_Up.push_back(get2018PhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
-	    }
+
+	    _loosePhoEffWeight.push_back(phoSF->getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
+	    _loosePhoEffWeight_Do.push_back(phoSF->getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
+	    _loosePhoEffWeight_Up.push_back(phoSF->getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
+
 	}
 	
 	

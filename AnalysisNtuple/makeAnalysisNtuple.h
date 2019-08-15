@@ -28,6 +28,9 @@
 // Header file that includes all of the event luminosity scaling
 #include "ScaleFactorFunction.h"
 
+#include "muSF_reader.h"
+#include "eleSF_reader.h"
+#include "phoSF_reader.h"
 
 #include "JEC/UncertaintySourcesList.h"
 
@@ -53,10 +56,18 @@ class makeAnalysisNtuple {
 
     bool isSystematicRun;
 
-
     bool getGenScaleWeights;
     bool applypdfweight;
     bool applyqsquare;
+
+    MuonSF* muSFa;
+    MuonSF* muSFb;
+    ElectronSF* eleSF;
+    PhotonSF* phoSF;
+    
+
+
+
     // Fixed size dimensions of array or collections stored in the TTree if any.
 
     // Declaration of leaf types

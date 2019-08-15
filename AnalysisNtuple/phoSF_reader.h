@@ -1,6 +1,9 @@
 #include<TH2F.h>
 #include<TFile.h>
 
+#include <iostream>
+
+
 using namespace std;
 
 class PhotonSF

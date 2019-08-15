@@ -1,6 +1,9 @@
 #include<TH2F.h>
 #include<TFile.h>
 
+#include <iostream>
+
+
 using namespace std;
 
 class ElectronSF
@@ -15,8 +18,8 @@ class ElectronSF
     }
 
     double getEleSF(double pt, double eta, int systLevel);
-
-
+    bool verbose = false;
+    
  private:
     TH2F* idHist;
     TH2F* recoHist;
@@ -83,6 +86,7 @@ double ElectronSF::getEleSF(double pt, double eta, int systLevel){
     double reco_SF = reco_SF_value + (systLevel-1)*reco_SF_error;
 
     double eleEffSF=id_SF*reco_SF;
+    if (verbose) { cout << id_SF << "\t" << reco_SF << endl;}
 
     return eleEffSF;
 
