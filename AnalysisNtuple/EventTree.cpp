@@ -5,7 +5,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain = new TChain("Events");
 
     //std::cout << chain->GetCacheSize() << std::endl;
-    chain->SetCacheSize(50*1024*1024);
+    chain->SetCacheSize(100*1024*1024);
     if (xRootDAccess){
 	string dir = "root://cms-xrd-global.cern.ch/";
 	for(int fileI=0; fileI<nFiles; fileI++){
@@ -408,8 +408,8 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	chain->SetBranchStatus("HLT_IsoMu24",1);
 	chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
 	
-	chain->SetBranchStatus("HLT_IsoTkMu24",1);
-	chain->SetBranchAddress("HLT_IsoTkMu24",&HLT_IsoTkMu24_);
+	// chain->SetBranchStatus("HLT_IsoTkMu24",1);
+	// chain->SetBranchAddress("HLT_IsoTkMu24",&HLT_IsoTkMu24_);
 
 	chain->SetBranchStatus("HLT_IsoMu24_eta2p1",1);
 	chain->SetBranchAddress("HLT_IsoMu24_eta2p1",&HLT_IsoMu24_eta2p1_);

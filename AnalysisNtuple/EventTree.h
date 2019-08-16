@@ -120,6 +120,13 @@ class EventTree{
     Int_t           phoGenPartIdx_[10];
     
 
+    // I don't know why, but these two lines are needed to avoid possible memory issue with nMuon (segfault when it thinks there are 2**32-1 muons in an event
+    // These vectors are not used
+    vector<float>*  PFClustdEta_;
+    vector<float>*  PFClustdPhi_;
+
+
+
     // Muon
     UInt_t          nMuon_;
     Float_t         muPhi_[10];
