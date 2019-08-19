@@ -49,22 +49,22 @@ class EventTree{
     
     UInt_t    nGenPart_;
     
-    Float_t   GenPart_pt_[200];
-    Float_t   GenPart_eta_[200];
-    Float_t   GenPart_phi_[200];
-    Float_t   GenPart_mass_[200];
-    Int_t     GenPart_genPartIdxMother_[200];
-    Int_t     GenPart_pdgId_[200];
-    Int_t     GenPart_status_[200];
-    Int_t     GenPart_statusFlags_[200];
+    Float_t   GenPart_pt_[300];
+    Float_t   GenPart_eta_[300];
+    Float_t   GenPart_phi_[300];
+    Float_t   GenPart_mass_[300];
+    Int_t     GenPart_genPartIdxMother_[300];
+    Int_t     GenPart_pdgId_[300];
+    Int_t     GenPart_status_[300];
+    Int_t     GenPart_statusFlags_[300];
     
     
     UInt_t    nGenJet_;
     
-    Float_t   GenJet_pt_[200];
-    Float_t   GenJet_eta_[200];
-    Float_t   GenJet_phi_[200];
-    Float_t   GenJet_mass_[200];
+    Float_t   GenJet_pt_[100];
+    Float_t   GenJet_eta_[100];
+    Float_t   GenJet_phi_[100];
+    Float_t   GenJet_mass_[100];
     
     // PU
     Int_t    nPU_;  
