@@ -20,9 +20,9 @@ class EventTree{
     TChain* chain;
     
     // include all variables just in case
-    Int_t    run_;
-    Long64_t event_;
-    Int_t    lumis_;
+    UInt_t    run_;
+    ULong64_t event_;
+    UInt_t    lumis_;
     
     Float_t  genWeight_;
 
@@ -47,7 +47,7 @@ class EventTree{
 
     // genParticle
     
-    Int_t    nGenPart_;
+    UInt_t    nGenPart_;
     
     Float_t   GenPart_pt_[200];
     Float_t   GenPart_eta_[200];
@@ -59,7 +59,7 @@ class EventTree{
     Int_t     GenPart_statusFlags_[200];
     
     
-    Int_t    nGenJet_;
+    UInt_t    nGenJet_;
     
     Float_t   GenJet_pt_[200];
     Float_t   GenJet_eta_[200];
@@ -79,45 +79,45 @@ class EventTree{
     // Electron
 
     UInt_t          nEle_;
-    Float_t         elePhi_[10];
-    Float_t         elePt_[10];
-    Float_t         eleEta_[10];
-    Float_t         eleDeltaEtaSC_[10];
-    Int_t           eleCharge_[10];
-    Float_t         eleMass_[10];
-    Float_t         elePFRelIso_[10];
-    Float_t         elePFRelChIso_[10];
-    Int_t           eleIDcutbased_[10];
-    Float_t         eleD0_[10];
-    Float_t         eleDz_[10];
-    Float_t         eleSIEIE_[10];
+    Float_t         elePhi_[15];
+    Float_t         elePt_[15];
+    Float_t         eleEta_[15];
+    Float_t         eleDeltaEtaSC_[15];
+    Int_t           eleCharge_[15];
+    Float_t         eleMass_[15];
+    Float_t         elePFRelIso_[15];
+    Float_t         elePFRelChIso_[15];
+    Int_t           eleIDcutbased_[15];
+    Float_t         eleD0_[15];
+    Float_t         eleDz_[15];
+    Float_t         eleSIEIE_[15];
 
-    Int_t           eleVidWPBitmap_[10];
-    Float_t         eleEcalSumEtDr03_[10];
-    Float_t         eleHcalSumEtDr03_[10];
-    Float_t         eleTrkSumPtDr03_[10];
+    Int_t           eleVidWPBitmap_[15];
+    Float_t         eleEcalSumEtDr03_[15];
+    Float_t         eleHcalSumEtDr03_[15];
+    Float_t         eleTrkSumPtDr03_[15];
 
 
     // Photon
     
     UInt_t          nPho_;
-    Float_t         phoEt_[10];
-    Float_t         phoEta_[10];
-    Float_t         phoPhi_[10];
-    Bool_t          phoIsEB_[10];
-    Bool_t          phoIsEE_[10];
-    Float_t         phoPFRelIso_[10];
-    Float_t         phoPFRelChIso_[10];
-    Int_t          phoIDcutbased_[10];
-    Int_t           phoVidWPBitmap_[10];
-    Bool_t           phoPixelSeed_[10];
-    Bool_t           phoEleVeto_[10];
+    Float_t         phoEt_[15];
+    Float_t         phoEta_[15];
+    Float_t         phoPhi_[15];
+    Bool_t          phoIsEB_[15];
+    Bool_t          phoIsEE_[15];
+    Float_t         phoPFRelIso_[15];
+    Float_t         phoPFRelChIso_[15];
+    Int_t          phoIDcutbased_[15];
+    Int_t           phoVidWPBitmap_[15];
+    Bool_t           phoPixelSeed_[15];
+    Bool_t           phoEleVeto_[15];
 
-    Float_t         phoR9_[10];
-    Float_t         phoSIEIE_[10];
-    Float_t         phoHoverE_[10];
+    Float_t         phoR9_[15];
+    Float_t         phoSIEIE_[15];
+    Float_t         phoHoverE_[15];
     
-    Int_t           phoGenPartIdx_[10];
+    Int_t           phoGenPartIdx_[15];
     
 
     // I don't know why, but these two lines are needed to avoid possible memory issue with nMuon (segfault when it thinks there are 2**32-1 muons in an event
@@ -126,40 +126,39 @@ class EventTree{
     vector<float>*  PFClustdPhi_;
 
 
-
     // Muon
     UInt_t          nMuon_;
-    Float_t         muPhi_[10];
-    Float_t         muPt_[10];
-    Float_t         muEta_[10];
-    Int_t           muCharge_[10];
-    Float_t         muMass_[10];
-    Float_t         muPFRelIso_[10];
-    Bool_t          muMediumId_[10];
-    Bool_t          muTightId_[10];
-    Bool_t          muIsPFMuon_[10];
-    Bool_t          muIsGlobal_[10];
-    Bool_t          muIsTracker_[10];
+    Float_t         muPhi_[15];
+    Float_t         muPt_[15];
+    Float_t         muEta_[15];
+    Int_t           muCharge_[15];
+    Float_t         muMass_[15];
+    Float_t         muPFRelIso_[15];
+    Bool_t          muMediumId_[15];
+    Bool_t          muTightId_[15];
+    Bool_t          muIsPFMuon_[15];
+    Bool_t          muIsGlobal_[15];
+    Bool_t          muIsTracker_[15];
 
 
 
     // Jet
 
     UInt_t          nJet_;
-    Float_t         jetPt_[40];
-    Float_t         jetEta_[40];
-    Float_t         jetPhi_[40];
-    Float_t         jetMass_[40];
-    Float_t         jetRawFactor_[40];
-    Int_t           jetID_[40];
-    Float_t         jetArea_[40];
-    Float_t         jetBtagCMVA_[40];
-    Float_t         jetBtagCSVV2_[40];
-    Float_t         jetBtagDeepB_[40];
-    Float_t         jetBtagDeepC_[40];
-    Float_t         jetBtagDeepFlavB_[40];
-    Int_t           jetHadFlvr_[40];
-    Int_t           jetGenJetIdx_[40];
+    Float_t         jetPt_[100];
+    Float_t         jetEta_[100];
+    Float_t         jetPhi_[100];
+    Float_t         jetMass_[100];
+    Float_t         jetRawFactor_[100];
+    Int_t           jetID_[100];
+    Float_t         jetArea_[100];
+    Float_t         jetBtagCMVA_[100];
+    Float_t         jetBtagCSVV2_[100];
+    Float_t         jetBtagDeepB_[100];
+    Float_t         jetBtagDeepC_[100];
+    Float_t         jetBtagDeepFlavB_[100];
+    Int_t           jetHadFlvr_[100];
+    Int_t           jetGenJetIdx_[100];
 
     Float_t  rho_;
 
