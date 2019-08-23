@@ -9,6 +9,7 @@
 #include<TObject.h>
 #include<TH1F.h>
 #include<TCanvas.h>
+#include <boost/program_options.hpp>
 
 
 // bool overlapRemovalTT(EventTree* tree);
@@ -48,11 +49,30 @@ int main(int ac, char** av){
 
 	std::string year(av[1]);	
 
+	//check if NofM type format is before output name (for splitting jobs)
 
+	int nJob = -1;
+	int totJob = -1;
+	std::string checkJobs(av[3]);
+	size_t pos = checkJobs.find("of");
+	if (pos != std::string::npos){
+	    nJob = std::stoi(checkJobs.substr(0,pos));
+	    totJob = std::stoi(checkJobs.substr(pos+2,checkJobs.length()));
+	    for (int i = 3; i < ac-1; i++){
+		av[i] = av[i+1];
+		//cout << av[i] << " ";
+	    }
+	    ac = ac-1;
+	}
+	cout << nJob << " of " << totJob << endl;
+ 
 	std::string outDirName(av[3]);
 	if( outDirName.find("Data") != std::string::npos){
 	    isMC = false;
 	}
+
+
+	    
 	
 
 	//check for xrootd argument before file list
@@ -161,13 +181,20 @@ int main(int ac, char** av){
 	// double duration;
 	// startClock = clock();
 
-	TFile* outFile = TFile::Open( av[3] ,"RECREATE" );
+	if (nJob>0 && totJob>0){
+	    pos = outDirName.find(".root");
+	    outDirName = outDirName.substr(0,pos) + "_" + checkJobs + ".root";
+	    cout << "new output file name: "<< outDirName << endl;
+	}
+
+	TFile* outFile = TFile::Open( outDirName.c_str() ,"RECREATE" );
 	TTree* newTree = tree->chain->CloneTree(0);
 	newTree->SetCacheSize(50*1024*1024);
 
 	Long64_t nEntr = tree->GetEntries();
 
 	std::cout << "Sample has "<<nEntr << " entries" << std::endl;
+
 	if( outDirName.find("Test") != std::string::npos || outDirName.find("test") != std::string::npos || outDirName.find("TEST") != std::string::npos){
 		if (selector->QCDselect){
 			std::cout << "-------------------------------------------------------------------------" << std::endl;
@@ -186,12 +213,26 @@ int main(int ac, char** av){
 	}
 
 
+	int startEntry = 0;
+	int endEntry = nEntr;
+	int eventsPerJob = nEntr;
+
+	if (nJob>0 && totJob>0){
+	    eventsPerJob = int(1.*nEntr/totJob);
+	    startEntry = (nJob-1)*eventsPerJob;
+	    endEntry = nJob*eventsPerJob;
+	    if (nJob==totJob){
+		endEntry=nEntr;
+	    }
+	}
+	cout << "Processing events "<<startEntry<< " to " << endEntry << endl;
+	    
 
 	int dumpFreq = 100;
-	if (nEntr >5000)   { dumpFreq = 1000; }
-	if (nEntr >50000)  { dumpFreq = 10000; }
-	if (nEntr >500000) { dumpFreq = 100000; }
-	if (nEntr >5000000){ dumpFreq = 1000000; }
+	if (eventsPerJob >5000)   { dumpFreq = 1000; }
+	if (eventsPerJob >50000)  { dumpFreq = 10000; }
+	if (eventsPerJob >500000) { dumpFreq = 100000; }
+	if (eventsPerJob >5000000){ dumpFreq = 1000000; }
 	
 
 
@@ -201,7 +242,7 @@ int main(int ac, char** av){
 	TH1D* hEvents_    = new TH1D("hEvents",    "number of events (+/- event weight)",      3,  -1.5, 1.5);
 
 
-	for(Long64_t entry= 0; entry < nEntr; entry++){
+	for(Long64_t entry= startEntry; entry < endEntry; entry++){
 	//	for(Long64_t entry= 0; entry < 300; entry++){ 	
 		if(entry%dumpFreq == 0) {
 		    
