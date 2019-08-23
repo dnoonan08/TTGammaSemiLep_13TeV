@@ -49,6 +49,12 @@ int main(int ac, char** av){
 	std::string year(av[1]);	
 
 
+	std::string outDirName(av[3]);
+	if( outDirName.find("Data") != std::string::npos){
+	    isMC = false;
+	}
+	
+
 	//check for xrootd argument before file list
 	//
 	if (std::string(av[4])=="xrootd"){
@@ -63,6 +69,7 @@ int main(int ac, char** av){
 	    tree = new EventTree(ac-4, xRootDAccess, year, av+4);
 	}
 
+	tree->isData_ = !isMC;
 
 	if (eventNum > -1) {
 	    string cut = "event=="+eventStr;
@@ -93,7 +100,6 @@ int main(int ac, char** av){
 	evtPick->printEvent = eventNum;
 
 
-	std::string outDirName(av[3]);
 	// antiselection for QCD fit
 	// if( outDirName.find("QCD") != std::string::npos){
 	// 	std::cout << "muon antiselection is on" << std::endl;

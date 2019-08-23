@@ -11,6 +11,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	for(int fileI=0; fileI<nFiles; fileI++){
 	    string fName = (string) fileNames[fileI];
 	    chain->Add( (dir + fileNames[fileI]).c_str() );
+	    cout << fName << "  " << chain->GetEntries() << endl;
 	}
     }
     else{
@@ -36,13 +37,13 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("PV_chi2",1);
     chain->SetBranchAddress("PV_chi2", &pvChi2_);
 
-
-    chain->SetBranchStatus("Pileup_nPU",1);
-    chain->SetBranchAddress("Pileup_nPU", &nPU_);
-
-    chain->SetBranchStatus("Pileup_nTrueInt",1);
-    chain->SetBranchAddress("Pileup_nTrueInt", &nPUTrue_);
-
+    if (!isData_){
+	chain->SetBranchStatus("Pileup_nPU",1);
+	chain->SetBranchAddress("Pileup_nPU", &nPU_);
+	
+	chain->SetBranchStatus("Pileup_nTrueInt",1);
+	chain->SetBranchAddress("Pileup_nTrueInt", &nPUTrue_);
+    }
 
 	
     // event
@@ -56,8 +57,10 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("luminosityBlock",1);
     chain->SetBranchAddress("luminosityBlock", &lumis_);
 
-    chain->SetBranchStatus("Generator_weight",1);
-    chain->SetBranchAddress("Generator_weight", &genWeight_);
+    if (!isData_){
+	chain->SetBranchStatus("Generator_weight",1);
+	chain->SetBranchAddress("Generator_weight", &genWeight_);
+    }
 
     chain->SetBranchStatus("PV_npvs",1);
     chain->SetBranchAddress("PV_npvs", &nVtx_);
@@ -86,12 +89,13 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("MET_phi",1);
     chain->SetBranchAddress("MET_phi", &MET_phi_);
 
-    chain->SetBranchStatus("GenMET_pt",1);
-    chain->SetBranchAddress("GenMET_pt", &GenMET_pt_);
-
-    chain->SetBranchStatus("GenMET_phi",1);
-    chain->SetBranchAddress("GenMET_phi", &GenMET_phi_);
-
+    if (!isData_){
+	chain->SetBranchStatus("GenMET_pt",1);
+	chain->SetBranchAddress("GenMET_pt", &GenMET_pt_);
+	
+	chain->SetBranchStatus("GenMET_phi",1);
+	chain->SetBranchAddress("GenMET_phi", &GenMET_phi_);
+    }
 
 	
     // electrons	
@@ -244,13 +248,13 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("Jet_btagDeepFlavB",1);
     chain->SetBranchAddress("Jet_btagDeepFlavB", &jetBtagDeepFlavB_);
 
-
-    chain->SetBranchStatus("Jet_hadronFlavour",1);
-    chain->SetBranchAddress("Jet_hadronFlavour", &jetHadFlvr_);
-
-    chain->SetBranchStatus("Jet_genJetIdx",1);
-    chain->SetBranchAddress("Jet_genJetIdx", &jetGenJetIdx_);
-
+    if (!isData_){
+	chain->SetBranchStatus("Jet_hadronFlavour",1);
+	chain->SetBranchAddress("Jet_hadronFlavour", &jetHadFlvr_);
+	
+	chain->SetBranchStatus("Jet_genJetIdx",1);
+	chain->SetBranchAddress("Jet_genJetIdx", &jetGenJetIdx_);
+    }
 
     // // photons
 	
@@ -310,49 +314,50 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchAddress("Photon_electronVeto", &phoEleVeto_);
 	
     // Gen Partons
+    if (!isData_){
+	chain->SetBranchStatus("nGenPart",1);
+	chain->SetBranchAddress("nGenPart", &nGenPart_);
+	
+	chain->SetBranchStatus("GenPart_pt",1);
+	chain->SetBranchAddress("GenPart_pt", &GenPart_pt_);
+	
+	chain->SetBranchStatus("GenPart_eta",1);
+	chain->SetBranchAddress("GenPart_eta", &GenPart_eta_);
+	
+	chain->SetBranchStatus("GenPart_phi",1);
+	chain->SetBranchAddress("GenPart_phi", &GenPart_phi_);
 
-    chain->SetBranchStatus("nGenPart",1);
-    chain->SetBranchAddress("nGenPart", &nGenPart_);
+	chain->SetBranchStatus("GenPart_mass",1);
+	chain->SetBranchAddress("GenPart_mass", &GenPart_mass_);
 
-    chain->SetBranchStatus("GenPart_pt",1);
-    chain->SetBranchAddress("GenPart_pt", &GenPart_pt_);
+	chain->SetBranchStatus("GenPart_genPartIdxMother",1);
+	chain->SetBranchAddress("GenPart_genPartIdxMother", &GenPart_genPartIdxMother_);
 
-    chain->SetBranchStatus("GenPart_eta",1);
-    chain->SetBranchAddress("GenPart_eta", &GenPart_eta_);
+	chain->SetBranchStatus("GenPart_pdgId",1);
+	chain->SetBranchAddress("GenPart_pdgId", &GenPart_pdgId_);
+	
+	chain->SetBranchStatus("GenPart_status",1);
+	chain->SetBranchAddress("GenPart_status", &GenPart_status_);
+	
+	chain->SetBranchStatus("GenPart_statusFlags",1);
+	chain->SetBranchAddress("GenPart_statusFlags", &GenPart_statusFlags_);
+    
 
-    chain->SetBranchStatus("GenPart_phi",1);
-    chain->SetBranchAddress("GenPart_phi", &GenPart_phi_);
+	chain->SetBranchStatus("nGenJet",1);
+	chain->SetBranchAddress("nGenJet", &nGenJet_);
+	
+	chain->SetBranchStatus("GenJet_pt",1);
+	chain->SetBranchAddress("GenJet_pt", &GenJet_pt_);
 
-    chain->SetBranchStatus("GenPart_mass",1);
-    chain->SetBranchAddress("GenPart_mass", &GenPart_mass_);
+	chain->SetBranchStatus("GenJet_eta",1);
+	chain->SetBranchAddress("GenJet_eta", &GenJet_eta_);
 
-    chain->SetBranchStatus("GenPart_genPartIdxMother",1);
-    chain->SetBranchAddress("GenPart_genPartIdxMother", &GenPart_genPartIdxMother_);
+	chain->SetBranchStatus("GenJet_phi",1);
+	chain->SetBranchAddress("GenJet_phi", &GenJet_phi_);
 
-    chain->SetBranchStatus("GenPart_pdgId",1);
-    chain->SetBranchAddress("GenPart_pdgId", &GenPart_pdgId_);
-
-    chain->SetBranchStatus("GenPart_status",1);
-    chain->SetBranchAddress("GenPart_status", &GenPart_status_);
-
-    chain->SetBranchStatus("GenPart_statusFlags",1);
-    chain->SetBranchAddress("GenPart_statusFlags", &GenPart_statusFlags_);
-
-
-    chain->SetBranchStatus("nGenJet",1);
-    chain->SetBranchAddress("nGenJet", &nGenJet_);
-
-    chain->SetBranchStatus("GenJet_pt",1);
-    chain->SetBranchAddress("GenJet_pt", &GenJet_pt_);
-
-    chain->SetBranchStatus("GenJet_eta",1);
-    chain->SetBranchAddress("GenJet_eta", &GenJet_eta_);
-
-    chain->SetBranchStatus("GenJet_phi",1);
-    chain->SetBranchAddress("GenJet_phi", &GenJet_phi_);
-
-    chain->SetBranchStatus("GenJet_mass",1);
-    chain->SetBranchAddress("GenJet_mass", &GenJet_mass_);
+	chain->SetBranchStatus("GenJet_mass",1);
+	chain->SetBranchAddress("GenJet_mass", &GenJet_mass_);
+    }
 
     //Fliters
     chain->SetBranchStatus("Flag_goodVertices",1);

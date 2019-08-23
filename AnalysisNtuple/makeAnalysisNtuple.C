@@ -71,6 +71,14 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
     systematicType = "";
     cout << sampleType << endl;
+
+
+    isMC = true;
+    if (sampleType.find("Data") != std::string::npos){
+	isMC = false;
+    }
+
+    tree->isData_ = !isMC;
     
     isSystematicRun = false;
 
@@ -266,11 +274,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     PUReweight* PUweighterDown = new PUReweight(ac-4, av+4, PUfilename_down);
     tree->GetEntry(0);
         
-    isMC = tree->nGenPart_>0;
-
     std::cout << "isMC: " << isMC << endl;
-
-    tree->isData_ = !isMC;
 
     InitBranches();
 
