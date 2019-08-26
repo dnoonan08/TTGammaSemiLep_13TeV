@@ -80,14 +80,48 @@ int main(int ac, char** av){
 	if (std::string(av[4])=="xrootd"){
 	    xRootDAccess=true;
 	    std::cout << "Will access files from xRootD" << std::endl;
+	    for (int i = 4; i < ac-1; i++){
+		av[i] = av[i+1];
+		//cout << av[i] << " ";
+	    }
+	    ac = ac-1;
 	}
 
-	EventTree* tree;
-	if (xRootDAccess){
-	    tree = new EventTree(ac-5, xRootDAccess, year, av+5);
-	} else {
-	    tree = new EventTree(ac-4, xRootDAccess, year, av+4);
+	cout << av+5 << endl;
+
+	bool splitByEvents=false;
+
+	
+	int nFiles = ac-4;
+	int startFile = 0;
+
+	if (nJob>0 && totJob>0){
+	    if (ac-4 >= totJob){
+		double filesPerJob = 1.*(ac-4)/totJob;
+		cout << "Processing " << filesPerJob << " files per job on average" << endl;
+		startFile = int((nJob-1)*filesPerJob);
+		nFiles = int(nJob*filesPerJob) - startFile;
+		cout << "   total of " << (ac-4) << " files" << endl;
+		cout << "   this job will process files " << startFile << " to " << startFile+nFiles << endl;
+	    } else {
+		splitByEvents = true;
+	    }
+	    
 	}
+
+	char** fileList(av+4+startFile);
+
+
+	EventTree* tree;
+
+	tree = new EventTree(nFiles, xRootDAccess, year, fileList);
+
+
+	// if (xRootDAccess){
+	//     tree = new EventTree(ac-5, xRootDAccess, year, av+5);
+	// } else {
+	//     tree = new EventTree(ac-4, xRootDAccess, year, av+4);
+	// }
 
 	tree->isData_ = !isMC;
 
@@ -217,7 +251,7 @@ int main(int ac, char** av){
 	int endEntry = nEntr;
 	int eventsPerJob = nEntr;
 
-	if (nJob>0 && totJob>0){
+	if (splitByEvents) {
 	    eventsPerJob = int(1.*nEntr/totJob);
 	    startEntry = (nJob-1)*eventsPerJob;
 	    endEntry = nJob*eventsPerJob;
@@ -241,7 +275,6 @@ int main(int ac, char** av){
 
 	TH1D* hEvents_    = new TH1D("hEvents",    "number of events (+/- event weight)",      3,  -1.5, 1.5);
 
-
 	for(Long64_t entry= startEntry; entry < endEntry; entry++){
 	//	for(Long64_t entry= 0; entry < 300; entry++){ 	
 		if(entry%dumpFreq == 0) {
@@ -250,7 +283,7 @@ int main(int ac, char** av){
 			// std::cout << "processing entry " << entry << " out of " << nEntr << " : " << duration << " seconds since last progress" << std::endl;
 			// startClock = clock();
 
-			std::cout << "processing entry " << entry << " out of " << nEntr << " : " 
+			std::cout << "processing entry " << entry << " out of " << endEntry << " : " 
 				  << std::chrono::duration<double>(std::chrono::high_resolution_clock::now()-startClock).count()
 				  << " seconds since last progress" << std::endl;
 

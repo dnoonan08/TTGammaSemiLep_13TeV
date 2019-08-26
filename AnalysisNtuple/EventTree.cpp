@@ -7,7 +7,8 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     //std::cout << chain->GetCacheSize() << std::endl;
     chain->SetCacheSize(100*1024*1024);
     if (xRootDAccess){
-	string dir = "root://cms-xrd-global.cern.ch/";
+	//string dir = "root://cms-xrd-global.cern.ch/";
+	string dir = "root://cmsxrootd.fnal.gov/";
 	for(int fileI=0; fileI<nFiles; fileI++){
 	    string fName = (string) fileNames[fileI];
 	    chain->Add( (dir + fileNames[fileI]).c_str() );
