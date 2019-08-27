@@ -30,8 +30,8 @@ double minGenDr(int myInd, const EventTree* tree){
 }
 
 bool overlapRemovalTT(EventTree* tree){
-    const double Et_cut = 13;
-    const double Eta_cut = 3.0;
+    const double Et_cut = 10;
+    const double Eta_cut = 5.0;
     bool haveOverlap = false;
     for(int mcInd=0; mcInd<tree->nGenPart_; ++mcInd){
         if(tree->GenPart_pdgId_[mcInd]==22 &&
