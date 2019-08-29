@@ -266,7 +266,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     cout << av[3] << " " << sampleType << " " << systematicType << endl;
     //	outputFileName = sprintf("%s_AnalysisNtuple.root",sampleType);
     if (systematicType!=""){
-	outputFileName = outputDirectory + "/"+systematicType + "_" +sampleType+"_AnalysisNtuple.root";
+	outputFileName = outputDirectory + "/"+systematicType + "_" +sampleType+"_"+year+"_AnalysisNtuple.root";
 	//		sprintf(outputFileName,"%s/%s_%s_AnalysisNtuple.root",av[3],systematicType,sampleType);
     }
     cout << av[3] << " " << sampleType << " " << systematicType << endl;
