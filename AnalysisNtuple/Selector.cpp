@@ -328,12 +328,15 @@ void Selector::filter_electrons(){
         
 	
         if (QCDselect){
+            Float_t isoEBcut = 0.0287 + 0.506/tree->elePt_[eleInd];
+            Float_t isoEECut = 0.0445 + 0.963/tree->elePt_[eleInd];
             passTightID = false;
             passTightID = passEleTightID(eleInd,false) && 
-		PFrelIso_corr > (absSCEta < 1.47 ? 0.0588 : 0.0571) && 
-		(tree->eleEcalSumEtDr03_[eleInd] / tree->elePt_[eleInd] ) < (absSCEta < 1.47 ? 0.032 : 0.040) && 
-		(tree->eleHcalSumEtDr03_[eleInd] / tree->elePt_[eleInd] ) < (absSCEta < 1.47 ? 0.055 : 0.05) && 
-		(tree->eleTrkSumPtDr03_[eleInd]   / tree->elePt_[eleInd] ) < (absSCEta < 1.47 ? 0.06 : 0.05);
+		PFrelIso_corr > (absSCEta < 1.479 ? isoEBcut : isoEECut);
+	//	PFrelIso_corr > (absSCEta < 1.47 ? 0.0588 : 0.0571) && 
+	//	(tree->eleEcalSumEtDr03_[eleInd] / tree->elePt_[eleInd] ) < (absSCEta < 1.47 ? 0.032 : 0.040) && 
+	//	(tree->eleHcalSumEtDr03_[eleInd] / tree->elePt_[eleInd] ) < (absSCEta < 1.47 ? 0.055 : 0.05) && 
+	//	(tree->eleTrkSumPtDr03_[eleInd]   / tree->elePt_[eleInd] ) < (absSCEta < 1.47 ? 0.06 : 0.05);
         }
         
         bool eleSel = (passEtaEBEEGap && 
@@ -527,18 +530,18 @@ bool Selector::passEleTightID(int eleInd, bool doRelisoCut){
 
     Int_t WPcutBits = tree->eleVidWPBitmap_[eleInd];
 
-    int nBits = 2;
+ int nBits = 3;
 
-    bool MinPtCut                            = WPcutBits>>(9*nBits+1) & 3;
-    bool GsfEleSCEtaMultiRangeCut            = WPcutBits>>(8*nBits+1) & 3;
-    bool GsfEleDEtaInSeedCut                 = WPcutBits>>(7*nBits+1) & 3;
-    bool GsfEleDPhiInCut                     = WPcutBits>>(6*nBits+1) & 3;
-    bool GsfEleFull5x5SigmaIEtaIEtaCut       = WPcutBits>>(5*nBits+1) & 3;
-    bool GsfEleHadronicOverEMEnergyScaledCut = WPcutBits>>(4*nBits+1) & 3;
-    bool GsfEleEInverseMinusPInverseCut      = WPcutBits>>(3*nBits+1) & 3;
-    bool GsfEleEffAreaPFIsoCut               = WPcutBits>>(2*nBits+1) & 3;
-    bool GsfEleConversionVetoCut             = WPcutBits>>(1*nBits+1) & 3;
-    bool GsfEleMissingHitsCut                = WPcutBits>>(0*nBits+1) & 3;
+    bool MinPtCut                            = (WPcutBits>>(0*nBits) & 7) >= 4;
+    bool GsfEleSCEtaMultiRangeCut            = (WPcutBits>>(1*nBits) & 7) >= 4;
+    bool GsfEleDEtaInSeedCut                 = (WPcutBits>>(2*nBits) & 7) >= 4;
+    bool GsfEleDPhiInCut                     = (WPcutBits>>(3*nBits) & 7) >= 4;
+    bool GsfEleFull5x5SigmaIEtaIEtaCut       = (WPcutBits>>(4*nBits) & 7) >= 4;
+    bool GsfEleHadronicOverEMEnergyScaledCut = (WPcutBits>>(5*nBits) & 7) >= 4;
+    bool GsfEleEInverseMinusPInverseCut      = (WPcutBits>>(6*nBits) & 7) >= 4;
+    bool GsfEleEffAreaPFIsoCut               = (WPcutBits>>(7*nBits) & 7) >= 4;
+    bool GsfEleConversionVetoCut             = (WPcutBits>>(8*nBits) & 7) >= 4;
+    bool GsfEleMissingHitsCut                = (WPcutBits>>(9*nBits) & 7) >= 4;
 
     bool passTight = (MinPtCut
                       && GsfEleSCEtaMultiRangeCut
