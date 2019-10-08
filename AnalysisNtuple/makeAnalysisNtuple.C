@@ -924,12 +924,6 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	}
     }
 
-    //Calculate transverse mass variables
-    //W transverse mass		
-
-    _WtransMass = TMath::Sqrt(2*lepVector.Pt()*tree->MET_pt_*( 1.0 - TMath::Cos( lepVector.DeltaPhi(METVector))));
-
-
     // // Calculate MET z
 
     metZ.SetLepton(lepVector);
@@ -940,6 +934,12 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 			   0.);
 	
     metZ.SetMET(METVector);
+
+    //Calculate transverse mass variables
+    //W transverse mass		
+
+    _WtransMass = TMath::Sqrt(2*lepVector.Pt()*tree->MET_pt_*( 1.0 - TMath::Cos( lepVector.DeltaPhi(METVector))));
+
 
     // TLorentzVector tempLep;
     // tempLep.SetPtEtaPhiM(lepVector.Pt(),
