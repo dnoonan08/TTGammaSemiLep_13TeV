@@ -25,7 +25,8 @@ int elescale012_g = 1;
 #include "BTagCalibrationStandalone.h"
 
 bool overlapRemovalTT(EventTree* tree);
-bool overlapRemovalWZ(EventTree* tree);
+bool overlapRemovalZJets(EventTree* tree);
+bool overlapRemovalWJets(EventTree* tree);
 bool overlapRemoval_Tchannel(EventTree* tree);
 double getJetResolution(double, double, double);
 
@@ -187,8 +188,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		BTagEntry::FLAV_UDSG,    // btag flavour
 		"incl");               // measurement type
     
-    bool doOverlapRemoval = false;
-    bool doOverlapRemoval_WZ = false;	
+    bool doOverlapRemoval_TT = false;
+    bool doOverlapRemoval_W = false;	
+    bool doOverlapRemoval_Z = false;	
     bool doOverlapRemoval_Tchannel = false;	
     
     bool invertOverlap = false;
@@ -200,13 +202,24 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
     if (sampleType.find("TTbarPowheg")!= std::string::npos) {
-	doOverlapRemoval = true;
+	doOverlapRemoval_TT = true;
     }
     
-    if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets" || sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50" || sampleType=="DYjetsM10to50_MLM" || sampleType=="DYjetsM50_MLM") doOverlapRemoval_WZ = true;
+    if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets"){
+	doOverlapRemoval_W = true;
+    }
+
+    if (sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50" || sampleType=="DYjetsM10to50_MLM" || sampleType=="DYjetsM50_MLM"){
+	doOverlapRemoval_Z = true;
+    }
     
-    if( sampleType == "ST_t-channel" || sampleType == "ST_tbar-channel") doOverlapRemoval_Tchannel = true;
-    if(doOverlapRemoval || doOverlapRemoval_WZ || doOverlapRemoval_Tchannel) std::cout << "########## Will apply overlap removal ###########" << std::endl;
+    if( sampleType == "ST_t-channel" || sampleType == "ST_tbar-channel") {
+	doOverlapRemoval_Tchannel = true;
+    }
+
+    if(doOverlapRemoval_TT || doOverlapRemoval_W || doOverlapRemoval_Z || doOverlapRemoval_Tchannel) {
+	std::cout << "########## Will apply overlap removal ###########" << std::endl;
+    }
     
 
     dileptonsample = false;
@@ -417,7 +430,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	//  cout << entry << endl;
 	tree->GetEntry(entry);
 
-	if( isMC && doOverlapRemoval){
+	if( isMC && doOverlapRemoval_TT){
 	    if (!invertOverlap){
 		if (overlapRemovalTT(tree)){	
 		    count_overlapTTbar++;			
@@ -430,8 +443,14 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		}
 	    }
 	}
-	if( isMC && doOverlapRemoval_WZ){
-	    if (overlapRemovalWZ(tree)){
+	if( isMC && doOverlapRemoval_W){
+	    if (overlapRemovalWJets(tree)){
+		count_overlapVJets++;
+		continue;
+	    }
+	}
+	if( isMC && doOverlapRemoval_Z){
+	    if (overlapRemovalZJets(tree)){
 		count_overlapVJets++;
 		continue;
 	    }
@@ -536,10 +555,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	    outputTree->Fill();
 	}
     }
-    if (doOverlapRemoval){
+    if (doOverlapRemoval_TT){
 	std::cout << "Total number of events removed from TTbar:"<< count_overlapTTbar <<std::endl;
     }
-    if(doOverlapRemoval_WZ){
+    if(doOverlapRemoval_W || doOverlapRemoval_Z){
 	std::cout << "Total number of events removed from W/ZJets:"<< count_overlapVJets <<std::endl;
     }
     if(doOverlapRemoval_Tchannel){

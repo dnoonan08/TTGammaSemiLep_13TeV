@@ -42,7 +42,10 @@ double ZGamma_xs            = 131.3; // ?????? https://twiki.cern.ch/twiki/bin/v
 double WGamma_xs            = 585.8; // ?????? https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns lists it as 489
 
 double ZGamma_01J_xs    = 50.2   ;
-double WGamma_01J_xs    = 203.3  ;
+double ZGamma_01J_lowMass_xs    = 105.4   ; //from GenXSecAnalzer of 1M events
+
+//double WGamma_01J_xs    = 203.3  ;  ///?? Old? New one from GenXSecAnalzer is below (change in pt cut?)
+double WGamma_01J_xs    = 465.0 ; // LO from GenXSecAnalzer of 1M events
 
 double WW_xs                = 75.8;//118.7;
 double WZ_xs                = 27.6;//47.13;
@@ -136,6 +139,7 @@ double getEvtWeight(string sampleType, double luminosity, double nEvents_MC){
 	else if( sampleType=="ZGamma") {evtWeight = ZGamma_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="WGamma") {evtWeight = WGamma_xs * luminosity / nEvents_MC;}
 	else if (sampleType=="ZGamma_01J_5f") {evtWeight = ZGamma_01J_xs * luminosity / nEvents_MC;}
+	else if (sampleType=="ZGamma_01J_5f_lowMass") {evtWeight = ZGamma_01J_lowMass_xs * luminosity / nEvents_MC;}
 	else if (sampleType=="WGamma_01J_5f") {evtWeight = WGamma_01J_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="WW") {evtWeight = WW_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="WZ") {evtWeight = WZ_xs * luminosity / nEvents_MC;}
@@ -295,6 +299,7 @@ const std::string allowedSampleTypes[116] = {"Data",
 					     "ZGamma",
 					     "WGamma",
 					     "ZGamma_01J_5f",
+					     "ZGamma_01J_5f_lowMass",
 					     "WGamma_01J_5f",
 					     "WW",
 					     "WZ",

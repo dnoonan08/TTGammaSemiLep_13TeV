@@ -51,7 +51,7 @@ bool overlapRemovalTT(EventTree* tree){
 	    if (parentagePass) {
 		double minDR = minGenDr(mcInd, tree);
 			
-		if(minDR > 0.2) {
+		if(minDR > 0.1) {
 		    haveOverlap = true;
 		}
 	    }
@@ -60,7 +60,37 @@ bool overlapRemovalTT(EventTree* tree){
     return haveOverlap;
 }
 
-bool overlapRemovalWZ(EventTree* tree){
+bool overlapRemovalWJets(EventTree* tree){
+    const double Et_cut = 10;
+    const double Eta_cut = 2.5;
+    bool haveOverlap = false;
+    for(int mcInd=0; mcInd<tree->nGenPart_; ++mcInd){
+        if(tree->GenPart_pdgId_[mcInd]==22 &&
+           tree->GenPart_pt_[mcInd] > Et_cut &&
+           fabs(tree->GenPart_eta_[mcInd]) < Eta_cut) {
+
+	    Int_t parentIdx = mcInd;
+	    int maxPDGID = 0;
+	    int motherPDGID = 0;
+	    while (parentIdx != -1){
+		motherPDGID = std::abs(tree->GenPart_pdgId_[parentIdx]);
+		maxPDGID = std::max(maxPDGID,motherPDGID);
+		parentIdx = tree->GenPart_genPartIdxMother_[parentIdx];
+	    }
+
+	    bool parentagePass = maxPDGID < 37;
+	    
+	    if (parentagePass) {
+		if(minGenDr(mcInd, tree) > 0.05) {
+		    haveOverlap = true;
+		}
+	    }
+        }
+    }
+    return haveOverlap;
+}
+
+bool overlapRemovalZJets(EventTree* tree){
     const double Et_cut = 15;
     const double Eta_cut = 2.6;
     bool haveOverlap = false;
@@ -81,7 +111,7 @@ bool overlapRemovalWZ(EventTree* tree){
 	    bool parentagePass = maxPDGID < 37;
 	    
 	    if (parentagePass) {
-		if(minGenDr(mcInd, tree) > 0.2) {
+		if(minGenDr(mcInd, tree) > 0.05) {
 		    haveOverlap = true;
 		}
 	    }
