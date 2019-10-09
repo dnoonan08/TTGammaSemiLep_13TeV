@@ -23,10 +23,10 @@ double alt_TTGamma_dilept_xs    =  1.026;//0.9556;   //0.899;
 double alt_TTGamma_noFullyHad_xs    =  0.9556 + 3.1201 ;
 double WjetsInclusive_xs    = 61526.7; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#W_jets
 
-double W1jets_xs            =  9493.0;
-double W2jets_xs            =  3120.0;
-double W3jets_xs            =  942.3;
-double W4jets_xs            =  524.2;
+double W1jets_xs            =  11524;//9493.0;
+double W2jets_xs            =  3788;//3120.0;
+double W3jets_xs            =  1166;//942.3;
+double W4jets_xs            =  636;//524.2;
 
 double DYjetsM50_xs         =  5765.4; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 double DYjetsM10to50_xs     =  18610.; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
