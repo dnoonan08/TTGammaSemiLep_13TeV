@@ -13,14 +13,25 @@ double TTGJets_xs               =  3.697; //https://twiki.cern.ch/twiki/bin/view
 
 double TGJets_xs                =  2.967;
 
-double TTGamma_hadronic_xs  = 2.045;//3.482;   //4.599;
-double TTGamma_semilept_xs  =  1.544*2;//5.017/2.;//4.499/2.;
-double TTGamma_dilept_xs    =  1.026;//1.679;   //0.899;
-double TTGamma_noFullyHad_xs    =  1.679 + 5.017/2 ;
-double alt_TTGamma_hadronic_xs  = 2.045 ;//2.4315;   //4.599;
-double alt_TTGamma_semilept_xs  =  1.544;//3.1201/2.;//4.499/2.;
-double alt_TTGamma_dilept_xs    =  1.026;//0.9556;   //0.899;
-double alt_TTGamma_noFullyHad_xs    =  0.9556 + 3.1201 ;
+double TTGamma_hadronic_xs  =  4.164;
+double TTGamma_semilept_xs  =  5.076;
+double TTGamma_dilept_xs    =  1.495;
+
+double TTGamma_hadronic_Pt100_xs  =  0.1251;
+double TTGamma_semilept_Pt100_xs  =  0.132;
+double TTGamma_dilept_Pt100_xs    =  0.03428;
+
+double TTGamma_hadronic_Pt200_xs  =  0.02674;
+double TTGamma_semilept_Pt200_xs  =  0.02703;
+double TTGamma_dilept_Pt200_xs    =  0.006812;
+
+double TTGamma_noFullyHad_xs    =  TTGamma_semilept_xs + TTGamma_dilept_xs ;
+
+/* double alt_TTGamma_hadronic_xs  = 2.045 ;//2.4315;   //4.599; */
+/* double alt_TTGamma_semilept_xs  =  1.544;//3.1201/2.;//4.499/2.; */
+/* double alt_TTGamma_dilept_xs    =  1.026;//0.9556;   //0.899; */
+/* double alt_TTGamma_noFullyHad_xs    =  0.9556 + 3.1201 ; */
+
 double WjetsInclusive_xs    = 61526.7; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#W_jets
 
 double W1jets_xs            =  11524;//9493.0;
@@ -106,10 +117,10 @@ double getEvtWeight(string sampleType, double luminosity, double nEvents_MC){
 	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="TTGamma_noFullyHad") {evtWeight = TTGamma_noFullyHad_xs * luminosity / nEvents_MC;}
         else if( sampleType=="TTbarPowheg") {evtWeight = TTbar_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="TTbarPowheg1") {evtWeight = TTbar_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="TTbarPowheg2") {evtWeight = TTbar_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="TTbarPowheg3") {evtWeight = TTbar_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="TTbarPowheg4") {evtWeight = TTbar_xs * luminosity / nEvents_MC;}
+	/* else if( sampleType=="TTbarPowheg1") {evtWeight = TTbar_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="TTbarPowheg2") {evtWeight = TTbar_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="TTbarPowheg3") {evtWeight = TTbar_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="TTbarPowheg4") {evtWeight = TTbar_xs * luminosity / nEvents_MC;} */
         else if( sampleType=="TTbarPowheg_Dilepton") {evtWeight = TTbar_dilepton_xs * luminosity / nEvents_MC;}
         else if( sampleType=="TTbarPowheg_Semilept") {evtWeight = TTbar_semilept_xs * luminosity / nEvents_MC;}
         else if( sampleType=="TTbarPowheg_Hadronic") {evtWeight = TTbar_hadronic_xs * luminosity / nEvents_MC;}
@@ -119,12 +130,12 @@ double getEvtWeight(string sampleType, double luminosity, double nEvents_MC){
 	else if( sampleType=="TTbarMadgraph_SingleLeptFromT") {evtWeight = TTbar_semilept_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="TTbarMadgraph_SingleLeptFromTbar") {evtWeight = TTbar_semilept_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="WjetsInclusive") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="WjetsInclusive1") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="WjetsInclusive2") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="WjetsInclusive3") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="WjetsInclusive4") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="WjetsInclusive5") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="WjetsInclusive6") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;}
+	/* else if( sampleType=="WjetsInclusive1") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="WjetsInclusive2") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="WjetsInclusive3") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="WjetsInclusive4") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="WjetsInclusive5") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="WjetsInclusive6") {evtWeight = WjetsInclusive_xs * luminosity / nEvents_MC;} */
 	else if( sampleType=="W1jets") {evtWeight = W1jets_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="W2jets") {evtWeight = W2jets_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="W3jets") {evtWeight = W3jets_xs * luminosity / nEvents_MC;}
@@ -144,11 +155,11 @@ double getEvtWeight(string sampleType, double luminosity, double nEvents_MC){
 	else if( sampleType=="WW") {evtWeight = WW_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="WZ") {evtWeight = WZ_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="ZZ") {evtWeight = ZZ_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="ST_tW-channel") {evtWeight = ST_tW_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="ST_tbarW-channel") {evtWeight = ST_tbarW_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="ST_t-channel") {evtWeight = ST_tchannel_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="ST_tbar-channel") {evtWeight = ST_tbarchannel_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="ST_s-channel") {evtWeight = ST_schannel_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="ST_tW_channel") {evtWeight = ST_tW_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="ST_tbarW_channel") {evtWeight = ST_tbarW_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="ST_t_channel") {evtWeight = ST_tchannel_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="ST_tbar_channel") {evtWeight = ST_tbarchannel_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="ST_s_channel") {evtWeight = ST_schannel_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="QCD_Pt20to30_Mu") {evtWeight = QCD_Pt20to30_Mu_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="QCD_Pt30to50_Mu") {evtWeight = QCD_Pt30to50_Mu_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="QCD_Pt50to80_Mu") {evtWeight = QCD_Pt50to80_Mu_xs * luminosity / nEvents_MC;}
@@ -169,51 +180,51 @@ double getEvtWeight(string sampleType, double luminosity, double nEvents_MC){
 	else if( sampleType=="QCD_Pt170to300_Ele") {evtWeight = QCD_Pt170to300_Ele_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="QCD_Pt300toInf_Ele") {evtWeight = QCD_Pt300toInf_Ele_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="QCD_Pt40toInf_Ele") {evtWeight = QCD_Pt40toInf_Ele_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="GJets_HT-40To100")  {evtWeight = GJets_HT40to100_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="GJets_HT-100To200") {evtWeight = GJets_HT100to200_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="GJets_HT-200To400") {evtWeight = GJets_HT200to400_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="GJets_HT-400To600") {evtWeight = GJets_HT400to600_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="GJets_HT-600ToInf") {evtWeight = GJets_HT600toInf_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="GJets_HT40To100")  {evtWeight = GJets_HT40to100_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="GJets_HT100To200") {evtWeight = GJets_HT100to200_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="GJets_HT200To400") {evtWeight = GJets_HT200to400_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="GJets_HT400To600") {evtWeight = GJets_HT400to600_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="GJets_HT600ToInf") {evtWeight = GJets_HT600toInf_xs * luminosity / nEvents_MC;}
 
-	else if( sampleType=="fsr_down_TTGamma_Dilepton") {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="fsr_up_TTGamma_Dilepton")   {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="isr_down_TTGamma_Dilepton") {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="isr_up_TTGamma_Dilepton")   {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="fsr_down_TTGamma_SingleLeptFromT")    {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="fsr_up_TTGamma_SingleLeptFromT")      {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="isr_down_TTGamma_SingleLeptFromT")    {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="isr_up_TTGamma_SingleLeptFromT")      {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="fsr_down_TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="fsr_up_TTGamma_SingleLeptFromTbar")   {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="isr_down_TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="isr_up_TTGamma_SingleLeptFromTbar")   {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="fsr_up_TTbarPowheg")                  {evtWeight=TTbar_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="fsr_down_TTbarPowheg")                {evtWeight=TTbar_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="isr_up_TTbarPowheg")                  {evtWeight=TTbar_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="isr_down_TTbarPowheg")                {evtWeight=TTbar_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="Gencut_TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="Gencut_TTGamma_Semilept_Tbar") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="Gencut_TTGamma_Semilept_T") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="Gencut_TTGamma_Dilept") {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;}
+	/* else if( sampleType=="fsr_down_TTGamma_Dilepton") {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="fsr_up_TTGamma_Dilepton")   {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="isr_down_TTGamma_Dilepton") {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="isr_up_TTGamma_Dilepton")   {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="fsr_down_TTGamma_SingleLeptFromT")    {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="fsr_up_TTGamma_SingleLeptFromT")      {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="isr_down_TTGamma_SingleLeptFromT")    {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="isr_up_TTGamma_SingleLeptFromT")      {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="fsr_down_TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="fsr_up_TTGamma_SingleLeptFromTbar")   {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="isr_down_TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="isr_up_TTGamma_SingleLeptFromTbar")   {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="fsr_up_TTbarPowheg")                  {evtWeight=TTbar_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="fsr_down_TTbarPowheg")                {evtWeight=TTbar_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="isr_up_TTbarPowheg")                  {evtWeight=TTbar_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="isr_down_TTbarPowheg")                {evtWeight=TTbar_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="Gencut_TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="Gencut_TTGamma_Semilept_Tbar") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="Gencut_TTGamma_Semilept_T") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="Gencut_TTGamma_Dilept") {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;} */
 
-	else if( sampleType=="alt_TTGamma_Hadronic")           {evtWeight = alt_TTGamma_hadronic_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_TTGamma_SingleLeptFromTbar") {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_TTGamma_SingleLeptFromT")    {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_TTGamma_Dilepton")           {evtWeight = alt_TTGamma_dilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_TTGamma_noFullyHad")        {evtWeight = alt_TTGamma_noFullyHad_xs * luminosity / nEvents_MC;}
+	/* else if( sampleType=="alt_TTGamma_Hadronic")           {evtWeight = alt_TTGamma_hadronic_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_TTGamma_SingleLeptFromTbar") {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_TTGamma_SingleLeptFromT")    {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_TTGamma_Dilepton")           {evtWeight = alt_TTGamma_dilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_TTGamma_noFullyHad")        {evtWeight = alt_TTGamma_noFullyHad_xs * luminosity / nEvents_MC;} */
 
-	else if( sampleType=="alt_fsr_down_TTGamma_Dilepton") {evtWeight = alt_TTGamma_dilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_fsr_up_TTGamma_Dilepton")   {evtWeight = alt_TTGamma_dilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_isr_down_TTGamma_Dilepton") {evtWeight = alt_TTGamma_dilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_isr_up_TTGamma_Dilepton")   {evtWeight = alt_TTGamma_dilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_fsr_down_TTGamma_SingleLeptFromT")    {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_fsr_up_TTGamma_SingleLeptFromT")      {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_isr_down_TTGamma_SingleLeptFromT")    {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_isr_up_TTGamma_SingleLeptFromT")      {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_fsr_down_TTGamma_SingleLeptFromTbar") {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_fsr_up_TTGamma_SingleLeptFromTbar")   {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_isr_down_TTGamma_SingleLeptFromTbar") {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="alt_isr_up_TTGamma_SingleLeptFromTbar")   {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;}
+	/* else if( sampleType=="alt_fsr_down_TTGamma_Dilepton") {evtWeight = alt_TTGamma_dilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_fsr_up_TTGamma_Dilepton")   {evtWeight = alt_TTGamma_dilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_isr_down_TTGamma_Dilepton") {evtWeight = alt_TTGamma_dilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_isr_up_TTGamma_Dilepton")   {evtWeight = alt_TTGamma_dilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_fsr_down_TTGamma_SingleLeptFromT")    {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_fsr_up_TTGamma_SingleLeptFromT")      {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_isr_down_TTGamma_SingleLeptFromT")    {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_isr_up_TTGamma_SingleLeptFromT")      {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_fsr_down_TTGamma_SingleLeptFromTbar") {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_fsr_up_TTGamma_SingleLeptFromTbar")   {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_isr_down_TTGamma_SingleLeptFromTbar") {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;} */
+	/* else if( sampleType=="alt_isr_up_TTGamma_SingleLeptFromTbar")   {evtWeight = alt_TTGamma_semilept_xs * luminosity / nEvents_MC;} */
 
 	else {
 		cout << "-------------------------------------------------" << endl;
@@ -242,7 +253,7 @@ double getEvtWeight(string sampleType, double luminosity, double nEvents_MC){
 
 
 
-const std::string allowedSampleTypes[116] = {"Data",
+const std::string allowedSampleTypes[150] = {"Data",
 					     "Data_SingleMu_a",
 					     "Data_SingleMu_b",
 					     "Data_SingleMu_c",
@@ -260,16 +271,19 @@ const std::string allowedSampleTypes[116] = {"Data",
 					     "Data_SingleEle_g",
 					     "Data_SingleEle_h",
 					     "TTGamma_Hadronic",
+					     "TTGamma_Hadronic_Pt100",
+					     "TTGamma_Hadronic_Pt200",
 					     "TTGamma_SingleLeptFromTbar",
 					     "TTGamma_SingleLeptFromT",
 					     "TTGamma_SingleLept",
+					     "TTGamma_SingleLept_Pt100",
+					     "TTGamma_SingleLept_Pt200",
 					     "TTGamma_Dilepton",
+					     "TTGamma_Dilepton_Pt100",
+					     "TTGamma_Dilepton_Pt200",
 					     "TTGamma_noFullyHad",
+
 					     "TTbarPowheg",
-					     "TTbarPowheg1",
-					     "TTbarPowheg2",
-					     "TTbarPowheg3",
-					     "TTbarPowheg4",
 					     "TTbarPowheg_Semilept",
 					     "TTbarPowheg_Dilepton",
 					     "TTbarPowheg_Hadronic",
@@ -304,11 +318,11 @@ const std::string allowedSampleTypes[116] = {"Data",
 					     "WW",
 					     "WZ",
 					     "ZZ",
-					     "ST_tW-channel",
-					     "ST_tbarW-channel",
-					     "ST_t-channel",
-					     "ST_tbar-channel",
-					     "ST_s-channel",
+					     "ST_tW_channel",
+					     "ST_tbarW_channel",
+					     "ST_t_channel",
+					     "ST_tbar_channel",
+					     "ST_s_channel",
 					     "QCD_Pt20to30_Mu",
 					     "QCD_Pt30to50_Mu",
 					     "QCD_Pt50to80_Mu",
@@ -329,11 +343,11 @@ const std::string allowedSampleTypes[116] = {"Data",
 					     "QCD_Pt300toInf_Ele",
 					     "QCD_Pt30to40_Ele",
 					     "QCD_Pt40toInf_Ele",
-					     "GJets_HT-40To100",
-					     "GJets_HT-100To200",
-					     "GJets_HT-200To400",
-					     "GJets_HT-400To600",
-					     "GJets_HT-600ToInf",
+					     "GJets_HT40To100",
+					     "GJets_HT100To200",
+					     "GJets_HT200To400",
+					     "GJets_HT400To600",
+					     "GJets_HT600ToInf",
 					     "TGJets",
 					     "TTGJets",
 					     "isr_up_TTGamma_SingleLeptFromTbar",

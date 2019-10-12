@@ -324,11 +324,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
 
     _lumiWeight = getEvtWeight(sampleType, luminosity, nMC_total);
-    _lumiWeightAlt = _lumiWeight;
+    // _lumiWeightAlt = _lumiWeight;
 
-    if (isTTGamma){
-	_lumiWeightAlt = getEvtWeight("alt_"+sampleType, luminosity, nMC_total);
-    }
+    // if (isTTGamma){
+    // 	_lumiWeightAlt = getEvtWeight("alt_"+sampleType, luminosity, nMC_total);
+    // }
 
     _PUweight       = 1.;
     _muEffWeight    = 1.;
@@ -587,11 +587,11 @@ void makeAnalysisNtuple::FillEvent(std::string year)
     // _rho		 = tree->rho_;
     
     _evtWeight       = _lumiWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
-    _evtWeightAlt    = _lumiWeightAlt *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
+    //    _evtWeightAlt    = _lumiWeightAlt *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
 
     if (_isData) {
 	_evtWeight= 1.;
-	_evtWeightAlt= 1.;
+	//	_evtWeightAlt= 1.;
     }
     
     _genMET		     = tree->GenMET_pt_;
@@ -859,17 +859,19 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 
 	// TODO Reimplement with NANOAOD
 
-	// if (!tree->isData_){
-	//     phoGenMatchInd = findPhotonGenMatch(phoInd, tree);
-	    
-	//     _loosePhoGenMatchInd.push_back(phoGenMatchInd);
-	    
-	//     findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
-	//     _loosePhotonIsGenuine.push_back(isGenuine);
-	//     _loosePhotonIsMisIDEle.push_back(isMisIDEle);
-	//     _loosePhotonIsHadronicPhoton.push_back(isHadronicPhoton);
-	//     _loosePhotonIsHadronicFake.push_back(isHadronicFake);
-	// }
+	if (!tree->isData_){
+	    //phoGenMatchInd = findPhotonGenMatch(phoInd, tree);
+	    phoGenMatchInd = tree->phoGenPartIdx_[phoInd];
+            
+	    _loosePhoGenMatchInd.push_back(phoGenMatchInd);
+
+	    findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+	    _loosePhotonIsGenuine.push_back(isGenuine);
+	    _loosePhotonIsMisIDEle.push_back(isMisIDEle);
+	    _loosePhotonIsHadronicPhoton.push_back(isHadronicPhoton);
+	    _loosePhotonIsHadronicFake.push_back(isHadronicFake);
+	}
+
 	
     }
     
