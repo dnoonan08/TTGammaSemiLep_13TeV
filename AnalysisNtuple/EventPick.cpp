@@ -58,6 +58,8 @@ EventPick::EventPick(std::string titleIn){
 
     ZeroBExclusive = false;
 
+    applyMetFilter   = false;
+
     Npho_ge = 1;
 
 }
@@ -77,7 +79,6 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
     if (tree->event_==printEvent){
 	cout << "Found Event Number " << printEvent << endl;
     }
-    bool applyMetFilter   = false;
     bool Pass_trigger_mu  = false;
     bool Pass_trigger_ele = false;
 

@@ -42,6 +42,8 @@ public:
 
 	bool ZeroBExclusive;
 
+	bool applyMetFilter;
+
 	int Jet_Pt_cut_1;
 	int Jet_Pt_cut_2;
 	int Jet_Pt_cut_3;	

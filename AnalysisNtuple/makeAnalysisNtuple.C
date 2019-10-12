@@ -157,6 +157,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     //	selector->jet_Pt_cut = 40.;
     evtPick->Njet_ge = 2;	
     evtPick->NBjet_ge = 0;	
+
+    evtPick->applyMetFilter = true;	
+
     BTagCalibration calib;
     if (!selector->useDeepCSVbTag){
 	if (year=="2016") calib = BTagCalibration("csvv2", "BtagSF/CSVv2_Moriond17_B_H.csv");
