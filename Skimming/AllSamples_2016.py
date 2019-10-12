@@ -129,11 +129,11 @@ sampleList_2016 = {'TTGamma_Dilept'     : '/TTGamma_Dilept_TuneCP5_PSweights_13T
 'QCD_Pt30to50_Ele_ext1'   : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt30to50_EM_ext1/191003_030647/0000',
 'QCD_Pt50to80_Ele'        : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt50to80_EM/191003_030713/0000',
 'QCD_Pt50to80_Ele_ext1'   : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt50to80_EM_ext1/191003_030806/0000',
-'QCD_Pt80to120_Ele'       : ' /store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt80to120_EM/191003_030838/0000',
-'QCD_Pt80to120_Ele_ext1'  : ' /store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt80to120_EM_ext1/191003_030908/0000',
-'QCD_Pt120to170_Ele'      : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt120to170_EM/191003_031019/0000',
-'QCD_Pt120to170_Ele_ext1' : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt120to170_EM_ext1/191003_031048/0000',
-#'QCD_Pt170to300_Ele'      : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt170to300_EM/191003_031220/0000',
-#'QCD_Pt300toInf_Ele'      : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt300toInf_EM/191003_031246/0000',
+'QCD_Pt80to120_Ele'       : ' /store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt80to120_EM/191009_145001/0000',
+'QCD_Pt80to120_Ele_ext1'  : ' /store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt80to120_EM_ext1/191007_162328/0000',
+'QCD_Pt120to170_Ele'      : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt120to170_EM/191009_144902/0000',
+'QCD_Pt120to170_Ele_ext1' : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt120to170_EM_ext1/191009_144911/0000',
+'QCD_Pt170to300_Ele'      : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt170to300_EM/191007_171912/0000',
+'QCD_Pt300toInf_Ele'      : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt300toInf_EM/191007_172129/0000',
 
 }

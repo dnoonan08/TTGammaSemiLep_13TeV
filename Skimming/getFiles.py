@@ -26,5 +26,9 @@ def getFileList_EOS(sample):
     return names
 
 if __name__=="__main__":
-    s = sys.argv[1]
-    print (getFileList_DAS(s))
+    location=sys.argv[1]
+    s = sys.argv[2]
+    if location=="DAS":
+        print (getFileList_DAS(s))
+    if location=="EOS":
+        print (getFileList_EOS(s))
