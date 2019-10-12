@@ -1,0 +1,182 @@
+universe = vanilla
+Executable = runSkims.sh
+
+should_transfer_files = YES
+#WhenToTransferOutput  = ON_EXIT
+notification = never
+
+Transfer_Input_Files = makeSkim, fileLists_2018.sh
+
+Output = condor/Skim_2018_$(cluster)_$(process).stdout
+Error  = condor/Skim_2018_$(cluster)_$(process).stderr
+Log    = condor/Skim_2018_$(cluster)_$(process).condor
+
+X=$(step)+1
+Arguments = "TTGamma_Dilept 2018"
+Queue 1
+Arguments = "TTGamma_Hadronic 2018"
+Queue 1
+Arguments = "TTGamma_SingleLept 2018"
+Queue 1
+Arguments = "TTGamma_Dilept_pt100to200 2018"
+Queue 1
+Arguments = "TTGamma_Dilept_pt200toInf 2018"
+Queue 1
+Arguments = "TTGamma_SingleLept_pt100to200 2018"
+Queue 1
+Arguments = "TTGamma_SingleLept_pt200toInf 2018"
+Queue 1
+Arguments = "TTGamma_Hadronic_pt100to200 2018"
+Queue 1
+Arguments = "TTGamma_Hadronic_pt200toInf 2018"
+Queue 1
+Arguments = "TTGamma_Dilept_small 2018"
+Queue 1
+Arguments = "TTGamma_Hadronic_small 2018"
+Queue 1
+Arguments = "TTGamma_SemiLept_small 2018"
+Queue 1
+Arguments = "TTGamma_Dilept_TuneDown 2018"
+Queue 1
+Arguments = "TTGamma_Dilept_TuneUp 2018"
+Queue 1
+Arguments = "TTGamma_Dilept_erdOn 2018"
+Queue 1
+Arguments = "TTGamma_SingleLept_TuneDown 2018"
+Queue 1
+Arguments = "TTGamma_SingleLept_TuneUp 2018"
+Queue 1
+Arguments = "TTGamma_SingleLept_erdOn 2018"
+Queue 1
+
+Arguments = "Data_SingleMu_a 2018 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_b 2018 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_c 2018 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_d 2018 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_a 2018 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_b 2018 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_c 2018 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_d 2018 $INT(X) 5"
+Queue 5
+Arguments = "TTbarPowheg_Dilepton 2018 $INT(X) 5"
+Queue 5
+Arguments = "TTbarPowheg_Hadronic 2018 $INT(X) 5"
+Queue 5
+Arguments = "TTbarPowheg_Semilept 2018 $INT(X) 5"
+Queue 5
+
+Arguments = "W1jets 2018"
+Queue 1
+Arguments = "W2jets 2018"
+Queue 1
+Arguments = "W3jets 2018"
+Queue 1
+Arguments = "W4jets 2018"
+Queue 1
+
+Arguments = "DYjetsM10to50 2018"
+Queue 1
+Arguments = "DYjetsM10to50_ext1 2018"
+Queue 1
+Arguments = "DYjetsM50 2018 $INT(X) 5"
+Queue 5
+
+Arguments = "ST_schannel 2018"
+Queue 1
+Arguments = "ST_tchannel 2018"
+Queue 1
+Arguments = "ST_tbarchannel 2018"
+Queue 1
+Arguments = "ST_tWchannel 2018"
+Queue 1
+Arguments = "ST_tbarWchannel 2018"
+Queue 1
+
+Arguments = "TTWtoQQ 2018"
+Queue 1
+Arguments = "TTWtoLNu 2018"
+Queue 1
+Arguments = "TTZtoLL 2018"
+Queue 1
+
+Arguments = "WW 2018"
+Queue 1
+Arguments = "WZ 2018"
+Queue 1
+Arguments = "ZZ 2018"
+Queue 1
+
+Arguments = "WGamma 2018"
+Queue 1
+Arguments = "ZGamma_lowMLL 2018"
+Queue 1
+Arguments = "TGJets 2018"
+Queue 1
+
+Arguments = "GJets_HT_40To100 2018"
+Queue 1
+Arguments = "GJets_HT_100To200 2018"
+Queue 1
+Arguments = "GJets_HT_200To400 2018"
+Queue 1
+Arguments = "GJets_HT_400To600 2018"
+Queue 1
+Arguments = "GJets_HT_600ToInf 2018"
+Queue 1
+
+Arguments = "QCD_Pt20to30_Mu 2018"
+Queue 1
+Arguments = "QCD_Pt30to50_Mu 2018"
+Queue 1
+Arguments = "QCD_Pt50to80_Mu 2018"
+Queue 1
+Arguments = "QCD_Pt80to120_Mu 2018"
+Queue 1
+Arguments = "QCD_Pt80to120_Mu_ext1 2018"
+Queue 1
+Arguments = "QCD_Pt120to170_Mu 2018"
+Queue 1
+Arguments = "QCD_Pt120to170_Mu_ext1 2018"
+Queue 1
+Arguments = "QCD_Pt170to300_Mu 2018"
+Queue 1
+Arguments = "QCD_Pt300to470_Mu 2018"
+Queue 1
+Arguments = "QCD_Pt300to470_Mu_ext3 2018"
+Queue 1
+Arguments = "QCD_Pt470to600_Mu 2018"
+Queue 1
+Arguments = "QCD_Pt470to600_Mu_ext1 2018"
+Queue 1
+Arguments = "QCD_Pt600to800_Mu 2018"
+Queue 1
+Arguments = "QCD_Pt800to1000_Mu 2018"
+Queue 1
+Arguments = "QCD_Pt1000toInf_Mu 2018"
+Queue 1
+
+Arguments = "QCD_Pt20to30_Ele 2018"
+Queue 1
+Arguments = "QCD_Pt30to50_Ele 2018"
+Queue 1
+Arguments = "QCD_Pt50to80_Ele 2018"
+Queue 1
+Arguments = "QCD_Pt80to120_Ele 2018"
+Queue 1
+Arguments = "QCD_Pt120to170_Ele 2018"
+Queue 1
+Arguments = "QCD_Pt170to300_Ele 2018"
+Queue 1
+Arguments = "QCD_Pt300toInf_Ele 2018"
+Queue 1
+
+
+
+

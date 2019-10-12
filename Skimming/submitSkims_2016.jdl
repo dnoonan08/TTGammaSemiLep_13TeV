@@ -1,0 +1,243 @@
+universe = vanilla
+Executable = runSkims.sh
+
+should_transfer_files = YES
+#WhenToTransferOutput  = ON_EXIT
+notification = never
+
+Transfer_Input_Files = makeSkim, fileLists_2016.sh
+
+Output = condor/Skim_2016_$(cluster)_$(process).stdout
+Error  = condor/Skim_2016_$(cluster)_$(process).stderr
+Log    = condor/Skim_2016_$(cluster)_$(process).condor
+
+X=$(step)+1
+
+Arguments = "TTGamma_Dilept 2016"
+Queue 1
+Arguments = "TTGamma_Hadronic 2016"
+Queue 1
+Arguments = "TTGamma_SingleLept 2016"
+Queue 1
+
+Arguments = "TTGamma_Dilept_pt100to200 2016"
+Queue 1
+Arguments = "TTGamma_Dilept_pt200toInf 2016"
+Queue 1
+Arguments = "TTGamma_SingleLept_pt100to200 2016"
+Queue 1
+Arguments = "TTGamma_SingleLept_pt200toInf 2016"
+Queue 1
+Arguments = "TTGamma_Hadronic_pt100to200 2016"
+Queue 1
+Arguments = "TTGamma_Hadronic_pt200toInf 2016"
+Queue 1
+
+Arguments = "TTGamma_Dilept_small 2016"
+Queue 1
+Arguments = "TTGamma_Hadronic_small 2016"
+Queue 1
+Arguments = "TTGamma_SemiLept_small 2016"
+Queue 1
+Arguments = "TTGamma_Dilept_TuneDown 2016"
+Queue 1
+Arguments = "TTGamma_Dilept_TuneUp 2016"
+Queue 1
+Arguments = "TTGamma_Dilept_erdOn 2016"
+Queue 1
+Arguments = "TTGamma_SingleLept_TuneDown 2016"
+Queue 1
+Arguments = "TTGamma_SingleLept_TuneUp 2016"
+Queue 1
+Arguments = "TTGamma_SingleLept_erdOn 2016"
+Queue 1
+
+Arguments = "Data_SingleMu_b 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_c 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_d 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_e 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_f 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_g 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_h 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_b 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_c 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_d 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_e 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_f 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_g 2016 $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_h 2016 $INT(X) 5"
+Queue 5
+
+Arguments = "TTbarPowheg_Dilepton 2016 $INT(X) 5"
+Queue 5
+Arguments = "TTbarPowheg_Hadronic 2016 $INT(X) 5"
+Queue 5
+Arguments = "TTbarPowheg_Semilept 2016 $INT(X) 5"
+Queue 5
+
+Arguments = "W1jets 2016"
+Queue 1
+Arguments = "W2jets 2016"
+Queue 1
+Arguments = "W2jets_ext1 2016"
+Queue 1
+Arguments = "W3jets 2016"
+Queue 1
+Arguments = "W3jets_ext1 2016"
+Queue 1
+Arguments = "W4jets 2016"
+Queue 1
+Arguments = "W4jets_ext1 2016"
+Queue 1
+Arguments = "W4jets_ext2 2016"
+Queue 1
+
+Arguments = "DYjetsM10to50 2016"
+Queue 1
+
+Arguments = "DYjetsM50_ext1 2016 $INT(X) 5"
+Queue 5
+Arguments = "DYjetsM50_ext2 2016 $INT(X) 5"
+Queue 5
+
+Arguments = "ST_schannel 2016"
+Queue 1
+Arguments = "ST_tchannel 2016"
+Queue 1
+Arguments = "ST_tbarchannel 2016"
+Queue 1
+Arguments = "ST_tWchannel 2016"
+Queue 1
+Arguments = "ST_tbarWchannel 2016"
+Queue 1
+
+Arguments = "TTWtoQQ 2016"
+Queue 1
+Arguments = "TTWtoLNu_ext1 2016"
+Queue 1
+Arguments = "TTWtoLNu_ext2 2016"
+Queue 1
+Arguments = "TTZtoLL_ext1 2016"
+Queue 1
+Arguments = "TTZtoLL_ext2 2016"
+Queue 1
+Arguments = "TTZtoLL_ext3 2016"
+Queue 1
+
+Arguments = "WW 2016"
+Queue 1
+Arguments = "WW_ext1 2016"
+Queue 1
+Arguments = "WZ 2016"
+Queue 1
+Arguments = "WZ_ext1 2016"
+Queue 1
+Arguments = "ZZ 2016"
+Queue 1
+Arguments = "ZZ_ext1 2016"
+Queue 1
+Arguments = "WGamma 2016"
+Queue 1
+Arguments = "ZGamma_lowMLL 2016"
+Queue 1
+
+Arguments = "TGJets 2016"
+Queue 1
+
+Arguments = "GJets_HT_40To100 2016"
+Queue 1
+Arguments = "GJets_HT_40To100_ext1 2016"
+Queue 1
+Arguments = "GJets_HT_100To200 2016"
+Queue 1
+Arguments = "GJets_HT_100To200_ext1 2016"
+Queue 1
+Arguments = "GJets_HT_200To400 2016"
+Queue 1
+Arguments = "GJets_HT_200To400_ext1 2016"
+Queue 1
+Arguments = "GJets_HT_400To600 2016"
+Queue 1
+Arguments = "GJets_HT_400To600_ext1 2016"
+Queue 1
+Arguments = "GJets_HT_600ToInf 2016"
+Queue 1
+Arguments = "GJets_HT_600ToInf_ext1 2016"
+Queue 1
+
+Arguments = "QCD_Pt20to30_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt30to50_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt50to80_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt80to120_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt80to120_Mu_ext1 2016"
+Queue 1
+Arguments = "QCD_Pt120to170_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt170to300_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt170to300_Mu_ext1 2016"
+Queue 1
+Arguments = "QCD_Pt300to470_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt300to470_Mu_ext1 2016"
+Queue 1
+Arguments = "QCD_Pt300to470_Mu_ext2 2016"
+Queue 1
+Arguments = "QCD_Pt470to600_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt470to600_Mu_ext1 2016"
+Queue 1
+Arguments = "QCD_Pt470to600_Mu_ext2 2016"
+Queue 1
+Arguments = "QCD_Pt600to800_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt600to800_Mu_ext1 2016"
+Queue 1
+Arguments = "QCD_Pt800to1000_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt800to1000_Mu_ext1 2016"
+Queue 1
+Arguments = "QCD_Pt800to1000_Mu_ext2 2016"
+Queue 1
+Arguments = "QCD_Pt1000toInf_Mu 2016"
+Queue 1
+Arguments = "QCD_Pt1000toInf_Mu_ext1 2016"
+Queue 1
+
+Arguments = "QCD_Pt20to30_Ele 2016"
+Queue 1
+Arguments = "QCD_Pt30to50_Ele 2016"
+Queue 1
+Arguments = "QCD_Pt30to50_Ele_ext1 2016"
+Queue 1
+Arguments = "QCD_Pt50to80_Ele 2016"
+Queue 1
+Arguments = "QCD_Pt50to80_Ele_ext1 2016"
+Queue 1
+Arguments = "QCD_Pt80to120_Ele 2016"
+Queue 1
+Arguments = "QCD_Pt80to120_Ele_ext1 2016"
+Queue 1
+Arguments = "QCD_Pt120to170_Ele 2016"
+Queue 1
+Arguments = "QCD_Pt120to170_Ele_ext1 2016"
+Queue 1
+
+
