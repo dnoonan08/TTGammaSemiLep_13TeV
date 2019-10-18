@@ -11,6 +11,7 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
+#include <TH2.h>
 #include "EventTree.h"
 #include "EventPick.h"
 #include "Selector.h"
@@ -65,7 +66,9 @@ class makeAnalysisNtuple {
     ElectronSF* eleSF;
     PhotonSF* phoSF;
     
-
+    TH2D* l_eff;
+    TH2D* c_eff;
+    TH2D* b_eff;
 
 
     // Fixed size dimensions of array or collections stored in the TTree if any.
@@ -91,6 +94,12 @@ class makeAnalysisNtuple {
     Float_t	         _pdfweight_Do;
     std::vector<float> _pdfSystWeight;
 
+
+    float _btagWeight_1a;
+    float _btagWeight_1a_b_Up;
+    float _btagWeight_1a_b_Do;
+    float _btagWeight_1a_l_Up;
+    float _btagWeight_1a_l_Do;
 
     std::vector<float> _btagWeight;
     std::vector<float> _btagWeight_b_Up;
@@ -327,7 +336,9 @@ class makeAnalysisNtuple {
 
     double SFtop(double pt);
     double topPtWeight();
-    vector<float> getBtagSF(string sysType, BTagCalibrationReader reader, vector<float> &btagSF);
+    void loadBtagEff(string sampleType, string year);
+    float getBtagSF_1a(string sysType, BTagCalibrationReader reader);
+    vector<float> getBtagSF_1c(string sysType, BTagCalibrationReader reader, vector<float> &btagSF);
 
     /* double getMuSF(int muInd, int systLevel); */
     /* double getEleSF(int eleInd, int systLevel); */
@@ -362,11 +373,16 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("PUweight_Do"                , &_PUweight_Do                 );
     }
     outputTree->Branch("btagWeight"                 , &_btagWeight                  );
+    outputTree->Branch("btagWeight_1a"                 , &_btagWeight_1a                  );
     if (!isSystematicRun){
 	outputTree->Branch("btagWeight_b_Up"              , &_btagWeight_b_Up               );
 	outputTree->Branch("btagWeight_b_Do"              , &_btagWeight_b_Do               );
 	outputTree->Branch("btagWeight_l_Up"              , &_btagWeight_l_Up               );
 	outputTree->Branch("btagWeight_l_Do"              , &_btagWeight_l_Do               );
+	outputTree->Branch("btagWeight_1a_b_Up"              , &_btagWeight_1a_b_Up               );
+	outputTree->Branch("btagWeight_1a_b_Do"              , &_btagWeight_1a_b_Do               );
+	outputTree->Branch("btagWeight_1a_l_Up"              , &_btagWeight_1a_l_Up               );
+	outputTree->Branch("btagWeight_1a_l_Do"              , &_btagWeight_1a_l_Do               );
     }
     outputTree->Branch("btagSF"                     , &_btagSF                      );
     outputTree->Branch("muEffWeight"                , &_muEffWeight                 );
@@ -644,6 +660,12 @@ void makeAnalysisNtuple::InitVariables()
     _btagWeight_b_Do.clear();
     _btagWeight_l_Up.clear();
     _btagWeight_l_Do.clear();
+
+    _btagWeight_1a = 1.;
+    _btagWeight_1a_b_Up = 1.;
+    _btagWeight_1a_b_Do = 1.;
+    _btagWeight_1a_l_Up = 1.;
+    _btagWeight_1a_l_Do = 1.;
 
     _btagSF.clear();
     _btagSF_b_Up.clear();
