@@ -11,36 +11,37 @@ Output = condor/Skim_2018_$(cluster)_$(process).stdout
 Error  = condor/Skim_2018_$(cluster)_$(process).stderr
 Log    = condor/Skim_2018_$(cluster)_$(process).condor
 
+
 X=$(step)+1
-Arguments = "TTGamma_Dilept 2018"
+Arguments = "TTGamma_Dilepton 2018"
 Queue 1
 Arguments = "TTGamma_Hadronic 2018"
 Queue 1
 Arguments = "TTGamma_SingleLept 2018"
 Queue 1
-Arguments = "TTGamma_Dilept_pt100to200 2018"
+Arguments = "TTGamma_Dilepton_Pt100 2018"
 Queue 1
-Arguments = "TTGamma_Dilept_pt200toInf 2018"
+Arguments = "TTGamma_Dilepton_Pt200 2018"
 Queue 1
-Arguments = "TTGamma_SingleLept_pt100to200 2018"
+Arguments = "TTGamma_SingleLept_Pt100 2018"
 Queue 1
-Arguments = "TTGamma_SingleLept_pt200toInf 2018"
+Arguments = "TTGamma_SingleLept_Pt200 2018"
 Queue 1
-Arguments = "TTGamma_Hadronic_pt100to200 2018"
+Arguments = "TTGamma_Hadronic_Pt100 2018"
 Queue 1
-Arguments = "TTGamma_Hadronic_pt200toInf 2018"
+Arguments = "TTGamma_Hadronic_Pt200 2018"
 Queue 1
-Arguments = "TTGamma_Dilept_small 2018"
+Arguments = "TTGamma_Dilepton_small 2018"
 Queue 1
 Arguments = "TTGamma_Hadronic_small 2018"
 Queue 1
 Arguments = "TTGamma_SemiLept_small 2018"
 Queue 1
-Arguments = "TTGamma_Dilept_TuneDown 2018"
+Arguments = "TTGamma_Dilepton_TuneDown 2018"
 Queue 1
-Arguments = "TTGamma_Dilept_TuneUp 2018"
+Arguments = "TTGamma_Dilepton_TuneUp 2018"
 Queue 1
-Arguments = "TTGamma_Dilept_erdOn 2018"
+Arguments = "TTGamma_Dilepton_erdOn 2018"
 Queue 1
 Arguments = "TTGamma_SingleLept_TuneDown 2018"
 Queue 1
@@ -49,22 +50,22 @@ Queue 1
 Arguments = "TTGamma_SingleLept_erdOn 2018"
 Queue 1
 
-Arguments = "Data_SingleMu_a 2018 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_b 2018 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_c 2018 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_d 2018 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_a 2018 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_b 2018 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_c 2018 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_d 2018 $INT(X) 5"
-Queue 5
+Arguments = "Data_SingleMu_a 2018 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleMu_b 2018 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleMu_c 2018 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleMu_d 2018 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_a 2018 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_b 2018 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_c 2018 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_d 2018 $INT(X) 10"
+Queue 10
 Arguments = "TTbarPowheg_Dilepton 2018 $INT(X) 5"
 Queue 5
 Arguments = "TTbarPowheg_Hadronic 2018 $INT(X) 5"
@@ -88,15 +89,15 @@ Queue 1
 Arguments = "DYjetsM50 2018 $INT(X) 5"
 Queue 5
 
-Arguments = "ST_schannel 2018"
+Arguments = "ST_s_channel 2018"
 Queue 1
-Arguments = "ST_tchannel 2018"
+Arguments = "ST_t_channel 2018"
 Queue 1
-Arguments = "ST_tbarchannel 2018"
+Arguments = "ST_tbar_channel 2018"
 Queue 1
-Arguments = "ST_tWchannel 2018"
+Arguments = "ST_tW_channel 2018"
 Queue 1
-Arguments = "ST_tbarWchannel 2018"
+Arguments = "ST_tbarW_channel 2018"
 Queue 1
 
 Arguments = "TTWtoQQ 2018"
@@ -115,20 +116,20 @@ Queue 1
 
 Arguments = "WGamma 2018"
 Queue 1
-Arguments = "ZGamma_lowMLL 2018"
+Arguments = "ZGamma_01J_5f_lowMass 2018"
 Queue 1
 Arguments = "TGJets 2018"
 Queue 1
 
-Arguments = "GJets_HT_40To100 2018"
+Arguments = "GJets_HT40To100 2018"
 Queue 1
-Arguments = "GJets_HT_100To200 2018"
+Arguments = "GJets_HT100To200 2018"
 Queue 1
-Arguments = "GJets_HT_200To400 2018"
+Arguments = "GJets_HT200To400 2018"
 Queue 1
-Arguments = "GJets_HT_400To600 2018"
+Arguments = "GJets_HT400To600 2018"
 Queue 1
-Arguments = "GJets_HT_600ToInf 2018"
+Arguments = "GJets_HT600ToInf 2018"
 Queue 1
 
 Arguments = "QCD_Pt20to30_Mu 2018"

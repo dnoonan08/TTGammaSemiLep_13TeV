@@ -13,38 +13,38 @@ Log    = condor/Skim_2017_$(cluster)_$(process).condor
 
 X=$(step)+1
 
-Arguments = "TTGamma_Dilept 2017"
+Arguments = "TTGamma_Dilepton 2017"
 Queue 1
 Arguments = "TTGamma_Hadronic 2017"
 Queue 1
 Arguments = "TTGamma_SingleLept 2017"
 Queue 1
 
-Arguments = "TTGamma_Dilept_pt100to200 2017"
+Arguments = "TTGamma_Dilepton_Pt100 2017"
 Queue 1
-Arguments = "TTGamma_Dilept_pt200toInf 2017"
+Arguments = "TTGamma_Dilepton_Pt200 2017"
 Queue 1
-Arguments = "TTGamma_SingleLept_pt100to200 2017"
+Arguments = "TTGamma_SingleLept_Pt100 2017"
 Queue 1
-Arguments = "TTGamma_SingleLept_pt200toInf 2017"
+Arguments = "TTGamma_SingleLept_Pt200 2017"
 Queue 1
-Arguments = "TTGamma_Hadronic_pt100to200 2017"
+Arguments = "TTGamma_Hadronic_Pt100 2017"
 Queue 1
-Arguments = "TTGamma_Hadronic_pt200toInf 2017"
+Arguments = "TTGamma_Hadronic_Pt200 2017"
 Queue 1
 
-Arguments = "TTGamma_Dilept_small 2017"
+Arguments = "TTGamma_Dilepton_small 2017"
 Queue 1
 Arguments = "TTGamma_Hadronic_small 2017"
 Queue 1
 Arguments = "TTGamma_SemiLept_small 2017"
 Queue 1
 
-Arguments = "TTGamma_Dilept_TuneDown 2017"
+Arguments = "TTGamma_Dilepton_TuneDown 2017"
 Queue 1
-Arguments = "TTGamma_Dilept_TuneUp 2017"
+Arguments = "TTGamma_Dilepton_TuneUp 2017"
 Queue 1
-Arguments = "TTGamma_Dilept_erdOn 2017"
+Arguments = "TTGamma_Dilepton_erdOn 2017"
 Queue 1
 Arguments = "TTGamma_SingleLept_TuneDown 2017"
 Queue 1
@@ -98,15 +98,15 @@ Queue 5
 Arguments = "DYjetsM50_ext2 2017 $INT(X) 5"
 Queue 5
 
-Arguments = "ST_schannel 2017"
+Arguments = "ST_s_channel 2017"
 Queue 1
-Arguments = "ST_tchannel 2017"
+Arguments = "ST_t_channel 2017"
 Queue 1
-Arguments = "ST_tbarchannel 2017"
+Arguments = "ST_tbar_channel 2017"
 Queue 1
-Arguments = "ST_tWchannel 2017"
+Arguments = "ST_tW_channel 2017"
 Queue 1
-Arguments = "ST_tbarWchannel 2017"
+Arguments = "ST_tbarW_channel 2017"
 Queue 1
 
 Arguments = "TTWtoQQ 2017"
@@ -124,21 +124,21 @@ Arguments = "ZZ 2017"
 Queue 1
 Arguments = "WGamma 2017"
 Queue 1
-Arguments = "ZGamma_lowMLL 2017"
+Arguments = "ZGamma_01J_5f_lowMass 2017"
 Queue 1
 
 Arguments = "TGJets 2017"
 Queue 1
 
-Arguments = "GJets_HT_40To100 2017"
+Arguments = "GJets_HT40To100 2017"
 Queue 1
-Arguments = "GJets_HT_100To200 2017"
+Arguments = "GJets_HT100To200 2017"
 Queue 1
-Arguments = "GJets_HT_200To400 2017"
+Arguments = "GJets_HT200To400 2017"
 Queue 1
-Arguments = "GJets_HT_400To600 2017"
+Arguments = "GJets_HT400To600 2017"
 Queue 1
-Arguments = "GJets_HT_600ToInf 2017"
+Arguments = "GJets_HT600ToInf 2017"
 Queue 1
 
 Arguments = "QCD_Pt20to30_Mu 2017"

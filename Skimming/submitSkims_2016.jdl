@@ -11,39 +11,40 @@ Output = condor/Skim_2016_$(cluster)_$(process).stdout
 Error  = condor/Skim_2016_$(cluster)_$(process).stderr
 Log    = condor/Skim_2016_$(cluster)_$(process).condor
 
-X=$(step)+1
 
-Arguments = "TTGamma_Dilept 2016"
+
+X=$(step)+1
+Arguments = "TTGamma_Dilepton 2016"
 Queue 1
 Arguments = "TTGamma_Hadronic 2016"
 Queue 1
 Arguments = "TTGamma_SingleLept 2016"
 Queue 1
 
-Arguments = "TTGamma_Dilept_pt100to200 2016"
+Arguments = "TTGamma_Dilepton_Pt100 2016"
 Queue 1
-Arguments = "TTGamma_Dilept_pt200toInf 2016"
+Arguments = "TTGamma_Dilepton_Pt200 2016"
 Queue 1
-Arguments = "TTGamma_SingleLept_pt100to200 2016"
+Arguments = "TTGamma_SingleLept_Pt100 2016"
 Queue 1
-Arguments = "TTGamma_SingleLept_pt200toInf 2016"
+Arguments = "TTGamma_SingleLept_Pt200 2016"
 Queue 1
-Arguments = "TTGamma_Hadronic_pt100to200 2016"
+Arguments = "TTGamma_Hadronic_Pt100 2016"
 Queue 1
-Arguments = "TTGamma_Hadronic_pt200toInf 2016"
+Arguments = "TTGamma_Hadronic_Pt200 2016"
 Queue 1
 
-Arguments = "TTGamma_Dilept_small 2016"
+Arguments = "TTGamma_Dilepton_small 2016"
 Queue 1
 Arguments = "TTGamma_Hadronic_small 2016"
 Queue 1
 Arguments = "TTGamma_SemiLept_small 2016"
 Queue 1
-Arguments = "TTGamma_Dilept_TuneDown 2016"
+Arguments = "TTGamma_Dilepton_TuneDown 2016"
 Queue 1
-Arguments = "TTGamma_Dilept_TuneUp 2016"
+Arguments = "TTGamma_Dilepton_TuneUp 2016"
 Queue 1
-Arguments = "TTGamma_Dilept_erdOn 2016"
+Arguments = "TTGamma_Dilepton_erdOn 2016"
 Queue 1
 Arguments = "TTGamma_SingleLept_TuneDown 2016"
 Queue 1
@@ -113,15 +114,15 @@ Queue 5
 Arguments = "DYjetsM50_ext2 2016 $INT(X) 5"
 Queue 5
 
-Arguments = "ST_schannel 2016"
+Arguments = "ST_s_channel 2016"
 Queue 1
-Arguments = "ST_tchannel 2016"
+Arguments = "ST_t_channel 2016"
 Queue 1
-Arguments = "ST_tbarchannel 2016"
+Arguments = "ST_tbar_channel 2016"
 Queue 1
-Arguments = "ST_tWchannel 2016"
+Arguments = "ST_tW_channel 2016"
 Queue 1
-Arguments = "ST_tbarWchannel 2016"
+Arguments = "ST_tbarW_channel 2016"
 Queue 1
 
 Arguments = "TTWtoQQ 2016"
@@ -151,31 +152,31 @@ Arguments = "ZZ_ext1 2016"
 Queue 1
 Arguments = "WGamma 2016"
 Queue 1
-Arguments = "ZGamma_lowMLL 2016"
+Arguments = "ZGamma_01J_5f_lowMass 2016"
 Queue 1
 
 Arguments = "TGJets 2016"
 Queue 1
 
-Arguments = "GJets_HT_40To100 2016"
+Arguments = "GJets_HT40To100 2016"
 Queue 1
-Arguments = "GJets_HT_40To100_ext1 2016"
+Arguments = "GJets_HT40To100_ext1 2016"
 Queue 1
-Arguments = "GJets_HT_100To200 2016"
+Arguments = "GJets_HT100To200 2016"
 Queue 1
-Arguments = "GJets_HT_100To200_ext1 2016"
+Arguments = "GJets_HT100To200_ext1 2016"
 Queue 1
-Arguments = "GJets_HT_200To400 2016"
+Arguments = "GJets_HT200To400 2016"
 Queue 1
-Arguments = "GJets_HT_200To400_ext1 2016"
+Arguments = "GJets_HT200To400_ext1 2016"
 Queue 1
-Arguments = "GJets_HT_400To600 2016"
+Arguments = "GJets_HT400To600 2016"
 Queue 1
-Arguments = "GJets_HT_400To600_ext1 2016"
+Arguments = "GJets_HT400To600_ext1 2016"
 Queue 1
-Arguments = "GJets_HT_600ToInf 2016"
+Arguments = "GJets_HT600ToInf 2016"
 Queue 1
-Arguments = "GJets_HT_600ToInf_ext1 2016"
+Arguments = "GJets_HT600ToInf_ext1 2016"
 Queue 1
 
 Arguments = "QCD_Pt20to30_Mu 2016"
@@ -238,6 +239,10 @@ Queue 1
 Arguments = "QCD_Pt120to170_Ele 2016"
 Queue 1
 Arguments = "QCD_Pt120to170_Ele_ext1 2016"
+Queue 1
+Arguments = "QCD_Pt170to300_Ele 2016"
+Queue 1
+Arguments = "QCD_Pt300toInf_Ele 2016"
 Queue 1
 
 
