@@ -15,10 +15,12 @@ else
     cd CMSSW_10_2_10
     eval `scramv1 runtime -sh`
     cd -
-    echo 'Untarring Scale Factors'
+    echo "Untarring Scale Factors"
     tar -zxf RequiredScaleFactors.tgz
     mkdir AnalysisNtuple
     mv makeAnalysisNtuple AnalysisNtuple/makeAnalysisNtuple
+    echo "Done With Setup" ;
+
 fi
 
 

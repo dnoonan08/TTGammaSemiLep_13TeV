@@ -15,10 +15,11 @@ else
     cd CMSSW_10_2_10
     eval `scramv1 runtime -sh`
     cd -
-    echo 'Untarring Scale Factors'
+    echo "Untarring Scale Factors"
     tar -zxf RequiredScaleFactors.tgz
     mkdir AnalysisNtuple
     mv makeAnalysisNtuple AnalysisNtuple/makeAnalysisNtuple
+    echo "Done With Setup" ;
 fi
 
 
@@ -30,11 +31,11 @@ varname=${sample}_${year}
 echo "./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep . ${!varname}"
 ./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep . ${!varname}
 
-xrdcp -f Dilep_${sample}_${year}_AnalysisNtuple.root ${outputdir}/${year}
-
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
     echo "Finished" ;
 else
+    xrdcp -f Dilep_${sample}_${year}_AnalysisNtuple.root ${outputdir}/${year}
     echo "Finished, Cleaning up"
-    rm *
+    rm *root
+    rm RequiredScaleFactors.tgz
 fi
