@@ -175,6 +175,11 @@ class makeAnalysisNtuple {
     std::vector<bool>  _photonIsHadronicPhoton;
     std::vector<bool>  _photonIsHadronicFake;
 
+    std::vector<bool>  _photonIsGenuine_Old;
+    std::vector<bool>  _photonIsMisIDEle_Old;
+    std::vector<bool>  _photonIsHadronicPhoton_Old;
+    std::vector<bool>  _photonIsHadronicFake_Old;
+
     std::vector<int>   _photonParentage;
     std::vector<int>   _photonParentPID;
 
@@ -204,6 +209,8 @@ class makeAnalysisNtuple {
     std::vector<bool>    _loosePhoTightID;
     std::vector<bool>    _loosePhoMediumID;
     std::vector<bool>    _loosePhoLooseID;
+    std::vector<float>   _loosePhoMVAID;
+    std::vector<float>   _loosePhoMVAID17v1;
     std::vector<int>     _loosePhoGenMatchInd;
     std::vector<float>   _loosePhoMassLepGamma;
 
@@ -224,6 +231,11 @@ class makeAnalysisNtuple {
     std::vector<bool>    _loosePhotonIsMisIDEle;
     std::vector<bool>    _loosePhotonIsHadronicPhoton;
     std::vector<bool>    _loosePhotonIsHadronicFake;
+
+    std::vector<bool>    _loosePhotonIsGenuine_Old;
+    std::vector<bool>    _loosePhotonIsMisIDEle_Old;
+    std::vector<bool>    _loosePhotonIsHadronicPhoton_Old;
+    std::vector<bool>    _loosePhotonIsHadronicFake_Old;
 
     std::vector<float>    _loosePhoEffWeight;
     std::vector<float>    _loosePhoEffWeight_Up;
@@ -344,6 +356,7 @@ class makeAnalysisNtuple {
     /* double getEleSF(int eleInd, int systLevel); */
 
     void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
+    void findPhotonCategory_Old(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
     /* int findPhotonParentage(int phoInd, EventTree* tree); */
         int findPhotonGenMatch(int phoInd, EventTree* tree);
 
@@ -471,6 +484,9 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("loosePhoTightID"                 , &_loosePhoTightID                  ); 
     outputTree->Branch("loosePhoMediumID"                , &_loosePhoMediumID                 ); 
     outputTree->Branch("loosePhoLooseID"                 , &_loosePhoLooseID                  ); 
+    outputTree->Branch("loosePhoMVAId"                 , &_loosePhoMVAID                  ); 
+    outputTree->Branch("loosePhoMVAId17v1"             , &_loosePhoMVAID17v1              ); 
+
     outputTree->Branch("loosePhoGenMatchInd"                 , &_loosePhoGenMatchInd                  ); 
     outputTree->Branch("loosePhoMassLepGamma"                  , &_loosePhoMassLepGamma                   ); 
 	
@@ -575,6 +591,16 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("loosePhotonIsMisIDEle"            , &_loosePhotonIsMisIDEle           );
     outputTree->Branch("loosePhotonIsHadronicPhoton"      , &_loosePhotonIsHadronicPhoton     );
     outputTree->Branch("loosePhotonIsHadronicFake"        , &_loosePhotonIsHadronicFake       );
+
+    outputTree->Branch("photonIsGenuine_Old"             , &_photonIsGenuine_Old            );
+    outputTree->Branch("photonIsMisIDEle_Old"            , &_photonIsMisIDEle_Old           );
+    outputTree->Branch("photonIsHadronicPhoton_Old"      , &_photonIsHadronicPhoton_Old     );
+    outputTree->Branch("photonIsHadronicFake_Old"        , &_photonIsHadronicFake_Old       );
+    outputTree->Branch("loosePhotonIsGenuine_Old"             , &_loosePhotonIsGenuine_Old            );
+    outputTree->Branch("loosePhotonIsMisIDEle_Old"            , &_loosePhotonIsMisIDEle_Old           );
+    outputTree->Branch("loosePhotonIsHadronicPhoton_Old"      , &_loosePhotonIsHadronicPhoton_Old     );
+    outputTree->Branch("loosePhotonIsHadronicFake_Old"        , &_loosePhotonIsHadronicFake_Old       );
+
     outputTree->Branch("photonParentage"        , &_photonParentage       );
     outputTree->Branch("photonParentPID"        , &_photonParentPID       );
 	
@@ -703,6 +729,12 @@ void makeAnalysisNtuple::InitVariables()
     _photonIsMisIDEle.clear();
     _photonIsHadronicPhoton.clear();
     _photonIsHadronicFake.clear();
+
+    _photonIsGenuine_Old.clear();
+    _photonIsMisIDEle_Old.clear();
+    _photonIsHadronicPhoton_Old.clear();
+    _photonIsHadronicFake_Old.clear();
+
     _photonParentage.clear();
     _photonParentPID.clear();
 
@@ -719,6 +751,8 @@ void makeAnalysisNtuple::InitVariables()
     _loosePhoTightID.clear();
     _loosePhoMediumID.clear();
     _loosePhoLooseID.clear();
+    _loosePhoMVAID.clear();
+    _loosePhoMVAID17v1.clear();
     _loosePhoGenMatchInd.clear();
     _loosePhoMassLepGamma.clear();
     _loosePhoMediumIDFunction.clear(); 
@@ -737,6 +771,10 @@ void makeAnalysisNtuple::InitVariables()
     _loosePhotonIsMisIDEle.clear();
     _loosePhotonIsHadronicPhoton.clear();
     _loosePhotonIsHadronicFake.clear();
+    _loosePhotonIsGenuine_Old.clear();
+    _loosePhotonIsMisIDEle_Old.clear();
+    _loosePhotonIsHadronicPhoton_Old.clear();
+    _loosePhotonIsHadronicFake_Old.clear();
 
     _jetPt.clear();
     /* _jetEn.clear(); */

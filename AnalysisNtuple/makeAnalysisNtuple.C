@@ -784,6 +784,12 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	bool isMisIDEle = false;
 	bool isHadronicPhoton = false;
 	bool isHadronicFake = false;
+
+	bool isGenuine_Old = false;
+	bool isMisIDEle_Old = false;
+	bool isHadronicPhoton_Old = false;
+	bool isHadronicFake_Old = false;
+
 	int phoGenMatchInd = -1.;
 
 	// TODO needs to be reimplemented with NANOAOD
@@ -793,12 +799,19 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	    _phoGenMatchInd.push_back(phoGenMatchInd);
 
 	    findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake); //as we are using phogenmatch defined in nanontuple
+	    findPhotonCategory_Old(phoGenMatchInd, tree, &isGenuine_Old, &isMisIDEle_Old, &isHadronicPhoton_Old, &isHadronicFake_Old); //as we are using phogenmatch defined in nanontuple
+
 	  //  findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake); //In order to use our own phogenmatch defined 
 
 	    _photonIsGenuine.push_back(isGenuine);
 	    _photonIsMisIDEle.push_back(isMisIDEle);
 	    _photonIsHadronicPhoton.push_back(isHadronicPhoton);
 	    _photonIsHadronicFake.push_back(isHadronicFake);
+
+	    _photonIsGenuine_Old.push_back(isGenuine_Old);
+	    _photonIsMisIDEle_Old.push_back(isMisIDEle_Old);
+	    _photonIsHadronicPhoton_Old.push_back(isHadronicPhoton_Old);
+	    _photonIsHadronicFake_Old.push_back(isHadronicFake_Old);
 	}
 	
 	_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
@@ -845,6 +858,10 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	_loosePhoMediumID.push_back(tree->phoIDcutbased_[phoInd]>=2);
 	_loosePhoLooseID.push_back(tree->phoIDcutbased_[phoInd]>=1);
 
+	_loosePhoMVAID.push_back(tree->phoMVAId_[phoInd]);
+	_loosePhoMVAID17v1.push_back(tree->phoMVAId17V1_[phoInd]);
+	_loosePhoMediumID.push_back(tree->phoIDcutbased_[phoInd]>=2);
+
 	vector<bool> phoMediumCuts =  passPhoMediumID(phoInd);
 	_loosePhoMediumIDFunction.push_back(  phoMediumCuts.at(0));
 	_loosePhoMediumIDPassHoverE.push_back(phoMediumCuts.at(1));
@@ -867,6 +884,12 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	bool isMisIDEle = false;
 	bool isHadronicPhoton = false;
 	bool isHadronicFake = false;
+
+	bool isGenuine_Old = false;
+	bool isMisIDEle_Old = false;
+	bool isHadronicPhoton_Old = false;
+	bool isHadronicFake_Old = false;
+
 	int phoGenMatchInd = -1.;
 
 	// TODO Reimplement with NANOAOD
@@ -878,10 +901,18 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	    _loosePhoGenMatchInd.push_back(phoGenMatchInd);
 
 	    findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+
+	    findPhotonCategory_Old(phoGenMatchInd, tree, &isGenuine_Old, &isMisIDEle_Old, &isHadronicPhoton_Old, &isHadronicFake_Old);
+
 	    _loosePhotonIsGenuine.push_back(isGenuine);
 	    _loosePhotonIsMisIDEle.push_back(isMisIDEle);
 	    _loosePhotonIsHadronicPhoton.push_back(isHadronicPhoton);
 	    _loosePhotonIsHadronicFake.push_back(isHadronicFake);
+
+	    _loosePhotonIsGenuine_Old.push_back(isGenuine_Old);
+	    _loosePhotonIsMisIDEle_Old.push_back(isMisIDEle_Old);
+	    _loosePhotonIsHadronicPhoton_Old.push_back(isHadronicPhoton_Old);
+	    _loosePhotonIsHadronicFake_Old.push_back(isHadronicFake_Old);
 	}
 
 	
@@ -1364,6 +1395,56 @@ double minGenDr(int myInd, const EventTree* tree);
 
 //void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){ // to use our own phoGenMatch
 void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){ // to use official phoGenMatch
+
+	*genuine        = false;
+	*misIDele       = false;
+	*hadronicphoton = false;
+	*hadronicfake   = false;
+
+//	int mcMatchInd = findPhotonGenMatch( phoInd, tree); //to use our own phoGenMatch 
+	       
+        // TODO needs to be reimplemented with NANOAOD                                                                                                      
+	// If no match, it's hadronic fake
+	if (mcMatchInd== -1) {
+		*hadronicfake = true;
+		return;
+	}
+
+	int mcMatchPDGID = tree->GenPart_pdgId_[mcMatchInd];
+
+	Int_t parentIdx = mcMatchInd;
+	int maxPDGID = 0;
+	int motherPDGID = 0;
+	while (parentIdx != -1){
+	    motherPDGID = std::abs(tree->GenPart_pdgId_[parentIdx]);
+	    maxPDGID = std::max(maxPDGID,motherPDGID);
+	    parentIdx = tree->GenPart_genPartIdxMother_[parentIdx];
+	}
+
+	bool parentagePass = maxPDGID < 37;
+
+	// bool parentagePass = (fabs(tree->mcMomPID->at(mcMatchInd))<37 || tree->mcMomPID->at(mcMatchInd) == -999);
+
+	if (mcMatchPDGID==22){
+	    bool drotherPass = minGenDr(mcMatchInd, tree) > 0.2;
+	    if (parentagePass){ 
+		*genuine = true;
+	    }
+	    else {
+		*hadronicphoton = true;
+	    }
+	}
+	else if ( abs(mcMatchPDGID ) == 11 && parentagePass ) {
+	    *misIDele = true;
+	} 
+	else {
+	    *hadronicfake = true;
+	}
+	
+
+}
+
+void makeAnalysisNtuple::findPhotonCategory_Old(int mcMatchInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){ // to use official phoGenMatch
 
 	*genuine        = false;
 	*misIDele       = false;

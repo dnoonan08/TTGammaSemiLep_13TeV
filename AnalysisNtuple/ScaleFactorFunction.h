@@ -350,28 +350,28 @@ const std::string allowedSampleTypes[150] = {"Data",
 					     "GJets_HT600ToInf",
 					     "TGJets",
 					     "TTGJets",
-					     "isr_up_TTGamma_SingleLeptFromTbar",
-					     "isr_up_TTGamma_SingleLeptFromT",
-					     "isr_up_TTGamma_Dilepton",
-					     "isr_down_TTGamma_SingleLeptFromTbar",
-					     "isr_down_TTGamma_SingleLeptFromT",
-					     "isr_down_TTGamma_Dilepton",
-					     "fsr_up_TTGamma_SingleLeptFromTbar",
-					     "fsr_up_TTGamma_SingleLeptFromT",
-					     "fsr_up_TTGamma_Dilepton",
-					     "fsr_down_TTGamma_SingleLeptFromTbar",
-					     "fsr_down_TTGamma_SingleLeptFromT",
-					     "fsr_down_TTGamma_Dilepton",
-					     "isr_up_TTbarPowheg",
-					     "isr_down_TTbarPowheg",
-					     "fsr_up_TTbarPowheg",
-					     "fsr_down_TTbarPowheg",
+					     /* "isr_up_TTGamma_SingleLeptFromTbar", */
+					     /* "isr_up_TTGamma_SingleLeptFromT", */
+					     /* "isr_up_TTGamma_Dilepton", */
+					     /* "isr_down_TTGamma_SingleLeptFromTbar", */
+					     /* "isr_down_TTGamma_SingleLeptFromT", */
+					     /* "isr_down_TTGamma_Dilepton", */
+					     /* "fsr_up_TTGamma_SingleLeptFromTbar", */
+					     /* "fsr_up_TTGamma_SingleLeptFromT", */
+					     /* "fsr_up_TTGamma_Dilepton", */
+					     /* "fsr_down_TTGamma_SingleLeptFromTbar", */
+					     /* "fsr_down_TTGamma_SingleLeptFromT", */
+					     /* "fsr_down_TTGamma_Dilepton", */
+					     /* "isr_up_TTbarPowheg", */
+					     /* "isr_down_TTbarPowheg", */
+					     /* "fsr_up_TTbarPowheg", */
+					     /* "fsr_down_TTbarPowheg", */
 					     "TestAll",
 					     "Test",
-					     "Gencut_TTGamma_Semilept_T",
-					     "Gencut_TTGamma_Semilept_Tbar",
-					     "Gencut_TTGamma_Dilept",
-					     "Gencut_TTGamma_Hadronic",
+					     /* "Gencut_TTGamma_Semilept_T", */
+					     /* "Gencut_TTGamma_Semilept_Tbar", */
+					     /* "Gencut_TTGamma_Dilept", */
+					     /* "Gencut_TTGamma_Hadronic", */
 };
 
 

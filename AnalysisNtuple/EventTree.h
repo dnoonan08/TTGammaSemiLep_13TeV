@@ -112,6 +112,8 @@ class EventTree{
     Int_t           phoVidWPBitmap_[15];
     Bool_t           phoPixelSeed_[15];
     Bool_t           phoEleVeto_[15];
+    Float_t           phoMVAId_[15];
+    Float_t           phoMVAId17V1_[15];
 
     Float_t         phoR9_[15];
     Float_t         phoSIEIE_[15];
