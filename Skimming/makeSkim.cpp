@@ -67,6 +67,7 @@ int main(int ac, char** av){
  
 	std::string outDirName(av[2]);
 	if( outDirName.find("Data") != std::string::npos){
+	    cout << "IsData" << endl;
 	    isMC = false;
 	}
 
@@ -113,7 +114,7 @@ int main(int ac, char** av){
 	cout << "HERE" << endl;
 	EventTree* tree;
 
-	tree = new EventTree(nFiles, xRootDAccess, year, fileList);
+	tree = new EventTree(nFiles, xRootDAccess, year, fileList, isMC);
 
 
 	// if (xRootDAccess){
@@ -215,8 +216,12 @@ int main(int ac, char** av){
 		
 		hPU_->Fill(tree->nPU_);
 		hPUTrue_->Fill(tree->nPUTrue_);
-
-		hEvents_->Fill(tree->genWeight_/abs(tree->genWeight_));
+		if (isMC) {
+		    hEvents_->Fill(tree->genWeight_/abs(tree->genWeight_));
+		}
+		else {
+		    hEvents_->Fill(1.);
+		}
 
 		evtPick->process_event(tree);
 

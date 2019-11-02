@@ -1,7 +1,7 @@
 #include<iostream>
 #include"EventTree_Skim.h"
 
-EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileNames){
+EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileNames, bool isMC){
     chain = new TChain("Events");
 
     std::cout << "Start EventTree" << std::endl;
@@ -30,7 +30,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("PV_z",1);
     chain->SetBranchStatus("PV_chi2",1);
 
-    if (!isData_){
+    if (isMC){
 	chain->SetBranchStatus("Pileup_nPU",1);
 	chain->SetBranchAddress("Pileup_nPU", &nPU_);
 	
@@ -45,7 +45,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("event",1);
     chain->SetBranchStatus("luminosityBlock",1);
 
-    if (!isData_){
+    if (isMC){
 	chain->SetBranchStatus("Generator_weight",1);
 	chain->SetBranchAddress("Generator_weight", &genWeight_);
     }
@@ -58,7 +58,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("MET_pt",1);
     chain->SetBranchStatus("MET_phi",1);
 
-    if (!isData_){
+    if (isMC){
 	chain->SetBranchStatus("GenMET_pt",1);
 	chain->SetBranchStatus("GenMET_phi",1);
     }
@@ -90,7 +90,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("Photon_*",1);
 	
     // Gen Partons
-    if (!isData_){
+    if (isMC){
 	chain->SetBranchStatus("nGenPart",1);
 	
 	chain->SetBranchStatus("GenPart_*",1);
@@ -131,7 +131,19 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 
 	// chain->SetBranchStatus("GenJet_mass",1);
 	// chain->SetBranchAddress("GenJet_mass", &GenJet_mass_);
+
+        chain->SetBranchStatus("nPSWeight",1);
+        chain->SetBranchStatus("PSWeight",1);
+
+        chain->SetBranchStatus("nLHEPdfWeight",1);
+        chain->SetBranchStatus("LHEPdfWeight",1);
+
+        chain->SetBranchStatus("nLHEScaleWeight",1);
+        chain->SetBranchStatus("LHEScaleWeight",1);
+	
     }
+
+    chain->SetBranchStatus("L1PreFiringWeight*",1);
 
     //Fliters
     chain->SetBranchStatus("Flag_goodVertices",1);

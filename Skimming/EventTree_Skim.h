@@ -12,7 +12,7 @@ const Int_t maxP = 600;
 
 class EventTree{
  public:
-    EventTree(int nFiles, bool xRootDAccess, string year, char** fileNames);
+    EventTree(int nFiles, bool xRootDAccess, string year, char** fileNames, bool isMC);
     ~EventTree();
     Long64_t GetEntries();
     Int_t GetEntry(Long64_t entry);
