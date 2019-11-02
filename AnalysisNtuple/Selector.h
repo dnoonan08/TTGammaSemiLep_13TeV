@@ -157,8 +157,8 @@ private:
 	double phoEffArea03Pho(double phoSCEta);
 	int egammaRegion(double absEta);
 
-	bool passEleTightID(int eleInd, bool doRelisoCut);
-	bool passEleVetoID(int eleInd, bool doRelisoCut);
+	bool passEleID(int eleInd, int cutVal, bool doRelisoCut);
+	//	bool passEleVetoID(int eleInd, bool doRelisoCut);
 	//	bool passPhoMediumID(int phoInd);
 	bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso);
 };

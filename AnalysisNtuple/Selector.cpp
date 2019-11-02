@@ -331,13 +331,30 @@ void Selector::filter_electrons(){
             Float_t isoEBcut = 0.0287 + 0.506/tree->elePt_[eleInd];
             Float_t isoEECut = 0.0445 + 0.963/tree->elePt_[eleInd];
             passTightID = false;
-            passTightID = passEleTightID(eleInd,false) && 
+            passTightID = passEleID(eleInd, 4,false) && 
 		PFrelIso_corr > (absSCEta < 1.479 ? isoEBcut : isoEECut);
-	//	PFrelIso_corr > (absSCEta < 1.47 ? 0.0588 : 0.0571) && 
-	//	(tree->eleEcalSumEtDr03_[eleInd] / tree->elePt_[eleInd] ) < (absSCEta < 1.47 ? 0.032 : 0.040) && 
-	//	(tree->eleHcalSumEtDr03_[eleInd] / tree->elePt_[eleInd] ) < (absSCEta < 1.47 ? 0.055 : 0.05) && 
-	//	(tree->eleTrkSumPtDr03_[eleInd]   / tree->elePt_[eleInd] ) < (absSCEta < 1.47 ? 0.06 : 0.05);
         }
+
+
+
+	// use electron photon matching to take min relIso for veto (reduces misIDele background)
+	double looseRelIso = PFrelIso_corr;
+	int phoMatch = tree->elePhoIdx_[eleInd];
+
+	if (phoMatch>-1){
+	    double phoRelIso = tree->phoPFRelIso_[phoMatch];
+	    if (phoRelIso< looseRelIso){
+		looseRelIso = phoRelIso;
+	    }
+	}
+	    
+	float vetoIsoEBcut = 0.198 + 0.506/tree->elePt_[eleInd];
+	float vetoIsoEECut = 0.203 + 0.963/tree->elePt_[eleInd];
+
+	passVetoID = passEleID(eleInd, 1,false) && 
+	    looseRelIso > (absSCEta < 1.479 ? vetoIsoEBcut : vetoIsoEECut);
+
+
         
         bool eleSel = (passEtaEBEEGap && 
                        absEta < ele_Eta_cut &&
@@ -526,35 +543,35 @@ void Selector::filter_jets(){
 }
 
 
-bool Selector::passEleTightID(int eleInd, bool doRelisoCut){
+bool Selector::passEleID(int eleInd, int cutVal, bool doRelisoCut){
 
     Int_t WPcutBits = tree->eleVidWPBitmap_[eleInd];
 
- int nBits = 3;
+    int nBits = 3;
 
-    bool MinPtCut                            = (WPcutBits>>(0*nBits) & 7) >= 4;
-    bool GsfEleSCEtaMultiRangeCut            = (WPcutBits>>(1*nBits) & 7) >= 4;
-    bool GsfEleDEtaInSeedCut                 = (WPcutBits>>(2*nBits) & 7) >= 4;
-    bool GsfEleDPhiInCut                     = (WPcutBits>>(3*nBits) & 7) >= 4;
-    bool GsfEleFull5x5SigmaIEtaIEtaCut       = (WPcutBits>>(4*nBits) & 7) >= 4;
-    bool GsfEleHadronicOverEMEnergyScaledCut = (WPcutBits>>(5*nBits) & 7) >= 4;
-    bool GsfEleEInverseMinusPInverseCut      = (WPcutBits>>(6*nBits) & 7) >= 4;
-    bool GsfEleEffAreaPFIsoCut               = (WPcutBits>>(7*nBits) & 7) >= 4;
-    bool GsfEleConversionVetoCut             = (WPcutBits>>(8*nBits) & 7) >= 4;
-    bool GsfEleMissingHitsCut                = (WPcutBits>>(9*nBits) & 7) >= 4;
+    bool MinPtCut                            = (WPcutBits>>(0*nBits) & 7) >= cutVal;
+    bool GsfEleSCEtaMultiRangeCut            = (WPcutBits>>(1*nBits) & 7) >= cutVal;
+    bool GsfEleDEtaInSeedCut                 = (WPcutBits>>(2*nBits) & 7) >= cutVal;
+    bool GsfEleDPhiInCut                     = (WPcutBits>>(3*nBits) & 7) >= cutVal;
+    bool GsfEleFull5x5SigmaIEtaIEtaCut       = (WPcutBits>>(4*nBits) & 7) >= cutVal;
+    bool GsfEleHadronicOverEMEnergyScaledCut = (WPcutBits>>(5*nBits) & 7) >= cutVal;
+    bool GsfEleEInverseMinusPInverseCut      = (WPcutBits>>(6*nBits) & 7) >= cutVal;
+    bool GsfEleEffAreaPFIsoCut               = (WPcutBits>>(7*nBits) & 7) >= cutVal;
+    bool GsfEleConversionVetoCut             = (WPcutBits>>(8*nBits) & 7) >= cutVal;
+    bool GsfEleMissingHitsCut                = (WPcutBits>>(9*nBits) & 7) >= cutVal;
 
-    bool passTight = (MinPtCut
-                      && GsfEleSCEtaMultiRangeCut
-                      && GsfEleDEtaInSeedCut
-                      && GsfEleDPhiInCut
-                      && GsfEleFull5x5SigmaIEtaIEtaCut
-                      && GsfEleHadronicOverEMEnergyScaledCut
-                      && GsfEleEInverseMinusPInverseCut
-                      && (GsfEleEffAreaPFIsoCut || !doRelisoCut)
-                      && GsfEleConversionVetoCut
-                      && GsfEleMissingHitsCut);
+    bool passID = (MinPtCut
+		   && GsfEleSCEtaMultiRangeCut
+		   && GsfEleDEtaInSeedCut
+		   && GsfEleDPhiInCut
+		   && GsfEleFull5x5SigmaIEtaIEtaCut
+		   && GsfEleHadronicOverEMEnergyScaledCut
+		   && GsfEleEInverseMinusPInverseCut
+		   && (GsfEleEffAreaPFIsoCut || !doRelisoCut)
+		   && GsfEleConversionVetoCut
+		   && GsfEleMissingHitsCut);
 
-    return passTight;
+    return passID;
 
 }
 

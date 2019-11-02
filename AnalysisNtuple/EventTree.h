@@ -97,6 +97,8 @@ class EventTree{
     Float_t         eleHcalSumEtDr03_[15];
     Float_t         eleTrkSumPtDr03_[15];
 
+    Int_t           elePhoIdx_[15];
+
 
     // Photon
     

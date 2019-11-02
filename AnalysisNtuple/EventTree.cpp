@@ -163,6 +163,9 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("Electron_dr03TkSumPt",1);
     chain->SetBranchAddress("Electron_dr03TkSumPt", &eleTrkSumPtDr03_);
 
+    chain->SetBranchStatus("Electron_photonIdx",1);
+    chain->SetBranchAddress("Electron_photonIdx", &elePhoIdx_);
+
 
 
 
