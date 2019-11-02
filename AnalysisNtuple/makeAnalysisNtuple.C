@@ -1228,7 +1228,14 @@ float makeAnalysisNtuple::getBtagSF_1a(string sysType, BTagCalibrationReader rea
 
     }
 
-    weight = pData/pMC;
+    //    weight = pData/pMC;
+    if (pMC==0){
+	//      cout << "Inf weight" << endl;
+	cout << pData << " / " << pMC << endl;
+	weight = 0.;
+    } else {
+	weight = pData/pMC;
+    }
     return weight;
 
 }
