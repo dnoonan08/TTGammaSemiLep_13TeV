@@ -112,8 +112,10 @@ void Selector::clear_vectors(){
     Electrons.clear();
     ElectronsLoose.clear();
     ElectronsMedium.clear();
+    ElectronsNoIso.clear();
     Muons.clear();
     MuonsLoose.clear();
+    MuonsNoIso.clear();
     Jets.clear();
     FwdJets.clear();
     bJets.clear();
@@ -326,12 +328,13 @@ void Selector::filter_electrons(){
         // tree->elePt_[eleInd] = pt;
         // tree->eleEn_[eleInd]= en;
         
+	bool passTightID_noIso = passEleID(eleInd, 4,false);
 	
         if (QCDselect){
             Float_t isoEBcut = 0.0287 + 0.506/tree->elePt_[eleInd];
             Float_t isoEECut = 0.0445 + 0.963/tree->elePt_[eleInd];
             passTightID = false;
-            passTightID = passEleID(eleInd, 4,false) && 
+            passTightID = passTightID_noIso && 
 		PFrelIso_corr > (absSCEta < 1.479 ? isoEBcut : isoEECut);
         }
 
@@ -362,7 +365,7 @@ void Selector::filter_electrons(){
                        passTightID &&
                        passD0 &&
                        passDz);
-	
+
         bool looseSel = ( passEtaEBEEGap && 
 			  absEta < ele_EtaLoose_cut &&
 			  pt > ele_PtLoose_cut &&
@@ -370,6 +373,13 @@ void Selector::filter_electrons(){
 			  passD0 &&
 			  passDz);
         
+	bool eleSel_noIso = (passEtaEBEEGap && 
+			     absEta < ele_Eta_cut &&
+			     pt > ele_Pt_cut &&
+			     passTightID_noIso &&
+			     passD0 &&
+			     passDz);
+	
         
 	if (tree->event_==printEvent){
 	    cout << "-- " << eleInd << " eleSel=" <<  eleSel << " looseSel=" <<  looseSel << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->elePhi_[eleInd]<< " eleID="<<eleID << " passD0="<<passD0<< "("<<tree->eleD0_[eleInd]<<") passDz="<<passDz<< "("<<tree->eleDz_[eleInd]<<")"<< endl;
@@ -388,6 +398,9 @@ void Selector::filter_electrons(){
         }
         else if( looseSel ){ 
             ElectronsLoose.push_back(eleInd);
+        }
+        if( eleSel_noIso ){
+            ElectronsNoIso.push_back(eleInd);
         }
     }
 
@@ -429,6 +442,11 @@ void Selector::filter_muons(){
 			  (!QCDselect ? (PFrelIso_corr < mu_RelIso_loose): PFrelIso_corr > mu_RelIso_loose)
 			  );
 
+	bool passTight_noIso = (pt > mu_Pt_cut &&
+				TMath::Abs(eta) < mu_Eta_tight &&
+				tightMuonID
+				);
+
 	if (tree->event_==printEvent){
 	    cout << "-- " << muInd << " passTight="<<passTight<< " passLoose="<<passLoose << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->muPhi_[muInd]<< " tightID="<<tightMuonID<< " looseID="<<looseMuonID << " pfRelIso="<<PFrelIso_corr << endl;
 	} 
@@ -438,6 +456,9 @@ void Selector::filter_muons(){
 	}
 	else if (passLoose){
 	  MuonsLoose.push_back(muInd);
+	}
+	if(passTight_noIso){
+	    MuonsNoIso.push_back(muInd);
 	}
     }
 }

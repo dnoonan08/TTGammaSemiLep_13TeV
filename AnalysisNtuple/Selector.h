@@ -62,8 +62,10 @@ public:
 	std::vector<int> Electrons;
 	std::vector<int> ElectronsLoose;
 	std::vector<int> ElectronsMedium;
+	std::vector<int> ElectronsNoIso;
 	std::vector<int> Muons;
 	std::vector<int> MuonsLoose;
+	std::vector<int> MuonsNoIso;
 	std::vector<int> Jets;
 	std::vector<int> bJets;
         std::vector<int> FwdJets;
@@ -178,8 +180,10 @@ public:
         std::vector<int> Electrons;
         std::vector<int> ElectronsLoose;
         std::vector<int> ElectronsMedium;
+        std::vector<int> ElectronsNoIso;
         std::vector<int> Muons;
         std::vector<int> MuonsLoose;
+        std::vector<int> MuonsNoIso;
         std::vector<int> Jets;
         std::vector<int> bJets;
         std::vector<int> FwdJets;

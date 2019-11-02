@@ -270,7 +270,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     //	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
     //	if( systematicType=="elesmear_down"){elesmear012_g = 0;}
     if( systematicType=="Dilep")     {dileptonsample =true; evtPick->Nmu_eq=2; evtPick->Nele_eq=2;}
-    if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->ZeroBExclusive=true;}
+    if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->ZeroBExclusive=true; evtPick->QCDselect = true;}
     std::cout << "Dilepton Sample :" << dileptonsample << std::endl;
     std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << " eleScale "<< elescale012_g << " phoScale" << phoscale012_g << "   ";
     std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << std::endl;
@@ -1161,7 +1161,6 @@ void makeAnalysisNtuple::loadBtagEff(string sampleName, string year){
     std::string beffName = sampleName+"_"+year+"_b_efficiency";
 
     TFile* inputFile = TFile::Open(fName.c_str(),"read");
-
     l_eff = (TH2D*) inputFile->Get(leffName.c_str());
     c_eff = (TH2D*) inputFile->Get(ceffName.c_str());
     b_eff = (TH2D*) inputFile->Get(beffName.c_str());
@@ -1199,7 +1198,6 @@ float makeAnalysisNtuple::getBtagSF_1a(string sysType, BTagCalibrationReader rea
 	jetFlavor = abs(tree->jetHadFlvr_[*jetInd]);
 	jetBtag = tree->jetBtagDeepB_[*jetInd];
 
-
 	if (jetFlavor == 5){
 	    SFb = reader.eval_auto_bounds(b_sysType, BTagEntry::FLAV_B, jetEta, jetPt); 
 	    int xbin = b_eff->GetXaxis()->FindBin(jetPt);
@@ -1219,6 +1217,7 @@ float makeAnalysisNtuple::getBtagSF_1a(string sysType, BTagCalibrationReader rea
 	    Eff = l_eff->GetBinContent(xbin,ybin);
 	}
 
+
 	if (jetBtag>selector->btag_cut_DeepCSV){
 	    pMC *= Eff;
 	    pData *= Eff*SFb;
@@ -1228,7 +1227,6 @@ float makeAnalysisNtuple::getBtagSF_1a(string sysType, BTagCalibrationReader rea
 	}
 
     }
-
 
     weight = pData/pMC;
     return weight;

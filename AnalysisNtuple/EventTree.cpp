@@ -404,6 +404,15 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     if (year=="2016"){
 	chain->SetBranchStatus("HLT_Ele27_WPTight_Gsf",1);
 	chain->SetBranchAddress("HLT_Ele27_WPTight_Gsf",&HLT_Ele27_WPTight_Gsf_);
+	
+	chain->SetBranchStatus("HLT_Ele105_CaloIdVT_GsfTrkIdT",1);
+	chain->SetBranchAddress("HLT_Ele105_CaloIdVT_GsfTrkIdT",&HLT_Ele105_CaloIdVT_GsfTrkIdT_);
+	
+	chain->SetBranchStatus("HLT_Ele115_CaloIdVT_GsfTrkIdT",1);
+	chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
+	
+	chain->SetBranchStatus("HLT_Photon175",1);
+	chain->SetBranchAddress("HLT_Photon175",&HLT_Photon175_);
 
 	// chain->SetBranchStatus("HLT_Ele32_eta2p1_WPTight_Gsf",1);
 	// chain->SetBranchAddress("HLT_Ele32_eta2p1_WPTight_Gsf",&HLT_Ele32_eta2p1_WPTight_Gsf_);
@@ -426,6 +435,12 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	chain->SetBranchStatus("HLT_Ele35_WPTight_Gsf",1);
 	chain->SetBranchAddress("HLT_Ele35_WPTight_Gsf",&HLT_Ele35_WPTight_Gsf_);
 	
+	chain->SetBranchStatus("HLT_Ele115_CaloIdVT_GsfTrkIdT",1);
+	chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
+	
+	chain->SetBranchStatus("HLT_Photon200",1);
+	chain->SetBranchAddress("HLT_Photon200",&HLT_Photon200_);
+
 	chain->SetBranchStatus("HLT_IsoMu24",1);
 	chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
 	
@@ -449,6 +464,18 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 
 	chain->SetBranchStatus("HLT_Ele38_WPTight_Gsf",1);
 	chain->SetBranchAddress("HLT_Ele38_WPTight_Gsf",&HLT_Ele38_WPTight_Gsf_);
+
+	chain->SetBranchStatus("HLT_Ele32_WPTight_Gsf_L1DoubleEG",1);
+	chain->SetBranchAddress("HLT_Ele32_WPTight_Gsf_L1DoubleEG",&HLT_Ele32_WPTight_Gsf_L1DoubleEG_);
+
+	chain->SetBranchStatus("HLT_Ele115_CaloIdVT_GsfTrkIdT",1);
+	chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
+	
+	chain->SetBranchStatus("HLT_DoubleEle25_CaloIdL_MW",1);
+	chain->SetBranchAddress("HLT_DoubleEle25_CaloIdL_MW",&HLT_DoubleEle25_CaloIdL_MW_);
+
+	chain->SetBranchStatus("HLT_Photon200",1);
+	chain->SetBranchAddress("HLT_Photon200",&HLT_Photon200_);
 
 	chain->SetBranchStatus("HLT_IsoMu24",1);
 	chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);

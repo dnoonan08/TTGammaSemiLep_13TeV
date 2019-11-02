@@ -42,6 +42,8 @@ public:
 
 	bool ZeroBExclusive;
 
+	bool QCDselect;
+
 	bool applyMetFilter;
 
 	int Jet_Pt_cut_1;

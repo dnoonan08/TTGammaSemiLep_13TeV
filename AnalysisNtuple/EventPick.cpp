@@ -58,6 +58,8 @@ EventPick::EventPick(std::string titleIn){
 
     ZeroBExclusive = false;
 
+    QCDselect = false;
+
     applyMetFilter   = false;
 
     Npho_ge = 1;
@@ -172,41 +174,70 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
     }
     
     // Cut on events with ==1 muon, no loose muons, no loose or tight electrons
-    if( passPresel_mu && selector->Muons.size() == Nmu_eq){
-	if (Nmu_eq==2) { 
-	    int mu1 = selector->Muons.at(0); 
-	    int mu2 = selector->Muons.at(1);
-	    if(tree->muCharge_[mu1]*tree->muCharge_[mu2] ==1){
-		passPresel_mu = false;
+    if (!QCDselect){
+	if( passPresel_mu && selector->Muons.size() == Nmu_eq){
+	    if (Nmu_eq==2) { 
+		int mu1 = selector->Muons.at(0); 
+		int mu2 = selector->Muons.at(1);
+		if(tree->muCharge_[mu1]*tree->muCharge_[mu2] ==1){
+		    passPresel_mu = false;
+		}
 	    }
+	    if (saveCutflows){cutFlow_mu->Fill(3); cutFlowWeight_mu->Fill(3,weight); } 
 	}
-	if (saveCutflows){cutFlow_mu->Fill(3); cutFlowWeight_mu->Fill(3,weight); } 
+	else { passPresel_mu = false;}
+    
+	if( passPresel_mu && selector->MuonsLoose.size() <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_mu->Fill(4); cutFlowWeight_mu->Fill(4,weight); } }
+	else { passPresel_mu = false;}
+	if( passPresel_mu && (selector->ElectronsLoose.size() + selector->Electrons.size() ) <=  NlooseEleVeto_le ) {if (saveCutflows) {cutFlow_mu->Fill(5); cutFlowWeight_mu->Fill(5,weight);} }
+	else { passPresel_mu = false;}
     }
-    else { passPresel_mu = false;}
-    
-    if( passPresel_mu && selector->MuonsLoose.size() <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_mu->Fill(4); cutFlowWeight_mu->Fill(4,weight); } }
-    else { passPresel_mu = false;}
-    if( passPresel_mu && (selector->ElectronsLoose.size() + selector->Electrons.size() ) <=  NlooseEleVeto_le ) {if (saveCutflows) {cutFlow_mu->Fill(5); cutFlowWeight_mu->Fill(5,weight);} }
-    else { passPresel_mu = false;}
-    
+    else{
+	if( passPresel_mu && selector->Muons.size() == 1){
+            if (saveCutflows){cutFlow_mu->Fill(3); cutFlowWeight_mu->Fill(3,weight); }
+        }
+        else { passPresel_mu = false;}
+        if( passPresel_mu && selector->MuonsNoIso.size() == 1 ) { 
+	    if (saveCutflows) {cutFlow_mu->Fill(4); cutFlowWeight_mu->Fill(4,weight); } }
+        else { passPresel_mu = false;}
+        if( passPresel_mu && (selector->ElectronsNoIso.size() ) == 0 ) {
+	    if (saveCutflows) {cutFlow_mu->Fill(5); cutFlowWeight_mu->Fill(5,weight);} }
+        else { passPresel_mu = false;}
+    }
+
+
     // Cut on events with ==1 muon, no loose muons, no loose or tight electrons
-    if( passPresel_ele && selector->Electrons.size() == Nele_eq) { 
-	if (Nele_eq==2) {
-	    int ele1 = selector->Electrons.at(0);
-	    int ele2 = selector->Electrons.at(1);
-	    if((tree->eleCharge_[ele1])*(tree->eleCharge_[ele2]) == 1){
-		passPresel_ele = false;
-	    }
-	}		
-	if (saveCutflows) {cutFlow_ele->Fill(3); cutFlowWeight_ele->Fill(3,weight);}
+    if (!QCDselect) {
+	if( passPresel_ele && selector->Electrons.size() == Nele_eq) { 
+	    if (Nele_eq==2) {
+		int ele1 = selector->Electrons.at(0);
+		int ele2 = selector->Electrons.at(1);
+		if((tree->eleCharge_[ele1])*(tree->eleCharge_[ele2]) == 1){
+		    passPresel_ele = false;
+		}
+	    }		
+	    if (saveCutflows) {cutFlow_ele->Fill(3); cutFlowWeight_ele->Fill(3,weight);}
+	}
+	else { passPresel_ele = false;}
+
+	if( passPresel_ele && selector->ElectronsLoose.size() <=  NlooseEleVeto_le ) { if (saveCutflows) {cutFlow_ele->Fill(4); cutFlowWeight_ele->Fill(4,weight);}}
+	else { passPresel_ele = false;}
+
+	if( passPresel_ele && (selector->MuonsLoose.size() + selector->Muons.size() ) <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_ele->Fill(5); cutFlowWeight_ele->Fill(5,weight);}}
+	else { passPresel_ele = false;}
     }
-    else { passPresel_ele = false;}
-
-    if( passPresel_ele && selector->ElectronsLoose.size() <=  NlooseEleVeto_le ) { if (saveCutflows) {cutFlow_ele->Fill(4); cutFlowWeight_ele->Fill(4,weight);}}
-    else { passPresel_ele = false;}
-
-    if( passPresel_ele && (selector->MuonsLoose.size() + selector->Muons.size() ) <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_ele->Fill(5); cutFlowWeight_ele->Fill(5,weight);}}
-    else { passPresel_ele = false;}
+    else {
+	if( passPresel_ele && selector->Electrons.size() == 1){
+            if (saveCutflows){cutFlow_ele->Fill(3); cutFlowWeight_ele->Fill(3,weight); }
+        }
+        else { passPresel_ele = false;}
+        if( passPresel_ele && selector->ElectronsNoIso.size() == 1 ) { 
+	    if (saveCutflows) {cutFlow_ele->Fill(4); cutFlowWeight_ele->Fill(4,weight); } }
+        else { passPresel_ele = false;}
+        if( passPresel_ele && (selector->MuonsNoIso.size() ) == 0 ) {
+	    if (saveCutflows) {cutFlow_ele->Fill(5); cutFlowWeight_ele->Fill(5,weight);} }
+        else { passPresel_ele = false;}
+    }
 
     // split skim into ele and mu
     if ( (skimEle && passPresel_ele) || (skimMu && passPresel_mu) && selector->Jets.size() >= SkimNjet_ge && selector->bJets.size() >= SkimNBjet_ge ){ passSkim = true; }
