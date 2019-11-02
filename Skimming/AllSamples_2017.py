@@ -30,7 +30,7 @@ sampleList_2017 = {
 'Data_SingleMu_b' : '/SingleMuon/Run2017B-Nano1June2019-v1/NANOAOD',
 'Data_SingleMu_c' : '/SingleMuon/Run2017C-Nano1June2019-v1/NANOAOD',
 'Data_SingleMu_d' : '/SingleMuon/Run2017D-Nano1June2019-v1/NANOAOD',
-'Data_SingleMu_e' : '/SingleMuon/Run2017D-Nano1June2019-v1/NANOAOD',
+'Data_SingleMu_e' : '/SingleMuon/Run2017E-Nano1June2019-v1/NANOAOD',
 'Data_SingleMu_f' : '/SingleMuon/Run2017F-Nano1June2019-v1/NANOAOD',
 
 'Data_SingleEle_b' : '/SingleElectron/Run2017B-Nano1June2019-v1/NANOAOD',

@@ -12,7 +12,6 @@ Error  = condor/Skim_2017_$(cluster)_$(process).stderr
 Log    = condor/Skim_2017_$(cluster)_$(process).condor
 
 X=$(step)+1
-
 Arguments = "TTGamma_Dilepton 2017"
 Queue 1
 Arguments = "TTGamma_Hadronic 2017"
@@ -61,8 +60,8 @@ Arguments = "Data_SingleMu_d 2017 $INT(X) 5"
 Queue 5
 Arguments = "Data_SingleMu_e 2017 $INT(X) 5"
 Queue 5
-Arguments = "Data_SingleMu_f 2017 $INT(X) 5"
-Queue 5
+Arguments = "Data_SingleMu_f 2017 $INT(X) 10"
+Queue 10
 Arguments = "Data_SingleEle_b 2017 $INT(X) 5"
 Queue 5
 Arguments = "Data_SingleEle_c 2017 $INT(X) 5"
@@ -71,8 +70,8 @@ Arguments = "Data_SingleEle_d 2017 $INT(X) 5"
 Queue 5
 Arguments = "Data_SingleEle_e 2017 $INT(X) 5"
 Queue 5
-Arguments = "Data_SingleEle_f 2017 $INT(X) 5"
-Queue 5
+Arguments = "Data_SingleEle_f 2017 $INT(X) 10"
+Queue 10
 
 Arguments = "TTbarPowheg_Dilepton 2017 $INT(X) 5"
 Queue 5
