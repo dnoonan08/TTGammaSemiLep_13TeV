@@ -542,7 +542,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 		    _eleEffWeight    = eleSF->getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
 		    _eleEffWeight_Do = eleSF->getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],0);
-		    _eleEffWeight_Up = eleSF->getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],1);
+		    _eleEffWeight_Up = eleSF->getEleSF(tree->elePt_[eleInd_],tree->eleEta_[eleInd_] + tree->eleDeltaEtaSC_[eleInd_],2);
 
 		}
 	    }
@@ -1231,7 +1231,7 @@ float makeAnalysisNtuple::getBtagSF_1a(string sysType, BTagCalibrationReader rea
     //    weight = pData/pMC;
     if (pMC==0){
 	//      cout << "Inf weight" << endl;
-	cout << pData << " / " << pMC << endl;
+	//	cout << pData << " / " << pMC << endl;
 	weight = 0.;
     } else {
 	weight = pData/pMC;
