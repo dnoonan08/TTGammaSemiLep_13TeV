@@ -13,17 +13,17 @@ double TTGJets_xs               =  3.697; //https://twiki.cern.ch/twiki/bin/view
 
 double TGJets_xs                =  2.967;
 
-double TTGamma_hadronic_xs  =  4.164;
-double TTGamma_semilept_xs  =  5.076;
-double TTGamma_dilept_xs    =  1.495;
+double TTGamma_hadronic_xs  =  10.528;
+double TTGamma_semilept_xs  =  10.234;
+double TTGamma_dilept_xs    =  2.4243;
 
-double TTGamma_hadronic_Pt100_xs  =  0.1251;
-double TTGamma_semilept_Pt100_xs  =  0.132;
-double TTGamma_dilept_Pt100_xs    =  0.03428;
+double TTGamma_hadronic_Pt100_xs  =  0.3209;
+double TTGamma_semilept_Pt100_xs  =  0.2632;
+double TTGamma_dilept_Pt100_xs    =  0.0554;
 
-double TTGamma_hadronic_Pt200_xs  =  0.02674;
-double TTGamma_semilept_Pt200_xs  =  0.02703;
-double TTGamma_dilept_Pt200_xs    =  0.006812;
+double TTGamma_hadronic_Pt200_xs  =  0.068588;
+double TTGamma_semilept_Pt200_xs  =  0.053898;
+double TTGamma_dilept_Pt200_xs    =  0.011008;
 
 double TTGamma_noFullyHad_xs    =  TTGamma_semilept_xs + TTGamma_dilept_xs ;
 
@@ -111,9 +111,9 @@ double getEvtWeight(string sampleType, double luminosity, double nEvents_MC){
 	else if( sampleType=="TGJets"){evtWeight = TGJets_xs * luminosity / nEvents_MC;} 
 	else if( sampleType=="TTGJets"){evtWeight = TTGJets_xs * luminosity / nEvents_MC;} 
 	else if( sampleType=="TTGamma_Hadronic") {evtWeight = TTGamma_hadronic_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
-	else if( sampleType=="TTGamma_SingleLept") {evtWeight = 2*TTGamma_semilept_xs * luminosity / nEvents_MC;}
+	else if( sampleType=="TTGamma_SingleLeptFromTbar") {evtWeight = TTGamma_semilept_xs/2. * luminosity / nEvents_MC;}
+	else if( sampleType=="TTGamma_SingleLeptFromT") {evtWeight = TTGamma_semilept_xs/2. * luminosity / nEvents_MC;}
+	else if( sampleType=="TTGamma_SingleLept") {evtWeight = TTGamma_semilept_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="TTGamma_Dilepton") {evtWeight = TTGamma_dilept_xs * luminosity / nEvents_MC;}
 	else if( sampleType=="TTGamma_noFullyHad") {evtWeight = TTGamma_noFullyHad_xs * luminosity / nEvents_MC;}
         else if( sampleType=="TTbarPowheg") {evtWeight = TTbar_xs * luminosity / nEvents_MC;}
