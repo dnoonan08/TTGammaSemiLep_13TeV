@@ -32,6 +32,11 @@ class EventTree{
     UInt_t nLHEPdfWeight_;
     Float_t LHEPdfWeight_[200];
     
+    UInt_t nPSWeight_;
+    Float_t PSWeight_[200];
+
+    Float_t LHEWeight_originalXWGTUP_;
+    
     bool isData_;
 
     Int_t    nVtx_;

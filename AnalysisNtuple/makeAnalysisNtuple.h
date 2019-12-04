@@ -94,6 +94,12 @@ class makeAnalysisNtuple {
     Float_t	         _pdfweight_Do;
     std::vector<float> _pdfSystWeight;
 
+    Float_t         _ISRweight_Up;
+    Float_t         _ISRweight_Do;
+
+    Float_t         _FSRweight_Up;
+    Float_t         _FSRweight_Do;
+
 
     float _btagWeight_1a;
     float _btagWeight_1a_b_Up;
@@ -428,6 +434,12 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("pdfweight_Up"              , &_pdfweight_Up             );
 	outputTree->Branch("pdfweight_Do"              , &_pdfweight_Do             );
 	outputTree->Branch("pdfSystWeight"             , &_pdfSystWeight               );
+
+	outputTree->Branch("ISRweight_Up"               , &_ISRweight_Up               );
+	outputTree->Branch("ISRweight_Do"               , &_ISRweight_Do               );
+
+	outputTree->Branch("FSRweight_Up"               , &_FSRweight_Up               );
+	outputTree->Branch("FSRweight_Do"               , &_FSRweight_Do               );
     }
 
     outputTree->Branch("evtWeight"                  , &_evtWeight                   );      
@@ -664,6 +676,12 @@ void makeAnalysisNtuple::InitVariables()
     _q2weight_nominal = 1.;
     _q2weight_Up = 1.;
     _q2weight_Do = 1.;
+
+    _ISRweight_Up = 1.;
+    _ISRweight_Do = 1.;
+
+    _FSRweight_Up = 1.;
+    _FSRweight_Do = 1.;
 
     _eleEffWeight    = 1.;
     _eleEffWeight_Do = 1.;

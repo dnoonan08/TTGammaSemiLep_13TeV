@@ -1090,6 +1090,18 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	    _q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end())/tree->LHEScaleWeight_[4];
 	}
 
+	if (tree->nLHEScaleWeight_==44){
+	    _genScaleSystWeights.push_back(tree->LHEScaleWeight_[0]);
+	    _genScaleSystWeights.push_back(tree->LHEScaleWeight_[5]);
+	    _genScaleSystWeights.push_back(tree->LHEScaleWeight_[15]);
+	    _genScaleSystWeights.push_back(tree->LHEScaleWeight_[24]);
+	    _genScaleSystWeights.push_back(tree->LHEScaleWeight_[34]);
+	    _genScaleSystWeights.push_back(tree->LHEScaleWeight_[39]);
+
+	    _q2weight_Up = *max_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());
+	    _q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());
+	}
+
 	_pdfWeight = tree->LHEPdfWeight_[0];
 	double pdfMean = 0.;
 	for (int j=1; j < tree->nLHEPdfWeight_; j++ ){
@@ -1106,6 +1118,20 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	_pdfuncer = sqrt(pdfVariance/_pdfSystWeight.size());
 	_pdfweight_Up = (_pdfWeight + _pdfuncer)/_pdfWeight;
 	_pdfweight_Do = (_pdfWeight - _pdfuncer)/_pdfWeight;
+
+	_ISRweight_Up = 1.;
+	_ISRweight_Do = 1.;
+
+	_FSRweight_Up = 1.;
+	_FSRweight_Do = 1.;
+	
+	if (tree->nPSWeight_==4){
+	    _ISRweight_Up = tree->PSWeight_[2] * tree->LHEWeight_originalXWGTUP_ / tree->genWeight_;
+	    _ISRweight_Do = tree->PSWeight_[0] * tree->LHEWeight_originalXWGTUP_ / tree->genWeight_;
+
+	    _FSRweight_Up = tree->PSWeight_[3] * tree->LHEWeight_originalXWGTUP_ / tree->genWeight_;
+	    _FSRweight_Do = tree->PSWeight_[0] * tree->LHEWeight_originalXWGTUP_ / tree->genWeight_;
+	}
 
     }
 
