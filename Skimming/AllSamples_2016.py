@@ -1,6 +1,6 @@
 sampleList_2016 = {
 'TTGamma_Dilepton'     : '/TTGamma_Dilept_TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
-'TTGamma_Hadronic'   : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/TTGamma_Hadronic_TuneCP5_PSweights_13TeV-madgraph-pythia8/crab_nanoTTGamma2016_Hadronic/191003_151606/0000',
+'TTGamma_Hadronic'   : '/TTGamma_Hadronic_TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
 'TTGamma_SingleLept' : '/TTGamma_SingleLept_TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
 
 'TTGamma_Dilepton_Pt100'  : '/TTGamma_Dilept_ptGamma100-200_TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
@@ -9,7 +9,7 @@ sampleList_2016 = {
 'TTGamma_SingleLept_Pt100' : '/TTGamma_SingleLept_ptGamma100-200_TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
 'TTGamma_SingleLept_Pt200' : '/TTGamma_SingleLept_ptGamma200inf_TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
 
-'TTGamma_Hadronic_Pt100' : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/TTGamma_Hadronic_ptGamma100-200_TuneCP5_PSweights_13TeV-madgraph-pythia8/crab_nanoTTGamma2016_HadronicPt100to200/191003_151644/0000',
+'TTGamma_Hadronic_Pt100' : '/TTGamma_Hadronic_ptGamma100-200_TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
 'TTGamma_Hadronic_Pt200' : '/TTGamma_Hadronic_ptGamma200inf_TuneCP5_PSweights_13TeV-madgraph-pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
 
 'TTGamma_Dilept_small'   : '/store/user/lpctop/TTGamma/NanoAOD/2016/Dilept',
@@ -130,16 +130,17 @@ sampleList_2016 = {
 'QCD_Pt1000toInf_Mu_ext1' : '/QCD_Pt-1000toInf_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM',
 
 
-'QCD_Pt20to30_Ele'        : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt20to30_EM/191002_224940/0000',
-'QCD_Pt30to50_Ele'        : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt30to50_EM/191003_030616/0000',
-'QCD_Pt30to50_Ele_ext1'   : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt30to50_EM_ext1/191003_030647/0000',
-'QCD_Pt50to80_Ele'        : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt50to80_EM/191003_030713/0000',
-'QCD_Pt50to80_Ele_ext1'   : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt50to80_EM_ext1/191003_030806/0000',
-'QCD_Pt80to120_Ele'       : ' /store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt80to120_EM/191009_145001/0000',
-'QCD_Pt80to120_Ele_ext1'  : ' /store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt80to120_EM_ext1/191007_162328/0000',
-'QCD_Pt120to170_Ele'      : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt120to170_EM/191009_144902/0000',
-'QCD_Pt120to170_Ele_ext1' : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt120to170_EM_ext1/191009_144911/0000',
-'QCD_Pt170to300_Ele'      : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt170to300_EM/191007_171912/0000',
-'QCD_Pt300toInf_Ele'      : '/store/user/lpctop/TTGamma_FullRun2/NanoAOD/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8/crab_nanoQCD2016_Pt300toInf_EM/191007_172129/0000',
+'QCD_Pt20to30_Ele'        : '/QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
+'QCD_Pt30to50_Ele'        : '/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
+'QCD_Pt30to50_Ele_ext1'   : '/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM',
+'QCD_Pt50to80_Ele'        : '/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
+'QCD_Pt50to80_Ele_ext1'   : '/QCD_Pt-50to80_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM',
+'QCD_Pt80to120_Ele'       : '/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
+'QCD_Pt80to120_Ele_ext1'  : '/QCD_Pt-80to120_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM',
+'QCD_Pt120to170_Ele'      : '/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
+'QCD_Pt120to170_Ele_ext1' : '/QCD_Pt-120to170_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7_ext1-v1/NANOAODSIM',
+'QCD_Pt170to300_Ele'      : '/QCD_Pt-170to300_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
+'QCD_Pt300toInf_Ele'      : '/QCD_Pt-300toInf_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISummer16NanoAODv5-PUMoriond17_Nano1June2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM',
+
 
 }
