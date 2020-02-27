@@ -7,11 +7,12 @@
 #include <iostream>
 #include <ctime>
 #include "TRandom3.h"
-#include"PUReweight.h"
+#include "ParsePhotonID.h"
+#include "PUReweight.h"
 #include "METzCalculator.h"
 #include "TopEventCombinatorics.h"
 #include "JetResolutions.h"
-#include"JEC/JECvariation.h"
+#include "JEC/JECvariation.h"
 //#include"OverlapRemove.cpp"
 #include <cmath>
 
@@ -1341,74 +1342,19 @@ vector<float> makeAnalysisNtuple::getBtagSF_1c(string sysType, BTagCalibrationRe
 
 vector<bool> makeAnalysisNtuple::passPhoMediumID(int phoInd){
 
-    bool passMediumID = false;
-    bool passHoverE = false;
-    bool passSIEIE  = false;
-    bool passChIso  = false;
-    bool passNeuIso  = false;
-    bool passPhoIso  = false;
-	
-    //    *         | Int_t VID compressed bitmap (MinPtCut,PhoSCEtaMultiRangeCut,PhoSingleTowerHadOverEmCut,PhoFull5x5SigmaIEtaIEtaCut,PhoAnyPFIsoWithEACut,PhoAnyPFIsoWithEAAndQuadScalingCut,PhoAnyPFIsoWithEACut), 2 bits per cut*
-
-
     Int_t bitMap = tree->phoVidWPBitmap_[phoInd];
 
-    passHoverE  = (bitMap>>4&3)  >= 2;
-    passSIEIE   = (bitMap>>6&3)  >= 2;
-    passChIso   = (bitMap>>8&3)  >= 2;
-    passNeuIso  = (bitMap>>10&3) >= 2;
-    passPhoIso  = (bitMap>>12&3) >= 2;
-
-
-    passMediumID = passHoverE && passSIEIE && passChIso && passNeuIso && passPhoIso;
-
-    vector<bool> cuts;
-    cuts.push_back(passMediumID);
-    cuts.push_back(passHoverE);
-    cuts.push_back(passSIEIE);
-    cuts.push_back(passChIso);
-    cuts.push_back(passNeuIso);
-    cuts.push_back(passPhoIso);
+    vector<bool> cuts = parsePhotonVIDCuts(bitMap, 2);
 
     return cuts;
 
 }
 
-
 vector<bool> makeAnalysisNtuple::passPhoTightID(int phoInd){
-
-    bool passTightId = false;
-    bool passHoverE = false;
-    bool passSIEIE  = false;
-    bool passChIso  = false;
-    bool passNeuIso  = false;
-    bool passPhoIso  = false;
-	
-    //    *         | Int_t VID compressed bitmap (MinPtCut,PhoSCEtaMultiRangeCut,PhoSingleTowerHadOverEmCut,PhoFull5x5SigmaIEtaIEtaCut,PhoAnyPFIsoWithEACut,PhoAnyPFIsoWithEAAndQuadScalingCut,PhoAnyPFIsoWithEACut), 2 bits per cut*
-
-    // 0 = fail all
-    // 1 = pass loose
-    // 2 = pass medium
-    // 3 = pass tight
 
     Int_t bitMap = tree->phoVidWPBitmap_[phoInd];
 
-    passHoverE  = (bitMap>>4&3)  >= 3;
-    passSIEIE   = (bitMap>>6&3)  >= 3;
-    passChIso   = (bitMap>>8&3)  >= 3;
-    passNeuIso  = (bitMap>>10&3) >= 3;
-    passPhoIso  = (bitMap>>12&3) >= 3;
-
-
-    passTightId = passHoverE && passSIEIE && passChIso && passNeuIso && passPhoIso;
-
-    vector<bool> cuts;
-    cuts.push_back(passTightId);
-    cuts.push_back(passHoverE);
-    cuts.push_back(passSIEIE);
-    cuts.push_back(passChIso);
-    cuts.push_back(passNeuIso);
-    cuts.push_back(passPhoIso);
+    vector<bool> cuts = parsePhotonVIDCuts(bitMap, 3);
 
     return cuts;
 
