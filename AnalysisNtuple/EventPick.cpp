@@ -60,8 +60,7 @@ EventPick::EventPick(std::string titleIn){
 
     QCDselect = false;
 
-   // applyMetFilter   = false;
-    applyMetFilter   = true; //aloke
+    applyMetFilter   = false;
 
     Npho_ge = 1;
 

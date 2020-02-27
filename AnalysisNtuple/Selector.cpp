@@ -352,18 +352,15 @@ void Selector::filter_electrons(){
 	}
 	    
 	if(QCDselect){
-	float vetoIsoEBcut = 0.198 + 0.506/tree->elePt_[eleInd];
-	float vetoIsoEECut = 0.203 + 0.963/tree->elePt_[eleInd];
-//aloke
-	passVetoID = passEleID(eleInd, 1,false); //ignoring Iso cut for QCDCR
-	//passVetoID = passEleID(eleInd, 1,false) && 
-	//    looseRelIso > (absSCEta < 1.479 ? vetoIsoEBcut : vetoIsoEECut);
-         }
+	    float vetoIsoEBcut = 0.198 + 0.506/tree->elePt_[eleInd];
+	    float vetoIsoEECut = 0.203 + 0.963/tree->elePt_[eleInd];
+
+	    passVetoID = passEleID(eleInd, 1,false); //ignoring Iso cut for QCDCR
+	}
 
  
 
 
-////////       
         bool eleSel = (passEtaEBEEGap && 
                        absEta < ele_Eta_cut &&
                        pt > ele_Pt_cut &&
@@ -448,25 +445,25 @@ void Selector::filter_muons(){
 			  //(!QCDselect ? (PFrelIso_corr < mu_RelIso_loose): PFrelIso_corr > mu_RelIso_loose) 
 			  );
 	if (QCDselect){ //ignoring Iso cut in  QCDCR
-		bool passLoose = (pt > mu_PtLoose_cut &&
-			  TMath::Abs(eta) < mu_Eta_loose &&
-			  looseMuonID 
-			  );
-		}
+	    bool passLoose = (pt > mu_PtLoose_cut &&
+			      TMath::Abs(eta) < mu_Eta_loose &&
+			      looseMuonID 
+			      );
+	}
 	bool passTight_noIso = (pt > mu_Pt_cut &&
 				TMath::Abs(eta) < mu_Eta_tight &&
 				tightMuonID
 				);
-
+	
 	if (tree->event_==printEvent){
 	    cout << "-- " << muInd << " passTight="<<passTight<< " passLoose="<<passLoose << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->muPhi_[muInd]<< " tightID="<<tightMuonID<< " looseID="<<looseMuonID << " pfRelIso="<<PFrelIso_corr << endl;
 	} 
 	
 	if(passTight){
-	  Muons.push_back(muInd);
+	    Muons.push_back(muInd);
 	}
 	else if (passLoose){
-	  MuonsLoose.push_back(muInd);
+	    MuonsLoose.push_back(muInd);
 	}
 	if(passTight_noIso){
 	    MuonsNoIso.push_back(muInd);
