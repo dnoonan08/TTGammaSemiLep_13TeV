@@ -9,6 +9,7 @@
 #include<TMath.h>
 #include<TLorentzVector.h>
 #include"EventTree.h"
+#include "ParsePhotonID.h"
 
 // https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
 // photon ID is not going to be changed every time this code runs
@@ -59,6 +60,7 @@ public:
 	std::vector<bool> PhoPassPhoIso;
 	std::vector<bool> PhoPassSih;
 	std::vector<int> LoosePhotons;
+	std::vector<int> PhotonsNoID;
 	std::vector<int> Electrons;
 	std::vector<int> ElectronsLoose;
 	std::vector<int> ElectronsMedium;
@@ -177,6 +179,7 @@ public:
         std::vector<bool> PhoPassPhoIso;
         std::vector<bool> PhoPassSih;
         std::vector<int> LoosePhotons;
+        std::vector<int> PhotonsNoID;
         std::vector<int> Electrons;
         std::vector<int> ElectronsLoose;
         std::vector<int> ElectronsMedium;

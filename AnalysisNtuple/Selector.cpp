@@ -2,6 +2,7 @@
 #include"TRandom3.h"
 #include <bitset>
 
+
 double dR(double eta1, double phi1, double eta2, double phi2){
     double dphi = phi2 - phi1;
     double deta = eta2 - eta1;
@@ -108,6 +109,7 @@ void Selector::clear_vectors(){
     PhoPassSih.clear();
 
     LoosePhotons.clear();
+    PhotonsNoID.clear();
 	
     Electrons.clear();
     ElectronsLoose.clear();
@@ -200,9 +202,13 @@ void Selector::filter_photons(){
 			  );
 
 	bool indet = (isEE || isEB);
-	bool  pho_et_pass = et > pho_Et_cut ;
+	bool pho_et_pass = et > pho_Et_cut ;
 	bool pho_eta_pass = absEta < pho_Eta_cut ;
 	bool finalsel = phoPresel && passMediumPhotonID ;
+
+
+	vector<bool> cutBasedID_split = parsePhotonVIDCuts(tree->phoVidWPBitmap_[phoInd], 2);
+	bool passMediumIDNoChIso = cutBasedID_split[1] && cutBasedID_split[2] && cutBasedID_split[4] && cutBasedID_split[5]; // HoverE (1), SIEIE (2), NeuIso (4), and PhoIso (5) cuts, skip ChIso (3)
 	
 	if (tree->event_==printEvent){
 	    cout << "-- " << phoInd << " pt="<<et<< " eta="<<eta<< " phi="<<phi<< " pho_et_pass "<< pho_et_pass<<" pho_Eta_pass="<< pho_eta_pass <<" (isEE || isEB) ="<<indet<<" hasPixelSeed= "<<hasPixelSeed<<" presel="<< phoPresel<< " drlepgamma="<<passDR_lep_pho<< " medID="<<passMediumPhotonID<<" final selection"<<finalsel<<endl;
@@ -212,6 +218,9 @@ void Selector::filter_photons(){
             Photons.push_back(phoInd);
         }
         if(phoPresel){
+            PhotonsNoID.push_back(phoInd);
+        }
+        if(phoPresel && passMediumIDNoChIso){
             LoosePhotons.push_back(phoInd);
         }
     }
@@ -259,6 +268,27 @@ void Selector::filter_photons_jetsDR(){
         }
         
     }
+
+
+    for(int i = PhotonsNoID.size()-1; i >= 0; i--){
+        int phoInd = PhotonsNoID.at(i);
+        double eta = tree->phoEta_[phoInd];
+        double et = tree->phoEt_[phoInd];
+        double phi = tree->phoPhi_[phoInd];
+        
+        bool passDR_jet_pho = true;
+        double _dr;
+        
+        for(std::vector<int>::const_iterator jetInd = Jets.begin(); jetInd != Jets.end(); jetInd++) {
+          _dr = dR(eta, phi, tree->jetEta_[*jetInd], tree->jetPhi_[*jetInd]);
+          if (_dr < veto_jet_pho_dR) passDR_jet_pho = false;
+        }
+        if (!passDR_jet_pho){
+          PhotonsNoID.erase(PhotonsNoID.begin()+i);
+        }
+        
+    }
+
 }
 
 void Selector::filter_electrons(){

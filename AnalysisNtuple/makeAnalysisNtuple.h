@@ -238,6 +238,48 @@ class makeAnalysisNtuple {
     std::vector<float>    _loosePhoEffWeight_Do;
 
 
+    Int_t           _nPhoNoID;
+    std::vector<float>   _phoNoIDEt;
+    std::vector<float>   _phoNoIDEta;
+    //    std::vector<float>   _phoNoIDSCEta;
+    std::vector<float>   _phoNoIDPhi;
+    std::vector<bool>    _phoNoIDIsBarrel;
+    std::vector<float>   _phoNoIDHoverE;
+    std::vector<float>   _phoNoIDSIEIE;
+    std::vector<float>   _phoNoIDPFRelIso;
+    std::vector<float>   _phoNoIDPFRelChIso;
+    std::vector<float>   _phoNoIDPFChIso;
+    std::vector<bool>    _phoNoIDTightID;
+    std::vector<bool>    _phoNoIDMediumID;
+    std::vector<bool>    _phoNoIDLooseID;
+    std::vector<float>   _phoNoIDMVAID;
+    std::vector<float>   _phoNoIDMVAID17v1;
+    std::vector<int>     _phoNoIDGenMatchInd;
+    std::vector<float>   _phoNoIDMassLepGamma;
+
+    std::vector<bool>    _phoNoIDMediumIDFunction; 
+    std::vector<bool>    _phoNoIDMediumIDPassHoverE; 
+    std::vector<bool>    _phoNoIDMediumIDPassSIEIE; 
+    std::vector<bool>    _phoNoIDMediumIDPassChIso; 
+    std::vector<bool>    _phoNoIDMediumIDPassNeuIso; 
+    std::vector<bool>    _phoNoIDMediumIDPassPhoIso; 
+    std::vector<bool>    _phoNoIDTightIDFunction; 
+    std::vector<bool>    _phoNoIDTightIDPassHoverE; 
+    std::vector<bool>    _phoNoIDTightIDPassSIEIE; 
+    std::vector<bool>    _phoNoIDTightIDPassChIso; 
+    std::vector<bool>    _phoNoIDTightIDPassNeuIso; 
+    std::vector<bool>    _phoNoIDTightIDPassPhoIso; 
+
+    std::vector<bool>    _photonNoIDIsGenuine;
+    std::vector<bool>    _photonNoIDIsMisIDEle;
+    std::vector<bool>    _photonNoIDIsHadronicPhoton;
+    std::vector<bool>    _photonNoIDIsHadronicFake;
+
+    std::vector<float>    _phoNoIDEffWeight;
+    std::vector<float>    _phoNoIDEffWeight_Up;
+    std::vector<float>    _phoNoIDEffWeight_Do;
+
+
 
     /* std::vector<bool>    _phoMediumIDNoHoverECut;  */
     /* std::vector<bool>    _phoMediumIDNoSIEIECut;  */
@@ -404,14 +446,17 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("eleEffWeight_Do"            , &_eleEffWeight_Do             );
     }
     outputTree->Branch("phoEffWeight"               , &_phoEffWeight                );
+    outputTree->Branch("loosePhoEffWeight"               , &_loosePhoEffWeight                );
+    outputTree->Branch("phoNoIDEffWeight"               , &_phoNoIDEffWeight                );
     if (!isSystematicRun){
 	outputTree->Branch("phoEffWeight_Up"            , &_phoEffWeight_Up             );
 	outputTree->Branch("phoEffWeight_Do"            , &_phoEffWeight_Do             );
-    }
-    outputTree->Branch("loosePhoEffWeight"               , &_loosePhoEffWeight                );
-    if (!isSystematicRun){
+
 	outputTree->Branch("loosePhoEffWeight_Up"            , &_loosePhoEffWeight_Up             );
 	outputTree->Branch("loosePhoEffWeight_Do"            , &_loosePhoEffWeight_Do             );
+
+	outputTree->Branch("phoNoIDEffWeight_Up"            , &_phoNoIDEffWeight_Up             );
+	outputTree->Branch("phoNoIDEffWeight_Do"            , &_phoNoIDEffWeight_Do             );
 
 	outputTree->Branch("q2weight_Up"               , &_q2weight_Up               );
 	outputTree->Branch("q2weight_Do"               , &_q2weight_Do               );
@@ -497,12 +542,35 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("loosePhoMediumIDPassChIso"       , &_loosePhoMediumIDPassChIso        ); 
     outputTree->Branch("loosePhoMediumIDPassNeuIso"      , &_loosePhoMediumIDPassNeuIso       ); 
     outputTree->Branch("loosePhoMediumIDPassPhoIso"      , &_loosePhoMediumIDPassPhoIso       ); 
-    //outputTree->Branch("loosePhoTightIDFunction"        , &_loosePhoTightIDFunction         ); 
-    //outputTree->Branch("loosePhoTightIDPassHoverE"      , &_loosePhoTightIDPassHoverE       ); 
-    //outputTree->Branch("loosePhoTightIDPassSIEIE"       , &_loosePhoTightIDPassSIEIE        ); 
-    //outputTree->Branch("loosePhoTightIDPassChIso"       , &_loosePhoTightIDPassChIso        ); 
-    //outputTree->Branch("loosePhoTightIDPassNeuIso"      , &_loosePhoTightIDPassNeuIso       ); 
-    //outputTree->Branch("loosePhoTightIDPassPhoIso"      , &_loosePhoTightIDPassPhoIso       ); 
+
+
+    outputTree->Branch("nPhoNoID"                       , &_nPhoNoID                        ); 
+    outputTree->Branch("phoNoIDEt"                      , &_phoNoIDEt                       );
+    outputTree->Branch("phoNoIDEta"                     , &_phoNoIDEta                      ); 
+    //    outputTree->Branch("phoNoIDSCEta"                   , &_phoNoIDSCEta                    ); 
+    outputTree->Branch("phoNoIDPhi"                     , &_phoNoIDPhi                      ); 
+    outputTree->Branch("phoNoIDIsBarrel"                , &_phoNoIDIsBarrel                 ); 
+    outputTree->Branch("phoNoIDHoverE"                  , &_phoNoIDHoverE                   ); 
+    outputTree->Branch("phoNoIDSIEIE"                   , &_phoNoIDSIEIE                    ); 
+    outputTree->Branch("phoNoIDPFChIso"                 , &_phoNoIDPFChIso                  ); 
+    /* outputTree->Branch("phoNoIDPFPhoIso"                , &_phoNoIDPFPhoIso                 );  */
+    /* outputTree->Branch("phoNoIDPFNeuIso"                , &_phoNoIDPFNeuIso                 );  */
+    outputTree->Branch("phoNoIDTightID"                 , &_phoNoIDTightID                  ); 
+    outputTree->Branch("phoNoIDMediumID"                , &_phoNoIDMediumID                 ); 
+    outputTree->Branch("phoNoIDLooseID"                 , &_phoNoIDLooseID                  ); 
+    outputTree->Branch("phoNoIDMVAId"                 , &_phoNoIDMVAID                  ); 
+    outputTree->Branch("phoNoIDMVAId17v1"             , &_phoNoIDMVAID17v1              ); 
+
+    outputTree->Branch("phoNoIDGenMatchInd"                 , &_phoNoIDGenMatchInd                  ); 
+    outputTree->Branch("phoNoIDMassLepGamma"                  , &_phoNoIDMassLepGamma                   ); 
+	
+    outputTree->Branch("phoNoIDMediumIDFunction"        , &_phoNoIDMediumIDFunction         ); 
+    outputTree->Branch("phoNoIDMediumIDPassHoverE"      , &_phoNoIDMediumIDPassHoverE       ); 
+    outputTree->Branch("phoNoIDMediumIDPassSIEIE"       , &_phoNoIDMediumIDPassSIEIE        ); 
+    outputTree->Branch("phoNoIDMediumIDPassChIso"       , &_phoNoIDMediumIDPassChIso        ); 
+    outputTree->Branch("phoNoIDMediumIDPassNeuIso"      , &_phoNoIDMediumIDPassNeuIso       ); 
+    outputTree->Branch("phoNoIDMediumIDPassPhoIso"      , &_phoNoIDMediumIDPassPhoIso       ); 
+
 
 	
     outputTree->Branch("nEle"                        , &_nEle                       ); 
@@ -588,10 +656,10 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("photonIsMisIDEle"            , &_photonIsMisIDEle           );
     outputTree->Branch("photonIsHadronicPhoton"      , &_photonIsHadronicPhoton     );
     outputTree->Branch("photonIsHadronicFake"        , &_photonIsHadronicFake       );
-    outputTree->Branch("loosePhotonIsGenuine"             , &_loosePhotonIsGenuine            );
-    outputTree->Branch("loosePhotonIsMisIDEle"            , &_loosePhotonIsMisIDEle           );
-    outputTree->Branch("loosePhotonIsHadronicPhoton"      , &_loosePhotonIsHadronicPhoton     );
-    outputTree->Branch("loosePhotonIsHadronicFake"        , &_loosePhotonIsHadronicFake       );
+    outputTree->Branch("photonNoIDIsGenuine"             , &_photonNoIDIsGenuine            );
+    outputTree->Branch("photonNoIDIsMisIDEle"            , &_photonNoIDIsMisIDEle           );
+    outputTree->Branch("photonNoIDIsHadronicPhoton"      , &_photonNoIDIsHadronicPhoton     );
+    outputTree->Branch("photonNoIDIsHadronicFake"        , &_photonNoIDIsHadronicFake       );
 
     outputTree->Branch("photonParentage"        , &_photonParentage       );
     outputTree->Branch("photonParentPID"        , &_photonParentPID       );
@@ -679,6 +747,10 @@ void makeAnalysisNtuple::InitVariables()
     _loosePhoEffWeight_Do.clear();
     _loosePhoEffWeight_Up.clear();
 
+    _phoNoIDEffWeight.clear();
+    _phoNoIDEffWeight_Do.clear();
+    _phoNoIDEffWeight_Up.clear();
+
     _btagWeight.clear();
     _btagWeight_b_Up.clear();
     _btagWeight_b_Do.clear();
@@ -764,6 +836,40 @@ void makeAnalysisNtuple::InitVariables()
     _loosePhotonIsMisIDEle.clear();
     _loosePhotonIsHadronicPhoton.clear();
     _loosePhotonIsHadronicFake.clear();
+
+    _phoNoIDEt.clear();
+    _phoNoIDEta.clear();
+    //    _phoNoIDSCEta.clear();
+    _phoNoIDPhi.clear();
+    _phoNoIDIsBarrel.clear();
+    _phoNoIDHoverE.clear();
+    _phoNoIDSIEIE.clear();
+    _phoNoIDPFChIso.clear();
+    /* _phoNoIDPFPhoIso.clear(); */
+    /* _phoNoIDPFNeuIso.clear(); */
+    _phoNoIDTightID.clear();
+    _phoNoIDMediumID.clear();
+    _phoNoIDLooseID.clear();
+    _phoNoIDMVAID.clear();
+    _phoNoIDMVAID17v1.clear();
+    _phoNoIDGenMatchInd.clear();
+    _phoNoIDMassLepGamma.clear();
+    _phoNoIDMediumIDFunction.clear(); 
+    _phoNoIDMediumIDPassHoverE.clear(); 
+    _phoNoIDMediumIDPassSIEIE.clear(); 
+    _phoNoIDMediumIDPassChIso.clear(); 
+    _phoNoIDMediumIDPassNeuIso.clear(); 
+    _phoNoIDMediumIDPassPhoIso.clear(); 
+    _phoNoIDTightIDFunction.clear(); 
+    _phoNoIDTightIDPassHoverE.clear(); 
+    _phoNoIDTightIDPassSIEIE.clear(); 
+    _phoNoIDTightIDPassChIso.clear(); 
+    _phoNoIDTightIDPassNeuIso.clear(); 
+    _phoNoIDTightIDPassPhoIso.clear(); 
+    _photonNoIDIsGenuine.clear();
+    _photonNoIDIsMisIDEle.clear();
+    _photonNoIDIsHadronicPhoton.clear();
+    _photonNoIDIsHadronicFake.clear();
 
     _jetPt.clear();
     /* _jetEn.clear(); */

@@ -628,6 +628,7 @@ void makeAnalysisNtuple::FillEvent(std::string year)
     
     _nPho		     = selector->Photons.size();
     _nLoosePho	             = selector->LoosePhotons.size();
+    _nPhoNoID	             = selector->PhotonsNoID.size();
     _nEle		     = selector->Electrons.size();
     _nEleLoose               = selector->ElectronsLoose.size();
     _nMu		     = selector->Muons.size();
@@ -912,6 +913,93 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 
 	
     }
+
+    for (int i_pho = 0; i_pho <_nPhoNoID; i_pho++){
+	int phoInd = selector->PhotonsNoID.at(i_pho);
+	phoVector.SetPtEtaPhiM(tree->phoEt_[phoInd],
+			       tree->phoEta_[phoInd],
+			       tree->phoPhi_[phoInd],
+			       0.0);
+	
+	_phoNoIDEt.push_back(tree->phoEt_[phoInd]);
+	_phoNoIDEta.push_back(tree->phoEta_[phoInd]);
+	_phoNoIDPhi.push_back(tree->phoPhi_[phoInd]);
+	_phoNoIDIsBarrel.push_back( abs(tree->phoEta_[phoInd])<1.47 );
+
+	_phoNoIDHoverE.push_back(tree->phoHoverE_[phoInd]);
+	_phoNoIDSIEIE.push_back(tree->phoSIEIE_[phoInd]);
+
+
+	_phoNoIDPFRelIso.push_back( tree->phoPFRelIso_[phoInd]);
+	_phoNoIDPFRelChIso.push_back( tree->phoPFRelChIso_[phoInd]);
+	_phoNoIDPFChIso.push_back( tree->phoPFRelChIso_[phoInd] * tree->phoEt_[phoInd]);
+
+	if (tree->isData_){
+	    _phoNoIDEffWeight.push_back(1.);
+	    _phoNoIDEffWeight_Do.push_back(1.);
+	    _phoNoIDEffWeight_Up.push_back(1.);
+	} else {
+
+	    _phoNoIDEffWeight.push_back(phoSF->getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],1));
+	    _phoNoIDEffWeight_Do.push_back(phoSF->getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],0));
+	    _phoNoIDEffWeight_Up.push_back(phoSF->getPhoSF(tree->phoEt_[phoInd],tree->phoEta_[phoInd],2));
+
+	}
+	
+	
+	_phoNoIDTightID.push_back(tree->phoIDcutbased_[phoInd]>=3);
+	_phoNoIDMediumID.push_back(tree->phoIDcutbased_[phoInd]>=2);
+	_phoNoIDLooseID.push_back(tree->phoIDcutbased_[phoInd]>=1);
+
+	_phoNoIDMVAID.push_back(tree->phoMVAId_[phoInd]);
+	_phoNoIDMVAID17v1.push_back(tree->phoMVAId17V1_[phoInd]);
+	_phoNoIDMediumID.push_back(tree->phoIDcutbased_[phoInd]>=2);
+
+	vector<bool> phoMediumCuts =  passPhoMediumID(phoInd);
+	_phoNoIDMediumIDFunction.push_back(  phoMediumCuts.at(0));
+	_phoNoIDMediumIDPassHoverE.push_back(phoMediumCuts.at(1));
+	_phoNoIDMediumIDPassSIEIE.push_back( phoMediumCuts.at(2));
+	_phoNoIDMediumIDPassChIso.push_back( phoMediumCuts.at(3));
+	_phoNoIDMediumIDPassNeuIso.push_back(phoMediumCuts.at(4));
+	_phoNoIDMediumIDPassPhoIso.push_back(phoMediumCuts.at(5));
+	
+	vector<bool> phoTightCuts =  passPhoTightID(phoInd);
+	_phoNoIDTightIDFunction.push_back(  phoTightCuts.at(0));
+	_phoNoIDTightIDPassHoverE.push_back(phoTightCuts.at(1));
+	_phoNoIDTightIDPassSIEIE.push_back( phoTightCuts.at(2));
+	_phoNoIDTightIDPassChIso.push_back( phoTightCuts.at(3));
+	_phoNoIDTightIDPassNeuIso.push_back(phoTightCuts.at(4));
+	_phoNoIDTightIDPassPhoIso.push_back(phoTightCuts.at(5));
+	
+	_phoNoIDMassLepGamma.push_back( (phoVector+lepVector).M() );
+	
+	bool isGenuine = false;
+	bool isMisIDEle = false;
+	bool isHadronicPhoton = false;
+	bool isHadronicFake = false;
+
+	int phoGenMatchInd = -1.;
+
+	// TODO Reimplement with NANOAOD
+
+	if (!tree->isData_){
+	    //phoGenMatchInd = findPhotonGenMatch(phoInd, tree);
+	    phoGenMatchInd = tree->phoGenPartIdx_[phoInd];
+            
+	    _phoNoIDGenMatchInd.push_back(phoGenMatchInd);
+
+	    findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+
+	    _photonNoIDIsGenuine.push_back(isGenuine);
+	    _photonNoIDIsMisIDEle.push_back(isMisIDEle);
+	    _photonNoIDIsHadronicPhoton.push_back(isHadronicPhoton);
+	    _photonNoIDIsHadronicFake.push_back(isHadronicFake);
+
+	}
+
+	
+    }
+
     
     for (int i_jet = 0; i_jet < _nfwdJet; i_jet++){
 	int jetInd = selector->FwdJets.at(i_jet);
