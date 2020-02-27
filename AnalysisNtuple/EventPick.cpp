@@ -60,7 +60,8 @@ EventPick::EventPick(std::string titleIn){
 
     QCDselect = false;
 
-    applyMetFilter   = false;
+   // applyMetFilter   = false;
+    applyMetFilter   = true; //aloke
 
     Npho_ge = 1;
 
@@ -203,6 +204,11 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
         if( passPresel_mu && (selector->ElectronsNoIso.size() ) == 0 ) {
 	    if (saveCutflows) {cutFlow_mu->Fill(5); cutFlowWeight_mu->Fill(5,weight);} }
         else { passPresel_mu = false;}
+//aloke : looselepveto in QCDCR
+	if( passPresel_mu && selector->MuonsLoose.size() <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_mu->Fill(4); cutFlowWeight_mu->Fill(4,weight); } }
+	else { passPresel_mu = false;}
+	if( passPresel_mu && (selector->ElectronsLoose.size() + selector->Electrons.size() ) <=  NlooseEleVeto_le ) {if (saveCutflows) {cutFlow_mu->Fill(5); cutFlowWeight_mu->Fill(5,weight);} }
+	else { passPresel_mu = false;}
     }
 
 
@@ -237,6 +243,12 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
         if( passPresel_ele && (selector->MuonsNoIso.size() ) == 0 ) {
 	    if (saveCutflows) {cutFlow_ele->Fill(5); cutFlowWeight_ele->Fill(5,weight);} }
         else { passPresel_ele = false;}
+//aloke ; loose lepton veto in QCDCR too
+
+	if( passPresel_ele && selector->ElectronsLoose.size() <=  NlooseEleVeto_le ) { if (saveCutflows) {cutFlow_ele->Fill(4); cutFlowWeight_ele->Fill(4,weight);}}
+	else { passPresel_ele = false;}
+	if( passPresel_ele && (selector->MuonsLoose.size() + selector->Muons.size() ) <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_ele->Fill(5); cutFlowWeight_ele->Fill(5,weight);}}
+	else { passPresel_ele = false;}
     }
 
     // split skim into ele and mu
