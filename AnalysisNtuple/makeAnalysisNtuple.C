@@ -30,6 +30,7 @@ bool overlapRemovalWJets(EventTree* tree);
 bool overlapRemoval_Tchannel(EventTree* tree);
 double getJetResolution(double, double, double);
 
+
 bool dileptonsample;
 
 auto startClock = std::chrono::high_resolution_clock::now();
@@ -41,6 +42,10 @@ auto startClock = std::chrono::high_resolution_clock::now();
 makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 {
     startClock = std::chrono::high_resolution_clock::now();
+    printf("Git Commit Number: %s\n", VERSION);
+    printf("Git Commit Time: %s\n", COMMITTIME);
+    printf("Git Branch: %s\n", BRANCH);
+    printf("Git Status: %s\n", STATUS);
 
     int eventNum = -1;
     std::string eventStr = "-1";
@@ -352,7 +357,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	if (nEntr > 20000) nEntr = 20000;
     }
     if (sampleType=="TestAll") {
-	if (nEntr > 1000) nEntr = 1000;
+	if (nEntr > 1000) nEntr = 10;
 	saveAllEntries = true;
     }
     //    nEntr = 4000;
@@ -580,7 +585,17 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     outputFile->cd();
 
     outputTree->Write();
+    
+    TNamed gitCommit("Git_Commit", VERSION);
+    TNamed gitTime("Git_Commit_Time", COMMITTIME);
+    TNamed gitBranch("Git_Branch", BRANCH);
+    TNamed gitStatus("Git_Status", STATUS);
 
+    gitCommit.Write();
+    gitTime.Write();
+    gitBranch.Write();
+    gitStatus.Write();
+    
     outputFile->Close();
 
 }
@@ -1182,6 +1197,9 @@ double makeAnalysisNtuple::topPtWeight(){
 
 void makeAnalysisNtuple::loadBtagEff(string sampleName, string year){
     std::string fName = "BtagSF/efficiencies_"+year+".root";
+    if (sampleName=="Test" || sampleName=="TestAll"){
+	sampleName = "TTGamma_SingleLept";
+    }
     std::string leffName = sampleName+"_"+year+"_l_efficiency";
     std::string ceffName = sampleName+"_"+year+"_c_efficiency";
     std::string beffName = sampleName+"_"+year+"_b_efficiency";
@@ -1242,7 +1260,6 @@ float makeAnalysisNtuple::getBtagSF_1a(string sysType, BTagCalibrationReader rea
 	    int ybin = l_eff->GetYaxis()->FindBin(abs(jetEta));
 	    Eff = l_eff->GetBinContent(xbin,ybin);
 	}
-
 
 	if (jetBtag>selector->btag_cut_DeepCSV){
 	    pMC *= Eff;
