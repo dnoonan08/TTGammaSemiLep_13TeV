@@ -47,7 +47,7 @@ Selector::Selector(){
 
     // electrons
     ele_Pt_cut = 35.0;
-    ele_Eta_cut = 2.1;
+    ele_Eta_cut = 2.4;
     ele_PtLoose_cut = 15.0;
     ele_EtaLoose_cut = 2.4;
 
