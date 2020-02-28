@@ -48,6 +48,16 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     printf("Git Branch: %s\n", BRANCH);
     printf("Git Status: %s\n", STATUS);
 
+    if (STATUS != ""){
+	cout << endl;
+	cout <<"=============================================" << endl;
+	cout <<"=============================================" << endl;
+	cout <<"Warning, files are missing from github" << endl;
+	cout <<"=============================================" << endl;
+	cout <<"=============================================" << endl;
+	cout << endl;
+    }
+
     int eventNum = -1;
     std::string eventStr = "-1";
 
@@ -375,7 +385,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			   "MuEGammaScaleFactors/mu2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunGtoH.root", "IsoMu24_OR_IsoTkMu24_PtEtaBins/abseta_pt_ratio");
 	
 	eleSF = new ElectronSF("MuEGammaScaleFactors/ele2016/2016LegacyReReco_ElectronTight_Fall17V2.root",
-			       "MuEGammaScaleFactors/ele2016/egammaEffi.txt_EGM2D_runBCDEF_passingRECO.root");
+			       "MuEGammaScaleFactors/ele2016/egammaEffi.txt_EGM2D_runBCDEF_passingRECO.root",
+			       "MuEGammaScaleFactors/ele2016/sf_ele_2016_trig_v5.root");
 	
 	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2016/Fall17V2_2016_Tight_photons.root");
 
@@ -387,7 +398,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			   "MuEGammaScaleFactors/mu2017/EfficienciesAndSF_RunBtoF_Nov17Nov2017.root", "IsoMu27_PtEtaBins/abseta_pt_ratio");
 	
 	eleSF = new ElectronSF("MuEGammaScaleFactors/ele2017/2017_ElectronTight.root",
-			       "MuEGammaScaleFactors/ele2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO.root");
+			       "MuEGammaScaleFactors/ele2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO.root",
+			       "MuEGammaScaleFactors/ele2017/sf_ele_2017_trig_v5.root");
+
 	
 	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2017/2017_PhotonsTight.root");
 	
@@ -403,7 +416,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			   "MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_AfterMuonHLTUpdate.root", "IsoMu24_PtEtaBins/abseta_pt_ratio");
 
 	eleSF = new ElectronSF("MuEGammaScaleFactors/ele2018/2018_ElectronTight.root",
-			       "MuEGammaScaleFactors/ele2018/egammaEffi.txt_EGM2D_updatedAll.root");
+			       "MuEGammaScaleFactors/ele2018/egammaEffi.txt_EGM2D_updatedAll.root",
+			       "MuEGammaScaleFactors/ele2018/sf_ele_2018_trig_v5.root");
+
 
 	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2018/2018_PhotonsTight.root");
 
