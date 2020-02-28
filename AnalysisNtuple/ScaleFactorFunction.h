@@ -5,17 +5,17 @@
 
 double TTbar_xs             =  831.76;  //ttbar NNLO (http://inspirehep.net/search?p=find+eprint+1112.5675)
 
-double TTbar_dilepton_xs             =  88.29;//87.315;
-double TTbar_semilept_xs             =  365.34;//182.175
-double TTbar_hadronic_xs             =  377.96;//831.76-TTbar_dilepton_xs-2*TTbar_semilept_xs;
+double TTbar_dilepton_xs             =  87.315;
+double TTbar_semilept_xs             =  364.352;
+double TTbar_hadronic_xs             =  380.095;
 
 double TTGJets_xs               =  3.697; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#TT_X
 
 double TGJets_xs                =  2.967;
 
-double TTGamma_hadronic_xs  =  10.528;
-double TTGamma_semilept_xs  =  10.234;
-double TTGamma_dilept_xs    =  2.4243;
+double TTGamma_hadronic_xs  =  4.164*2.565; //10.528;
+double TTGamma_semilept_xs  =  5.076*1.994; //10.234;
+double TTGamma_dilept_xs    =  1.496*1.616; //2.4243;
 
 double TTGamma_hadronic_Pt100_xs  =  0.3209;
 double TTGamma_semilept_Pt100_xs  =  0.2632;
@@ -39,7 +39,7 @@ double W2jets_xs            =  3788;//3120.0;
 double W3jets_xs            =  1166;//942.3;
 double W4jets_xs            =  636;//524.2;
 
-double DYjetsM50_xs         =  5765.4; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
+double DYjetsM50_xs         =  6077.22; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 double DYjetsM10to50_xs     =  18610.; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
 
 double DYjetsM10to50_MLM_xs = 18610.0; 
@@ -66,7 +66,7 @@ double ST_tW_xs             =  35.85 ;
 double ST_tbarW_xs          =  35.85 ;
 double ST_tchannel_xs       =  136.02 ;
 double ST_tbarchannel_xs    =  80.95 ;
-double ST_schannel_xs       =  10.32;
+double ST_schannel_xs       =  3.68064;
 
 
 //Product fo XS and filter eff from table at:
