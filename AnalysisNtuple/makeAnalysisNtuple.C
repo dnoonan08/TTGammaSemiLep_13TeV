@@ -1,5 +1,7 @@
 #include "makeAnalysisNtuple.h"
 #define makeAnalysisNtuple_cxx
+#include <boost/program_options.hpp>
+
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -81,6 +83,24 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	//cout << eventStr << "  "  << eventNum << endl;
     }
 
+    //check if NofM type format is before output name (for splitting jobs)
+    int nJob = -1;
+    int totJob = -1;
+    std::string checkJobs(av[3]);
+    size_t pos = checkJobs.find("of");
+    if (pos != std::string::npos){
+	nJob = std::stoi(checkJobs.substr(0,pos));
+	totJob = std::stoi(checkJobs.substr(pos+2,checkJobs.length()));
+	for (int i = 3; i < ac-1; i++){
+	    av[i] = av[i+1];
+	    //cout << av[i] << " ";
+	}
+	ac = ac-1;
+    }
+    cout << nJob << " of " << totJob << endl;
+
+
+
     std::string year(av[1]);
     tree = new EventTree(ac-4, false, year, av+4);
 
@@ -100,7 +120,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     isSystematicRun = false;
 
     
-    size_t pos = sampleType.find("__");
+    pos = sampleType.find("__");
     if (pos != std::string::npos){
 	systematicType = sampleType.substr(pos+2,sampleType.length());
 	sampleType = sampleType.substr(0,pos);
@@ -294,9 +314,17 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (isSystematicRun){
 	std::cout << "  Systematic Run : Dropping genMC variables from tree" << endl;
     }
+
+
     std::string outputDirectory(av[3]);
 
-    std::string outputFileName = outputDirectory + "/" + sampleType+"_"+year+"_AnalysisNtuple.root";
+    std::string outputFileName;
+
+    if (nJob==-1){
+	outputFileName = outputDirectory + "/" + sampleType+"_"+year+"_AnalysisNtuple.root";
+    } else {
+	outputFileName = outputDirectory + "/" + sampleType+"_"+year+"_AnalysisNtuple_"+to_string(nJob)+"of"+to_string(totJob)+".root";
+    }
     // char outputFileName[100];
     cout << av[3] << " " << sampleType << " " << systematicType << endl;
     //	outputFileName = sprintf("%s_AnalysisNtuple.root",sampleType);
@@ -441,7 +469,23 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     int count_overlapVJets=0;
     int count_overlapTTbar=0;
 
-    for(Long64_t entry=0; entry<nEntr; entry++){
+    int entryStart;
+    int entryStop;
+    if (nJob==-1){
+	entryStart = 0;
+	entryStop=nEntr;
+    }
+    else {
+	int evtPerJob = nEntr/totJob;
+	entryStart = (nJob-1) * evtPerJob;
+	entryStop = (nJob) * evtPerJob;
+	if (nJob==totJob){
+	    entryStop = nEntr;
+	}
+    }
+
+
+    for(Long64_t entry=entryStart; entry<entryStop; entry++){
 	if(entry%dumpFreq == 0){
 	    // duration =  ( clock() - startClock ) / (double) CLOCKS_PER_SEC;
 	    // std::cout << "processing entry " << entry << " out of " << nEntr << " : " << duration << " seconds since last progress" << std::endl;
