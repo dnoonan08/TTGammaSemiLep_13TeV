@@ -147,8 +147,8 @@ Arguments = "TTbarPowheg_Dilepton $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
-Arguments = "TTbarPowheg_Semilept $(year)"
-Queue 1
+Arguments = "TTbarPowheg_Semilept $(year) $(step) 5"
+Queue 5
 
 Arguments = "W1jets $(year)"
 Queue 1
@@ -306,8 +306,8 @@ Arguments = "TTbarPowheg_Dilepton $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
-Arguments = "TTbarPowheg_Semilept $(year)"
-Queue 1
+Arguments = "TTbarPowheg_Semilept $(year) $(step) 5"
+Queue 5
 
 Arguments = "W1jets $(year)"
 Queue 1
@@ -460,8 +460,8 @@ Arguments = "TTbarPowheg_Dilepton $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
-Arguments = "TTbarPowheg_Semilept $(year)"
-Queue 1
+Arguments = "TTbarPowheg_Semilept $(year) $(step) 5"
+Queue 5
 
 Arguments = "W1jets $(year)"
 Queue 1
