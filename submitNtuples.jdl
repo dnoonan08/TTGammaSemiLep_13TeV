@@ -11,6 +11,8 @@ Output = condor/nTuples_$(cluster)_$(process).stdout
 Error  = condor/nTuples_$(cluster)_$(process).stderr
 Log    = condor/nTuples_$(cluster)_$(process).condor
 
+X=$(step)+1
+
 year=2016
 Arguments = "Data_SingleEle_b $(year)"
 Queue 1
@@ -147,7 +149,7 @@ Arguments = "TTbarPowheg_Dilepton $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
-Arguments = "TTbarPowheg_Semilept $(year) $(step) 5"
+Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
 Queue 5
 
 Arguments = "W1jets $(year)"
@@ -306,7 +308,7 @@ Arguments = "TTbarPowheg_Dilepton $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
-Arguments = "TTbarPowheg_Semilept $(year) $(step) 5"
+Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
 Queue 5
 
 Arguments = "W1jets $(year)"
@@ -460,7 +462,7 @@ Arguments = "TTbarPowheg_Dilepton $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
-Arguments = "TTbarPowheg_Semilept $(year) $(step) 5"
+Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
 Queue 5
 
 Arguments = "W1jets $(year)"
