@@ -121,9 +121,43 @@ Arguments = "WZ 2017"
 Queue 1
 Arguments = "ZZ 2017"
 Queue 1
+
+Arguments = "WWTo1L1Nu2Q_amcatnlo 2017"
+Queue 1
+Arguments = "WWToLNuQQ_powheg 2017"
+Queue 1
+Arguments = "WWTo2L2Nu_powheg 2017"
+Queue 1
+Arguments = "WWTo4Q_powheg 2017"
+Queue 1
+Arguments = "WZTo1L3Nu_amcatnlo 2017"
+Queue 1
+Arguments = "WZTo1L1Nu2Q_amcatnlo 2017"
+Queue 1
+Arguments = "WZTo2L2Q_amcatnlo 2017"
+Queue 1
+Arguments = "WZTo3LNu_powheg 2017"
+Queue 1
+Arguments = "ZZTo2L2Q_amcatnlo 2017"
+Queue 1
+Arguments = "ZZTo2L2Nu_powheg 2017"
+Queue 1
+Arguments = "ZZTo2Q2Nu_amcatnlo 2017"
+Queue 1
+Arguments = "ZZTo4L_powheg 2017"
+Queue 1
+Arguments = "ZZTo4L_powheg_ext1 2017"
+Queue 1
+Arguments = "ZZTo4L_powheg_ext2 2017"
+Queue 1
+Arguments = "VVTo2L2Nu_amcatnlo 2017"
+Queue 1
+
 Arguments = "WGamma 2017"
 Queue 1
 Arguments = "ZGamma_01J_5f_lowMass 2017"
+Queue 1
+Arguments = "ZGamma_01J_LoosePt 2017"
 Queue 1
 
 Arguments = "TGJets 2017"
