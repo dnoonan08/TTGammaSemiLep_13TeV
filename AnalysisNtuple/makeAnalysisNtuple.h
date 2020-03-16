@@ -656,6 +656,10 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("photonIsMisIDEle"            , &_photonIsMisIDEle           );
     outputTree->Branch("photonIsHadronicPhoton"      , &_photonIsHadronicPhoton     );
     outputTree->Branch("photonIsHadronicFake"        , &_photonIsHadronicFake       );
+    outputTree->Branch("loosePhotonIsGenuine"             , &_loosePhotonIsGenuine            );
+    outputTree->Branch("loosePhotonIsMisIDEle"            , &_loosePhotonIsMisIDEle           );
+    outputTree->Branch("loosePhotonIsHadronicPhoton"      , &_loosePhotonIsHadronicPhoton     );
+    outputTree->Branch("loosePhotonIsHadronicFake"        , &_loosePhotonIsHadronicFake       );
     outputTree->Branch("photonNoIDIsGenuine"             , &_photonNoIDIsGenuine            );
     outputTree->Branch("photonNoIDIsMisIDEle"            , &_photonNoIDIsMisIDEle           );
     outputTree->Branch("photonNoIDIsHadronicPhoton"      , &_photonNoIDIsHadronicPhoton     );
