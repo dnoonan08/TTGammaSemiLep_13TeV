@@ -137,6 +137,10 @@ Arguments = "TTZtoLL_ext2 2016"
 Queue 1
 Arguments = "TTZtoLL_ext3 2016"
 Queue 1
+Arguments = "TTZtoLL_M1to10 2016"
+Queue 1
+Arguments = "TTZtoQQ 2016"
+Queue 1
 
 Arguments = "WW 2016"
 Queue 1

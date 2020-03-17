@@ -106,6 +106,12 @@ Arguments = "TTWtoLNu 2018"
 Queue 1
 Arguments = "TTZtoLL 2018"
 Queue 1
+Arguments = "TTZtoLL_M1to10 2018"
+Queue 1
+Arguments = "TTZtoQQ 2018"
+Queue 1
+Arguments = "TTZtoQQ_ext1 2019"
+Queue 1
 
 Arguments = "WW 2018"
 Queue 1
