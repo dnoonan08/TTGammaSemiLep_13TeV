@@ -373,7 +373,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	nMC_total=1;
     }
 
-    _lumiWeight = getEvtWeight(sampleType, luminosity, nMC_total);
+    _lumiWeight = getEvtWeight(sampleType, std::stoi(year), luminosity, nMC_total);
     // _lumiWeightAlt = _lumiWeight;
 
     // if (isTTGamma){
