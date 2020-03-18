@@ -2,6 +2,8 @@
 
 sample=$1
 year=$2
+job=$3
+nJobs=$4
 
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then 
     echo "Running Interactively" ; 
@@ -23,13 +25,24 @@ else
 fi
 
 
+echo ${sample}
+echo ${year}
+echo ${job}
+echo ${nJobs}
+
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/AnalysisNtuples/Dilepton"
 
 source sampleList_${year}.sh
 varname=${sample}_${year}
 
-echo "./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep . ${!varname}"
-./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep . ${!varname}
+if [ -z ${job} ] ; then
+    echo "./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep . ${!varname}"
+    ./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep . ${!varname};
+else
+    echo "./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep ${job}of${nJobs} . ${!varname}"
+    ./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep ${job}of${nJobs} . ${!varname};
+fi
+
 
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
     echo "Finished" ;

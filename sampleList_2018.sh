@@ -94,3 +94,23 @@ WW_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/W
 WZ_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/WZ_2018_skim.root"
 
 ZZ_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZZ_2018_skim.root"
+
+
+WWToLNuQQ_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/WWToLNuQQ_powheg_2018_skim.root"
+WWTo4Q_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/WWTo4Q_powheg_2018_skim.root"
+
+WZTo1L1Nu2Q_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/WZTo1L1Nu2Q_amcatnlo_2018_skim.root"
+WZTo1L3Nu_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/WZTo1L3Nu_amcatnlo_2018_skim.root"
+WZTo2L2Q_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/WZTo2L2Q_amcatnlo_2018_skim.root"
+WZTo3L1Nu_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/WZTo3LNu_amcatnlo_2018_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/WZTo3LNu_amcatnlo_ext1_2018_skim.root"
+
+ZGamma_01J_5f_LoosePt_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZGamma_01J_LoosePt_2018_skim.root"
+
+ZZTo2L2Q_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZZTo2L2Q_amcatnlo_2018_skim.root"
+ZZTo2Q2Nu_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZZTo2Q2Nu_amcatnlo_2018_skim.root"
+ZZTo4L_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZZTo4L_powheg_ext1_2018_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZZTo4L_powheg_ext2_2018_skim.root"
+
+VVTo2L2Nu_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/VVTo2L2Nu_amcatnlo_2018_skim.root"
+
+TTZtoLL_M1to10_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/TTZtoLL_M1to10_2018_skim.root"
+TTZtoQQ_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/TTZtoQQ_2018_skim.root"

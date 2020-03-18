@@ -1,5 +1,5 @@
 universe = vanilla
-Executable = runAnalysisNtuple_Dilep.sh
+Executable = runAnalysisNtuple_QCD.sh
 
 should_transfer_files = YES
 WhenToTransferOutput  = ON_EXIT
@@ -10,6 +10,8 @@ Transfer_Input_Files = AnalysisNtuple/makeAnalysisNtuple, sampleList_2016.sh, sa
 Output = condor/nTuples_$(cluster)_$(process).stdout
 Error  = condor/nTuples_$(cluster)_$(process).stderr
 Log    = condor/nTuples_$(cluster)_$(process).condor
+
+X=$(step)+1
 
 year=2016
 Arguments = "Data_SingleEle_b $(year)"
@@ -115,16 +117,12 @@ Arguments = "TTGamma_Dilepton_Pt100 $(year)"
 Queue 1
 Arguments = "TTGamma_Dilepton_Pt200 $(year)"
 Queue 1
-Arguments = "TTGamma_Dilepton_small $(year)"
-Queue 1
 
 Arguments = "TTGamma_Hadronic $(year)"
 Queue 1
 Arguments = "TTGamma_Hadronic_Pt100 $(year)"
 Queue 1
 Arguments = "TTGamma_Hadronic_Pt200 $(year)"
-Queue 1
-Arguments = "TTGamma_Hadronic_small $(year)"
 Queue 1
 
 Arguments = "TTGamma_SingleLept $(year)"
@@ -133,8 +131,6 @@ Arguments = "TTGamma_SingleLept_Pt100 $(year)"
 Queue 1
 Arguments = "TTGamma_SingleLept_Pt200 $(year)"
 Queue 1
-Arguments = "TTGamma_SingleLept_small $(year)"
-Queue 1
 
 Arguments = "TTWtoLNu $(year)"
 Queue 1
@@ -142,13 +138,17 @@ Arguments = "TTWtoQQ $(year)"
 Queue 1
 Arguments = "TTZtoLL $(year)"
 Queue 1
+Arguments = "TTZtoLL_M1to10 $(year)"
+Queue 1
+Arguments = "TTZtoQQ $(year)"
+Queue 1
 
 Arguments = "TTbarPowheg_Dilepton $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
-Arguments = "TTbarPowheg_Semilept $(year)"
-Queue 1
+Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
+Queue 5
 
 Arguments = "W1jets $(year)"
 Queue 1
@@ -163,6 +163,8 @@ Arguments = "WGamma_01J_5f $(year)"
 Queue 1
 Arguments = "ZGamma_01J_5f_lowMass $(year)"
 Queue 1
+Arguments = "ZGamma_01J_5f_LoosePt $(year)"
+Queue 1
 
 Arguments = "WW $(year)"
 Queue 1
@@ -171,9 +173,29 @@ Queue 1
 Arguments = "ZZ $(year)"
 Queue 1
 
+Arguments = "WWToLNuQQ $(year)"
+Queue 1
+Arguments = "WWTo4Q $(year)"
+Queue 1
 
+Arguments = "WZTo1L3Nu $(year)"
+Queue 1
+Arguments = "WZTo1L1Nu2Q $(year)"
+Queue 1
+Arguments = "WZTo2L2Q $(year)"
+Queue 1
+Arguments = "WZTo3L1Nu $(year)"
+Queue 1
 
+Arguments = "ZZTo2L2Q $(year)"
+Queue 1
+Arguments = "ZZTo2Q2Nu $(year)"
+Queue 1
+Arguments = "ZZTo4L $(year)"
+Queue 1
 
+Arguments = "VVTo2L2Nu $(year)"
+Queue 1
 
 
 
@@ -274,16 +296,12 @@ Arguments = "TTGamma_Dilepton_Pt100 $(year)"
 Queue 1
 Arguments = "TTGamma_Dilepton_Pt200 $(year)"
 Queue 1
-Arguments = "TTGamma_Dilepton_small $(year)"
-Queue 1
 
 Arguments = "TTGamma_Hadronic $(year)"
 Queue 1
 Arguments = "TTGamma_Hadronic_Pt100 $(year)"
 Queue 1
 Arguments = "TTGamma_Hadronic_Pt200 $(year)"
-Queue 1
-Arguments = "TTGamma_Hadronic_small $(year)"
 Queue 1
 
 Arguments = "TTGamma_SingleLept $(year)"
@@ -292,8 +310,6 @@ Arguments = "TTGamma_SingleLept_Pt100 $(year)"
 Queue 1
 Arguments = "TTGamma_SingleLept_Pt200 $(year)"
 Queue 1
-Arguments = "TTGamma_SingleLept_small $(year)"
-Queue 1
 
 Arguments = "TTWtoLNu $(year)"
 Queue 1
@@ -301,13 +317,17 @@ Arguments = "TTWtoQQ $(year)"
 Queue 1
 Arguments = "TTZtoLL $(year)"
 Queue 1
+Arguments = "TTZtoLL_M1to10 $(year)"
+Queue 1
+Arguments = "TTZtoQQ $(year)"
+Queue 1
 
 Arguments = "TTbarPowheg_Dilepton $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
-Arguments = "TTbarPowheg_Semilept $(year)"
-Queue 1
+Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
+Queue 5
 
 Arguments = "W1jets $(year)"
 Queue 1
@@ -322,6 +342,8 @@ Arguments = "WGamma_01J_5f $(year)"
 Queue 1
 Arguments = "ZGamma_01J_5f_lowMass $(year)"
 Queue 1
+Arguments = "ZGamma_01J_5f_LoosePt $(year)"
+Queue 1
 
 Arguments = "WW $(year)"
 Queue 1
@@ -330,6 +352,29 @@ Queue 1
 Arguments = "ZZ $(year)"
 Queue 1
 
+Arguments = "WWToLNuQQ $(year)"
+Queue 1
+Arguments = "WWTo4Q $(year)"
+Queue 1
+
+Arguments = "WZTo1L3Nu $(year)"
+Queue 1
+Arguments = "WZTo1L1Nu2Q $(year)"
+Queue 1
+Arguments = "WZTo2L2Q $(year)"
+Queue 1
+Arguments = "WZTo3L1Nu $(year)"
+Queue 1
+
+Arguments = "ZZTo2L2Q $(year)"
+Queue 1
+Arguments = "ZZTo2Q2Nu $(year)"
+Queue 1
+Arguments = "ZZTo4L $(year)"
+Queue 1
+
+Arguments = "VVTo2L2Nu $(year)"
+Queue 1
 
 
 
@@ -428,16 +473,12 @@ Arguments = "TTGamma_Dilepton_Pt100 $(year)"
 Queue 1
 Arguments = "TTGamma_Dilepton_Pt200 $(year)"
 Queue 1
-Arguments = "TTGamma_Dilepton_small $(year)"
-Queue 1
 
 Arguments = "TTGamma_Hadronic $(year)"
 Queue 1
 Arguments = "TTGamma_Hadronic_Pt100 $(year)"
 Queue 1
 Arguments = "TTGamma_Hadronic_Pt200 $(year)"
-Queue 1
-Arguments = "TTGamma_Hadronic_small $(year)"
 Queue 1
 
 Arguments = "TTGamma_SingleLept $(year)"
@@ -446,8 +487,6 @@ Arguments = "TTGamma_SingleLept_Pt100 $(year)"
 Queue 1
 Arguments = "TTGamma_SingleLept_Pt200 $(year)"
 Queue 1
-Arguments = "TTGamma_SingleLept_small $(year)"
-Queue 1
 
 Arguments = "TTWtoLNu $(year)"
 Queue 1
@@ -455,13 +494,17 @@ Arguments = "TTWtoQQ $(year)"
 Queue 1
 Arguments = "TTZtoLL $(year)"
 Queue 1
+Arguments = "TTZtoLL_M1to10 $(year)"
+Queue 1
+Arguments = "TTZtoQQ $(year)"
+Queue 1
 
 Arguments = "TTbarPowheg_Dilepton $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
-Arguments = "TTbarPowheg_Semilept $(year)"
-Queue 1
+Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
+Queue 5
 
 Arguments = "W1jets $(year)"
 Queue 1
@@ -476,6 +519,8 @@ Arguments = "WGamma_01J_5f $(year)"
 Queue 1
 Arguments = "ZGamma_01J_5f_lowMass $(year)"
 Queue 1
+Arguments = "ZGamma_01J_5f_LoosePt $(year)"
+Queue 1
 
 Arguments = "WW $(year)"
 Queue 1
@@ -484,3 +529,26 @@ Queue 1
 Arguments = "ZZ $(year)"
 Queue 1
 
+Arguments = "WWToLNuQQ $(year)"
+Queue 1
+Arguments = "WWTo4Q $(year)"
+Queue 1
+
+Arguments = "WZTo1L3Nu $(year)"
+Queue 1
+Arguments = "WZTo1L1Nu2Q $(year)"
+Queue 1
+Arguments = "WZTo2L2Q $(year)"
+Queue 1
+Arguments = "WZTo3L1Nu $(year)"
+Queue 1
+
+Arguments = "ZZTo2L2Q $(year)"
+Queue 1
+Arguments = "ZZTo2Q2Nu $(year)"
+Queue 1
+Arguments = "ZZTo4L $(year)"
+Queue 1
+
+Arguments = "VVTo2L2Nu $(year)"
+Queue 1

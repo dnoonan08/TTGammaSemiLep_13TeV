@@ -92,7 +92,7 @@ ST_tbar_channel_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2
 
 ST_t_channel_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/ST_t_channel_2016_skim.root"
 
-TGJets_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TGJets_2016_skim.root"
+TGJets_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TGJets_2016_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TGJets_ext1_2016_skim.root"
 
 
 TTGamma_Dilepton_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTGamma_Dilepton_2016_skim.root"
@@ -117,6 +117,10 @@ TTWtoQQ_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2
 
 TTZtoLL_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTZtoLL_ext1_2016_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTZtoLL_ext2_2016_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTZtoLL_ext3_2016_skim.root"
 
+TTZtoLL_M1to10_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTZtoLL_M1to10_2016_skim.root"
+
+TTZtoQQ_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTZtoQQ_2016_skim.root"
+
 TTbarPowheg_Dilepton_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTbarPowheg_Dilepton_2016_skim_1of5.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTbarPowheg_Dilepton_2016_skim_2of5.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTbarPowheg_Dilepton_2016_skim_3of5.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTbarPowheg_Dilepton_2016_skim_4of5.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTbarPowheg_Dilepton_2016_skim_5of5.root"
 
 TTbarPowheg_Hadronic_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTbarPowheg_Hadronic_2016_skim_1of5.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTbarPowheg_Hadronic_2016_skim_2of5.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTbarPowheg_Hadronic_2016_skim_3of5.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTbarPowheg_Hadronic_2016_skim_4of5.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/TTbarPowheg_Hadronic_2016_skim_5of5.root"
@@ -136,9 +140,25 @@ WGamma_01J_5f_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/S
 
 ZGamma_01J_5f_lowMass_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/ZGamma_01J_5f_lowMass_2016_skim.root"
 
+ZGamma_01J_5f_LoosePt_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/ZGamma_01J_LoosePt_2016_skim.root"
+
 WW_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WW_2016_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WW_ext1_2016_skim.root"
 
 WZ_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WZ_2016_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WZ_ext1_2016_skim.root"
 
 ZZ_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/ZZ_2016_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/ZZ_ext1_2016_skim.root"
 
+
+WWToLNuQQ_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WWToLNuQQ_powheg_2016_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WWToLNuQQ_powheg_ext1_2016_skim.root"
+WWTo4Q_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WWTo4Q_powheg_2016_skim.root"
+
+WZTo1L3Nu_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WZTo1L3Nu_amcatnlo_2016_skim.root"
+WZTo1L1Nu2Q_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WZTo1L1Nu2Q_amcatnlo_2016_skim.root"
+WZTo2L2Q_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WZTo2L2Q_amcatnlo_2016_skim.root"
+WZTo3L1Nu_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WZTo3LNu_powheg_2016_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/WZTo3LNu_powheg_ext1_2016_skim.root"
+
+ZZTo2L2Q_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/ZZTo2L2Q_powheg_2016_skim.root"
+ZZTo2Q2Nu_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/ZZTo2Q2Nu_powheg_2016_skim.root"
+ZZTo4L_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/ZZTo4L_powheg_2016_skim.root"
+
+VVTo2L2Nu_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/VVTo2L2Nu_amcatnlo_2016_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2016/VVTo2L2Nu_amcatnlo_ext1_2016_skim.root"
