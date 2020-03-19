@@ -14,40 +14,40 @@ Log    = condor/nTuples_$(cluster)_$(process).condor
 X=$(step)+1
 
 year=2016
-Arguments = "Data_SingleEle_b $(year)"
-Queue 1
-Arguments = "Data_SingleEle_c $(year)"
-Queue 1
-Arguments = "Data_SingleEle_d $(year)"
-Queue 1
-Arguments = "Data_SingleEle_e $(year)"
-Queue 1
-Arguments = "Data_SingleEle_f $(year)"
-Queue 1
-Arguments = "Data_SingleEle_g $(year)"
-Queue 1
-Arguments = "Data_SingleEle_h $(year)"
-Queue 1
+Arguments = "Data_SingleEle_b $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_c $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_d $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_e $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_f $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_g $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_h $(year) $INT(X) 5"
+Queue 5
 
-Arguments = "Data_SingleMu_b $(year)"
-Queue 1
-Arguments = "Data_SingleMu_c $(year)"
-Queue 1
-Arguments = "Data_SingleMu_d $(year)"
-Queue 1
-Arguments = "Data_SingleMu_e $(year)"
-Queue 1
-Arguments = "Data_SingleMu_f $(year)"
-Queue 1
-Arguments = "Data_SingleMu_g $(year)"
-Queue 1
-Arguments = "Data_SingleMu_h $(year)"
-Queue 1
+Arguments = "Data_SingleMu_b $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_c $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_d $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_e $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_f $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_g $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_h $(year) $INT(X) 5"
+Queue 5
 
 Arguments = "DYjetsM10to50 $(year)"
 Queue 1
-Arguments = "DYjetsM50 $(year)"
-Queue 1
+Arguments = "DYjetsM50 $(year) $INT(X) 5"
+Queue 5
 
 Arguments = "GJets_HT40To100 $(year)"
 Queue 1
@@ -143,8 +143,8 @@ Queue 1
 Arguments = "TTZtoQQ $(year)"
 Queue 1
 
-Arguments = "TTbarPowheg_Dilepton $(year)"
-Queue 1
+Arguments = "TTbarPowheg_Dilepton $(year) $INT(X) 5"
+Queue 5
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
@@ -201,32 +201,32 @@ Queue 1
 
 
 year=2017
-Arguments = "Data_SingleEle_b $(year)"
-Queue 1
-Arguments = "Data_SingleEle_c $(year)"
-Queue 1
-Arguments = "Data_SingleEle_d $(year)"
-Queue 1
-Arguments = "Data_SingleEle_e $(year)"
-Queue 1
-Arguments = "Data_SingleEle_f $(year)"
-Queue 1
+Arguments = "Data_SingleEle_b $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_c $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_d $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_e $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_f $(year) $INT(X) 5"
+Queue 5
 
-Arguments = "Data_SingleMu_b $(year)"
-Queue 1
-Arguments = "Data_SingleMu_c $(year)"
-Queue 1
-Arguments = "Data_SingleMu_d $(year)"
-Queue 1
-Arguments = "Data_SingleMu_e $(year)"
-Queue 1
-Arguments = "Data_SingleMu_f $(year)"
-Queue 1
+Arguments = "Data_SingleMu_b $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_c $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_d $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_e $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_f $(year) $INT(X) 5"
+Queue 5
 
 Arguments = "DYjetsM10to50 $(year)"
 Queue 1
-Arguments = "DYjetsM50 $(year)"
-Queue 1
+Arguments = "DYjetsM50 $(year) $INT(X) 5"
+Queue 5
 
 Arguments = "GJets_HT40To100 $(year)"
 Queue 1
@@ -322,8 +322,8 @@ Queue 1
 Arguments = "TTZtoQQ $(year)"
 Queue 1
 
-Arguments = "TTbarPowheg_Dilepton $(year)"
-Queue 1
+Arguments = "TTbarPowheg_Dilepton $(year) $INT(X) 5"
+Queue 5
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
@@ -382,28 +382,28 @@ Queue 1
 
 
 year=2018
-Arguments = "Data_SingleEle_a $(year)"
-Queue 1
-Arguments = "Data_SingleEle_b $(year)"
-Queue 1
-Arguments = "Data_SingleEle_c $(year)"
-Queue 1
-Arguments = "Data_SingleEle_d $(year)"
-Queue 1
+Arguments = "Data_SingleEle_a $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_b $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_c $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleEle_d $(year) $INT(X) 5"
+Queue 5
 
-Arguments = "Data_SingleMu_a $(year)"
-Queue 1
-Arguments = "Data_SingleMu_b $(year)"
-Queue 1
-Arguments = "Data_SingleMu_c $(year)"
-Queue 1
-Arguments = "Data_SingleMu_d $(year)"
-Queue 1
+Arguments = "Data_SingleMu_a $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_b $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_c $(year) $INT(X) 5"
+Queue 5
+Arguments = "Data_SingleMu_d $(year) $INT(X) 5"
+Queue 5
 
 Arguments = "DYjetsM10to50 $(year)"
 Queue 1
-Arguments = "DYjetsM50 $(year)"
-Queue 1
+Arguments = "DYjetsM50 $(year) $INT(X) 5"
+Queue 5
 
 Arguments = "GJets_HT40To100 $(year)"
 Queue 1
@@ -499,8 +499,8 @@ Queue 1
 Arguments = "TTZtoQQ $(year)"
 Queue 1
 
-Arguments = "TTbarPowheg_Dilepton $(year)"
-Queue 1
+Arguments = "TTbarPowheg_Dilepton $(year) $INT(X) 5"
+Queue 5
 Arguments = "TTbarPowheg_Hadronic $(year)"
 Queue 1
 Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
