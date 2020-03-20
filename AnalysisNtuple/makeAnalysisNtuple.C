@@ -341,10 +341,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
     // char outputFileName[100];
     cout << av[3] << " " << sampleType << " " << systematicType << endl;
-    //	outputFileName = sprintf("%s_AnalysisNtuple.root",sampleType);
+
     if (systematicType!=""){
-	outputFileName = outputDirectory + "/"+systematicType + "_" +sampleType+"_"+year+"_AnalysisNtuple.root";
-	//		sprintf(outputFileName,"%s/%s_%s_AnalysisNtuple.root",av[3],systematicType,sampleType);
+	outputFileName.replace(0,outputDirectory.size()+1, outputDirectory + "/"+systematicType + "_");
+	//	outputFileName.replace(outputFileName.begin(),outputDirectory.size()+1, outputDirectory + "/"+systematicType + "_");
+	//	outputFileName = outputDirectory + "/"+systematicType + "_" +sampleType+"_"+year+"_AnalysisNtuple.root";
     }
 
     if (saveCutflow) {
