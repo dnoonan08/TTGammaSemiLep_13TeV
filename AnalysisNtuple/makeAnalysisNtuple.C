@@ -45,6 +45,14 @@ auto startClock = std::chrono::high_resolution_clock::now();
 makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 {
     startClock = std::chrono::high_resolution_clock::now();
+    int eventNum = -1;
+    std::string eventStr = "-1";
+
+    if(ac < 5){
+	std::cout << "usage: ./makeAnalysisNtuple year sampleName outputFileDir inputFile[s]" << std::endl;
+	return;
+    }
+
     printf("Git Commit Number: %s\n", VERSION);
     printf("Git Commit Time: %s\n", COMMITTIME);
     printf("Git Branch: %s\n", BRANCH);
@@ -58,14 +66,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	cout <<"=============================================" << endl;
 	cout <<"=============================================" << endl;
 	cout << endl;
-    }
-
-    int eventNum = -1;
-    std::string eventStr = "-1";
-
-    if(ac < 5){
-	std::cout << "usage: ./makeAnalysisNtuple year sampleName outputFileDir inputFile[s]" << std::endl;
-	return;
     }
 
     bool saveCutflow=false;
