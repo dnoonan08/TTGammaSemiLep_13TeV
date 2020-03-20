@@ -68,6 +68,14 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	return;
     }
 
+    bool saveCutflow=false;
+    if (std::string(av[1])=="cutflow"){
+	saveCutflow=true;
+	for (int i = 1; i < ac-1; i++){
+	    av[i] = av[i+1];
+	}
+	ac = ac-1;
+    }
 
     if (std::string(av[1])=="event"){
 	
@@ -175,7 +183,18 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     selector->printEvent = eventNum;
     evtPick->printEvent = eventNum;
 
-    
+    evtPick->Njet_ge = 2;
+    evtPick->NBjet_ge = 0;
+
+    evtPick->applyMetFilter = true;
+
+    if (saveCutflow){
+	evtPick->saveCutflows=true;
+	evtPick->Njet_ge = 4;
+	evtPick->NBjet_ge = 1;
+    }
+
+
 
     selector->pho_applyPhoID = false;
     selector->looseJetID = false;
@@ -191,11 +210,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (year=="2018") selector->btag_cut_DeepCSV = 0.4184;
     
     //	selector->jet_Pt_cut = 40.;
-    evtPick->Njet_ge = 2;	
-    evtPick->NBjet_ge = 0;	
-
-    evtPick->applyMetFilter = true;	
-
     BTagCalibration calib;
     if (!selector->useDeepCSVbTag){
 	if (year=="2016") calib = BTagCalibration("csvv2", "BtagSF/CSVv2_Moriond17_B_H.csv");
@@ -332,11 +346,19 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	outputFileName = outputDirectory + "/"+systematicType + "_" +sampleType+"_"+year+"_AnalysisNtuple.root";
 	//		sprintf(outputFileName,"%s/%s_%s_AnalysisNtuple.root",av[3],systematicType,sampleType);
     }
+
+    if (saveCutflow) {
+	outputFileName.replace(outputFileName.find("AnalysisNtuple"),14, "Cutflow");
+    }
+
     cout << av[3] << " " << sampleType << " " << systematicType << endl;
     cout << outputFileName << endl;
     TFile *outputFile = new TFile(outputFileName.c_str(),"recreate");
     outputTree = new TTree("AnalysisTree","AnalysisTree");
 
+    if (saveCutflow) {
+	evtPick->init_cutflow_files(outputFileName);
+    }
     PUReweight* PUweighter = new PUReweight(ac-4, av+4, PUfilename);
     PUReweight* PUweighterUp = new PUReweight(ac-4, av+4, PUfilename_up);
     PUReweight* PUweighterDown = new PUReweight(ac-4, av+4, PUfilename_down);
@@ -645,6 +667,29 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     outputFile->cd();
 
     outputTree->Write();
+
+    if (saveCutflow){
+	std::cout << "e+jets cutflow" << std::endl;
+	evtPick->print_cutflow_ele(evtPick->cutFlow_ele);
+
+	std::cout << "mu+jets cutflow" << std::endl;
+	evtPick->print_cutflow_mu(evtPick->cutFlow_mu);
+
+	std::cout << "e+jets cutflow Weighted" << std::endl;
+	evtPick->print_cutflow_ele(evtPick->cutFlowWeight_ele);
+
+	std::cout << "mu+jets cutflow Weighted" << std::endl;
+	evtPick->print_cutflow_mu(evtPick->cutFlowWeight_mu);
+
+	evtPick->cutFlow_mu->Write();
+	evtPick->cutFlow_ele->Write();
+	evtPick->cutFlowWeight_mu->Write();
+	evtPick->cutFlowWeight_ele->Write();
+    }
+
+    if (saveCutflow) {
+	evtPick->close_cutflow_files();
+    }
     
     TNamed gitCommit("Git_Commit", VERSION);
     TNamed gitTime("Git_Commit_Time", COMMITTIME);

@@ -5,6 +5,7 @@
 #include<string>
 #include<set>
 #include<iostream>
+#include<fstream>
 #include<TH1F.h>
 #include<TH1D.h>
 
@@ -20,6 +21,9 @@ public:
         void process_event_gen(EventTree* inp_tree, Selector_gen* inp_selector, double weight=1.0);
 	void print_cutflow_mu(TH1D* _cutflow);
 	void print_cutflow_ele(TH1D* _cutflow);
+
+	void init_cutflow_files(string fileName);
+	void close_cutflow_files();
 	
 	std::string title;
 	
@@ -53,7 +57,7 @@ public:
 	int Nmu_eq;
 	int NEleVeto_le;
 	
-	int Npho_ge;
+	int Npho_eq;
 	int NlooseMuVeto_le;
 	int NlooseEleVeto_le;
 	int NmediumEleVeto_le;
@@ -74,6 +78,24 @@ public:
 	TH1D* cutFlow_ele;
 	TH1D* cutFlowWeight_ele;
 
+	ofstream dump_trigger_ele;
+	ofstream dump_lepton_ele;
+	ofstream dump_oneJet_ele;
+	ofstream dump_twoJet_ele;
+	ofstream dump_threeJet_ele;
+	ofstream dump_fourJet_ele;
+	ofstream dump_btag_ele;
+	ofstream dump_photon_ele;
+
+	ofstream dump_trigger_mu;
+	ofstream dump_lepton_mu;
+	ofstream dump_oneJet_mu;
+	ofstream dump_twoJet_mu;
+	ofstream dump_threeJet_mu;
+	ofstream dump_fourJet_mu;
+	ofstream dump_btag_mu;
+	ofstream dump_photon_mu;
+
 
 private:
 	EventTree* tree;
@@ -83,6 +105,8 @@ private:
 	void set_cutflow_labels_mu(TH1D* hist);
 	void set_cutflow_labels_ele(TH1D* hist);
 };
+
+
 
 class EventPick_gen{
 public:
