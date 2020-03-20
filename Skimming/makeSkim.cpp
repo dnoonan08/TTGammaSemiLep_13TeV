@@ -31,7 +31,17 @@ int main(int ac, char** av){
 	bool isMC = true;
 	bool xRootDAccess = false;
 
-	//TEMP
+	bool passAll=false;
+        if (std::string(av[1])=="passAll"){
+	    passAll = true;
+	    cout << "Keeping all events, no skim" << endl;
+	    for (int i = 1; i < ac-1; i++){
+		av[i] = av[i+1];
+		//cout << av[i] << " ";
+	    }
+	    ac = ac-1;
+	}
+
         if (std::string(av[1])=="event"){
 
 	    std::string tempEventStr(av[2]);
@@ -71,9 +81,6 @@ int main(int ac, char** av){
 	    isMC = false;
 	}
 
-
-	    
-	
 
 	//check for xrootd argument before file list
 	//
@@ -197,7 +204,6 @@ int main(int ac, char** av){
 	TH1D* hEvents_    = new TH1D("hEvents",    "number of events (+/- event weight)",      3,  -1.5, 1.5);
 
 	for(Long64_t entry= startEntry; entry < endEntry; entry++){
-	//	for(Long64_t entry= 0; entry < 300; entry++){ 	
 		if(entry%dumpFreq == 0) {
 		    
 			// duration =  ( clock() - startClock ) / (double) CLOCKS_PER_SEC;
@@ -211,8 +217,6 @@ int main(int ac, char** av){
 			startClock = std::chrono::high_resolution_clock::now();			
 		}
 		tree->GetEntry(entry);
-
-		//		if (tree->event_!=year) continue;
 		
 		hPU_->Fill(tree->nPU_);
 		hPUTrue_->Fill(tree->nPUTrue_);
@@ -225,10 +229,9 @@ int main(int ac, char** av){
 
 		evtPick->process_event(tree);
 
-		if( evtPick->passSkim ){
+		if( evtPick->passSkim || passAll){
 			newTree->Fill();
 		}
-		
 	}
 
 	newTree->Write();
