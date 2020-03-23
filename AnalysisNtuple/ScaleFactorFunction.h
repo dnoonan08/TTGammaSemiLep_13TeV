@@ -62,9 +62,9 @@ void initCrossSections(){
     //crossSections["WGamma_01J"]    = 203.3  ;  ///?? Old? New one from GenXSecAnalzer is below (change in pt cut?)
     crossSections["WGamma_01J_5f"]  = {489., 463.9*1.295, 463.9*1.295} ; // LO from GenXSecAnalzer of 1M events
 
-    //crossSections["WW"]                = 75.8;//118.7;
-    //crossSections["WZ"]                = 27.6;//47.13;
-    //crossSections["ZZ"]                = 12.14;//16.523;  //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
+    crossSections["WW"]                = {75.8 ,75.8 ,75.8 };
+    crossSections["WZ"]                = {27.6 ,27.6 ,27.6 };
+    crossSections["ZZ"]                = {12.14,12.14,12.14};
 
     crossSections["WWToLNuQQ"]      = {49.997, 49.997, 49.997};
     crossSections["WWTo4Q"]         = {51.723, 51.723, 51.723};
@@ -109,11 +109,11 @@ void initCrossSections(){
     crossSections["QCD_Pt300toInf_Ele"] = {   1350.,    1350.,    1350.};
 
     // GJets cross sections taken from AN2016_471_v6 (SUSY photon + MET analysis)
-    crossSections["GJets_HT40to100"]  = {20790.  , 20790.  , 20790.  };
-    crossSections["GJets_HT100to200"] = { 9238.  ,  9238.  ,  9238.  };
-    crossSections["GJets_HT200to400"] = { 2305.  ,  2305.  ,  2305.  };
-    crossSections["GJets_HT400to600"] = {  274.4 ,   274.4 ,   274.4 };
-    crossSections["GJets_HT600toInf"] = {   93.46,    93.46,    93.46};
+    crossSections["GJets_HT40To100"]  = {20790.  , 20790.  , 20790.  };
+    crossSections["GJets_HT100To200"] = { 9238.  ,  9238.  ,  9238.  };
+    crossSections["GJets_HT200To400"] = { 2305.  ,  2305.  ,  2305.  };
+    crossSections["GJets_HT400To600"] = {  274.4 ,   274.4 ,   274.4 };
+    crossSections["GJets_HT600ToInf"] = {   93.46,    93.46,    93.46};
 
     return;
 }
