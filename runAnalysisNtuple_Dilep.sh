@@ -47,7 +47,7 @@ fi
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
     echo "Finished" ;
 else
-    xrdcp -f Dilep_${sample}_${year}_AnalysisNtuple.root ${outputdir}/${year}
+    xrdcp -f Dilep_${sample}_${year}_AnalysisNtuple*.root ${outputdir}/${year}
     echo "Finished, Cleaning up"
     rm *root
     rm RequiredScaleFactors.tgz
