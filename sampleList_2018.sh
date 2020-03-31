@@ -108,7 +108,7 @@ ZGamma_01J_5f_LoosePt_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_Fu
 
 ZZTo2L2Q_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZZTo2L2Q_amcatnlo_2018_skim.root"
 ZZTo2Q2Nu_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZZTo2Q2Nu_amcatnlo_2018_skim.root"
-ZZTo4L_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZZTo4L_powheg_ext1_2018_skim.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZZTo4L_powheg_ext2_2018_skim.root"
+ZZTo4L_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/ZZTo4L_amcatnlo2018_skim.root"
 
 VVTo2L2Nu_2018="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/2018/VVTo2L2Nu_amcatnlo_2018_skim.root"
 

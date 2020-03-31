@@ -125,8 +125,9 @@ double getEvtWeight(string sampleType, int year, double luminosity, double nEven
     if( sampleType.substr(0,4)=="Data") {evtWeight = 1.;}
     else if( sampleType=="Test") {evtWeight = 1.;}
     else if( sampleType=="TestAll") {evtWeight = 1.;}
+    else if( sampleType=="TestFull") {evtWeight = 1.;}
     else {
-	initCrossSections();
+	//	initCrossSections();
 	if (crossSections.find(sampleType) != crossSections.end()) {
 	    int index = year - 2016;
 	    evtWeight = crossSections[sampleType][index] * luminosity / nEvents_MC;
@@ -271,6 +272,7 @@ const std::string allowedSampleTypes[150] = {"Data",
 					     /* "isr_down_TTbarPowheg", */
 					     /* "fsr_up_TTbarPowheg", */
 					     /* "fsr_down_TTbarPowheg", */
+					     "TestFull",
 					     "TestAll",
 					     "Test",
 					     /* "Gencut_TTGamma_Semilept_T", */

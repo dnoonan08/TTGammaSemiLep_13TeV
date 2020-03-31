@@ -12,19 +12,19 @@ EventPick::EventPick(std::string titleIn){
     
     printEvent = -1;
 
-    cutFlow_ele = new TH1D("cut_flow_ele","cut flow e+jets",15,-0.5,14.5);
+    cutFlow_ele = new TH1D("cut_flow_ele","cut flow e+jets",20,-0.5,19.5);
     cutFlow_ele->SetDirectory(0);
     set_cutflow_labels_ele(cutFlow_ele); 
     
-    cutFlow_mu = new TH1D("cut_flow_mu","cut flow mu+jets",15,-0.5,14.5);
+    cutFlow_mu = new TH1D("cut_flow_mu","cut flow mu+jets",20,-0.5,19.5);
     cutFlow_mu->SetDirectory(0);
     set_cutflow_labels_mu(cutFlow_mu); 
 	
-    cutFlowWeight_ele = new TH1D("cut_flow_weight_ele","cut flow with PU weight e+jets",15,-0.5,14.5);
+    cutFlowWeight_ele = new TH1D("cut_flow_weight_ele","cut flow with PU weight e+jets",20,-0.5,19.5);
     cutFlowWeight_ele->SetDirectory(0);
     set_cutflow_labels_ele(cutFlowWeight_ele);
 
-    cutFlowWeight_mu = new TH1D("cut_flow_weight_mu","cut flow with PU weight mu+jets",15,-0.5,14.5);
+    cutFlowWeight_mu = new TH1D("cut_flow_weight_mu","cut flow with PU weight mu+jets",20,-0.5,19.5);
     cutFlowWeight_mu->SetDirectory(0);
     set_cutflow_labels_mu(cutFlowWeight_mu);
 
@@ -124,27 +124,27 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 	cout << "TriggerMu "<< Pass_trigger_mu << endl;
 	cout << "TriggerEle "<< Pass_trigger_ele << endl;
     }
-
+    // Pass_trigger_mu = Pass_trigger_mu || Pass_trigger_ele;
+    // Pass_trigger_ele = Pass_trigger_mu || Pass_trigger_ele;
 
     passPresel_mu  = true;
     passPresel_ele = true;
 
     bool isPVGood = (tree->pvNDOF_>4 && 
-		     sqrt(tree->pvX_ * tree->pvX_ + tree->pvY_ * tree->pvY_)<2. &&
-		     abs(tree->pvZ_) < 24.);
+		     sqrt(tree->pvX_ * tree->pvX_ + tree->pvY_ * tree->pvY_)<=2. &&
+		     abs(tree->pvZ_) <= 24.);
     
     if (tree->event_==printEvent){
-	cout << "PV "<< isPVGood << endl;
-	if (!isPVGood){
-	    cout << "    ndof="<<tree->pvNDOF_ << "   (>4)" << endl;
-	    cout << "    pX="<<tree->pvX_ <<  "   (<2)" << endl;
-	    cout << "    pY="<<tree->pvY_ <<  "   (<2)" << endl;
-	    cout << "    pZ="<<tree->pvZ_ <<  "   (<2)" << endl;
-	}
+    	cout << "PV "<< isPVGood << endl;
+    	cout << "    ndof="<<tree->pvNDOF_ << "   (>4)" << endl;
+    	cout << "    pX="<<tree->pvX_ <<  "   (<2)" << endl;
+    	cout << "    pY="<<tree->pvY_ <<  "   (<2)" << endl;
+    	cout << "    pZ="<<tree->pvZ_ <<  "   (<24)" << endl;
     }
+
     string run_lumi_event = to_string(tree->run_)+","+to_string(tree->lumis_)+","+to_string(tree->event_)+"\n";
     // Cut events that fail mu trigger
-    if( passPresel_mu &&  Pass_trigger_mu) { 
+    if( passPresel_mu &&  (Pass_trigger_mu)) { 
 	if (saveCutflows) {cutFlow_mu->Fill(1); cutFlowWeight_mu->Fill(1,weight); dump_trigger_mu << run_lumi_event;} 
     }
     else { passPresel_mu = false;}
@@ -152,7 +152,7 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
     else { passPresel_mu = false;}
 
     // Cut events that fail ele trigger
-    if( passPresel_ele &&  Pass_trigger_ele) { if (saveCutflows) {cutFlow_ele->Fill(1); cutFlowWeight_ele->Fill(1,weight); dump_trigger_ele << run_lumi_event;}}
+    if( passPresel_ele &&  (Pass_trigger_ele)) { if (saveCutflows) {cutFlow_ele->Fill(1); cutFlowWeight_ele->Fill(1,weight); dump_trigger_ele << run_lumi_event;}}
     else { passPresel_ele = false;}
     if( passPresel_ele && isPVGood) { if (saveCutflows) {cutFlow_ele->Fill(2); cutFlowWeight_ele->Fill(2,weight);} }
     else { passPresel_ele = false; }
@@ -167,12 +167,14 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
     
 
     if (tree->event_==printEvent){
-	cout << "Muons "<< selector->Muons.size() << endl;
-	cout << "  MuonsLoose "<< selector->MuonsLoose.size() << endl;
+	cout << "Muons     "<< selector->Muons.size() << endl;
+	cout << "  Loose   "<< selector->MuonsLoose.size() << endl;
 	cout << "Electrons "<< selector->Electrons.size() << endl;
-	cout << "  ElectronsLoose "<< selector->ElectronsLoose.size() << endl;
-	cout << "Jets "<< selector->Jets.size() << endl;
-	cout << "BJets "<< selector->bJets.size() << endl;
+	cout << "  Loose   "<< selector->ElectronsLoose.size() << endl;
+	cout << "Jets      "<< selector->Jets.size() << endl;
+	cout << "BJets     "<< selector->bJets.size() << endl;
+	cout << "Photons   "<< selector->Photons.size() << endl;
+	cout << "-------------------"<< endl;
     }
     
     // Cut on events with ==1 muon, no loose muons, no loose or tight electrons
@@ -294,13 +296,13 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
     
         
     // MET cut for electrons
-    if(passPresel_ele && tree->MET_pt_ >= MET_cut) { if (saveCutflows) {cutFlow_ele->Fill(13); cutFlowWeight_ele->Fill(13,weight);}}
+    if(passPresel_ele && tree->MET_pt_ >= MET_cut) { if (saveCutflows) {cutFlow_ele->Fill(12); cutFlowWeight_ele->Fill(12,weight);}}
     else passPresel_ele = false;
     
     // Photon cut for electrons
     if(passPresel_ele  && selector->Photons.size() == Npho_eq) {  
 	passAll_ele = true;
-	if (saveCutflows) {cutFlow_ele->Fill(14); cutFlowWeight_ele->Fill(14,weight);  dump_photon_ele << run_lumi_event;}
+	if (saveCutflows) {cutFlow_ele->Fill(13); cutFlowWeight_ele->Fill(13,weight);  dump_photon_ele << run_lumi_event;}
     }
     else passAll_ele = false ; 
 
@@ -349,13 +351,13 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
     }
     
     // MET cut for muons
-    if(passPresel_mu && tree->MET_pt_ >= MET_cut) { if (saveCutflows) {cutFlow_mu->Fill(13); cutFlowWeight_mu->Fill(13,weight);}}
+    if(passPresel_mu && tree->MET_pt_ >= MET_cut) { if (saveCutflows) {cutFlow_mu->Fill(12); cutFlowWeight_mu->Fill(12,weight);}}
     else passPresel_mu = false;
     
     // Photon cut for muons
     if(passPresel_mu && selector->Photons.size() == Npho_eq) { 
 	passAll_mu = true;
-	if (saveCutflows) {cutFlow_mu->Fill(14); cutFlowWeight_mu->Fill(14,weight); dump_photon_mu << run_lumi_event;}
+	if (saveCutflows) {cutFlow_mu->Fill(13); cutFlowWeight_mu->Fill(13,weight); dump_photon_mu << run_lumi_event;}
     }
     else passAll_mu = false ; 
     
@@ -363,7 +365,7 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 	cout << "PassBMu  "<< passPresel_mu << endl;
 	cout << "PassBEle "<< passPresel_ele << endl;
 	
-	exit (EXIT_FAILURE);	
+	//	exit (EXIT_FAILURE);	
     }
     
     
@@ -383,8 +385,8 @@ void EventPick::print_cutflow_mu(TH1D* _cutflow){
     std::cout << "Events with >= " << 4 << " jets "<< _cutflow->GetBinContent(10) << std::endl;
     std::cout << "Events with >= " << 1 <<     " bjets "<< _cutflow->GetBinContent(11) << std::endl;
     std::cout << "Events with >= " << 2 << " bjets       " << _cutflow->GetBinContent(12) << std::endl;
-    std::cout << "Events passing MET cut       " << _cutflow->GetBinContent(14) << std::endl;
-    std::cout << "Events with >= 1 photon      " << _cutflow->GetBinContent(15) << std::endl;
+    std::cout << "Events passing MET cut       " << _cutflow->GetBinContent(13) << std::endl;
+    std::cout << "Events with >= 1 photon      " << _cutflow->GetBinContent(14) << std::endl;
     std::cout << std::endl;
 }
 
@@ -402,8 +404,8 @@ void EventPick::print_cutflow_ele(TH1D* _cutflow){
     std::cout << "Events with >= " << 4 << " jets "<< _cutflow->GetBinContent(10) << std::endl;
     std::cout << "Events with >= " << 1 <<     " bjets "<< _cutflow->GetBinContent(11) << std::endl;
     std::cout << "Events with >= " << 2 << " bjets       " << _cutflow->GetBinContent(12) << std::endl;
-    std::cout << "Events passing MET cut       " << _cutflow->GetBinContent(14) << std::endl;
-    std::cout << "Events with >= 1 photon      " << _cutflow->GetBinContent(15) << std::endl;
+    std::cout << "Events passing MET cut       " << _cutflow->GetBinContent(13) << std::endl;
+    std::cout << "Events with >= 1 photon      " << _cutflow->GetBinContent(14) << std::endl;
     std::cout << std::endl;
 }
 
@@ -422,6 +424,10 @@ void EventPick::set_cutflow_labels_mu(TH1D* hist){
     hist->GetXaxis()->SetBinLabel(12,">=2 b-tags");
     hist->GetXaxis()->SetBinLabel(13,"MET Cut");
     hist->GetXaxis()->SetBinLabel(14,"Photon");
+    hist->GetXaxis()->SetBinLabel(15,"Genuine");
+    hist->GetXaxis()->SetBinLabel(16,"MisIDEle");
+    hist->GetXaxis()->SetBinLabel(17,"HadronicPho");
+    hist->GetXaxis()->SetBinLabel(18,"HadronicFake");
 }
 
 void EventPick::set_cutflow_labels_ele(TH1D* hist){
@@ -439,6 +445,10 @@ void EventPick::set_cutflow_labels_ele(TH1D* hist){
     hist->GetXaxis()->SetBinLabel(12,">=2 b-tags");
     hist->GetXaxis()->SetBinLabel(13,"MET Cut");
     hist->GetXaxis()->SetBinLabel(14,"Photon");
+    hist->GetXaxis()->SetBinLabel(15,"Genuine");
+    hist->GetXaxis()->SetBinLabel(16,"MisIDEle");
+    hist->GetXaxis()->SetBinLabel(17,"HadronicPho");
+    hist->GetXaxis()->SetBinLabel(18,"HadronicFake");
 }
 
 void EventPick::init_cutflow_files(string fileName){

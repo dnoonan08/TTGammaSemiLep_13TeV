@@ -27,7 +27,7 @@ int phoscale012_g = 1;
 int elescale012_g = 1;
 #include "BTagCalibrationStandalone.h"
 
-bool overlapRemovalTT(EventTree* tree);
+bool overlapRemovalTT(EventTree* tree, bool verbose);
 bool overlapRemovalZJets(EventTree* tree);
 bool overlapRemovalWJets(EventTree* tree);
 bool overlapRemoval_Tchannel(EventTree* tree);
@@ -135,13 +135,21 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
     
     cout << sampleType << "  " << systematicType << endl;
+    initCrossSections();
+    if (isMC && crossSections.find(sampleType) == crossSections.end()) {
+	//    if (std::end(allowedSampleTypes) == std::find(std::begin(allowedSampleTypes), std::end(allowedSampleTypes), sampleType)){
+	//	cout << "This is not an allowed sample, please specify one from this list (or add to this list in the code):" << endl;
+	// for (int i =0; i < sizeof(allowedSampleTypes)/sizeof(allowedSampleTypes[0]); i++){
+	//     cout << "    "<<allowedSampleTypes[i] << endl;
+	// }			
 
-    if (std::end(allowedSampleTypes) == std::find(std::begin(allowedSampleTypes), std::end(allowedSampleTypes), sampleType)){
-	cout << "This is not an allowed sample, please specify one from this list (or add to this list in the code):" << endl;
-	for (int i =0; i < sizeof(allowedSampleTypes)/sizeof(allowedSampleTypes[0]); i++){
-	    cout << "    "<<allowedSampleTypes[i] << endl;
-	}			
-	return;
+	if (sampleType.find("Test") == std::string::npos){
+	    cout << "This is not an allowed sample, please specify one from this list (or add to this list in the code):" << endl;
+	    for (auto const& pair: crossSections) {
+		cout << "    " << pair.first << endl;
+	    }
+	    return;
+	}
     }
     
     std::string PUfilename; 
@@ -244,6 +252,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		BTagEntry::FLAV_UDSG,    // btag flavour
 		"incl");               // measurement type
     
+    bool doOverlapRemoval_TTG = false;
     bool doOverlapRemoval_TT = false;
     bool doOverlapRemoval_W = false;	
     bool doOverlapRemoval_Z = false;	
@@ -260,7 +269,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (sampleType.find("TTbarPowheg")!= std::string::npos) {
 	doOverlapRemoval_TT = true;
     }
-    
+    if (sampleType.find("TTGamma")!= std::string::npos) {
+	doOverlapRemoval_TTG = true;
+    }    
     if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets"){
 	doOverlapRemoval_W = true;
     }
@@ -418,6 +429,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (sampleType=="Test") {
 	if (nEntr > 20000) nEntr = 20000;
     }
+    if (sampleType=="TestFull") {
+	nEntr = tree->GetEntries();
+    }
     if (sampleType=="TestAll") {
 	if (nEntr > 1000) nEntr = 10;
 	saveAllEntries = true;
@@ -524,14 +538,20 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	//  cout << entry << endl;
 	tree->GetEntry(entry);
 
+	if( isMC && doOverlapRemoval_TTG){
+	    if (!overlapRemovalTT(tree, tree->event_==eventNum)){	
+		count_overlapTTbar++;			
+		continue;
+	    }
+	}
 	if( isMC && doOverlapRemoval_TT){
 	    if (!invertOverlap){
-		if (overlapRemovalTT(tree)){	
+		if (overlapRemovalTT(tree, tree->event_==eventNum)){	
 		    count_overlapTTbar++;			
 		    continue;
 		}
 	    } else {
-		if (!overlapRemovalTT(tree)){	
+		if (!overlapRemovalTT(tree, tree->event_==eventNum)){	
 		    count_overlapTTbar++;			
 		    continue;
 		}
@@ -568,6 +588,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	evtPick->process_event(tree, selector, _PUweight);
 
 	if ( evtPick->passPresel_ele || evtPick->passPresel_mu || saveAllEntries) {
+	    if (saveCutflow && !(evtPick->passAll_ele || evtPick->passAll_mu) ) continue;
+
 
 	    InitVariables();
 	    FillEvent(year);
@@ -923,7 +945,25 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	    _photonIsMisIDEle.push_back(isMisIDEle);
 	    _photonIsHadronicPhoton.push_back(isHadronicPhoton);
 	    _photonIsHadronicFake.push_back(isHadronicFake);
-
+	    
+	    if (evtPick->saveCutflows){
+		if (isGenuine){
+		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(14);}
+		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(14);}
+		}
+		if (isMisIDEle){
+		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(15);}
+		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(15);}
+		}
+		if (isHadronicPhoton){
+		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(16);}
+		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(16);}
+		}
+		if (isHadronicFake){
+		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(17);}
+		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(17);}
+		}
+	    }
 	}
 	
 	_dRPhotonLepton.push_back(phoVector.DeltaR(lepVector));
@@ -1370,7 +1410,7 @@ double makeAnalysisNtuple::topPtWeight(){
 
 void makeAnalysisNtuple::loadBtagEff(string sampleName, string year){
     std::string fName = "BtagSF/efficiencies_"+year+".root";
-    if (sampleName=="Test" || sampleName=="TestAll"){
+    if (sampleType.find("Test") != std::string::npos){
 	sampleName = "TTGamma_SingleLept";
     }
     std::string leffName = sampleName+"_"+year+"_l_efficiency";

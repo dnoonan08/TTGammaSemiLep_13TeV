@@ -153,29 +153,6 @@ void Selector::filter_photons(){
         double phoPFRelIso = tree->phoPFRelIso_[phoInd];
         double phoPFRelChIso = tree->phoPFRelChIso_[phoInd];
 
-
-        ///////// TODO NEEDS TO BE REIMPLEMENTED WITH NANOAOD
-
-        // double PhoSmear = 1.;
-
-        // if (!tree->isData_ && phosmearLevel==1) {PhoSmear = generator->Gaus(1,(tree->phoResol_rho_up_[phoInd]+tree->phoResol_rho_dn_[phoInd])/2.);}
-        // if (!tree->isData_ && phosmearLevel==0) {PhoSmear = generator->Gaus(1,tree->phoResol_rho_dn_[phoInd]);}
-        // if (!tree->isData_ && phosmearLevel==2) {PhoSmear = generator->Gaus(1,tree->phoResol_rho_up_[phoInd]);}
-        // if (smearPho){
-        //   //	std::cout << "stat: "<<PhoSmear <<std::endl;
-        //   et = et*PhoSmear;
-        // }
-        // tree->phoEt_[phoInd] = et;
-        // double PhoScale = 1.;
-        
-        // if (tree->isData_ && phoscaleLevel==1) {PhoScale = ((tree->phoScale_stat_up_[phoInd]+tree->phoScale_stat_dn_[phoInd])/2.);}
-        // if (!tree->isData_ && phoscaleLevel==2){PhoScale =1.+sqrt(pow((1-tree->phoScale_syst_up_[phoInd]),2)+pow((1-tree->phoScale_stat_up_[phoInd]),2)+pow((1-tree->phoScale_gain_up_[phoInd]),2));}
-        // if (!tree->isData_ && phoscaleLevel==0) {PhoScale=1.-sqrt(pow((1-tree->phoScale_syst_dn_[phoInd]),2)+pow((1-tree->phoScale_stat_dn_[phoInd]),2)+pow((1-tree->phoScale_gain_dn_[phoInd]),2));}
-        
-        // if (scalePho){
-        //   et = et*PhoScale;
-        // }
-        // tree->phoEt_[phoInd] = et;
         
         bool passDR_lep_pho = true;
         
@@ -193,17 +170,17 @@ void Selector::filter_photons(){
         bool hasPixelSeed = tree->phoPixelSeed_[phoInd];
 
         bool passPhoEleVeto = tree->phoEleVeto_[phoInd];
-        bool phoPresel = (et > pho_Et_cut &&                          
-                          absEta < pho_Eta_cut &&
-                          (isEE || isEB) &&
+        bool phoPresel = (et >= pho_Et_cut &&                          
+                          absEta <= pho_Eta_cut &&
+                          //(isEE || isEB) &&
                           passDR_lep_pho && 
                           !hasPixelSeed
                           && passPhoEleVeto     //we have to add this in eventTree
 			  );
 
 	bool indet = (isEE || isEB);
-	bool pho_et_pass = et > pho_Et_cut ;
-	bool pho_eta_pass = absEta < pho_Eta_cut ;
+	bool pho_et_pass = et >= pho_Et_cut ;
+	bool pho_eta_pass = absEta <= pho_Eta_cut ;
 	bool finalsel = phoPresel && passMediumPhotonID ;
 
 
@@ -211,7 +188,7 @@ void Selector::filter_photons(){
 	bool passMediumIDNoChIso = cutBasedID_split[1] && cutBasedID_split[2] && cutBasedID_split[4] && cutBasedID_split[5]; // HoverE (1), SIEIE (2), NeuIso (4), and PhoIso (5) cuts, skip ChIso (3)
 	
 	if (tree->event_==printEvent){
-	    cout << "-- " << phoInd << " pt="<<et<< " eta="<<eta<< " phi="<<phi<< " pho_et_pass "<< pho_et_pass<<" pho_Eta_pass="<< pho_eta_pass <<" (isEE || isEB) ="<<indet<<" hasPixelSeed= "<<hasPixelSeed<<" presel="<< phoPresel<< " drlepgamma="<<passDR_lep_pho<< " medID="<<passMediumPhotonID<<" final selection"<<finalsel<<endl;
+	    cout << "-- " << phoInd << " pt="<<et<< " eta="<<eta<< " phi="<<phi<< " pho_et_pass "<< pho_et_pass<<" pho_Eta_pass="<< pho_eta_pass <<" (isEE || isEB) ="<<indet<<" !hasPixelSeed= "<<!hasPixelSeed<<" presel="<< phoPresel<< " drlepgamma="<<passDR_lep_pho<< " medID="<<passMediumPhotonID<<" final selection"<<finalsel<<endl;
 	} 
 	
         if(phoPresel && passMediumPhotonID){
@@ -381,33 +358,37 @@ void Selector::filter_electrons(){
 	    }
 	}
 	    
-	if(QCDselect){
-	    float vetoIsoEBcut = 0.198 + 0.506/tree->elePt_[eleInd];
-	    float vetoIsoEECut = 0.203 + 0.963/tree->elePt_[eleInd];
+	bool passVetoIDNoIso = passEleID(eleInd, 1,false); // Ignore iso requirements
 
-	    passVetoID = passEleID(eleInd, 1,false); //ignoring Iso cut for QCDCR
+	float vetoIsoEBcut = 0.198 + 0.506/tree->elePt_[eleInd];
+	float vetoIsoEECut = 0.203 + 0.963/tree->elePt_[eleInd];
+
+	// add back iso requirements, with the pho matching iso
+	passVetoID = (passVetoIDNoIso && 
+		      looseRelIso < (absSCEta < 1.479 ? vetoIsoEBcut : vetoIsoEECut) );
+
+	// if using QCD cr, just use cut without iso requirement
+	if(QCDselect){
+	    passVetoID = passVetoIDNoIso;
 	}
 
- 
-
-
         bool eleSel = (passEtaEBEEGap && 
-                       absEta < ele_Eta_cut &&
-                       pt > ele_Pt_cut &&
+                       absEta <= ele_Eta_cut &&
+                       pt >= ele_Pt_cut &&
                        passTightID &&
                        passD0 &&
                        passDz);
 
         bool looseSel = ( passEtaEBEEGap && 
-			  absEta < ele_EtaLoose_cut &&
-			  pt > ele_PtLoose_cut &&
+			  absEta <= ele_EtaLoose_cut &&
+			  pt >= ele_PtLoose_cut &&
 			  passVetoID &&
 			  passD0 &&
 			  passDz);
         
 	bool eleSel_noIso = (passEtaEBEEGap && 
-			     absEta < ele_Eta_cut &&
-			     pt > ele_Pt_cut &&
+			     absEta <= ele_Eta_cut &&
+			     pt >= ele_Pt_cut &&
 			     passTightID_noIso &&
 			     passD0 &&
 			     passDz);
@@ -416,7 +397,7 @@ void Selector::filter_electrons(){
 	if (tree->event_==printEvent){
 	    cout << "-- " << eleInd << " eleSel=" <<  eleSel << " looseSel=" <<  looseSel << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->elePhi_[eleInd]<< " eleID="<<eleID << " passD0="<<passD0<< "("<<tree->eleD0_[eleInd]<<") passDz="<<passDz<< "("<<tree->eleDz_[eleInd]<<")"<< endl;
 	    cout << "            ";
-	    cout << "sieie="<<tree->eleSIEIE_[eleInd];
+	    cout << "sieie="<<tree->eleSIEIE_[eleInd] << " vetoID="<<passVetoID<<" vetoIDNoIso="<<passVetoIDNoIso << " looseIso=" << looseRelIso;
 	    cout << endl;
 	    std::cout << std::setbase(8);
 	    cout << "            idBits="<<tree->eleVidWPBitmap_[eleInd] << endl;
@@ -462,26 +443,26 @@ void Selector::filter_muons(){
 	bool mediumMuonID = tree->muMediumId_[muInd];
 	bool tightMuonID = tree->muTightId_[muInd];
 
-	bool passTight = (pt > mu_Pt_cut &&
-			  TMath::Abs(eta) < mu_Eta_tight &&
+	bool passTight = (pt >= mu_Pt_cut &&
+			  TMath::Abs(eta) <= mu_Eta_tight &&
 			  tightMuonID &&
 			  (!QCDselect ? (PFrelIso_corr < mu_RelIso_tight): PFrelIso_corr > mu_RelIso_tight)
 			  );
 
-	bool passLoose = (pt > mu_PtLoose_cut &&
-			  TMath::Abs(eta) < mu_Eta_loose &&
+	bool passLoose = (pt >= mu_PtLoose_cut &&
+			  TMath::Abs(eta) <= mu_Eta_loose &&
 			  looseMuonID &&
 			  (PFrelIso_corr < mu_RelIso_loose)
 			  //(!QCDselect ? (PFrelIso_corr < mu_RelIso_loose): PFrelIso_corr > mu_RelIso_loose) 
 			  );
 	if (QCDselect){ //ignoring Iso cut in  QCDCR
-	    bool passLoose = (pt > mu_PtLoose_cut &&
-			      TMath::Abs(eta) < mu_Eta_loose &&
+	    bool passLoose = (pt >= mu_PtLoose_cut &&
+			      TMath::Abs(eta) <= mu_Eta_loose &&
 			      looseMuonID 
 			      );
 	}
-	bool passTight_noIso = (pt > mu_Pt_cut &&
-				TMath::Abs(eta) < mu_Eta_tight &&
+	bool passTight_noIso = (pt >= mu_Pt_cut &&
+				TMath::Abs(eta) <= mu_Eta_tight &&
 				tightMuonID
 				);
 	
@@ -554,8 +535,8 @@ void Selector::filter_jets(){
 	    if (dR(eta, phi, tree->phoEta_[*phoInd], tree->phoPhi_[*phoInd]) < veto_pho_jet_dR) passDR_pho_jet = false;
 	}
 
-        bool jetPresel = (pt > jet_Pt_cut &&
-                          TMath::Abs(eta) < jet_Eta_cut &&
+        bool jetPresel = (pt >= jet_Pt_cut &&
+                          TMath::Abs(eta) <= jet_Eta_cut &&
                           jetID_pass &&
                           passDR_lep_jet &&
                           passDR_pho_jet
@@ -564,8 +545,8 @@ void Selector::filter_jets(){
 	if (tree->event_==printEvent){
 	    cout << "   pt=" << pt << "  eta=" << eta << " phi=" << phi << "  jetID=" << jetID_pass << endl;
 	    cout << "         presel=" << jetPresel << endl;
-	    cout << "              pt=" << (pt > jet_Pt_cut) <<endl;
-	    cout << "              eta=" << (TMath::Abs(eta) < jet_Eta_cut) <<endl;
+	    cout << "              pt=" << (pt >= jet_Pt_cut) <<endl;
+	    cout << "              eta=" << (TMath::Abs(eta) <= jet_Eta_cut) <<endl;
 	    cout << "              jetID=" << jetID_pass <<endl;
 	    cout << "              dRLep=" << passDR_lep_jet <<endl;
 	    cout << "              dRPho=" << passDR_pho_jet << endl;
@@ -574,7 +555,7 @@ void Selector::filter_jets(){
 	}
 
         
-        bool fwdjetPresel = (pt> jet_Pt_cut && jetID_pass && TMath::Abs(eta)<3.0 && TMath::Abs(eta)>2.5 &&
+        bool fwdjetPresel = (pt>= jet_Pt_cut && jetID_pass && TMath::Abs(eta)<=3.0 && TMath::Abs(eta)>2.5 &&
                              passDR_lep_jet &&
                              passDR_pho_jet
                              );
