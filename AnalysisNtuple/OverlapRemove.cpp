@@ -25,6 +25,15 @@ double minGenDr(int myInd, const EventTree* tree, std::vector<int> ignorePID = s
 	if(std::find(ignorePID.begin(),ignorePID.end(),opid) != ignorePID.end()) continue; //skip any pid in ignorePID vector
         dr = dR(myEta, myPhi, tree->GenPart_eta_[oind], tree->GenPart_phi_[oind]);
         if( mindr > dr ) {
+	    //check if the second particle is a decay product of the first
+	    int genParentIdx = tree->GenPart_genPartIdxMother_[oind];
+	    bool isDecay = false;
+	    while (genParentIdx>=myInd){
+		if (genParentIdx==myInd) isDecay = true;
+		genParentIdx = tree->GenPart_genPartIdxMother_[genParentIdx];
+	    }
+	    if (isDecay) continue;
+
             mindr = dr;
             bestInd = oind;
         }
