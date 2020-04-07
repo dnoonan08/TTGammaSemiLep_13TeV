@@ -3,11 +3,12 @@
 #include<cstdlib>
 #include <math.h>
 #include <algorithm>
+#include <tuple>
 
 double dR(double eta1, double phi1, double eta2, double phi2);
 
 //double secondMinDr(int myInd, const EventTree* tree)
-double minGenDr(int myInd, const EventTree* tree, std::vector<int> ignorePID = std::vector<int>()){
+std::vector<double> minGenDr(int myInd, const EventTree* tree, std::vector<int> ignorePID = std::vector<int>()){
     double myEta = tree->GenPart_eta_[myInd]; 
     double myPhi = tree->GenPart_phi_[myInd];
     int myPID = tree->GenPart_pdgId_[myInd];
@@ -38,24 +39,26 @@ double minGenDr(int myInd, const EventTree* tree, std::vector<int> ignorePID = s
             bestInd = oind;
         }
     }
-    return mindr;
+    vector<double> v;
+    v.push_back(mindr);
+    v.push_back((double)bestInd);
+    return v;
 }
 
 bool overlapRemovalTT(EventTree* tree, bool verbose){
     const double Et_cut = 10;
     const double Eta_cut = 5.0;
     bool haveOverlap = false;
-
     vector<int> extraPIDIgnore={22};
     for(int mcInd=0; mcInd<tree->nGenPart_; ++mcInd){
         if(tree->GenPart_pdgId_[mcInd]==22){
 	    
 	    bool parentagePass=false;
-	    double minDR = 99.;
+	    vector<double> minDR_Result = {-1.,0.};
 	    bool Overlaps = false;
 	    int maxPDGID = 0;
 	    if (tree->GenPart_pt_[mcInd] >= Et_cut &&
-		fabs(tree->GenPart_eta_[mcInd]) < Eta_cut){
+		fabs(tree->GenPart_eta_[mcInd]) <= Eta_cut){
 	    
 		Int_t parentIdx = mcInd;
 		int motherPDGID = 0;
@@ -67,16 +70,16 @@ bool overlapRemovalTT(EventTree* tree, bool verbose){
 
 		bool parentagePass = maxPDGID < 37;
 		if (parentagePass) {
-		    minDR = minGenDr(mcInd, tree, extraPIDIgnore);
+		    minDR_Result= minGenDr(mcInd, tree, extraPIDIgnore);
 
-		    if(minDR > 0.1) {
+		    if(minDR_Result.at(0) > 0.1) {
 			haveOverlap = true;
 			Overlaps = true;
 		    }
 		}
 	    }
 	    if (verbose){
-		cout << " gen particle idx="<<mcInd << " pdgID="<<tree->GenPart_pdgId_[mcInd] << " status="<<tree->GenPart_status_[mcInd] << " pt="<<tree->GenPart_pt_[mcInd] << " eta=" << tree->GenPart_eta_[mcInd] << " parentage=" << (maxPDGID < 37) << " maxPDGID=" << maxPDGID << " minDR="<<minDR<<" OVERLAPS="<<Overlaps<<endl;
+		cout << " gen particle idx="<<mcInd << " pdgID="<<tree->GenPart_pdgId_[mcInd] << " status="<<tree->GenPart_status_[mcInd] << " pt="<<tree->GenPart_pt_[mcInd] << " eta=" << tree->GenPart_eta_[mcInd] << " parentage=" << (maxPDGID < 37) << " maxPDGID=" << maxPDGID << " minDR="<<minDR_Result.at(0) << " closestInd="<<minDR_Result.at(1) << " closestPDGID="<<tree->GenPart_pdgId_[(int)minDR_Result.at(1)]<<" OVERLAPS="<<Overlaps<<endl;
 	    }
 	}
     }
@@ -104,7 +107,7 @@ bool overlapRemovalWJets(EventTree* tree){
 	    bool parentagePass = maxPDGID < 37;
 	    
 	    if (parentagePass) {
-		if(minGenDr(mcInd, tree) > 0.05) {
+		if(minGenDr(mcInd, tree).at(0) > 0.05) {
 		    haveOverlap = true;
 		}
 	    }
@@ -134,7 +137,7 @@ bool overlapRemovalZJets(EventTree* tree){
 	    bool parentagePass = maxPDGID < 37;
 	    
 	    if (parentagePass) {
-		if(minGenDr(mcInd, tree) > 0.05) {
+		if(minGenDr(mcInd, tree).at(0) > 0.05) {
 		    haveOverlap = true;
 		}
 	    }
@@ -173,7 +176,7 @@ bool overlapRemoval_Tchannel(EventTree* tree){
 		}
 	    }
 	    bool parentagePass = maxPDGID < 37;
-	    if(parentagePass && !fromTopDecay && minGenDr(mcInd, tree) > 0.05) {
+	    if(parentagePass && !fromTopDecay && minGenDr(mcInd, tree).at(0) > 0.05) {
 		haveOverlap = true;
 	    }
 	}

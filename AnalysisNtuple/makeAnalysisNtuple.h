@@ -54,6 +54,7 @@ class makeAnalysisNtuple {
     string sampleType;
     string systematicType;
 
+    int eventNum = -1;
 
     bool isSystematicRun;
 
@@ -393,9 +394,9 @@ class makeAnalysisNtuple {
     /* double getMuSF(int muInd, int systLevel); */
     /* double getEleSF(int eleInd, int systLevel); */
 
-    void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake);
+    void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake, bool* puPhoton, bool verbose=false);
     /* int findPhotonParentage(int phoInd, EventTree* tree); */
-        int findPhotonGenMatch(int phoInd, EventTree* tree);
+    int findPhotonGenMatch(int phoInd, EventTree* tree);
 
     vector<bool> passPhoMediumID(int phoInd);
     vector<bool> passPhoTightID(int phoInd);

@@ -37,6 +37,8 @@ public:
 	double MET_cut;
 	bool no_trigger;
 
+	bool loosePhotonVeto;
+
 	int Nlep_eq;
 	
 	int Njet_ge;
@@ -78,6 +80,7 @@ public:
 	TH1D* cutFlow_ele;
 	TH1D* cutFlowWeight_ele;
 
+	ofstream dump_input_ele;
 	ofstream dump_trigger_ele;
 	ofstream dump_lepton_ele;
 	ofstream dump_oneJet_ele;
@@ -86,7 +89,14 @@ public:
 	ofstream dump_fourJet_ele;
 	ofstream dump_btag_ele;
 	ofstream dump_photon_ele;
+	ofstream dump_loosePhoton_ele;
+	ofstream dump_photon_GenPho_ele;
+	ofstream dump_photon_MisIDEle_ele;
+	ofstream dump_photon_HadPho_ele;
+	ofstream dump_photon_HadFake_ele;
+	ofstream dump_photon_PU_ele;
 
+	ofstream dump_input_mu;
 	ofstream dump_trigger_mu;
 	ofstream dump_lepton_mu;
 	ofstream dump_oneJet_mu;
@@ -95,6 +105,12 @@ public:
 	ofstream dump_fourJet_mu;
 	ofstream dump_btag_mu;
 	ofstream dump_photon_mu;
+	ofstream dump_loosePhoton_mu;
+	ofstream dump_photon_GenPho_mu;
+	ofstream dump_photon_MisIDEle_mu;
+	ofstream dump_photon_HadPho_mu;
+	ofstream dump_photon_HadFake_mu;
+	ofstream dump_photon_PU_mu;
 
 
 private:

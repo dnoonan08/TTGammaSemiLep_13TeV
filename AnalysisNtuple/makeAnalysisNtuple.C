@@ -20,11 +20,12 @@
 
 int jecvar012_g = 1; // 0:down, 1:norm, 2:up
 int jervar012_g = 1; // 0:down, 1:norm, 2:up
-int phosmear012_g = 1; // 0:down, 1:norm, 2:up 
+int phosmear012_g = 1; // 0:down, 1:norm, 2:up
 int musmear012_g = 1; // 0:down, 1:norm, 2: up
 int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 int phoscale012_g = 1;
 int elescale012_g = 1;
+
 #include "BTagCalibrationStandalone.h"
 
 bool overlapRemovalTT(EventTree* tree, bool verbose);
@@ -45,7 +46,6 @@ auto startClock = std::chrono::high_resolution_clock::now();
 makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 {
     startClock = std::chrono::high_resolution_clock::now();
-    int eventNum = -1;
     std::string eventStr = "-1";
 
     if(ac < 5){
@@ -78,7 +78,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
 
     if (std::string(av[1])=="event"){
-	
+
 	std::string tempEventStr(av[2]);
 	eventNum = std::stoi(tempEventStr);
 	for (int i = 1; i < ac-2; i++){
@@ -252,10 +252,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		BTagEntry::FLAV_UDSG,    // btag flavour
 		"incl");               // measurement type
     
-    bool doOverlapRemoval_TTG = false;
+    bool doOverlapInvert_TTG = false;
     bool doOverlapRemoval_TT = false;
+    bool doOverlapInvert_WG = false;	
     bool doOverlapRemoval_W = false;	
+    bool doOverlapInvert_ZG = false;	
     bool doOverlapRemoval_Z = false;	
+    bool doOverlapInvert_TG = false;	
     bool doOverlapRemoval_Tchannel = false;	
     
     bool invertOverlap = false;
@@ -270,22 +273,35 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	doOverlapRemoval_TT = true;
     }
     if (sampleType.find("TTGamma")!= std::string::npos) {
-	doOverlapRemoval_TTG = true;
+	doOverlapInvert_TTG = true;
     }    
     if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets"){
 	doOverlapRemoval_W = true;
     }
-
+    if (sampleType.find("WGamma")!= std::string::npos) {
+	doOverlapInvert_WG = true;
+    }    
     if (sampleType=="DYjetsM10to50" || sampleType=="DYjetsM50" || sampleType=="DYjetsM10to50_MLM" || sampleType=="DYjetsM50_MLM"){
 	doOverlapRemoval_Z = true;
     }
+    if (sampleType.find("ZGamma")!= std::string::npos) {
+	doOverlapInvert_ZG = true;
+    }    
     
     if( sampleType == "ST_t-channel" || sampleType == "ST_tbar-channel") {
 	doOverlapRemoval_Tchannel = true;
     }
+    if (sampleType.find("TGJets")!= std::string::npos) {
+	doOverlapInvert_TG = true;
+    }    
+    
 
     if(doOverlapRemoval_TT || doOverlapRemoval_W || doOverlapRemoval_Z || doOverlapRemoval_Tchannel) {
 	std::cout << "########## Will apply overlap removal ###########" << std::endl;
+    }
+    if(doOverlapInvert_TTG || doOverlapInvert_WG || doOverlapInvert_ZG || doOverlapInvert_TG) {
+	std::cout << "##########   Will apply overlap inversion   ###########" << std::endl;
+	std::cout << "########## Keeping only events with overlap ###########" << std::endl;
     }
     
 
@@ -502,9 +518,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (nEntr >1000000) { dumpFreq = 100000; }
     if (nEntr >5000000) { dumpFreq = 500000; }
     if (nEntr >10000000){ dumpFreq = 1000000; }
-    int count_overlapTchannel=0;
-    int count_overlapVJets=0;
-    int count_overlapTTbar=0;
+    int count_overlap=0;
 
     int entryStart;
     int entryStop;
@@ -538,40 +552,58 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	//  cout << entry << endl;
 	tree->GetEntry(entry);
 
-	if( isMC && doOverlapRemoval_TTG){
+	if( isMC && doOverlapInvert_TTG){
 	    if (!overlapRemovalTT(tree, tree->event_==eventNum)){	
-		count_overlapTTbar++;			
+		count_overlap++;			
 		continue;
 	    }
 	}
 	if( isMC && doOverlapRemoval_TT){
 	    if (!invertOverlap){
 		if (overlapRemovalTT(tree, tree->event_==eventNum)){	
-		    count_overlapTTbar++;			
+		    count_overlap++;			
 		    continue;
 		}
 	    } else {
 		if (!overlapRemovalTT(tree, tree->event_==eventNum)){	
-		    count_overlapTTbar++;			
+		    count_overlap++;			
 		    continue;
 		}
 	    }
 	}
 	if( isMC && doOverlapRemoval_W){
 	    if (overlapRemovalWJets(tree)){
-		count_overlapVJets++;
+		count_overlap++;
+		continue;
+	    }
+	}
+	if( isMC && doOverlapInvert_WG){
+	    if (!overlapRemovalWJets(tree)){	
+		count_overlap++;			
 		continue;
 	    }
 	}
 	if( isMC && doOverlapRemoval_Z){
 	    if (overlapRemovalZJets(tree)){
-		count_overlapVJets++;
+		count_overlap++;
+		continue;
+	    }
+	}
+	if( isMC && doOverlapInvert_ZG){
+	    if (!overlapRemovalZJets(tree)){
+		count_overlap++;
 		continue;
 	    }
 	}
 	if( isMC && doOverlapRemoval_Tchannel){
 	    if (overlapRemoval_Tchannel(tree)){
-		count_overlapTchannel++;
+		count_overlap++;
+		continue;
+	    }
+	}
+	if( isMC && doOverlapInvert_TG){
+	    if (!overlapRemoval_Tchannel(tree)){
+		count_overlap++;
 		continue;
 	    }
 	}
@@ -678,13 +710,22 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
     }
     if (doOverlapRemoval_TT){
-	std::cout << "Total number of events removed from TTbar:"<< count_overlapTTbar <<std::endl;
+	std::cout << "Total number of events removed from TTbar:"<< count_overlap <<std::endl;
     }
     if(doOverlapRemoval_W || doOverlapRemoval_Z){
-	std::cout << "Total number of events removed from W/ZJets:"<< count_overlapVJets <<std::endl;
+	std::cout << "Total number of events removed from W/ZJets:"<< count_overlap <<std::endl;
     }
     if(doOverlapRemoval_Tchannel){
-	std::cout << "Total number of events removed from t-channel:"<< count_overlapTchannel <<std::endl;
+	std::cout << "Total number of events removed from t-channel:"<< count_overlap <<std::endl;
+    }
+    if (doOverlapInvert_TTG){
+	std::cout << "Total number of events removed from TTGamma:"<< count_overlap <<std::endl;
+    }
+    if (doOverlapInvert_WG || doOverlapInvert_ZG){
+	std::cout << "Total number of events removed from W/Z+Gamma:"<< count_overlap <<std::endl;
+    }
+    if (doOverlapInvert_TG){
+	std::cout << "Total number of events removed from TGJets:"<< count_overlap <<std::endl;
     }
 
     outputFile->cd();
@@ -880,6 +921,9 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 
     int parentPID = -1;
 
+    if (tree->event_==eventNum) {
+	cout <<"Photon Info" << endl; 
+    }
     for (int i_pho = 0; i_pho <_nPho; i_pho++){
 	int phoInd = selector->Photons.at(i_pho);
 
@@ -928,6 +972,7 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	bool isMisIDEle = false;
 	bool isHadronicPhoton = false;
 	bool isHadronicFake = false;
+	bool isPUPhoton = false;
 
 	int phoGenMatchInd = -1.;
 
@@ -936,32 +981,41 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	    phoGenMatchInd = tree->phoGenPartIdx_[phoInd];
 
 	    _phoGenMatchInd.push_back(phoGenMatchInd);
-
-	    findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake); //as we are using phogenmatch defined in nanontuple
-
-	  //  findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake); //In order to use our own phogenmatch defined 
-
+	    findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake, &isPUPhoton,tree->event_==eventNum); //as we are using phogenmatch defined in nanontuple
+	    if (tree->event_==eventNum){
+		cout << endl;
+		cout << "        Genuine: "<<isGenuine << endl;
+		cout << "        MisID:   "<<isMisIDEle << endl;
+		cout << "        Hadronic:"<<isHadronicPhoton << endl;
+		cout << "        Fake:    "<<isHadronicFake << endl;
+		cout << "        PUPhoton:"<<isPUPhoton << endl;
+	    }
 	    _photonIsGenuine.push_back(isGenuine);
 	    _photonIsMisIDEle.push_back(isMisIDEle);
 	    _photonIsHadronicPhoton.push_back(isHadronicPhoton);
-	    _photonIsHadronicFake.push_back(isHadronicFake);
+	    _photonIsHadronicFake.push_back(isHadronicFake || isPUPhoton);
 	    
 	    if (evtPick->saveCutflows){
+		string run_lumi_event = to_string(tree->run_)+","+to_string(tree->lumis_)+","+to_string(tree->event_)+"\n";		
 		if (isGenuine){
-		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(14);}
-		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(14);}
+		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(15); evtPick->dump_photon_GenPho_mu << run_lumi_event;}
+		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(15); evtPick->dump_photon_GenPho_ele << run_lumi_event;}
 		}
 		if (isMisIDEle){
-		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(15);}
-		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(15);}
+		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(16); evtPick->dump_photon_MisIDEle_mu << run_lumi_event;}
+		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(16); evtPick->dump_photon_MisIDEle_ele << run_lumi_event;}
 		}
 		if (isHadronicPhoton){
-		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(16);}
-		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(16);}
+		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(17); evtPick->dump_photon_HadPho_mu << run_lumi_event;}
+		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(17); evtPick->dump_photon_HadPho_ele << run_lumi_event;}
 		}
 		if (isHadronicFake){
-		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(17);}
-		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(17);}
+		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(18); evtPick->dump_photon_HadFake_mu << run_lumi_event;}
+		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(18); evtPick->dump_photon_HadFake_ele << run_lumi_event;}
+		}
+		if (isPUPhoton){
+		    if (evtPick->passAll_mu) {evtPick->cutFlow_mu->Fill(19); evtPick->dump_photon_PU_mu << run_lumi_event;}
+		    if (evtPick->passAll_ele) {evtPick->cutFlow_ele->Fill(19); evtPick->dump_photon_PU_ele << run_lumi_event;}
 		}
 	    }
 	}
@@ -1036,23 +1090,24 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	bool isMisIDEle = false;
 	bool isHadronicPhoton = false;
 	bool isHadronicFake = false;
+	bool isPUPhoton = false;
 
 	int phoGenMatchInd = -1.;
 
 	// TODO Reimplement with NANOAOD
 
 	if (!tree->isData_){
-	    //phoGenMatchInd = findPhotonGenMatch(phoInd, tree);
+
 	    phoGenMatchInd = tree->phoGenPartIdx_[phoInd];
             
 	    _loosePhoGenMatchInd.push_back(phoGenMatchInd);
 
-	    findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+	    findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake, &isPUPhoton);
 
 	    _loosePhotonIsGenuine.push_back(isGenuine);
 	    _loosePhotonIsMisIDEle.push_back(isMisIDEle);
 	    _loosePhotonIsHadronicPhoton.push_back(isHadronicPhoton);
-	    _loosePhotonIsHadronicFake.push_back(isHadronicFake);
+	    _loosePhotonIsHadronicFake.push_back(isHadronicFake || isPUPhoton);
 
 	}
 
@@ -1122,23 +1177,23 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	bool isMisIDEle = false;
 	bool isHadronicPhoton = false;
 	bool isHadronicFake = false;
+	bool isPUPhoton = false;
 
 	int phoGenMatchInd = -1.;
 
 	// TODO Reimplement with NANOAOD
 
 	if (!tree->isData_){
-	    //phoGenMatchInd = findPhotonGenMatch(phoInd, tree);
 	    phoGenMatchInd = tree->phoGenPartIdx_[phoInd];
             
 	    _phoNoIDGenMatchInd.push_back(phoGenMatchInd);
 
-	    findPhotonCategory(phoGenMatchInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake);
+	    findPhotonCategory(phoInd, tree, &isGenuine, &isMisIDEle, &isHadronicPhoton, &isHadronicFake, &isPUPhoton);
 
 	    _photonNoIDIsGenuine.push_back(isGenuine);
 	    _photonNoIDIsMisIDEle.push_back(isMisIDEle);
 	    _photonNoIDIsHadronicPhoton.push_back(isHadronicPhoton);
-	    _photonNoIDIsHadronicFake.push_back(isHadronicFake);
+	    _photonNoIDIsHadronicFake.push_back(isHadronicFake | isPUPhoton);
 
 	}
 
@@ -1599,54 +1654,88 @@ vector<bool> makeAnalysisNtuple::passPhoTightID(int phoInd){
 double minGenDr(int myInd, const EventTree* tree);
 
 
-//void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){ // to use our own phoGenMatch
-void makeAnalysisNtuple::findPhotonCategory(int mcMatchInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake){ // to use official phoGenMatch
+void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake, bool *puPhoton, bool verbose){ // to use official phoGenMatch
 
-	*genuine        = false;
-	*misIDele       = false;
-	*hadronicphoton = false;
-	*hadronicfake   = false;
+    *genuine        = false;
+    *misIDele       = false;
+    *hadronicphoton = false;
+    *hadronicfake   = false;
+    *puPhoton       = false;
+    
+    int mcMatchInd = tree->phoGenPartIdx_[phoInd];
 
-//	int mcMatchInd = findPhotonGenMatch( phoInd, tree); //to use our own phoGenMatch 
-	       
-        // TODO needs to be reimplemented with NANOAOD                                                                                                      
-	// If no match, it's hadronic fake
-	if (mcMatchInd== -1) {
-		*hadronicfake = true;
-		return;
-	}
+    if (verbose){cout << phoInd << "  " << mcMatchInd << "  " << tree->phoEt_[phoInd] << "  " << tree->phoEta_[phoInd] << "  " << tree->phoPhi_[phoInd] << endl;}
 
-	int mcMatchPDGID = tree->GenPart_pdgId_[mcMatchInd];
+    // If no match, look deeper
+    if (mcMatchInd== -1) {
+	vector<int> genParticleCone_pid;
+	vector<int> genParticleCone_idx;
+	
+	if (verbose){cout << "    NPartons="<<tree->nGenPart_ << endl;}
+	for( int genIdx = 0; genIdx < tree->nGenPart_; genIdx++){
 
-	Int_t parentIdx = mcMatchInd;
-	int maxPDGID = 0;
-	int motherPDGID = 0;
-	while (parentIdx != -1){
-	    motherPDGID = std::abs(tree->GenPart_pdgId_[parentIdx]);
-	    maxPDGID = std::max(maxPDGID,motherPDGID);
-	    parentIdx = tree->GenPart_genPartIdxMother_[parentIdx];
-	}
+	    if (verbose){cout << "    " << genIdx << " " << tree->GenPart_pdgId_[genIdx] << " " << tree->GenPart_pt_[genIdx] << " " << tree->GenPart_eta_[genIdx] << " " << tree->GenPart_phi_[genIdx] <<  " "  << dR(tree->GenPart_eta_[genIdx],tree->GenPart_phi_[genIdx],tree->phoEta_[phoInd],tree->phoPhi_[phoInd]) << endl;}
+	    // skip gen particles < 5 GeV
+	    if (tree->GenPart_pt_[genIdx]< 5) continue;
 
-	bool parentagePass = maxPDGID < 37;
+	    // skip gen neutrinos
+	    vector<int> excludedPdgIds= {12, -12, 14, -14, 16, -16};
+	    int genPID = tree->GenPart_pdgId_[genIdx];
+	    if(std::find(excludedPdgIds.begin(),excludedPdgIds.end(),genPID) != excludedPdgIds.end()) continue;
 
-	// bool parentagePass = (fabs(tree->mcMomPID->at(mcMatchInd))<37 || tree->mcMomPID->at(mcMatchInd) == -999);
-
-	if (mcMatchPDGID==22){
-	    if (parentagePass){ 
-		*genuine = true;
-	    }
-	    else {
-		*hadronicphoton = true;
+	    // find all gen particles within 0.3 of the reco photon
+	    double dRValue = dR(tree->GenPart_eta_[genIdx],tree->GenPart_phi_[genIdx],tree->phoEta_[phoInd],tree->phoPhi_[phoInd]);
+	    if (dRValue<0.3){
+		genParticleCone_idx.push_back(genIdx);
+		genParticleCone_pid.push_back(genPID);
 	    }
 	}
-	else if ( abs(mcMatchPDGID ) == 11 ) {
-	    *misIDele = true;
-	} 
-	else {
-	    *hadronicfake = true;
+	if (genParticleCone_pid.size()==0){
+	    *puPhoton = true;
+	    return;
 	}
 	
+	// if a photon (22) and a pi_0 (111) are in the cone, it's a hadronic photon 
+	if(std::find(genParticleCone_pid.begin(),genParticleCone_pid.end(),111) != genParticleCone_pid.end() && 
+	   std::find(genParticleCone_pid.begin(),genParticleCone_pid.end(),22) != genParticleCone_pid.end()) {
+	    *hadronicphoton = true;
+	    return;
+	}
 
+	*hadronicfake = true;
+	return;
+    }
+
+    int mcMatchPDGID = tree->GenPart_pdgId_[mcMatchInd];
+
+    Int_t parentIdx = mcMatchInd;
+    int maxPDGID = 0;
+    int motherPDGID = 0;
+    while (parentIdx != -1){
+	motherPDGID = std::abs(tree->GenPart_pdgId_[parentIdx]);
+	maxPDGID = std::max(maxPDGID,motherPDGID);
+	parentIdx = tree->GenPart_genPartIdxMother_[parentIdx];
+    }
+
+    bool parentagePass = maxPDGID < 37;
+
+    // bool parentagePass = (fabs(tree->mcMomPID->at(mcMatchInd))<37 || tree->mcMomPID->at(mcMatchInd) == -999);
+
+    if (mcMatchPDGID==22){
+	if (parentagePass){ 
+	    *genuine = true;
+	}
+	else {
+	    *hadronicphoton = true;
+	}
+    }
+    else if ( abs(mcMatchPDGID ) == 11 ) {
+	*misIDele = true;
+    } 
+    else {
+	*hadronicfake = true;
+    }
+        
 }
 
 //our own pho Gen Match code
