@@ -257,7 +257,7 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 				  tree->eleEta_[idx_ele2],
 				  tree->elePhi_[idx_ele2],
 				  tree->eleMass_[idx_ele2]);
-		if ( (ele1 + ele2).M() - 91.1876 > 10 ){
+		if ( abs((ele1 + ele2).M() - 91.1876) > 10 ){
 		    passPresel_ele = false;
 		}
 	    }
