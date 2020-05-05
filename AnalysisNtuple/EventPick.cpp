@@ -1,4 +1,5 @@
 #include"EventPick.h"
+#include <TLorentzVector.h>
 #include <iostream>
 #include <iomanip>
 
@@ -182,9 +183,29 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
     if (!QCDselect){
 	if( passPresel_mu && selector->Muons.size() == Nmu_eq){
 	    if (Nmu_eq==2) {
-		int mu1 = selector->Muons.at(0);
-		int mu2 = selector->Muons.at(1);
-		if(tree->muCharge_[mu1]*tree->muCharge_[mu2] ==1){
+		int idx_mu1 = selector->Muons.at(0);
+		int idx_mu2 = selector->Muons.at(1);
+		if(tree->muCharge_[idx_mu1]*tree->muCharge_[idx_mu2] ==1){
+		    passPresel_mu = false;
+		}
+		TLorentzVector mu1;
+		TLorentzVector mu2;
+		mu1.SetPtEtaPhiM(tree->muPt_[idx_mu1],
+				 tree->muEta_[idx_mu1],
+				 tree->muPhi_[idx_mu1],
+				 tree->muMass_[idx_mu1]);
+		mu2.SetPtEtaPhiM(tree->muPt_[idx_mu2],
+				 tree->muEta_[idx_mu2],
+				 tree->muPhi_[idx_mu2],
+				 tree->muMass_[idx_mu2]);
+		if (tree->event_==printEvent){
+		    cout << "DilepMass:    " << (mu1 + mu2).M() << endl;
+		    cout << "Lep 1 Charge: " << tree->muCharge_[idx_mu1] << endl;
+		    cout << "Lep 2 Charge: " << tree->muCharge_[idx_mu2] << endl;
+		    cout << "-------------------"<< endl;
+		}
+ 
+		if ( abs((mu1 + mu2).M() - 91.1876) > 10 ){
 		    passPresel_mu = false;
 		}
 	    }
@@ -202,16 +223,17 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
             if (saveCutflows){cutFlow_mu->Fill(3); cutFlowWeight_mu->Fill(3,weight); }
         }
         else { passPresel_mu = false;}
-        if( passPresel_mu && selector->MuonsNoIso.size() == 1 ) {
-	    if (saveCutflows) {cutFlow_mu->Fill(4); cutFlowWeight_mu->Fill(4,weight); } }
-        else { passPresel_mu = false;}
-        if( passPresel_mu && (selector->ElectronsNoIso.size() ) == 0 ) {
-	    if (saveCutflows) {cutFlow_mu->Fill(5); cutFlowWeight_mu->Fill(5,weight);} }
-        else { passPresel_mu = false;}
+
+        // if( passPresel_mu && selector->MuonsNoIso.size() == 1 ) {
+	//     if (saveCutflows) {cutFlow_mu->Fill(4); cutFlowWeight_mu->Fill(4,weight); } }
+        // else { passPresel_mu = false;}
+        // if( passPresel_mu && (selector->ElectronsNoIso.size() ) == 0 ) {
+	//     if (saveCutflows) {cutFlow_mu->Fill(5); cutFlowWeight_mu->Fill(5,weight);} }
+        // else { passPresel_mu = false;}
 //aloke : looselepveto in QCDCR
-	if( passPresel_mu && selector->MuonsLoose.size() <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_mu->Fill(4); cutFlowWeight_mu->Fill(4,weight); } }
+	if( passPresel_mu && selector->MuonsLoose.size() <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_mu->Fill(4); cutFlowWeight_mu->Fill(4,weight);} }
 	else { passPresel_mu = false;}
-	if( passPresel_mu && (selector->ElectronsLoose.size() + selector->Electrons.size() ) <=  NlooseEleVeto_le ) {if (saveCutflows) {cutFlow_mu->Fill(5); cutFlowWeight_mu->Fill(5,weight);} }
+	if( passPresel_mu && (selector->ElectronsLoose.size() + selector->Electrons.size() ) <=  NlooseEleVeto_le ) {if (saveCutflows) {cutFlow_mu->Fill(5); cutFlowWeight_mu->Fill(5,weight);  dump_lepton_mu << run_lumi_event;} }
 	else { passPresel_mu = false;}
     }
 
@@ -220,9 +242,22 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
     if (!QCDselect) {
 	if( passPresel_ele && selector->Electrons.size() == Nele_eq) {
 	    if (Nele_eq==2) {
-		int ele1 = selector->Electrons.at(0);
-		int ele2 = selector->Electrons.at(1);
-		if((tree->eleCharge_[ele1])*(tree->eleCharge_[ele2]) == 1){
+		int idx_ele1 = selector->Electrons.at(0);
+		int idx_ele2 = selector->Electrons.at(1);
+		if((tree->eleCharge_[idx_ele1])*(tree->eleCharge_[idx_ele2]) == 1){
+		    passPresel_ele = false;
+		}
+		TLorentzVector ele1;
+		TLorentzVector ele2;
+		ele1.SetPtEtaPhiM(tree->elePt_[idx_ele1],
+				  tree->eleEta_[idx_ele1],
+				  tree->elePhi_[idx_ele1],
+				  tree->eleMass_[idx_ele1]);
+		ele2.SetPtEtaPhiM(tree->elePt_[idx_ele2],
+				  tree->eleEta_[idx_ele2],
+				  tree->elePhi_[idx_ele2],
+				  tree->eleMass_[idx_ele2]);
+		if ( (ele1 + ele2).M() - 91.1876 > 10 ){
 		    passPresel_ele = false;
 		}
 	    }
@@ -240,18 +275,19 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 	if( passPresel_ele && selector->Electrons.size() == 1){
             if (saveCutflows){cutFlow_ele->Fill(3); cutFlowWeight_ele->Fill(3,weight); }
         }
-        else { passPresel_ele = false;}
-        if( passPresel_ele && selector->ElectronsNoIso.size() == 1 ) {
-	    if (saveCutflows) {cutFlow_ele->Fill(4); cutFlowWeight_ele->Fill(4,weight); } }
-        else { passPresel_ele = false;}
-        if( passPresel_ele && (selector->MuonsNoIso.size() ) == 0 ) {
-	    if (saveCutflows) {cutFlow_ele->Fill(5); cutFlowWeight_ele->Fill(5,weight);} }
-        else { passPresel_ele = false;}
+	else { passPresel_ele = false;}
+
+        // if( passPresel_ele && selector->ElectronsNoIso.size() == 1 ) {
+	//     if (saveCutflows) {cutFlow_ele->Fill(4); cutFlowWeight_ele->Fill(4,weight); } }
+        // else { passPresel_ele = false;}
+        // if( passPresel_ele && (selector->MuonsNoIso.size() ) == 0 ) {
+	//     if (saveCutflows) {cutFlow_ele->Fill(5); cutFlowWeight_ele->Fill(5,weight);} }
+        // else { passPresel_ele = false;}
 //aloke ; loose lepton veto in QCDCR too
 
 	if( passPresel_ele && selector->ElectronsLoose.size() <=  NlooseEleVeto_le ) { if (saveCutflows) {cutFlow_ele->Fill(4); cutFlowWeight_ele->Fill(4,weight);}}
 	else { passPresel_ele = false;}
-	if( passPresel_ele && (selector->MuonsLoose.size() + selector->Muons.size() ) <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_ele->Fill(5); cutFlowWeight_ele->Fill(5,weight);}}
+	if( passPresel_ele && (selector->MuonsLoose.size() + selector->Muons.size() ) <=  NlooseMuVeto_le ) { if (saveCutflows) {cutFlow_ele->Fill(5); cutFlowWeight_ele->Fill(5,weight);  dump_lepton_ele << run_lumi_event;}}
 	else { passPresel_ele = false;}
     }
 

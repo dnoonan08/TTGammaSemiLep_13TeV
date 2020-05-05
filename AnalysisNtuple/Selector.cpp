@@ -186,6 +186,7 @@ void Selector::filter_photons(){
 
 	vector<bool> cutBasedID_split = parsePhotonVIDCuts(tree->phoVidWPBitmap_[phoInd], 2);
 	bool passMediumIDNoChIso = cutBasedID_split[1] && cutBasedID_split[2] && cutBasedID_split[4] && cutBasedID_split[5]; // HoverE (1), SIEIE (2), NeuIso (4), and PhoIso (5) cuts, skip ChIso (3)
+	bool passMediumIDNoChIsoOrSIEIE = cutBasedID_split[1] && cutBasedID_split[4] && cutBasedID_split[5]; // HoverE (1), NeuIso (4), and PhoIso (5) cuts, skip ChIso (3) and SIEIE (2)
 	
 	if (tree->event_==printEvent){
 	    cout << "-- " << phoInd << " pt="<<et<< " eta="<<eta<< " phi="<<phi<< " pho_et_pass "<< pho_et_pass<<" pho_Eta_pass="<< pho_eta_pass <<" (isEE || isEB) ="<<indet<<" !hasPixelSeed= "<<!hasPixelSeed<<" presel="<< phoPresel<< " drlepgamma="<<passDR_lep_pho<< " medID="<<passMediumPhotonID<<" final selection"<<finalsel<<endl;
@@ -197,7 +198,7 @@ void Selector::filter_photons(){
         if(phoPresel){
             PhotonsNoID.push_back(phoInd);
         }
-        if(phoPresel && passMediumIDNoChIso){
+        if(phoPresel && passMediumIDNoChIsoOrSIEIE){
             LoosePhotons.push_back(phoInd);
         }
     }
