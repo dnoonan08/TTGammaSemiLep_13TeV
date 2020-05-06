@@ -352,6 +352,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << " eleScale "<< elescale012_g << " phoScale" << phoscale012_g << "   ";
     std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << std::endl;
 
+    if (dileptonsample && saveCutflow){
+	evtPick->Njet_ge = 2;
+	evtPick->NBjet_ge = 0;
+    }
+
+
     if (isSystematicRun){
 	std::cout << "  Systematic Run : Dropping genMC variables from tree" << endl;
     }
