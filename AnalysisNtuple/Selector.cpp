@@ -175,7 +175,7 @@ void Selector::filter_photons(){
                           //(isEE || isEB) &&
                           passDR_lep_pho && 
                           !hasPixelSeed
-                          && passPhoEleVeto     //we have to add this in eventTree
+			  //                          && passPhoEleVeto     //we have to add this in eventTree
 			  );
 
 	bool indet = (isEE || isEB);
