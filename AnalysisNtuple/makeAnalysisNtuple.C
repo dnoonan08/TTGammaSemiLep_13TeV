@@ -347,7 +347,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     //	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
     //	if( systematicType=="elesmear_down"){elesmear012_g = 0;}
     if( systematicType=="Dilep")     {dileptonsample =true; evtPick->Nmu_eq=2; evtPick->Nele_eq=2;}
-    if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->ZeroBExclusive=true; evtPick->QCDselect = true;}
+    if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->QCDselect = true;}
+    //    if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->ZeroBExclusive=true; evtPick->QCDselect = true;}
     std::cout << "Dilepton Sample :" << dileptonsample << std::endl;
     std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << " eleScale "<< elescale012_g << " phoScale" << phoscale012_g << "   ";
     std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << std::endl;
