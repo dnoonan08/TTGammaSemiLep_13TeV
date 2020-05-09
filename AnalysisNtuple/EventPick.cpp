@@ -400,7 +400,7 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 	passAll_mu = true;
 	if (saveCutflows) {cutFlow_mu->Fill(13); cutFlowWeight_mu->Fill(13,weight); dump_photon_mu << run_lumi_event;}
     }
-    else passPresel_mu = false ; 
+    else passAll_mu = false ; 
     
     if (loosePhotonVeto){
 	// Loose photon cut for electrons
