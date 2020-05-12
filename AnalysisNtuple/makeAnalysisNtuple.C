@@ -13,8 +13,13 @@
 #include "PUReweight.h"
 #include "METzCalculator.h"
 #include "TopEventCombinatorics.h"
-#include "JetResolutions.h"
+//#include "JetResolutions.h"
 #include "JEC/JECvariation.h"
+
+//#include "JEC/JetResolution.h"
+
+//#include "JEC/JERScaleFactors.h"
+
 //#include"OverlapRemove.cpp"
 #include <cmath>
 
@@ -212,6 +217,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     // selector->veto_pho_jet_dR = -1.; //remove jets which have a photon close to them 
     selector->veto_jet_pho_dR = -1.; //remove photons which have a jet close to them (after having removed jets too close to photon from above cut)
 
+    if (isMC){
+    	if (year=="2016") selector->init_JER("./jecFiles/JER/Summer16_25nsV1");
+    	if (year=="2017") selector->init_JER("./jecFiles/JER/Fall17_V3");
+    	if (year=="2018") selector->init_JER("./jecFiles/JER/Autumn18_V7b");
+    }
+
+
 
     if (year=="2016") selector->btag_cut_DeepCSV = 0.6321;
     if (year=="2017") selector->btag_cut_DeepCSV = 0.4941;
@@ -347,7 +359,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     //	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
     //	if( systematicType=="elesmear_down"){elesmear012_g = 0;}
     if( systematicType=="Dilep")     {dileptonsample =true; evtPick->Nmu_eq=2; evtPick->Nele_eq=2;}
-    if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->ZeroBExclusive=true; evtPick->QCDselect = true;}
+    if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->QCDselect = true;}
+    //    if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->ZeroBExclusive=true; evtPick->QCDselect = true;}
     std::cout << "Dilepton Sample :" << dileptonsample << std::endl;
     std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << " eleScale "<< elescale012_g << " phoScale" << phoscale012_g << "   ";
     std::cout << "  PhoSmear: " << phosmear012_g << "  muSmear: " << musmear012_g << "  eleSmear: " << elesmear012_g << std::endl;
@@ -406,10 +419,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (isMC && jecvar012_g!=1) {
 	//		jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, "Total");//SubTotalAbsolute");
 	cout << "Applying JEC uncertainty variations : " << JECsystLevel << endl;
-	if (year=="2016") jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);
-	// THIS NEEDS TO BE UPDATED TO GET 2017 JEC FILES ///it will be Fall17_17NOV_2017_V*
-	if (year=="2017") jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);
-	if (year=="2018") jecvar = new JECvariation("./jecFiles/Summer16_23Sep2016V4", isMC, JECsystLevel);
+	if (year=="2016") jecvar = new JECvariation("./jecFiles/Summer16_07Aug2017_V11", isMC, JECsystLevel);
+	if (year=="2017") jecvar = new JECvariation("./jecFiles/Fall17_17Nov2017_V32", isMC, JECsystLevel);
+	if (year=="2018") jecvar = new JECvariation("./jecFiles/Autumn18_V19", isMC, JECsystLevel);
     }
 
     double luminosity = 1.;
