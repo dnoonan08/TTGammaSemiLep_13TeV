@@ -363,7 +363,9 @@ void Selector::filter_electrons(){
         // tree->elePt_[eleInd] = pt;
         // tree->eleEn_[eleInd]= en;
         
-	bool passTightID_noIso = passEleID(eleInd, 4,false);
+
+	// upper limit on the QCD iso of the vetoID value
+	bool passTightID_noIso = passEleID(eleInd, 4,false) && passVetoID;
 	
         if (QCDselect){
             Float_t isoEBcut = 0.0287 + 0.506/tree->elePt_[eleInd];
@@ -385,20 +387,23 @@ void Selector::filter_electrons(){
 		looseRelIso = phoRelIso;
 	    }
 	}
-	    
-	bool passVetoIDNoIso = passEleID(eleInd, 1,false); // Ignore iso requirements
 
-	float vetoIsoEBcut = 0.198 + 0.506/tree->elePt_[eleInd];
-	float vetoIsoEECut = 0.203 + 0.963/tree->elePt_[eleInd];
 
-	// add back iso requirements, with the pho matching iso
-	passVetoID = (passVetoIDNoIso && 
-		      looseRelIso < (absSCEta < 1.479 ? vetoIsoEBcut : vetoIsoEECut) );
+	//QCD CR now applies veto iso as upper limit, so Veto leptons are the same as they would be otherwise
 
-	// if using QCD cr, just use cut without iso requirement
-	if(QCDselect){
-	    passVetoID = passVetoIDNoIso;
-	}
+	// bool passVetoIDNoIso = passEleID(eleInd, 1,false); // Ignore iso requirements
+
+	// float vetoIsoEBcut = 0.198 + 0.506/tree->elePt_[eleInd];
+	// float vetoIsoEECut = 0.203 + 0.963/tree->elePt_[eleInd];
+
+	// // add back iso requirements, with the pho matching iso
+	// passVetoID = (passVetoIDNoIso && 
+	// 	      looseRelIso < (absSCEta < 1.479 ? vetoIsoEBcut : vetoIsoEECut) );
+
+	// // if using QCD cr, just use cut without iso requirement
+	// if(QCDselect){
+	//     passVetoID = passVetoIDNoIso;
+	// }
 
         bool eleSel = (passEtaEBEEGap && 
                        absEta <= ele_Eta_cut &&
@@ -425,7 +430,7 @@ void Selector::filter_electrons(){
 	if (tree->event_==printEvent){
 	    cout << "-- " << eleInd << " eleSel=" <<  eleSel << " looseSel=" <<  looseSel << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->elePhi_[eleInd]<< " eleID="<<eleID << " passD0="<<passD0<< "("<<tree->eleD0_[eleInd]<<") passDz="<<passDz<< "("<<tree->eleDz_[eleInd]<<")"<< endl;
 	    cout << "            ";
-	    cout << "sieie="<<tree->eleSIEIE_[eleInd] << " vetoID="<<passVetoID<<" vetoIDNoIso="<<passVetoIDNoIso << " looseIso=" << looseRelIso;
+	    cout << "sieie="<<tree->eleSIEIE_[eleInd] << " vetoID="<<passVetoID << " looseIso=" << looseRelIso;
 	    cout << endl;
 	    std::cout << std::setbase(8);
 	    cout << "            idBits="<<tree->eleVidWPBitmap_[eleInd] << endl;
@@ -475,6 +480,7 @@ void Selector::filter_muons(){
 			  TMath::Abs(eta) <= mu_Eta_tight &&
 			  tightMuonID &&
 			  (!QCDselect ? (PFrelIso_corr < mu_RelIso_tight): PFrelIso_corr > mu_RelIso_tight)
+			  && (PFrelIso_corr < mu_RelIso_loose) //for QCD , upper limit of iso of the loose cut
 			  );
 
 	bool passLoose = (pt >= mu_PtLoose_cut &&
@@ -483,12 +489,12 @@ void Selector::filter_muons(){
 			  (PFrelIso_corr < mu_RelIso_loose)
 			  //(!QCDselect ? (PFrelIso_corr < mu_RelIso_loose): PFrelIso_corr > mu_RelIso_loose) 
 			  );
-	if (QCDselect){ //ignoring Iso cut in  QCDCR
-	    bool passLoose = (pt >= mu_PtLoose_cut &&
-			      TMath::Abs(eta) <= mu_Eta_loose &&
-			      looseMuonID 
-			      );
-	}
+	// if (QCDselect){ //ignoring Iso cut in  QCDCR
+	//     bool passLoose = (pt >= mu_PtLoose_cut &&
+	// 		      TMath::Abs(eta) <= mu_Eta_loose &&
+	// 		      looseMuonID 
+	// 		      );
+	// }
 	bool passTight_noIso = (pt >= mu_Pt_cut &&
 				TMath::Abs(eta) <= mu_Eta_tight &&
 				tightMuonID
