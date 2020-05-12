@@ -16,3 +16,7 @@ testLepSF
 condor
 Test
 jecFiles
+core*
+temp*
+test*
+resubmit*

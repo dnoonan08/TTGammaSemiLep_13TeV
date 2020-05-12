@@ -2,6 +2,11 @@
 #include"TRandom3.h"
 #include <bitset>
 
+#include"JEC/JetResolution.h"
+#include"JEC/JetResolutionObject.h"
+//#include"JEC/JERScaleFactors.h"
+
+#include <random>
 
 double dR(double eta1, double phi1, double eta2, double phi2){
     double dphi = phi2 - phi1;
@@ -76,6 +81,28 @@ Selector::Selector(){
     pho_noEleVeto_cut = false;
     pho_applyPhoID = true;
 	
+
+
+}
+
+void Selector::init_JER(std::string inputPrefix){
+
+    jetResolution = new JME::JetResolution((inputPrefix+"_MC_PtResolution_AK4PFchs.txt").c_str());
+    jetResolutionScaleFactor = new JME::JetResolutionScaleFactor((inputPrefix+"_MC_SF_AK4PFchs.txt").c_str());
+
+    //jetParam = new JME::JetParameters();
+
+    // cout << "INIT JER" << endl;
+    // JERParam = new JetCorrectorParameters((inputPrefix+"_MC_PtResolution_AK4PFchs.txt").c_str());
+    // cout << "INIT JER" << endl;
+    // std::vector<JetCorrectorParameters> vPar;
+    // cout << "INIT JER" << endl;
+    // vPar.push_back(*JERParam);
+    // cout << "INIT JER" << endl;
+    // JetCorrector = new FactorizedJetCorrector(vPar);
+    // cout << "INIT JER" << endl;
+
+    // cout << JetCorrector << endl;
 }
 
 void Selector::process_objects(EventTree* inp_tree){
@@ -503,7 +530,28 @@ void Selector::filter_jets(){
         bool jetID_pass = (tree->jetID_[jetInd]>>0 & 1 && looseJetID) || (tree->jetID_[jetInd]>>jetID_cutBit & 1);
         
 
-// 		double jetSmear = 1.;
+	double jetSF = 1.;
+
+	jetParam.setJetEta(tree->jetEta_[jetInd]);
+	jetParam.setJetPt(tree->jetPt_[jetInd]);
+	jetParam.setJetArea(tree->jetArea_[jetInd]);
+	jetParam.setRho(tree->rho_);
+
+	if (JERsystLevel==1) jetSF = jetResolutionScaleFactor->getScaleFactor(jetParam,Variation::NOMINAL);
+	if (JERsystLevel==0) jetSF = jetResolutionScaleFactor->getScaleFactor(jetParam,Variation::DOWN);
+	if (JERsystLevel==2) jetSF = jetResolutionScaleFactor->getScaleFactor(jetParam,Variation::UP);
+
+	double jetSmear = 1;
+
+	int genIdx = tree->jetGenJetIdx_[jetInd];
+	if ( (genIdx>-1) && (genIdx < tree->nGenJet_)){
+	    double genJetPt = tree->GenJet_pt_[genIdx];
+	    jetSmear = 1. + (jetSF - 1.) * (pt - genJetPt)/pt;
+	}else{
+	    double resolution = jetResolution->getResolution(jetParam);
+	    jetSmear = 1 + generator->Gaus(0, resolution) * sqrt( max(jetSF*jetSF - 1, 0.) );
+	}
+
 // 		if (!tree->isData_ && JERsystLevel==1) {jetSmear = tree->jetP4Smear_->at(jetInd);}
 // 		if (!tree->isData_ && JERsystLevel==0) {jetSmear = tree->jetP4SmearDo_->at(jetInd);}
 // 		if (!tree->isData_ && JERsystLevel==2) {jetSmear = tree->jetP4SmearUp_->at(jetInd);}
@@ -513,6 +561,17 @@ void Selector::filter_jets(){
 // 		}
 // 		tree->jetPt_->at(jetInd) = pt;
 // 		tree->jetEn_->at(jetInd) = jetEn;
+
+	if (tree->event_==printEvent){
+	    cout << "GenIdx: "<< genIdx << endl;
+	    cout << "jetSF: "<< jetSF << endl;
+	    cout << "JetSmear: "<<jetSmear << endl;
+	}
+
+	if (smearJetPt){
+	    pt = pt*jetSmear;
+	    tree->jetPt_[jetInd] = pt;
+	}
 
 
         bool passDR_lep_jet = true;

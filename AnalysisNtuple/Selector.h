@@ -11,6 +11,9 @@
 #include"EventTree.h"
 #include "ParsePhotonID.h"
 
+#include "JEC/JetResolution.h"
+//#include "JEC/JERScaleFactors.h"
+
 // https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
 // photon ID is not going to be changed every time this code runs
 // barrel/endcap, Loose/Medium/Tight
@@ -142,6 +145,9 @@ public:
 	int printEvent;
 
 	void clear_vectors();
+	
+	void init_JER(std::string inputPrefix);
+
 
 private:
 	EventTree* tree;
@@ -165,6 +171,11 @@ private:
 	//	bool passEleVetoID(int eleInd, bool doRelisoCut);
 	//	bool passPhoMediumID(int phoInd);
 	bool passPhoMediumID(int phoInd, bool cutHoverE, bool cutSIEIE, bool cutIso);
+
+	JME::JetResolution *jetResolution;
+	JME::JetResolutionScaleFactor *jetResolutionScaleFactor;
+	JME::JetParameters jetParam;
+
 };
 
 class Selector_gen{

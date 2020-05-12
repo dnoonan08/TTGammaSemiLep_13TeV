@@ -26,29 +26,29 @@ testLepSF: testLepSF.cpp muSF_reader.h eleSF_reader.h phoSF_reader.h
 # 	g++ -o checkOverlap `root-config --libs` -I`root-config --incdir` -std=c++17 EventTree.o Selector.o OverlapRemove.cpp checkOverlap.cpp 
 
 EventTree.o: EventTree.cpp EventTree.h
-	g++ -c -I`root-config --incdir` -std=c++17 EventTree.cpp
+	g++ -c -I`root-config --incdir` -std=c++17 -D STANDALONE EventTree.cpp
 
 BTagCalibrationStandalone.o: BTagCalibrationStandalone.cpp BTagCalibrationStandalone.h
-	g++ -c -I`root-config --incdir` -std=c++17 BTagCalibrationStandalone.cpp
+	g++ -c -I`root-config --incdir` -std=c++17 -D STANDALONE BTagCalibrationStandalone.cpp
 
 JEC: JEC/FactorizedJetCorrector.cpp JEC/JetCorrectorParameters.cpp JEC/SimpleJetCorrector.cpp JEC/JetCorrectionUncertainty.cpp JEC/SimpleJetCorrectionUncertainty.cpp
 	$(MAKE) -C JEC
 
-makeAnalysisNtuple: Selector.o EventPick.o EventTree.o makeAnalysisNtuple.C makeAnalysisNtuple.h OverlapRemove.cpp JetResolutions.h PUReweight.cpp PUReweight.h BTagCalibrationStandalone.o ScaleFactorFunction.h JEC/JECvariation.o TopEventCombinatorics.cpp muSF_reader.h eleSF_reader.h phoSF_reader.h
-	g++ -o makeAnalysisNtuple `root-config --libs` -I`root-config --incdir` -std=c++17 makeAnalysisNtuple.C EventTree.o EventPick.o ParsePhotonID.cpp Selector.o  OverlapRemove.cpp  PUReweight.cpp BTagCalibrationStandalone.o JEC/FactorizedJetCorrector.o JEC/JetCorrectorParameters.o JEC/SimpleJetCorrector.o JEC/JetCorrectionUncertainty.o JEC/SimpleJetCorrectionUncertainty.o JEC/JECvariation.o METzCalculator.cpp TopEventCombinatorics.cpp -DVERSION=\"$(GIT_COMMIT_FULL)\" -DBRANCH=\"$(GIT_BRANCH)\" -DSTATUS=\"$(GIT_STATUS)\" -DCOMMITTIME=\"$(GIT_COMMIT_TIME)\"
+makeAnalysisNtuple: Selector.o EventPick.o EventTree.o makeAnalysisNtuple.C makeAnalysisNtuple.h OverlapRemove.cpp PUReweight.cpp PUReweight.h BTagCalibrationStandalone.o ScaleFactorFunction.h JEC/JECvariation.o TopEventCombinatorics.cpp muSF_reader.h eleSF_reader.h phoSF_reader.h
+	g++ -o makeAnalysisNtuple `root-config --libs` -I`root-config --incdir` -std=c++17 -D STANDALONE makeAnalysisNtuple.C EventTree.o EventPick.o ParsePhotonID.cpp Selector.o  OverlapRemove.cpp  PUReweight.cpp BTagCalibrationStandalone.o JEC/FactorizedJetCorrector.o JEC/JetCorrectorParameters.o JEC/SimpleJetCorrector.o JEC/JetCorrectionUncertainty.o JEC/SimpleJetCorrectionUncertainty.o JEC/JECvariation.o JEC/JetResolution.cc JEC/JetResolutionObject.cc METzCalculator.cpp TopEventCombinatorics.cpp -DVERSION=\"$(GIT_COMMIT_FULL)\" -DBRANCH=\"$(GIT_BRANCH)\" -DSTATUS=\"$(GIT_STATUS)\" -DCOMMITTIME=\"$(GIT_COMMIT_TIME)\"
 
 
 Selector.o: EventTree.o Selector.cpp Selector.h
-	g++ -c -I `root-config --incdir` -std=c++17 ParsePhotonID.cpp Selector.cpp
+	g++ -c -I `root-config --incdir` -std=c++17 -D STANDALONE ParsePhotonID.cpp JEC/JetResolution.cc JEC/JetResolutionObject.cc  Selector.cpp
 
 EventPick.o: Selector.o EventPick.cpp EventPick.h
-	g++ -c -I `root-config --incdir` -std=c++17 EventPick.cpp 
+	g++ -c -I `root-config --incdir` -std=c++17 -D STANDALONE EventPick.cpp 
 
 Selector_gen.o: EventTree.o Selector_gen.cpp Selector.h
-	g++ -c -I`root-config --incdir` -std=c++17 Selector_gen.cpp
+	g++ -c -I`root-config --incdir` -std=c++17 -D STANDALONE Selector_gen.cpp
 
 EventPick_gen.o: Selector_gen.o EventPick_gen.cpp EventPick.h
-	g++ -c -I `root-config --incdir` -std=c++17 EventPick_gen.cpp 
+	g++ -c -I `root-config --incdir` -std=c++17 -D STANDALONE EventPick_gen.cpp 
 
 clean:
 	rm EventTree.o Selector.o EventPick.o BTagCalibrationStandalone.o makeAnalysisNtuple
