@@ -176,6 +176,7 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 	cout << "Jets      "<< selector->Jets.size() << endl;
 	cout << "BJets     "<< selector->bJets.size() << endl;
 	cout << "Photons   "<< selector->Photons.size() << endl;
+	cout << "  Loose   "<< selector->LoosePhotons.size() << endl;
 	cout << "-------------------"<< endl;
     }
 
@@ -257,6 +258,13 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 				  tree->eleEta_[idx_ele2],
 				  tree->elePhi_[idx_ele2],
 				  tree->eleMass_[idx_ele2]);
+		if (tree->event_==printEvent){
+		    cout << "DilepMass:    " << (ele1 + ele2).M() << endl;
+		    cout << "Lep 1 Charge: " << tree->eleCharge_[idx_ele1] << endl;
+		    cout << "Lep 2 Charge: " << tree->eleCharge_[idx_ele2] << endl;
+		    cout << "-------------------"<< endl;
+		}
+ 
 		if ( abs((ele1 + ele2).M() - 91.1876) > 10 ){
 		    passPresel_ele = false;
 		}

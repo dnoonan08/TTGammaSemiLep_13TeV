@@ -202,7 +202,7 @@ void Selector::filter_photons(){
                           //(isEE || isEB) &&
                           passDR_lep_pho && 
                           !hasPixelSeed
-			  //                          && passPhoEleVeto     //we have to add this in eventTree
+			  //			  && passPhoEleVeto     //we have to add this in eventTree
 			  );
 
 	bool indet = (isEE || isEB);
@@ -371,8 +371,8 @@ void Selector::filter_electrons(){
             Float_t isoEBcut = 0.0287 + 0.506/tree->elePt_[eleInd];
             Float_t isoEECut = 0.0445 + 0.963/tree->elePt_[eleInd];
             passTightID = false;
-            passTightID = passTightID_noIso && 
-		PFrelIso_corr > (absSCEta < 1.479 ? isoEBcut : isoEECut);
+            passTightID = (passTightID_noIso && 
+			   PFrelIso_corr > (absSCEta < 1.479 ? isoEBcut : isoEECut) );
         }
 
 
@@ -389,16 +389,17 @@ void Selector::filter_electrons(){
 	}
 
 
+	bool passVetoIDNoIso = passEleID(eleInd, 1,false); // Ignore iso requirements
+
+	float vetoIsoEBcut = 0.198 + 0.506/tree->elePt_[eleInd];
+	float vetoIsoEECut = 0.203 + 0.963/tree->elePt_[eleInd];
+
+	// add back iso requirements, with the pho matching iso
+	passVetoID = (passVetoIDNoIso && 
+		      looseRelIso < (absSCEta < 1.479 ? vetoIsoEBcut : vetoIsoEECut) );
+
+
 	//QCD CR now applies veto iso as upper limit, so Veto leptons are the same as they would be otherwise
-
-	// bool passVetoIDNoIso = passEleID(eleInd, 1,false); // Ignore iso requirements
-
-	// float vetoIsoEBcut = 0.198 + 0.506/tree->elePt_[eleInd];
-	// float vetoIsoEECut = 0.203 + 0.963/tree->elePt_[eleInd];
-
-	// // add back iso requirements, with the pho matching iso
-	// passVetoID = (passVetoIDNoIso && 
-	// 	      looseRelIso < (absSCEta < 1.479 ? vetoIsoEBcut : vetoIsoEECut) );
 
 	// // if using QCD cr, just use cut without iso requirement
 	// if(QCDselect){
@@ -569,6 +570,7 @@ void Selector::filter_jets(){
 // 		tree->jetEn_->at(jetInd) = jetEn;
 
 	if (tree->event_==printEvent){
+	    cout << "DoJetSmear: " << smearJetPt << endl;
 	    cout << "GenIdx: "<< genIdx << endl;
 	    cout << "jetSF: "<< jetSF << endl;
 	    cout << "JetSmear: "<<jetSmear << endl;

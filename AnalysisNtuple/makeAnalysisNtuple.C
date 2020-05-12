@@ -202,12 +202,15 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     evtPick->applyMetFilter = true;
 
     if (saveCutflow){
+	selector->smearJetPt=false;
 	evtPick->saveCutflows=true;
 	evtPick->Njet_ge = 4;
 	evtPick->NBjet_ge = 1;
     }
 
-
+    if (eventNum > -1){
+	selector->smearJetPt=false;
+    }
 
     selector->pho_applyPhoID = false;
     selector->looseJetID = false;
