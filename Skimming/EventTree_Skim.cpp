@@ -144,7 +144,9 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	chain->SetBranchStatus("LHEWeight_originalXWGTUP",1);
     }
 
-    chain->SetBranchStatus("L1PreFiringWeight*",1);
+    if (year=="2016" || year=="2017"){
+	chain->SetBranchStatus("L1PreFiringWeight*",1);
+    }
 
     //Fliters
     chain->SetBranchStatus("Flag_goodVertices",1);
