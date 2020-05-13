@@ -33,9 +33,11 @@ int elescale012_g = 1;
 
 #include "BTagCalibrationStandalone.h"
 
+bool overlapRemoval(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
+bool overlapRemoval_2To3(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
 bool overlapRemovalTT(EventTree* tree, bool verbose);
-bool overlapRemovalZJets(EventTree* tree);
-bool overlapRemovalWJets(EventTree* tree);
+bool overlapRemovalZJets(EventTree* tree, bool verbose=false);
+bool overlapRemovalWJets(EventTree* tree, bool verbose=false);
 bool overlapRemoval_Tchannel(EventTree* tree);
 double getJetResolution(double, double, double);
 
@@ -574,56 +576,69 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	tree->GetEntry(entry);
 
 	if( isMC && doOverlapInvert_TTG){
-	    if (!overlapRemovalTT(tree, tree->event_==eventNum)){	
+	    //if (!overlapRemovalTT(tree, tree->event_==eventNum)){	
+	    if (!overlapRemoval(tree, 10., 5., 0.1, tree->event_==eventNum)){
 		count_overlap++;			
 		continue;
 	    }
 	}
 	if( isMC && doOverlapRemoval_TT){
+	    // if (overlapRemovalTT(tree, tree->event_==eventNum) != overlapRemoval(tree, 10., 5., 0.1, tree->event_==eventNum)){	
+	    // 	cout << "ISSUE WITH OVERLAP REMOVAL" << endl;
+	    // 	cout << "    " << tree->event_ << endl;
+	    // }
 	    if (!invertOverlap){
-		if (overlapRemovalTT(tree, tree->event_==eventNum)){	
+		//if (overlapRemovalTT(tree, tree->event_==eventNum)){	
+		if (overlapRemoval(tree, 10., 5., 0.1, tree->event_==eventNum)){
 		    count_overlap++;			
 		    continue;
 		}
 	    } else {
-		if (!overlapRemovalTT(tree, tree->event_==eventNum)){	
+		//if (!overlapRemovalTT(tree, tree->event_==eventNum)){	
+		if (!overlapRemoval(tree, 10., 5., 0.1, tree->event_==eventNum)){
 		    count_overlap++;			
 		    continue;
 		}
 	    }
 	}
 	if( isMC && doOverlapRemoval_W){
-	    if (overlapRemovalWJets(tree)){
+	    //if (overlapRemovalWJets(tree, tree->event_==eventNum)){
+	    if (overlapRemoval(tree, 15., 2.6, 0.05, tree->event_==eventNum)){
 		count_overlap++;
 		continue;
 	    }
 	}
 	if( isMC && doOverlapInvert_WG){
-	    if (!overlapRemovalWJets(tree)){	
+	    //if (!overlapRemovalWJets(tree, tree->event_==eventNum)){	
+	    if (!overlapRemoval(tree, 15., 2.6, 0.05, tree->event_==eventNum)){
 		count_overlap++;			
 		continue;
 	    }
 	}
 	if( isMC && doOverlapRemoval_Z){
-	    if (overlapRemovalZJets(tree)){
+	    //if (overlapRemovalZJets(tree, tree->event_==eventNum)){
+	    if (overlapRemoval(tree, 15., 2.6, 0.05, tree->event_==eventNum)){
 		count_overlap++;
 		continue;
 	    }
 	}
 	if( isMC && doOverlapInvert_ZG){
-	    if (!overlapRemovalZJets(tree)){
+	    //if (!overlapRemovalZJets(tree, tree->event_==eventNum)){
+	    if (overlapRemoval(tree, 15., 2.6, 0.05, tree->event_==eventNum)){
 		count_overlap++;
 		continue;
 	    }
 	}
 	if( isMC && doOverlapRemoval_Tchannel){
-	    if (overlapRemoval_Tchannel(tree)){
+	    //if (overlapRemoval_Tchannel(tree)){
+	    if (overlapRemoval_2To3(tree, 10., 2.6, 0.05, tree->event_==eventNum)){
 		count_overlap++;
 		continue;
 	    }
 	}
 	if( isMC && doOverlapInvert_TG){
-	    if (!overlapRemoval_Tchannel(tree)){
+	    //if (!overlapRemoval_Tchannel(tree)){
+	    if (!overlapRemoval_2To3(tree, 10., 2.6, 0.05, tree->event_==eventNum)){
 		count_overlap++;
 		continue;
 	    }
