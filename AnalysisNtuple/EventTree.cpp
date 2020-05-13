@@ -1,8 +1,10 @@
 #include<iostream>
 #include"EventTree.h"
 
-EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileNames){
+EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, char** fileNames){
     chain = new TChain("Events");
+
+    isData_ = isData;
 
     //std::cout << chain->GetCacheSize() << std::endl;
     chain->SetCacheSize(100*1024*1024);
@@ -320,9 +322,10 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("Photon_hoe",1);
     chain->SetBranchAddress("Photon_hoe", &phoHoverE_);
 
-    chain->SetBranchStatus("Photon_genPartIdx",1);
-    chain->SetBranchAddress("Photon_genPartIdx", &phoGenPartIdx_);
-
+    if (!isData_){
+	chain->SetBranchStatus("Photon_genPartIdx",1);
+	chain->SetBranchAddress("Photon_genPartIdx", &phoGenPartIdx_);
+    }
     chain->SetBranchStatus("Photon_electronVeto",1);
     chain->SetBranchAddress("Photon_electronVeto", &phoEleVeto_);
 	

@@ -114,21 +114,21 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
 
-    std::string year(av[1]);
-    tree = new EventTree(ac-4, false, year, av+4);
 
     sampleType = av[2];
 
     systematicType = "";
     cout << sampleType << endl;
 
-
     isMC = true;
     if (sampleType.find("Data") != std::string::npos){
 	isMC = false;
     }
 
-    tree->isData_ = !isMC;
+    std::string year(av[1]);
+    tree = new EventTree(ac-4, false, year, !isMC, av+4);
+
+
     
     isSystematicRun = false;
 
