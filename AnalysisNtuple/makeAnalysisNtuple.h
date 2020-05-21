@@ -12,9 +12,27 @@
 #include <TChain.h>
 #include <TFile.h>
 #include <TH2.h>
+#include <TLorentzVector.h>
+#include <iostream>
+#include <algorithm>
+#include <ctime>
+
+#include "TRandom3.h"
+#include "ParsePhotonID.h"
+#include "PUReweight.h"
+#include "METzCalculator.h"
+#include "TopEventCombinatorics.h"
+
 #include "EventTree.h"
 #include "EventPick.h"
 #include "Selector.h"
+
+#include "JEC/JECvariation.h"
+
+#include <iomanip>
+#include <cmath>
+
+//#include <boost/program_options.hpp>
 
 // Standalone Btag scale factor tool from 
 // https://twiki.cern.ch/twiki/bin/view/CMS/BTagCalibration
@@ -34,6 +52,8 @@
 #include "phoSF_reader.h"
 
 #include "JEC/UncertaintySourcesList.h"
+
+#include "OverlapRemove.h"
 
 class makeAnalysisNtuple {
  public :

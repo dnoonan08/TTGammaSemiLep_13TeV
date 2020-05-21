@@ -1,14 +1,8 @@
-#include"EventTree.h"
-#include<iostream>
-#include<cstdlib>
-#include <math.h>
-#include <algorithm>
-#include <tuple>
-
-double dR(double eta1, double phi1, double eta2, double phi2);
+#include "OverlapRemove.h"
+//double dR(double eta1, double phi1, double eta2, double phi2);
 
 //double secondMinDr(int myInd, const EventTree* tree)
-std::vector<double> minGenDr(int myInd, const EventTree* tree, std::vector<int> ignorePID = std::vector<int>()){
+std::vector<double> minGenDr(int myInd, const EventTree* tree, std::vector<int> ignorePID){
     double myEta = tree->GenPart_eta_[myInd]; 
     double myPhi = tree->GenPart_phi_[myInd];
     int myPID = tree->GenPart_pdgId_[myInd];
@@ -176,7 +170,7 @@ bool overlapRemovalTT(EventTree* tree, bool verbose){
 
 
 
-bool overlapRemovalWJets(EventTree* tree, bool verbose=false){
+bool overlapRemovalWJets(EventTree* tree, bool verbose){
     const double Et_cut = 15;
     const double Eta_cut = 2.6;
     bool haveOverlap = false;
@@ -215,7 +209,7 @@ bool overlapRemovalWJets(EventTree* tree, bool verbose=false){
 }
 
 
-bool overlapRemovalZJets(EventTree* tree, bool verbose=false){
+bool overlapRemovalZJets(EventTree* tree, bool verbose){
     const double Et_cut = 15;
     const double Eta_cut = 2.6;
     bool haveOverlap = false;

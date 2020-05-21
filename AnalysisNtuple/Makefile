@@ -35,11 +35,11 @@ JEC: JEC/FactorizedJetCorrector.cpp JEC/JetCorrectorParameters.cpp JEC/SimpleJet
 	$(MAKE) -C JEC
 
 makeAnalysisNtuple: Selector.o EventPick.o EventTree.o makeAnalysisNtuple.C makeAnalysisNtuple.h OverlapRemove.cpp PUReweight.cpp PUReweight.h BTagCalibrationStandalone.o ScaleFactorFunction.h JEC/JECvariation.o TopEventCombinatorics.cpp muSF_reader.h eleSF_reader.h phoSF_reader.h
-	g++ -o makeAnalysisNtuple `root-config --libs` -I`root-config --incdir` -std=c++17 -D STANDALONE makeAnalysisNtuple.C EventTree.o EventPick.o ParsePhotonID.cpp Selector.o  OverlapRemove.cpp  PUReweight.cpp BTagCalibrationStandalone.o JEC/FactorizedJetCorrector.o JEC/JetCorrectorParameters.o JEC/SimpleJetCorrector.o JEC/JetCorrectionUncertainty.o JEC/SimpleJetCorrectionUncertainty.o JEC/JECvariation.o JEC/JetResolution.cc JEC/JetResolutionObject.cc METzCalculator.cpp TopEventCombinatorics.cpp -DVERSION=\"$(GIT_COMMIT_FULL)\" -DBRANCH=\"$(GIT_BRANCH)\" -DSTATUS=\"$(GIT_STATUS)\" -DCOMMITTIME=\"$(GIT_COMMIT_TIME)\"
+	g++ -o makeAnalysisNtuple `root-config --libs` -I`root-config --incdir` -std=c++17 -D STANDALONE makeAnalysisNtuple.C EventTree.o EventPick.o ParsePhotonID.cpp Selector.o  OverlapRemove.cpp  PUReweight.cpp BTagCalibrationStandalone.o Utils.cc JEC/FactorizedJetCorrector.o JEC/JetCorrectorParameters.o JEC/SimpleJetCorrector.o JEC/JetCorrectionUncertainty.o JEC/SimpleJetCorrectionUncertainty.o JEC/JECvariation.o JEC/JetResolution.cc JEC/JetResolutionObject.cc METzCalculator.cpp TopEventCombinatorics.cpp -DVERSION=\"$(GIT_COMMIT_FULL)\" -DBRANCH=\"$(GIT_BRANCH)\" -DSTATUS=\"$(GIT_STATUS)\" -DCOMMITTIME=\"$(GIT_COMMIT_TIME)\"
 
 
 Selector.o: EventTree.o Selector.cpp Selector.h
-	g++ -c -I `root-config --incdir` -std=c++17 -D STANDALONE ParsePhotonID.cpp JEC/JetResolution.cc JEC/JetResolutionObject.cc  Selector.cpp
+	g++ -c -I `root-config --incdir` -std=c++17 -D STANDALONE ParsePhotonID.cpp Utils.cc JEC/JetResolution.cc JEC/JetResolutionObject.cc  Selector.cpp
 
 EventPick.o: Selector.o EventPick.cpp EventPick.h
 	g++ -c -I `root-config --incdir` -std=c++17 -D STANDALONE EventPick.cpp 

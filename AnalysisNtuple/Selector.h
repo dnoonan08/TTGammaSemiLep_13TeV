@@ -11,8 +11,21 @@
 #include"EventTree.h"
 #include "ParsePhotonID.h"
 
+#include "Utils.h"
+
 #include "JEC/JetResolution.h"
 //#include "JEC/JERScaleFactors.h"
+
+
+#include"TRandom3.h"
+#include <bitset>
+
+#include"JEC/JetResolution.h"
+#include"JEC/JetResolutionObject.h"
+//#include"JEC/JERScaleFactors.h"
+
+#include <random>
+
 
 // https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
 // photon ID is not going to be changed every time this code runs
@@ -49,7 +62,7 @@ static const double electronEA[7] = {0.1703,
 
 
 
-double dR(double eta1, double phi1, double eta2, double phi2);
+//double dR(double eta1, double phi1, double eta2, double phi2);
 
 class Selector{
 public:

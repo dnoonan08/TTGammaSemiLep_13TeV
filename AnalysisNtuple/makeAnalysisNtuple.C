@@ -1,29 +1,9 @@
 #include "makeAnalysisNtuple.h"
 #define makeAnalysisNtuple_cxx
-#include <boost/program_options.hpp>
 
-#include <TH2.h>
-#include <TStyle.h>
-#include <TCanvas.h>
-#include <TLorentzVector.h>
-#include <iostream>
-#include <algorithm>
-#include <ctime>
-#include "TRandom3.h"
-#include "ParsePhotonID.h"
-#include "PUReweight.h"
-#include "METzCalculator.h"
-#include "TopEventCombinatorics.h"
+//#include <TH2.h>
+//#include <TCanvas.h>
 //#include "JetResolutions.h"
-#include "JEC/JECvariation.h"
-
-//#include "JEC/JetResolution.h"
-
-//#include "JEC/JERScaleFactors.h"
-
-//#include"OverlapRemove.cpp"
-#include <iomanip>
-#include <cmath>
 
 int jecvar012_g = 1; // 0:down, 1:norm, 2:up
 int jervar012_g = 1; // 0:down, 1:norm, 2:up
@@ -33,15 +13,13 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 int phoscale012_g = 1;
 int elescale012_g = 1;
 
-#include "BTagCalibrationStandalone.h"
-
-bool overlapRemoval(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
-bool overlapRemoval_2To3(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
-bool overlapRemovalTT(EventTree* tree, bool verbose);
-bool overlapRemovalZJets(EventTree* tree, bool verbose=false);
-bool overlapRemovalWJets(EventTree* tree, bool verbose=false);
-bool overlapRemoval_Tchannel(EventTree* tree);
-double getJetResolution(double, double, double);
+// bool overlapRemoval(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
+// bool overlapRemoval_2To3(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
+// bool overlapRemovalTT(EventTree* tree, bool verbose);
+// bool overlapRemovalZJets(EventTree* tree, bool verbose=false);
+// bool overlapRemovalWJets(EventTree* tree, bool verbose=false);
+// bool overlapRemoval_Tchannel(EventTree* tree);
+// double getJetResolution(double, double, double);
 
 
 bool dileptonsample;
@@ -442,7 +420,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	TFile *_file = TFile::Open(fileNames[fileI],"read");
 	TH1D *hEvents = (TH1D*) _file->Get("hEvents");
 	nMC_total = (hEvents->GetBinContent(2)); //sum of gen weights
-	//nMC_total += (hEvents->GetBinContent(3) - hEvents->GetBinContent(1)); //positive weight - neg weight
+	if (nMC_total==0){ nMC_total = (hEvents->GetBinContent(3) - hEvents->GetBinContent(1)); }  //positive weight - neg weight 
     }
 	
     if (nMC_total==0){
@@ -753,7 +731,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 			// _muEffWeight_Up = (muSFa->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2, 2018) * 8.950818835/59.688059536 + 
 			// 		   muSFb->getMuSF(tree->muPt_[muInd_],tree->muEta_[muInd_],2, 2018) * 50.737240701/59.688059536);
-
+			
 		    }
 		    _muEffWeight    = muWeights.at(0);
 		    _muEffWeight_Up = muWeights_Up.at(0);
@@ -891,7 +869,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     gitStatus.Write();
     
     outputFile->Close();
-
+    
 }
 
 
@@ -1811,8 +1789,8 @@ vector<bool> makeAnalysisNtuple::passPhoTightID(int phoInd){
 
 
 
-//This is defined in OverlapRemoval.cpp
-double minGenDr(int myInd, const EventTree* tree);
+// //This is defined in OverlapRemoval.cpp
+// double minGenDr(int myInd, const EventTree* tree);
 
 
 void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake, bool *puPhoton, bool verbose){ // to use official phoGenMatch
