@@ -1,4 +1,4 @@
-#include<TH2F.h>
+#include<TH2D.h>
 #include<TFile.h>
 
 #include <iostream>
@@ -14,26 +14,25 @@ class MuonSF
 	   string trig_filename, string trig_histName){
 
 	TFile* idFile = TFile::Open(id_filename.c_str(),"READ");
-	idHist = (TH2F*) idFile->Get(id_histName.c_str());
+	idHist = (TH2D*) idFile->Get(id_histName.c_str());
 
 	TFile* isoFile = TFile::Open(iso_filename.c_str(),"READ");
-	isoHist = (TH2F*) isoFile->Get(iso_histName.c_str());
+	isoHist = (TH2D*) isoFile->Get(iso_histName.c_str());
 
 	TFile* trigFile = TFile::Open(trig_filename.c_str(),"READ");
-	trigHist = (TH2F*) trigFile->Get(trig_histName.c_str());
+	trigHist = (TH2D*) trigFile->Get(trig_histName.c_str());
 	
     }
-    double getMuSF(double pt, double eta, int systLevel, int year);
+    std::vector<double> getMuSF(double pt, double eta, int systLevel, int year, bool verbose=false);
 
-    bool verbose=false;
     /* bool splitSystsId = false; */
     /* bool splitSystsIso = false; */
     /* bool splitSystsTrig = false; */
     
  private:
-    TH2F* idHist;
-    TH2F* isoHist;
-    TH2F* trigHist;
+    TH2D* idHist;
+    TH2D* isoHist;
+    TH2D* trigHist;
     
     /* string isoName; */
     /* string idName; */
@@ -42,7 +41,7 @@ class MuonSF
 
 
 
-double MuonSF::getMuSF(double pt, double eta, int systLevel, int year){
+std::vector<double> MuonSF::getMuSF(double pt, double eta, int systLevel, int year, bool verbose){
 
     double abseta = fabs(eta);
 
@@ -202,11 +201,18 @@ double MuonSF::getMuSF(double pt, double eta, int systLevel, int year){
 
     double trig_SF = trig_SF_value + (systLevel-1)*trig_SF_error;
 
-    double muEffSF=id_SF*iso_SF*trig_SF;
+    //    double muEffSF=id_SF*iso_SF*trig_SF;
+    std::vector<double> muSF {id_SF*iso_SF*trig_SF, id_SF, iso_SF, trig_SF};
 
-    if (verbose) { cout << id_SF << "\t" << iso_SF << "\t" << trig_SF << endl;}
+    if (verbose) { 
+	cout << "Muon Scale Factors: " << endl;
+	cout << "    ID   = " << id_SF << endl;
+	cout << "    Iso  = " << iso_SF << endl;
+	cout << "    Trig = " << trig_SF << endl;
+	cout << "    Total= " << id_SF*iso_SF*trig_SF << endl;
+    }
 	
-    return muEffSF;
+    return muSF;
 
 }
 

@@ -124,9 +124,25 @@ class makeAnalysisNtuple {
     Float_t         _muEffWeight_Up;
     Float_t         _muEffWeight_Do;
 
+    Float_t         _muEffWeight_IdIso;
+    Float_t         _muEffWeight_IdIso_Up;
+    Float_t         _muEffWeight_IdIso_Do;
+
+    Float_t         _muEffWeight_Trig;
+    Float_t         _muEffWeight_Trig_Up;
+    Float_t         _muEffWeight_Trig_Do;
+
     Float_t         _eleEffWeight;
     Float_t         _eleEffWeight_Up;
     Float_t         _eleEffWeight_Do;
+
+    Float_t         _eleEffWeight_IdReco;
+    Float_t         _eleEffWeight_IdReco_Up;
+    Float_t         _eleEffWeight_IdReco_Do;
+
+    Float_t         _eleEffWeight_Trig;
+    Float_t         _eleEffWeight_Trig_Up;
+    Float_t         _eleEffWeight_Trig_Do;
 
     Float_t         _evtWeight;
     Float_t         _lumiWeight;
@@ -188,6 +204,14 @@ class makeAnalysisNtuple {
     std::vector<float>    _phoEffWeight;
     std::vector<float>    _phoEffWeight_Up;
     std::vector<float>    _phoEffWeight_Do;
+
+    std::vector<float>    _phoEffWeight_Id;
+    std::vector<float>    _phoEffWeight_Id_Up;
+    std::vector<float>    _phoEffWeight_Id_Do;
+
+    std::vector<float>    _phoEffWeight_eVeto;
+    std::vector<float>    _phoEffWeight_eVeto_Up;
+    std::vector<float>    _phoEffWeight_eVeto_Do;
 
 
 
@@ -388,7 +412,7 @@ class makeAnalysisNtuple {
     double SFtop(double pt);
     double topPtWeight();
     void loadBtagEff(string sampleType, string year);
-    float getBtagSF_1a(string sysType, BTagCalibrationReader reader);
+    float getBtagSF_1a(string sysType, BTagCalibrationReader reader, bool verbose=false);
     vector<float> getBtagSF_1c(string sysType, BTagCalibrationReader reader, vector<float> &btagSF);
 
     /* double getMuSF(int muInd, int systLevel); */
@@ -437,14 +461,30 @@ void makeAnalysisNtuple::InitBranches(){
     }
     outputTree->Branch("btagSF"                     , &_btagSF                      );
     outputTree->Branch("muEffWeight"                , &_muEffWeight                 );
+    outputTree->Branch("muEffWeight_IdIso"          , &_muEffWeight_IdIso           );
+    outputTree->Branch("muEffWeight_Trig"           , &_muEffWeight_Trig            );
     if (!isSystematicRun){
 	outputTree->Branch("muEffWeight_Up"             , &_muEffWeight_Up              );
 	outputTree->Branch("muEffWeight_Do"             , &_muEffWeight_Do              );
+
+	outputTree->Branch("muEffWeight_IdIso_Up"       , &_muEffWeight_IdIso_Up        );
+	outputTree->Branch("muEffWeight_IdIso_Do"       , &_muEffWeight_IdIso_Do        );
+
+	outputTree->Branch("muEffWeight_Trig_Up"        , &_muEffWeight_Trig_Up         );
+	outputTree->Branch("muEffWeight_Trig_Do"        , &_muEffWeight_Trig_Do         );
     }
     outputTree->Branch("eleEffWeight"               , &_eleEffWeight                );
+    outputTree->Branch("eleEffWeight_IdReco"        , &_eleEffWeight_IdReco         );
+    outputTree->Branch("eleEffWeight_Trig"          , &_eleEffWeight_Trig           );
     if (!isSystematicRun){
 	outputTree->Branch("eleEffWeight_Up"            , &_eleEffWeight_Up             );
 	outputTree->Branch("eleEffWeight_Do"            , &_eleEffWeight_Do             );
+
+	outputTree->Branch("eleEffWeight_IdReco_Up"     , &_eleEffWeight_IdReco_Up      );
+	outputTree->Branch("eleEffWeight_IdReco_Do"     , &_eleEffWeight_IdReco_Do      );
+
+	outputTree->Branch("eleEffWeight_Trig_Up"       , &_eleEffWeight_Trig_Up        );
+	outputTree->Branch("eleEffWeight_Trig_Do"       , &_eleEffWeight_Trig_Do        );
     }
     outputTree->Branch("phoEffWeight"               , &_phoEffWeight                );
     outputTree->Branch("loosePhoEffWeight"               , &_loosePhoEffWeight                );

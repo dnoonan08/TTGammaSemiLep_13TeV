@@ -20,8 +20,7 @@ class ElectronSF
 	trigHist = (TH2F*) trigFile->Get("EGamma_SF2D");
     }
 
-    double getEleSF(double pt, double eta, int systLevel);
-    bool verbose = false;
+    std::vector<double> getEleSF(double pt, double eta, int systLevel, bool verbose=false);
     
  private:
     TH2F* idHist;
@@ -31,7 +30,7 @@ class ElectronSF
 
 
 
-double ElectronSF::getEleSF(double pt, double eta, int systLevel){
+std::vector<double> ElectronSF::getEleSF(double pt, double eta, int systLevel, bool verbose){
 
 
     int eleEtaRegion_ID = -1;
@@ -115,8 +114,15 @@ double ElectronSF::getEleSF(double pt, double eta, int systLevel){
 
     double trig_SF = trig_SF_value + (systLevel-1)*trig_SF_error;
 
-    double eleEffSF=id_SF*reco_SF*trig_SF;
-    if (verbose) { cout << id_SF << "\t" << reco_SF << "\t" << trig_SF << endl;}
+    std::vector<double> eleEffSF {id_SF*reco_SF*trig_SF, id_SF, reco_SF, trig_SF};
+
+    if (verbose) { 
+	cout << "Electron Scale Factors: " << endl;
+	cout << "    ID   = " << id_SF << endl;
+	cout << "    Reco = " << reco_SF << endl;
+	cout << "    Trig = " << trig_SF << endl;
+	cout << "    TOTAL= " << eleEffSF.at(0) << endl;
+    }
 
     return eleEffSF;
 
