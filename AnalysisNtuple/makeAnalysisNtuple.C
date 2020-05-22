@@ -492,7 +492,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			       "MuEGammaScaleFactors/ele2017/sf_ele_2017_trig_v5.root");
 
 	
-	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2017/2017_PhotonsTight.root",
+	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2017/2017_PhotonsMedium.root",
 			     "MuEGammaScaleFactors/pho2017/PixelSeed_ScaleFactors_2017.root",
 			     2017);
 	
@@ -515,7 +515,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			       "MuEGammaScaleFactors/ele2018/sf_ele_2018_trig_v5.root");
 
 
-	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2018/2018_PhotonsTight.root",
+	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2018/2018_PhotonsMedium.root",
 			     "MuEGammaScaleFactors/pho2018/HasPix_2018.root",
 			     2018);
 
