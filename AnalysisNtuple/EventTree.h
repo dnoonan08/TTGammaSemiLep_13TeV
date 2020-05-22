@@ -166,6 +166,8 @@ class EventTree{
     Float_t         jetBtagDeepB_[200];
     Float_t         jetBtagDeepC_[200];
     Float_t         jetBtagDeepFlavB_[200];
+    Float_t         jetchEmEF_[200];
+    Float_t         jetneEmEF_[200];
     Int_t           jetHadFlvr_[200];
     Int_t           jetGenJetIdx_[200];
 

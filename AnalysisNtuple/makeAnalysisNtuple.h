@@ -51,6 +51,8 @@
 #include "eleSF_reader.h"
 #include "phoSF_reader.h"
 
+#include "PrefireWeights.h"
+
 #include "JEC/UncertaintySourcesList.h"
 
 #include "OverlapRemove.h"
@@ -86,6 +88,8 @@ class makeAnalysisNtuple {
     MuonSF* muSFb;
     ElectronSF* eleSF;
     PhotonSF* phoSF;
+
+    PrefireWeights* l1PrefireSF;
     
     TH2D* l_eff;
     TH2D* c_eff;
@@ -121,6 +125,10 @@ class makeAnalysisNtuple {
     Float_t         _FSRweight_Up;
     Float_t         _FSRweight_Do;
 
+
+    float _prefireSF;
+    float _prefireSF_Up;
+    float _prefireSF_Do;
 
     float _btagWeight_1a;
     float _btagWeight_1a_b_Up;
@@ -282,6 +290,14 @@ class makeAnalysisNtuple {
     std::vector<float>    _loosePhoEffWeight_Up;
     std::vector<float>    _loosePhoEffWeight_Do;
 
+    std::vector<float>    _loosePhoEffWeight_Id;
+    std::vector<float>    _loosePhoEffWeight_Id_Up;
+    std::vector<float>    _loosePhoEffWeight_Id_Do;
+
+    std::vector<float>    _loosePhoEffWeight_eVeto;
+    std::vector<float>    _loosePhoEffWeight_eVeto_Up;
+    std::vector<float>    _loosePhoEffWeight_eVeto_Do;
+
 
     Int_t           _nPhoNoID;
     std::vector<float>   _phoNoIDEt;
@@ -323,6 +339,14 @@ class makeAnalysisNtuple {
     std::vector<float>    _phoNoIDEffWeight;
     std::vector<float>    _phoNoIDEffWeight_Up;
     std::vector<float>    _phoNoIDEffWeight_Do;
+
+    std::vector<float>    _phoNoIDEffWeight_Id;
+    std::vector<float>    _phoNoIDEffWeight_Id_Up;
+    std::vector<float>    _phoNoIDEffWeight_Id_Do;
+
+    std::vector<float>    _phoNoIDEffWeight_eVeto;
+    std::vector<float>    _phoNoIDEffWeight_eVeto_Up;
+    std::vector<float>    _phoNoIDEffWeight_eVeto_Do;
 
 
 
@@ -467,6 +491,12 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("PUweight_Up"                , &_PUweight_Up                 );
 	outputTree->Branch("PUweight_Do"                , &_PUweight_Do                 );
     }
+
+    outputTree->Branch("prefireSF"                 , &_prefireSF                  );
+    if (!isSystematicRun){
+	outputTree->Branch("prefireSF_Up"                 , &_prefireSF_Up                  );
+	outputTree->Branch("prefireSF_Do"                 , &_prefireSF_Do                  );
+    }
     outputTree->Branch("btagWeight"                 , &_btagWeight                  );
     outputTree->Branch("btagWeight_1a"                 , &_btagWeight_1a                  );
     if (!isSystematicRun){
@@ -507,17 +537,39 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("eleEffWeight_Trig_Do"       , &_eleEffWeight_Trig_Do        );
     }
     outputTree->Branch("phoEffWeight"               , &_phoEffWeight                );
-    outputTree->Branch("loosePhoEffWeight"               , &_loosePhoEffWeight                );
-    outputTree->Branch("phoNoIDEffWeight"               , &_phoNoIDEffWeight                );
+    outputTree->Branch("phoEffWeight_Id"            , &_phoEffWeight_Id             );
+    outputTree->Branch("phoEffWeight_eVeto"         , &_phoEffWeight_eVeto          );
+
+    outputTree->Branch("loosePhoEffWeight"          , &_loosePhoEffWeight           );
+    outputTree->Branch("loosePhoEffWeight_Id"       , &_loosePhoEffWeight_Id        );
+    outputTree->Branch("loosePhoEffWeight_eVeto"    , &_loosePhoEffWeight_eVeto     );
+
+    outputTree->Branch("phoNoIDEffWeight"           , &_phoNoIDEffWeight            );
+    outputTree->Branch("phoNoIDEffWeight_Id"        , &_phoNoIDEffWeight_Id         );
+    outputTree->Branch("phoNoIDEffWeight_eVeto"     , &_phoNoIDEffWeight_eVeto      );
+
     if (!isSystematicRun){
 	outputTree->Branch("phoEffWeight_Up"            , &_phoEffWeight_Up             );
 	outputTree->Branch("phoEffWeight_Do"            , &_phoEffWeight_Do             );
+	outputTree->Branch("phoEffWeight_Id_Up"         , &_phoEffWeight_Id_Up          );
+	outputTree->Branch("phoEffWeight_Id_Do"         , &_phoEffWeight_Id_Do          );
+	outputTree->Branch("phoEffWeight_eVeto_Up"      , &_phoEffWeight_eVeto_Up       );
+	outputTree->Branch("phoEffWeight_eVeto_Do"      , &_phoEffWeight_eVeto_Do       );
 
 	outputTree->Branch("loosePhoEffWeight_Up"            , &_loosePhoEffWeight_Up             );
 	outputTree->Branch("loosePhoEffWeight_Do"            , &_loosePhoEffWeight_Do             );
+	outputTree->Branch("loosePhoEffWeight_Id_Up"         , &_loosePhoEffWeight_Id_Up          );
+	outputTree->Branch("loosePhoEffWeight_Id_Do"         , &_loosePhoEffWeight_Id_Do          );
+	outputTree->Branch("loosePhoEffWeight_eVeto_Up"      , &_loosePhoEffWeight_eVeto_Up       );
+	outputTree->Branch("loosePhoEffWeight_eVeto_Do"      , &_loosePhoEffWeight_eVeto_Do       );
 
 	outputTree->Branch("phoNoIDEffWeight_Up"            , &_phoNoIDEffWeight_Up             );
 	outputTree->Branch("phoNoIDEffWeight_Do"            , &_phoNoIDEffWeight_Do             );
+	outputTree->Branch("phoNoIDEffWeight_Id_Up"         , &_phoNoIDEffWeight_Id_Up          );
+	outputTree->Branch("phoNoIDEffWeight_Id_Do"         , &_phoNoIDEffWeight_Id_Do          );
+	outputTree->Branch("phoNoIDEffWeight_eVeto_Up"      , &_phoNoIDEffWeight_eVeto_Up       );
+	outputTree->Branch("phoNoIDEffWeight_eVeto_Do"      , &_phoNoIDEffWeight_eVeto_Do       );
+
 
 	outputTree->Branch("q2weight_Up"               , &_q2weight_Up               );
 	outputTree->Branch("q2weight_Do"               , &_q2weight_Do               );
@@ -807,14 +859,32 @@ void makeAnalysisNtuple::InitVariables()
     _phoEffWeight.clear();
     _phoEffWeight_Do.clear();
     _phoEffWeight_Up.clear();
+    _phoEffWeight_Id.clear();
+    _phoEffWeight_Id_Do.clear();
+    _phoEffWeight_Id_Up.clear();
+    _phoEffWeight_eVeto.clear();
+    _phoEffWeight_eVeto_Do.clear();
+    _phoEffWeight_eVeto_Up.clear();
 
     _loosePhoEffWeight.clear();
     _loosePhoEffWeight_Do.clear();
     _loosePhoEffWeight_Up.clear();
+    _loosePhoEffWeight_Id.clear();
+    _loosePhoEffWeight_Id_Do.clear();
+    _loosePhoEffWeight_Id_Up.clear();
+    _loosePhoEffWeight_eVeto.clear();
+    _loosePhoEffWeight_eVeto_Do.clear();
+    _loosePhoEffWeight_eVeto_Up.clear();
 
     _phoNoIDEffWeight.clear();
     _phoNoIDEffWeight_Do.clear();
     _phoNoIDEffWeight_Up.clear();
+    _phoNoIDEffWeight_Id.clear();
+    _phoNoIDEffWeight_Id_Do.clear();
+    _phoNoIDEffWeight_Id_Up.clear();
+    _phoNoIDEffWeight_eVeto.clear();
+    _phoNoIDEffWeight_eVeto_Do.clear();
+    _phoNoIDEffWeight_eVeto_Up.clear();
 
     _btagWeight.clear();
     _btagWeight_b_Up.clear();

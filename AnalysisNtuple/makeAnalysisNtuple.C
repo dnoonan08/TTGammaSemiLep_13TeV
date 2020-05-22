@@ -477,6 +477,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			     "MuEGammaScaleFactors/pho2016/ScalingFactors_80X_Summer16.root",
 			     2016);
 
+	l1PrefireSF = new PrefireWeights("MuEGammaScaleFactors/prefire/L1prefiring_photonpt_2016BtoH.root", "L1prefiring_photonpt_2016BtoH",
+					 "MuEGammaScaleFactors/prefire/L1prefiring_jetpt_2016BtoH.root", "L1prefiring_jetpt_2016BtoH");
+
 
     } else if (year=="2017") {
 	
@@ -494,6 +497,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			     2017);
 	
 	
+	l1PrefireSF = new PrefireWeights("MuEGammaScaleFactors/prefire/L1prefiring_photonpt_2017BtoF.root", "L1prefiring_photonpt_2017BtoF",
+					"MuEGammaScaleFactors/prefire/L1prefiring_jetpt_2017BtoF.root", "L1prefiring_jetpt_2017BtoF");
+
     } else if (year=="2018") {
 
 	muSFa = new MuonSF("MuEGammaScaleFactors/mu2018/EfficienciesStudies_2018_rootfiles_RunABCD_SF_ID.root",  "NUM_TightID_DEN_TrackerMuons_pt_abseta",
@@ -800,6 +806,22 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		    _btagWeight.push_back(1.0);
 		}				
 	    }
+
+	    if (year=="2016" || year=="2017"){
+		float prefireSF[3] = {1.,1.,1.};
+
+		l1PrefireSF->getPrefireSF(tree, prefireSF);
+
+		_prefireSF = prefireSF[1];
+		_prefireSF_Do = prefireSF[0];
+		_prefireSF_Up = prefireSF[2];
+	    }
+	    else{
+		_prefireSF = 1;
+		_prefireSF_Do = 1.;
+		_prefireSF_Up = 1.;
+	    }
+
 	    outputTree->Fill();
 	    if (tree->event_==eventNum){
 		cout << "--------------------------------------------" << endl;
@@ -808,6 +830,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		if (_phoEffWeight.size()>0){
 		    cout <<"  phoEffWeight="<<_phoEffWeight.at(0);
 		}
+		cout << "  prefire="<<_prefireSF;
 		cout<<endl;
 	    }
 	}
@@ -1177,6 +1200,13 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	    _loosePhoEffWeight_Do.push_back(phoWeights_Do.at(0));
 	    _loosePhoEffWeight_Up.push_back(phoWeights_Up.at(0));
 
+	    _loosePhoEffWeight_Id.push_back(phoWeights.at(1));
+	    _loosePhoEffWeight_Id_Do.push_back(phoWeights_Do.at(1));
+	    _loosePhoEffWeight_Id_Up.push_back(phoWeights_Up.at(1));
+
+	    _loosePhoEffWeight_eVeto.push_back(phoWeights.at(2));
+	    _loosePhoEffWeight_eVeto_Do.push_back(phoWeights_Do.at(2));
+	    _loosePhoEffWeight_eVeto_Up.push_back(phoWeights_Up.at(2));
 	}
 	
 	
@@ -1268,6 +1298,13 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	    _phoNoIDEffWeight_Do.push_back(phoWeights_Do.at(0));
 	    _phoNoIDEffWeight_Up.push_back(phoWeights_Up.at(0));
 
+	    _phoNoIDEffWeight_Id.push_back(phoWeights.at(1));
+	    _phoNoIDEffWeight_Id_Do.push_back(phoWeights_Do.at(1));
+	    _phoNoIDEffWeight_Id_Up.push_back(phoWeights_Up.at(1));
+
+	    _phoNoIDEffWeight_eVeto.push_back(phoWeights.at(2));
+	    _phoNoIDEffWeight_eVeto_Do.push_back(phoWeights_Do.at(2));
+	    _phoNoIDEffWeight_eVeto_Up.push_back(phoWeights_Up.at(2));
 	}
 	
 	
