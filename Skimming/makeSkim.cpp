@@ -222,9 +222,11 @@ int main(int ac, char** av){
 		hPUTrue_->Fill(tree->nPUTrue_);
 		if (isMC) {
 		    hEvents_->Fill(tree->genWeight_/abs(tree->genWeight_));
+		    hEvents_->Fill(0.,tree->genWeight_);
 		}
 		else {
 		    hEvents_->Fill(1.);
+		    hEvents_->Fill(0.);
 		}
 
 		evtPick->process_event(tree);
