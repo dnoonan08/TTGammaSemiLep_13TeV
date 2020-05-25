@@ -11,11 +11,6 @@
 #include <boost/program_options.hpp>
 
 
-// bool overlapRemovalTT(EventTree* tree);
-// bool overlapRemovalWZ(EventTree* tree);
-// bool overlapRemoval_Tchannel(EventTree* tree);
-
-
 int main(int ac, char** av){
 	if(ac < 3){
 		std::cout << "usage: ./makeSkim year outputFileName inputFile[s]" << std::endl;
@@ -199,7 +194,7 @@ int main(int ac, char** av){
 
 
 	TH1F* hPU_        = new TH1F("hPU",        "number of pileup",      200,  0, 200);
-	TH1F* hPUTrue_    = new TH1F("hPUTrue",    "number of true pilepu", 1000, 0, 200);
+	TH1F* hPUTrue_    = new TH1F("hPUTrue",    "number of true pilepu", 200, 0, 200);
 
 	TH1D* hEvents_    = new TH1D("hEvents",    "number of events (+/- event weight)",      3,  -1.5, 1.5);
 
@@ -218,8 +213,8 @@ int main(int ac, char** av){
 		}
 		tree->GetEntry(entry);
 		
-		hPU_->Fill(tree->nPU_);
-		hPUTrue_->Fill(tree->nPUTrue_);
+		hPU_->Fill(tree->nPU_, tree->genWeight_);
+		hPUTrue_->Fill(tree->nPUTrue_, tree->genWeight_);
 		if (isMC) {
 		    hEvents_->Fill(tree->genWeight_/abs(tree->genWeight_));
 		    hEvents_->Fill(0.,tree->genWeight_);
