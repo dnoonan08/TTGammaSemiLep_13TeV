@@ -90,7 +90,39 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
     }
     if (year=="2017"){
 	Pass_trigger_mu = (tree->HLT_IsoMu27_) || no_trigger;
-	Pass_trigger_ele = (tree->HLT_Ele32_WPTight_Gsf_ || tree->HLT_Ele32_WPTight_Gsf_L1DoubleEG_ ) || no_trigger;
+
+	bool allSingleEGL1or = (tree->L1_SingleEG24_ ||
+				tree->L1_SingleEG26_ ||
+				tree->L1_SingleEG30_ ||
+				tree->L1_SingleEG32_ ||
+				tree->L1_SingleEG34_ ||
+				tree->L1_SingleEG36_ ||
+				tree->L1_SingleEG38_ ||
+				tree->L1_SingleEG40_ ||
+				tree->L1_SingleEG42_ ||
+				tree->L1_SingleEG45_ ||
+				tree->L1_SingleEG50_ ||
+				tree->L1_SingleEG34er2p1_ ||
+				tree->L1_SingleEG36er2p1_ ||
+				tree->L1_SingleEG38er2p1_ ||
+				tree->L1_SingleIsoEG24er2p1_ ||
+				tree->L1_SingleIsoEG26er2p1_ ||
+				tree->L1_SingleIsoEG28er2p1_ ||
+				tree->L1_SingleIsoEG30er2p1_ ||
+				tree->L1_SingleIsoEG32er2p1_ ||
+				tree->L1_SingleIsoEG34er2p1_ ||
+				tree->L1_SingleIsoEG36er2p1_ ||
+				tree->L1_SingleIsoEG24_ ||
+				tree->L1_SingleIsoEG26_ ||
+				tree->L1_SingleIsoEG28_ ||
+				tree->L1_SingleIsoEG30_ ||
+				tree->L1_SingleIsoEG32_ ||
+				tree->L1_SingleIsoEG34_ ||
+				tree->L1_SingleIsoEG36_ ||
+				tree->L1_SingleIsoEG38_);
+	
+	Pass_trigger_ele = (tree->HLT_Ele32_WPTight_Gsf_L1DoubleEG_ && allSingleEGL1or) || no_trigger;
+
     }
     if (year=="2018"){
 	Pass_trigger_mu = (tree->HLT_IsoMu24_) || no_trigger;

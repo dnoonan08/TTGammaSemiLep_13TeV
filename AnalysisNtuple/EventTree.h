@@ -198,6 +198,38 @@ class EventTree{
     Bool_t   HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_;
     Bool_t   HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_;
     Bool_t   HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_;
+
+    Bool_t   L1_SingleEG24_;
+    Bool_t   L1_SingleEG26_;
+    Bool_t   L1_SingleEG30_;
+    Bool_t   L1_SingleEG32_;
+    Bool_t   L1_SingleEG34_;
+    Bool_t   L1_SingleEG36_;
+    Bool_t   L1_SingleEG38_;
+    Bool_t   L1_SingleEG40_;
+    Bool_t   L1_SingleEG42_;
+    Bool_t   L1_SingleEG45_;
+    Bool_t   L1_SingleEG50_;
+    Bool_t   L1_SingleEG34er2p1_;
+    Bool_t   L1_SingleEG36er2p1_;
+    Bool_t   L1_SingleEG38er2p1_;
+    Bool_t   L1_SingleIsoEG24er2p1_;
+    Bool_t   L1_SingleIsoEG26er2p1_;
+    Bool_t   L1_SingleIsoEG28er2p1_;
+    Bool_t   L1_SingleIsoEG30er2p1_;
+    Bool_t   L1_SingleIsoEG32er2p1_;
+    Bool_t   L1_SingleIsoEG34er2p1_;
+    Bool_t   L1_SingleIsoEG36er2p1_;
+    Bool_t   L1_SingleIsoEG24_;
+    Bool_t   L1_SingleIsoEG26_;
+    Bool_t   L1_SingleIsoEG28_;
+    Bool_t   L1_SingleIsoEG30_;
+    Bool_t   L1_SingleIsoEG32_;
+    Bool_t   L1_SingleIsoEG34_;
+    Bool_t   L1_SingleIsoEG36_;
+    Bool_t   L1_SingleIsoEG38_;
+
+
     
     Bool_t   Flag_goodVertices_ ;
     Bool_t   Flag_globalSuperTightHalo2016Filter_ ;
