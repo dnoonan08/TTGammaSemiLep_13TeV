@@ -146,21 +146,31 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
     if (year=="2016"){
-	PUfilename      = "PileupHists/Data_2016BCDGH_Pileup.root";
-	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
-	PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
+	// PUfilename      = "PileupHists/Data_2016BCDGH_Pileup.root";
+	// PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
+	// PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
+
+	PUfilename      = "PileupHists/New/PU_2016_35920_XSecCentral.root";
+	PUfilename_up   = "PileupHists/New/PU_2016_35920_XSecUp.root";
+	PUfilename_down = "PileupHists/New/PU_2016_35920_XSecDown.root";
     }
     if (year=="2017"){
-	//THIS NEEDS TO BE UPDATED WITH 2017 PILEUP FILES
-	PUfilename      = "PileupHists/Data_2017BCDEF_Pileup.root";
-	PUfilename_up   = "PileupHists/Data_2017BCDEF_Pileup_scaledUp.root";
-	PUfilename_down = "PileupHists/Data_2017BCDEF_Pileup_scaledDown.root";
+	// PUfilename      = "PileupHists/Data_2017BCDEF_Pileup.root";
+	// PUfilename_up   = "PileupHists/Data_2017BCDEF_Pileup_scaledUp.root";
+	// PUfilename_down = "PileupHists/Data_2017BCDEF_Pileup_scaledDown.root";
+
+	PUfilename      = "PileupHists/New/PU_2017_41530_XSecCentral.root";
+	PUfilename_up   = "PileupHists/New/PU_2017_41530_XSecUp.root";
+	PUfilename_down = "PileupHists/New/PU_2017_41530_XSecDown.root";
     }
     if (year=="2018"){
-	//THIS NEEDS TO BE UPDATED WITH 2018 PILEUP FILES
-	PUfilename      = "PileupHists/Data_2018ABCD_Pileup.root";
-	PUfilename_up   = "PileupHists/Data_2018ABCD_Pileup_scaledUp.root";
-	PUfilename_down = "PileupHists/Data_2018ABCD_Pileup_scaledDown.root";
+	// PUfilename      = "PileupHists/Data_2018ABCD_Pileup.root";
+	// PUfilename_up   = "PileupHists/Data_2018ABCD_Pileup_scaledUp.root";
+	// PUfilename_down = "PileupHists/Data_2018ABCD_Pileup_scaledDown.root";
+
+	PUfilename      = "PileupHists/New/PU_2018_59740_XSecCentral.root";
+	PUfilename_up   = "PileupHists/New/PU_2018_59740_XSecUp.root";
+	PUfilename_down = "PileupHists/New/PU_2018_59740_XSecDown.root";
     }
     if (eventNum > -1) {
 	string cut = "event=="+eventStr;
@@ -831,6 +841,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		    cout <<"  phoEffWeight="<<_phoEffWeight.at(0);
 		}
 		cout << "  prefire="<<_prefireSF;
+		cout << "  PUscale="<<_PUweight;
 		cout<<endl;
 	    }
 	}

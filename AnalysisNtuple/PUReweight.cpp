@@ -10,6 +10,8 @@ PUReweight::PUReweight(int nFiles, char** fileNames, std::string PUfilename){
 	pileupFile->Close();
 	TH1D* PUbackup;
 
+	int nBinsData = PUweightHist->GetNbinsX();
+
 	if(PUweightHist->GetNbinsX() != 200){
 		std::cout << "Wrong number of bins in the pileup histogram" << std::endl;
 		PUbackup = new TH1D("pileup_new","pileup_new",200,0,200);
@@ -48,6 +50,13 @@ PUReweight::PUReweight(int nFiles, char** fileNames, std::string PUfilename){
 		if (mcPU->GetNbinsX()>PUweightHist->GetNbinsX()){
 			mcPU->Rebin(mcPU->GetNbinsX()/PUweightHist->GetNbinsX());
 		}
+	}
+
+
+	if (nBinsData!=200){
+	    for(int ibin=nBinsData; ibin <= mcPU->GetNbinsX(); ibin++){
+		mcPU->SetBinContent(ibin,0);
+	    }
 	}
 
 	mcPU->Scale(1.0/mcPU->Integral());
