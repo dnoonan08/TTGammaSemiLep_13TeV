@@ -53,41 +53,41 @@ Queue 1
 Arguments = "TTGamma_SingleLept_erdOn 2016"
 Queue 1
 
-Arguments = "Data_SingleMu_b 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_c 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_d 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_e 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_f 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_g 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_h 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_b 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_c 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_d 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_e 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_f 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_g 2016 $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_h 2016 $INT(X) 5"
-Queue 5
+Arguments = "Data_SingleMu_b 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleMu_c 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleMu_d 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleMu_e 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleMu_f 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleMu_g 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleMu_h 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_b 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_c 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_d 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_e 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_f 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_g 2016 $INT(X) 10"
+Queue 10
+Arguments = "Data_SingleEle_h 2016 $INT(X) 10"
+Queue 10
 
-Arguments = "TTbarPowheg_Dilepton 2016 $INT(X) 5"
-Queue 5
-Arguments = "TTbarPowheg_Hadronic 2016 $INT(X) 5"
-Queue 5
-Arguments = "TTbarPowheg_Semilept 2016 $INT(X) 5"
-Queue 5
+Arguments = "TTbarPowheg_Dilepton 2016 $INT(X) 10"
+Queue 10
+Arguments = "TTbarPowheg_Hadronic 2016 $INT(X) 10"
+Queue 10
+Arguments = "TTbarPowheg_Semilept 2016 $INT(X) 10"
+Queue 10
 
 Arguments = "W1jets 2016"
 Queue 1
@@ -109,17 +109,17 @@ Queue 1
 Arguments = "DYjetsM10to50 2016"
 Queue 1
 
-Arguments = "DYjetsM50_ext1 2016 $INT(X) 5"
-Queue 5
-Arguments = "DYjetsM50_ext2 2016 $INT(X) 5"
-Queue 5
+Arguments = "DYjetsM50_ext1 2016 $INT(X) 10"
+Queue 10
+Arguments = "DYjetsM50_ext2 2016 $INT(X) 10"
+Queue 10
 
 Arguments = "ST_s_channel 2016"
 Queue 1
-Arguments = "ST_t_channel 2016"
-Queue 1
-Arguments = "ST_tbar_channel 2016"
-Queue 1
+Arguments = "ST_t_channel 2016 $INT(X) 5"
+Queue 5
+Arguments = "ST_tbar_channel 2016 $INT(X) 5"
+Queue 5
 Arguments = "ST_tW_channel 2016"
 Queue 1
 Arguments = "ST_tbarW_channel 2016"
@@ -167,26 +167,26 @@ Arguments = "WWTo4Q_powheg 2016"
 Queue 1
 Arguments = "WZTo1L3Nu_amcatnlo 2016" 
 Queue 1
-Arguments = "WZTo1L1Nu2Q_amcatnlo 2016" 
-Queue 1
-Arguments = "WZTo2L2Q_amcatnlo 2016" 
-Queue 1
+Arguments = "WZTo1L1Nu2Q_amcatnlo 2016 $INT(X) 5" 
+Queue 5
+Arguments = "WZTo2L2Q_amcatnlo 2016 $INT(X) 10" 
+Queue 5
 Arguments = "WZTo3LNu_powheg 2016" 
 Queue 1
-Arguments = "WZTo3LNu_powheg_ext1 2016" 
-Queue 1
+Arguments = "WZTo3LNu_powheg_ext1 2016 $INT(X) 10" 
+Queue 5
 Arguments = "ZZTo2L2Q_powheg 2016" 
 Queue 1
 Arguments = "ZZTo2L2Nu_powheg 2016" 
 Queue 1
-Arguments = "ZZTo2L2Nu_powheg_ext1 2016" 
-Queue 1
-Arguments = "ZZTo2Q2Nu_amcatnlo 2016" 
-Queue 1
+Arguments = "ZZTo2L2Nu_powheg_ext1 2016 $INT(X) 10" 
+Queue 10
+Arguments = "ZZTo2Q2Nu_amcatnlo 2016 $INT(X) 5" 
+Queue 5
 Arguments = "ZZTo2Q2Nu_powheg 2016" 
 Queue 1
 Arguments = "ZZTo4L_powheg 2016" 
-Queue 1
+Queue 
 
 Arguments = "VVTo2L2Nu_amcatnlo 2016"
 Queue 1
@@ -195,10 +195,12 @@ Queue 1
 
 Arguments = "WGamma 2016"
 Queue 1
-Arguments = "ZGamma_01J_5f_lowMass 2016"
-Queue 1
-Arguments = "ZGamma_01J_LoosePt 2016" 
-Queue 1
+Arguments = "ZGamma_01J_5f_lowMass 2016 $INT(X) 5"
+Queue 5
+Arguments = "ZGamma_01J_LoosePt 2016 $INT(X) 5" 
+Queue 5
+Arguments = "ZGamma_01J_lowMLL_lowGPt 2016 $INT(X) 5" 
+Queue 5
 
 Arguments = "TGJets 2016"
 Queue 1

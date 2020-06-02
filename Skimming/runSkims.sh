@@ -27,7 +27,7 @@ else
     jobNum=" ${job}of${nJobTotal}"
 fi
 
-outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims/"
+outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/"
 
 source fileLists_${year}.sh
 varname=${channel}_FileList_${year}

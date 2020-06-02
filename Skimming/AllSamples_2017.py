@@ -116,6 +116,8 @@ sampleList_2017 = {
 
 'ZGamma_01J_LoosePt' : '/ZGToLLG_01J_LoosePtlPtg_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/'+MCType+'/NANOAODSIM',
 
+'ZGamma_01J_lowMLL_lowGPt': '/ZGToLLG_01J_5f_lowMLL_lowGPt_TuneCP5_13TeV-amcatnloFXFX-pythia8/'+MCType+'/NANOAODSIM',
+
 'TGJets' : '/TGJets_TuneCP5_13TeV_amcatnlo_madspin_pythia8/'+MCType+'/NANOAODSIM',
 
 'GJets_HT40To100'       : '/GJets_HT-40To100_TuneCP5_13TeV-madgraphMLM-pythia8/'+MCType+'/NANOAODSIM',
