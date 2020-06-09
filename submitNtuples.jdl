@@ -5,7 +5,7 @@ should_transfer_files = YES
 WhenToTransferOutput  = ON_EXIT
 notification = never
 
-Transfer_Input_Files = AnalysisNtuple/makeAnalysisNtuple, sampleList_2016.sh, sampleList_2017.sh, sampleList_2018.sh, RequiredScaleFactors.tgz
+Transfer_Input_Files = AnalysisNtuple/makeAnalysisNtuple, sampleList_2016.sh, sampleList_2017.sh, sampleList_2018.sh
 
 Output = condor/nTuples_$(cluster)_$(process).stdout
 Error  = condor/nTuples_$(cluster)_$(process).stderr

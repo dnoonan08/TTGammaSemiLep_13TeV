@@ -1,0 +1,7 @@
+source RequiredScaleFactors.sh
+
+xrdcp -f RequiredScaleFactors.tgz root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/AnalysisNtuples
+
+condor_submit submitNtuples.jdl
+condor_submit submitNtuples_Dilep.jdl
+condor_submit submitNtuples_QCD.jdl
