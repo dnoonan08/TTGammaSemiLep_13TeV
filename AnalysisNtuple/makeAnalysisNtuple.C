@@ -681,7 +681,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		_btagWeight_b_Do = getBtagSF_1c("b_down",  reader, _btagSF_b_Do);				
 		_btagWeight_l_Up = getBtagSF_1c("l_up",    reader, _btagSF_l_Up);
 		_btagWeight_l_Do = getBtagSF_1c("l_down",  reader, _btagSF_l_Do);				
-				
+
 		if (evtPick->passPresel_mu) {
 		    vector<double> muWeights;
 		    vector<double> muWeights_Do;
@@ -1639,15 +1639,15 @@ void makeAnalysisNtuple::loadBtagEff(string sampleName, string year){
     std::string fName = "BtagSF/btag_efficiencies_"+year+".root";
     std::string effType = "Other";
     if (sampleType.find("TTGamma") != std::string::npos){
-	sampleName = "Top";
+	effType = "Top";
     }
     if (sampleType.find("TTbar") != std::string::npos){
-	sampleName = "Top";
+	effType = "Top";
     }
     
-    std::string leffName = sampleName+"_l_efficiency";
-    std::string ceffName = sampleName+"_c_efficiency";
-    std::string beffName = sampleName+"_b_efficiency";
+    std::string leffName = effType+"_l_efficiency";
+    std::string ceffName = effType+"_c_efficiency";
+    std::string beffName = effType+"_b_efficiency";
 
     TFile* inputFile = TFile::Open(fName.c_str(),"read");
     l_eff = (TH2D*) inputFile->Get(leffName.c_str());
@@ -1685,6 +1685,7 @@ float makeAnalysisNtuple::getBtagSF_1a(string sysType, BTagCalibrationReader rea
     }
 
     for(std::vector<int>::const_iterator jetInd = selector->Jets.begin(); jetInd != selector->Jets.end(); jetInd++){
+
 	jetPt = tree->jetPt_[*jetInd];
 	jetEta = fabs(tree->jetEta_[*jetInd]);
 	jetFlavor = abs(tree->jetHadFlvr_[*jetInd]);
