@@ -16,7 +16,7 @@ else
 	eval `scramv1 project CMSSW CMSSW_10_2_10`
 	cd CMSSW_10_2_10
 	eval `scramv1 runtime -sh`
-	cd -
+	cd - ;
 
 fi
 
@@ -44,5 +44,5 @@ else
     echo "Cleanup"
     rm -rf CMSSW_10_2_10
     rm *root
-    rm makeSkim    
+    rm makeSkim ;
 fi

@@ -154,8 +154,8 @@ Arguments = "ZZTo2Q2Nu_amcatnlo 2017 $INT(X) 5"
 Queue 5
 Arguments = "ZZTo4L_amcatnlo 2017 $INT(X) 5"
 Queue 5
-Arguments = "ZZTo4L_powheg_ext1 2017"
-Queue 1
+Arguments = "ZZTo4L_powheg_ext1 2017 $INT(X) 10""
+Queue 10
 Arguments = "ZZTo4L_powheg_ext2 2017 $INT(X) 10"
 Queue 10
 Arguments = "VVTo2L2Nu_amcatnlo 2017"
