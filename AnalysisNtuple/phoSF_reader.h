@@ -88,14 +88,14 @@ std::vector<double> PhotonSF::getPhoSF(double pt, double eta, int systLevel, boo
 	    eVeto_SF = eVetoHist_1D->GetBinContent(4);
 	    eVeto_error = eVetoHist_1D->GetBinError(4);
 	}
-    } else if (year==2017){
+    } else if (year==2018){
 	if (abs(eta)< 1.5){
 	    if (pt < 30){eVeto_SF = eVetoHist_2D->GetBinContent(1,1); eVeto_error = eVetoHist_Unc_2D->GetBinError(1,1);}
-	    else if (pt < 60){eVeto_SF = eVetoHist_2D->GetBinContent(1,2); eVeto_error = eVetoHist_Unc_2D->GetBinError(1,2);}
-	    else {eVeto_SF = eVetoHist_2D->GetBinContent(1,3); eVeto_error = eVetoHist_Unc_2D->GetBinError(1,3);}
+	    else if (pt < 60){eVeto_SF = eVetoHist_2D->GetBinContent(2,1); eVeto_error = eVetoHist_Unc_2D->GetBinError(2,1);}
+	    else {eVeto_SF = eVetoHist_2D->GetBinContent(3,1); eVeto_error = eVetoHist_Unc_2D->GetBinError(3,1);}
 	}else{
-	    if (pt < 30){eVeto_SF = eVetoHist_2D->GetBinContent(3,1); eVeto_error = eVetoHist_Unc_2D->GetBinError(3,1);}
-	    else if (pt < 60){eVeto_SF = eVetoHist_2D->GetBinContent(3,2); eVeto_error = eVetoHist_Unc_2D->GetBinError(3,2);}
+	    if (pt < 30){eVeto_SF = eVetoHist_2D->GetBinContent(1,3); eVeto_error = eVetoHist_Unc_2D->GetBinError(1,3);}
+	    else if (pt < 60){eVeto_SF = eVetoHist_2D->GetBinContent(2,3); eVeto_error = eVetoHist_Unc_2D->GetBinError(2,3);}
 	    else {eVeto_SF = eVetoHist_2D->GetBinContent(3,3); eVeto_error = eVetoHist_Unc_2D->GetBinError(3,3);}
 	}
     }

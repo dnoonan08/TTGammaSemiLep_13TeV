@@ -80,6 +80,8 @@ class makeAnalysisNtuple {
 
     bool isSystematicRun;
 
+    bool useGenWeightScaling;
+
     bool getGenScaleWeights;
     bool applypdfweight;
     bool applyqsquare;

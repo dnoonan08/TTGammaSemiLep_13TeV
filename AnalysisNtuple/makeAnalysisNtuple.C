@@ -425,12 +425,24 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (year=="2018") luminosity=59740.565202;
 
     double nMC_total = 0.;
+    useGenWeightScaling = true;
+
+    double nMC_thisFile = 0.;
     char** fileNames = av+4;
     for(int fileI=0; fileI<ac-4; fileI++){
 	TFile *_file = TFile::Open(fileNames[fileI],"read");
 	TH1D *hEvents = (TH1D*) _file->Get("hEvents");
-	nMC_total = (hEvents->GetBinContent(2)); //sum of gen weights
-	if (nMC_total==0){ nMC_total = (hEvents->GetBinContent(3) - hEvents->GetBinContent(1)); }  //positive weight - neg weight 
+	nMC_thisFile = (hEvents->GetBinContent(2)); //sum of gen weights
+	if (nMC_thisFile==0) {useGenWeightScaling=false;} //if bin isn't filled, fall back to using positive - negative bins
+	nMC_total += nMC_thisFile;
+    }
+
+    if (!useGenWeightScaling){
+	for(int fileI=0; fileI<ac-4; fileI++){
+	    TFile *_file = TFile::Open(fileNames[fileI],"read");
+	    TH1D *hEvents = (TH1D*) _file->Get("hEvents");
+	    nMC_total += (hEvents->GetBinContent(3) - hEvents->GetBinContent(1));  //positive weight - neg weight 
+	}
     }
 	
     if (nMC_total==0){
@@ -918,11 +930,11 @@ void makeAnalysisNtuple::FillEvent(std::string year)
     _nGoodVtx	 = tree->nGoodVtx_;
     // _isPVGood	 = tree->isPVGood_;
     // _rho		 = tree->rho_;
-    
-    _evtWeight       = _lumiWeight *  tree->genWeight_; 
-    // _evtWeight       = _lumiWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
-
-    //    _evtWeightAlt    = _lumiWeightAlt *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
+    if (useGenWeightScaling){
+	_evtWeight       = _lumiWeight *  tree->genWeight_; 
+    }else{
+	_evtWeight       = _lumiWeight *  ((tree->genWeight_ >= 0) ? 1 : -1);  //event weight needs to be positive or negative depending on sign of genWeight (to account for mc@nlo negative weights)
+    }
 
     if (_isData) {
 	_evtWeight= 1.;
