@@ -339,18 +339,18 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if( systematicType=="JER_up")       {jervar012_g = 2; selector->JERsystLevel=2; isSystematicRun = true;}
     if( systematicType=="JER_down")     {jervar012_g = 0; selector->JERsystLevel=0; isSystematicRun = true;}
     if(systematicType=="phosmear_down") {phosmear012_g=0;selector->phosmearLevel=0; isSystematicRun = true;}
-    if(systematicType=="phosmear_up") {phosmear012_g=2;selector->phosmearLevel=2; isSystematicRun = true;}
+    if(systematicType=="phosmear_up")   {phosmear012_g=2;selector->phosmearLevel=2; isSystematicRun = true;}
     if(systematicType=="elesmear_down") {elesmear012_g=0;selector->elesmearLevel=0; isSystematicRun = true;}
-    if(systematicType=="elesmear_up") {elesmear012_g=2;selector->elesmearLevel=2; isSystematicRun = true;}
+    if(systematicType=="elesmear_up")   {elesmear012_g=2;selector->elesmearLevel=2; isSystematicRun = true;}
     if(systematicType=="phoscale_down") {phoscale012_g=0;selector->phoscaleLevel=0; isSystematicRun = true;} 
-    if(systematicType=="phoscale_up") {phoscale012_g=2;selector->phoscaleLevel=2; isSystematicRun = true;}
+    if(systematicType=="phoscale_up")   {phoscale012_g=2;selector->phoscaleLevel=2; isSystematicRun = true;}
     if(systematicType=="elescale_down") {elescale012_g=0;selector->elescaleLevel=0; isSystematicRun = true;}
-    if(systematicType=="elescale_up") {elescale012_g=2;  selector->elescaleLevel=2; isSystematicRun = true;}
+    if(systematicType=="elescale_up")   {elescale012_g=2;  selector->elescaleLevel=2; isSystematicRun = true;}
 
     // if( systematicType=="pho_up")       {phosmear012_g = 2;}
     // if( systematicType=="pho_down")     {phosmear012_g = 0;}
-    if( systematicType=="musmear_up")   {musmear012_g = 2; isSystematicRun = true;}
-    if( systematicType=="musmear_down") {musmear012_g = 0; isSystematicRun = true;}
+    if( systematicType=="musmear_up") {musmear012_g = 2; isSystematicRun = true;}
+    if( systematicType=="musmear_do") {musmear012_g = 0; isSystematicRun = true;}
     //	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
     //	if( systematicType=="elesmear_down"){elesmear012_g = 0;}
     if( systematicType=="Dilep")     {dileptonsample =true; evtPick->Nmu_eq=2; evtPick->Nele_eq=2;}
@@ -639,7 +639,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 	if( isMC && doOverlapInvert_ZG){
 	    //if (!overlapRemovalZJets(tree, tree->event_==eventNum)){
-	    if (overlapRemoval(tree, 15., 2.6, 0.05, tree->event_==eventNum)){
+	    if (!overlapRemoval(tree, 15., 2.6, 0.05, tree->event_==eventNum)){
 		count_overlap++;
 		continue;
 	    }

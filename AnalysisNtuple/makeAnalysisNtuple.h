@@ -597,7 +597,9 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("nGoodVtx"                   , &_nGoodVtx                    ); 
     /* outputTree->Branch("isPVGood"                   , &_isPVGood                    );  */
     /* outputTree->Branch("rho"                        , &_rho                         );  */
-    outputTree->Branch("genMET"                     , &_genMET                      ); 
+    if (!isSystematicRun){
+	outputTree->Branch("genMET"                     , &_genMET                      ); 
+    }
     outputTree->Branch("pfMET"                      , &_pfMET                       );
     outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
     outputTree->Branch("WtransMass"                 , &_WtransMass                  );
@@ -628,7 +630,9 @@ void makeAnalysisNtuple::InitBranches(){
     /* outputTree->Branch("phoPFNeuIso"                , &_phoPFNeuIso                 );  */
     outputTree->Branch("phoTightID"                 , &_phoTightID                  ); 
     outputTree->Branch("phoMediumID"                , &_phoMediumID                 ); 
-    outputTree->Branch("phoGenMatchInd"                , &_phoGenMatchInd                 ); 
+    if (!isSystematicRun){
+	outputTree->Branch("phoGenMatchInd"                , &_phoGenMatchInd                 ); 
+    }
     outputTree->Branch("phoMassLepGamma"                 , &_phoMassLepGamma                  ); 
 
     outputTree->Branch("nLoosePho"                       , &_nLoosePho                        ); 
@@ -648,7 +652,9 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("loosePhoMVAId"                 , &_loosePhoMVAID                  ); 
     outputTree->Branch("loosePhoMVAId17v1"             , &_loosePhoMVAID17v1              ); 
 
-    outputTree->Branch("loosePhoGenMatchInd"                 , &_loosePhoGenMatchInd                  ); 
+    if (!isSystematicRun){
+	outputTree->Branch("loosePhoGenMatchInd"                 , &_loosePhoGenMatchInd                  ); 
+    }
     outputTree->Branch("loosePhoMassLepGamma"                  , &_loosePhoMassLepGamma                   ); 
 	
     outputTree->Branch("loosePhoMediumIDFunction"        , &_loosePhoMediumIDFunction         ); 
@@ -676,7 +682,9 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("phoNoIDMVAId"                 , &_phoNoIDMVAID                  ); 
     outputTree->Branch("phoNoIDMVAId17v1"             , &_phoNoIDMVAID17v1              ); 
 
-    outputTree->Branch("phoNoIDGenMatchInd"                 , &_phoNoIDGenMatchInd                  ); 
+    if (!isSystematicRun){
+	outputTree->Branch("phoNoIDGenMatchInd"                 , &_phoNoIDGenMatchInd                  ); 
+    }
     outputTree->Branch("phoNoIDMassLepGamma"                  , &_phoNoIDMassLepGamma                   ); 
 	
     outputTree->Branch("phoNoIDMediumIDFunction"        , &_phoNoIDMediumIDFunction         ); 
@@ -709,12 +717,14 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("jetPhi"                      , &_jetPhi                     ); 
     /* outputTree->Branch("jetRawPt"                    , &_jetRawPt                   );  */
     /* outputTree->Branch("jetArea"                     , &_jetArea                    );  */
-    outputTree->Branch("jetCMVA"  , &_jetCMVA );
-    outputTree->Branch("jetCSVV2"  , &_jetCSVV2 );
-    outputTree->Branch("jetDeepB"  , &_jetDeepB );
-    outputTree->Branch("jetDeepC"  , &_jetDeepC );
+    if (!isSystematicRun){
+	/* outputTree->Branch("jetCMVA"  , &_jetCMVA ); */
+	/* outputTree->Branch("jetCSVV2"  , &_jetCSVV2 ); */
+	outputTree->Branch("jetDeepB"  , &_jetDeepB );
+	/* outputTree->Branch("jetDeepC"  , &_jetDeepC ); */
 
-    outputTree->Branch("jetGenJetIdx"  , &_jetGenJetIdx );
+	outputTree->Branch("jetGenJetIdx"  , &_jetGenJetIdx );
+    }
 	
     /* if (!tree->isData_){ */
     /* 	outputTree->Branch("jetPartonID"                 , &_jetPartonID                );  */
@@ -747,7 +757,7 @@ void makeAnalysisNtuple::InitBranches(){
 	outputTree->Branch("genStatusFlag"              , &_genStatusFlag           );
 	outputTree->Branch("genPDGID"	                , &_genPDGID	            ); 
 	outputTree->Branch("genMomIdx"                  , &_genMomIdx               );
-	outputTree->Branch("genScaleSystWeights"        , &_genScaleSystWeights     );
+	//	outputTree->Branch("genScaleSystWeights"        , &_genScaleSystWeights     );
 
 
 	outputTree->Branch("nGenJet"  	                     , &_nGenJet	         ); 
