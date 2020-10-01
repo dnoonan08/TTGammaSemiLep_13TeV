@@ -37,11 +37,11 @@ source sampleList_${year}.sh
 varname=${sample}_${year}
 
 if [ -z ${job} ] ; then
-    echo "./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep . ${!varname}"
-    ./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep . ${!varname};
+    echo "./AnalysisNtuple/makeAnalysisNtuple Dilep ${year} ${sample} . ${!varname}"
+    ./AnalysisNtuple/makeAnalysisNtuple Dilep ${year} ${sample} . ${!varname};
 else
-    echo "./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep ${job}of${nJobs} . ${!varname}"
-    ./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__Dilep ${job}of${nJobs} . ${!varname};
+    echo "./AnalysisNtuple/makeAnalysisNtuple Dilep ${year} ${sample} ${job}of${nJobs} . ${!varname}"
+    ./AnalysisNtuple/makeAnalysisNtuple Dilep ${year} ${sample} ${job}of${nJobs} . ${!varname};
 fi
 
 
