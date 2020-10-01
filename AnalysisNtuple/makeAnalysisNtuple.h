@@ -21,7 +21,7 @@
 #include "ParsePhotonID.h"
 #include "PUReweight.h"
 #include "METzCalculator.h"
-#include "TopEventCombinatorics.h"
+#include "TopEventCombinatoricsV2.h"
 
 #include "EventTree.h"
 #include "EventPick.h"
@@ -186,12 +186,22 @@ class makeAnalysisNtuple {
         
     Float_t         _pfMET;
     Float_t         _pfMETPhi;
+    Float_t         _nu_pz;
+    Float_t         _nu_pz_other;
     Float_t         _WtransMass;
     Float_t         _Mt_blgammaMET;
     Float_t         _Mt_lgammaMET;
     Float_t         _M_bjj;
     Float_t         _M_bjjgamma;
     Float_t         _M_jj;
+    Float_t         _TopHad_pt;
+    Float_t         _TopHad_eta;
+    Float_t         _TopLep_pt;
+    Float_t         _TopLep_eta;
+    Float_t         _TopLep_charge;
+
+    Float_t         _chi2;
+
     Bool_t          _MassCuts;
 
     //	Float_t         _HT;
@@ -437,9 +447,15 @@ class makeAnalysisNtuple {
     TLorentzVector phoVector2;
     std::vector<TLorentzVector> ljetVectors;
     std::vector<TLorentzVector> bjetVectors;
+    std::vector<TLorentzVector> jetVectors;
+
+    float lepCharge;
 
     std::vector<double> ljetResVectors;
     std::vector<double> bjetResVectors;
+
+    std::vector<double> jetResolutionVectors;
+    std::vector<double> jetBtagVectors;
 
     TLorentzVector bhad;
     TLorentzVector blep;
@@ -602,6 +618,8 @@ void makeAnalysisNtuple::InitBranches(){
     }
     outputTree->Branch("pfMET"                      , &_pfMET                       );
     outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
+    outputTree->Branch("nu_pz"                      , &_nu_pz                       );
+    outputTree->Branch("nu_pz_other"                , &_nu_pz_other                 );
     outputTree->Branch("WtransMass"                 , &_WtransMass                  );
 
     outputTree->Branch("Mt_blgammaMET"              , &_Mt_blgammaMET               );
@@ -610,6 +628,14 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("M_bjjgamma"                 , &_M_bjjgamma                  );
     outputTree->Branch("M_jj"                       , &_M_jj                        );
     outputTree->Branch("MassCuts"                   , &_MassCuts                    );
+    outputTree->Branch("TopHad_pt"                  , &_TopHad_pt                   );
+    outputTree->Branch("TopHad_eta"                 , &_TopHad_eta                  );
+    outputTree->Branch("TopLep_pt"                  , &_TopLep_pt                   );
+    outputTree->Branch("TopLep_eta"                 , &_TopLep_eta                  );
+    outputTree->Branch("TopLep_charge"              , &_TopLep_charge               );
+
+    outputTree->Branch("chi2"                       , &_chi2               );
+
 
     outputTree->Branch("DiphoMass"                  , &_DiphoMass                   ); 
     outputTree->Branch("DilepMass"                  , &_DilepMass       			);
@@ -811,6 +837,8 @@ void makeAnalysisNtuple::InitVariables()
 
     _pfMET		     = -9999;
     _pfMETPhi	     = -9999;
+    _nu_pz           = -9999;
+    _nu_pz_other     = -9999;
     _WtransMass      = -9999;
 
     _Mt_blgammaMET   = -9999;
@@ -819,6 +847,13 @@ void makeAnalysisNtuple::InitVariables()
     _M_bjjgamma      = -9999;
     _M_jj            = -9999;
     _MassCuts        = false;
+    _TopHad_pt       = -9999;
+    _TopHad_eta      = -9999;
+    _TopLep_pt       = -9999;
+    _TopLep_eta      = -9999;
+    _TopLep_charge   = -9999;
+
+    _chi2   = -9999;
 
     _HT		 = -9999;
     _DilepMass	 = -9999;

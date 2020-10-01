@@ -87,6 +87,9 @@ public:
 	std::vector<int> Jets;
 	std::vector<int> bJets;
         std::vector<int> FwdJets;
+
+	std::vector<double> jet_resolution;
+	std::vector<bool>   jet_isTagged;
 	
 	std::vector<double> MuRelIso_corr;
 

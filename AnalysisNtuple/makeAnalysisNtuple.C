@@ -23,6 +23,7 @@ int elescale012_g = 1;
 
 
 bool dileptonsample;
+bool qcdSample;
 
 auto startClock = std::chrono::high_resolution_clock::now();
 
@@ -76,6 +77,34 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	//	cout  << endl;
 	eventStr = tempEventStr;
 	//cout << eventStr << "  "  << eventNum << endl;
+    }
+    dileptonsample = false;
+    qcdSample = false;
+
+    if (std::string(av[1])=="dilepton" || 
+        std::string(av[1])=="dilept" ||
+        std::string(av[1])=="dilep" ||
+        std::string(av[1])=="Dilepton" || 
+        std::string(av[1])=="Dilept" ||
+        std::string(av[1])=="Dilep"){
+  
+        dileptonsample=true;
+        for (int i = 1; i < ac-1; i++){
+            av[i] = av[i+1];
+	}
+	ac = ac-1;
+    }
+
+    if (std::string(av[1])=="qcd" || 
+        std::string(av[1])=="qcdCR" ||
+        std::string(av[1])=="QCD" ||
+        std::string(av[1])=="QCDCR"){
+  
+        qcdSample=true;
+        for (int i = 1; i < ac-1; i++){
+            av[i] = av[i+1];
+	}
+	ac = ac-1;
     }
 
     //check if NofM type format is before output name (for splitting jobs)
@@ -238,7 +267,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	loadBtagEff(sampleType,year);
 
     }
-    
+
+    topEvent.SetBtagThresh(selector->btag_cut_DeepCSV);
+
+
     BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
 				 "central",             // central sys type
 				 {"up", "down"});      // other sys types
@@ -258,7 +290,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     reader.load(calib,                // calibration instance
 		BTagEntry::FLAV_UDSG,    // btag flavour
 		"incl");               // measurement type
-    
+
+
     bool doOverlapInvert_TTG = false;
     bool doOverlapRemoval_TT = false;
     bool doOverlapInvert_WG = false;	
@@ -312,7 +345,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
     
 
-    dileptonsample = false;
     string JECsystLevel = "";
     if( systematicType.substr(0,3)=="JEC" ){
 	int pos = systematicType.find("_");
@@ -353,8 +385,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if( systematicType=="musmear_do") {musmear012_g = 0; isSystematicRun = true;}
     //	if( systematicType=="elesmear_up")  {elesmear012_g = 2;}
     //	if( systematicType=="elesmear_down"){elesmear012_g = 0;}
-    if( systematicType=="Dilep")     {dileptonsample =true; evtPick->Nmu_eq=2; evtPick->Nele_eq=2;}
-    if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->QCDselect = true;}
+
+
+
+    if(dileptonsample)     {evtPick->Nmu_eq=2; evtPick->Nele_eq=2;}
+    if(qcdSample)       {selector->QCDselect = true; evtPick->QCDselect = true;}
     //    if( systematicType=="QCDcr")       {selector->QCDselect = true; evtPick->ZeroBExclusive=true; evtPick->QCDselect = true;}
     std::cout << "Dilepton Sample :" << dileptonsample << std::endl;
     std::cout << "JEC: " << jecvar012_g << "  JER: " << jervar012_g << " eleScale "<< elescale012_g << " phoScale" << phoscale012_g << "   ";
@@ -389,6 +424,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	//	outputFileName = outputDirectory + "/"+systematicType + "_" +sampleType+"_"+year+"_AnalysisNtuple.root";
     }
 
+    if (dileptonsample){
+	outputFileName.replace(0,outputDirectory.size()+1, outputDirectory + "/Dilep_");
+    }
+    if (qcdSample){
+	outputFileName.replace(0,outputDirectory.size()+1, outputDirectory + "/QCDCR_");
+    }
     if (saveCutflow) {
 	outputFileName.replace(outputFileName.find("AnalysisNtuple"),14, "Cutflow");
     }
@@ -401,9 +442,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (saveCutflow) {
 	evtPick->init_cutflow_files(outputFileName);
     }
+    cout << "HERE" << endl;
     PUReweight* PUweighter = new PUReweight(ac-4, av+4, PUfilename);
     PUReweight* PUweighterUp = new PUReweight(ac-4, av+4, PUfilename_up);
     PUReweight* PUweighterDown = new PUReweight(ac-4, av+4, PUfilename_down);
+    cout << "DONE" << endl;
     tree->GetEntry(0);
         
     std::cout << "isMC: " << isMC << endl;
@@ -985,6 +1028,7 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 			       tree->eleEta_[eleInd] + tree->eleDeltaEtaSC_[eleInd],
 			       tree->elePhi_[eleInd],
 			       tree->eleMass_[eleInd]);
+	lepCharge=tree->eleCharge_[eleInd];
     }
 
 
@@ -999,6 +1043,7 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 			       tree->muEta_[muInd],
 			       tree->muPhi_[muInd],
 			       tree->muMass_[muInd]);
+	lepCharge=tree->muCharge_[muInd];
     }
 	
     if (dileptonsample){
@@ -1393,6 +1438,11 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	_fwdJetMass.push_back(tree->jetMass_[jetInd]);
     }
 
+
+    jetVectors.clear();
+    jetResolutionVectors.clear();
+    jetBtagVectors.clear();
+
     for (int i_jet = 0; i_jet <_nJet; i_jet++){
 		
 	int jetInd = selector->Jets.at(i_jet);
@@ -1409,16 +1459,21 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	jetVector.SetPtEtaPhiM(tree->jetPt_[jetInd], tree->jetEta_[jetInd], tree->jetPhi_[jetInd], tree->jetMass_[jetInd]);
 	
 	_jetGenJetIdx.push_back(tree->jetGenJetIdx_[jetInd]);
-	// TODO Reimplement with NANOAOD
 
-	// double resolution = getJetResolution(tree->jetPt_[jetInd], tree->jetEta_[jetInd], tree->rho_);
-	// if (tree->jetDeepCSVTags_b_[jetInd] + tree->jetDeepCSVTags_bb_[jetInd] > selector->btag_cut_DeepCSV){
-	//     bjetVectors.push_back(jetVector);
-	//     bjetResVectors.push_back(resolution);
-	// } else {
-	//     ljetVectors.push_back(jetVector);
-	//     ljetResVectors.push_back(resolution);
-	// }
+	double resolution = selector->jet_resolution.at(i_jet);
+
+	jetVectors.push_back(jetVector);
+	jetResolutionVectors.push_back(resolution);
+	jetBtagVectors.push_back(tree->jetBtagDeepB_[jetInd]);
+	
+	if (selector->jet_isTagged.at(i_jet)){
+	    //	if ( (tree->jetBtagDeepB_[jetInd]) > selector->btag_cut_DeepCSV){
+	    bjetVectors.push_back(jetVector);
+	    bjetResVectors.push_back(resolution);
+	} else {
+	    ljetVectors.push_back(jetVector);
+	    ljetResVectors.push_back(resolution);
+	}
     }	
 
     //Compute M3
@@ -1455,16 +1510,16 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	}
     }
 
-    // // Calculate MET z
+    
+    // // // Calculate MET z
+    // metZ.SetLepton(lepVector);
 
-    metZ.SetLepton(lepVector);
-
-    METVector.SetPtEtaPhiM(tree->MET_pt_,
-			   0.,
-			   tree->MET_phi_,
-			   0.);
+    // METVector.SetPtEtaPhiM(tree->MET_pt_,
+    // 			   0.,
+    // 			   tree->MET_phi_,
+    // 			   0.);
 	
-    metZ.SetMET(METVector);
+    // metZ.SetMET(METVector);
 
     //Calculate transverse mass variables
     //W transverse mass		
@@ -1481,9 +1536,10 @@ void makeAnalysisNtuple::FillEvent(std::string year)
     double _met_px = METVector.Px();
     double _met_py = METVector.Py();
 
-    double _met_pz = metZ.Calculate();
-    double _met_pz_other = metZ.getOther();
-
+    // _nu_pz = metZ.Calculate();
+    // _nu_pz_other = metZ.getOther();
+    // METVector.SetPz(_nu_pz);
+    // cout << _nu_pz << "   ----   " << _nu_pz_other << endl;
 
     // for (int __j = 0; __j < isBjet.size(); __j++){
     // 	if (isBjet.at(__j)) b_ind.push_back(__j);
@@ -1491,29 +1547,44 @@ void makeAnalysisNtuple::FillEvent(std::string year)
     // }
     
 
-    topEvent.SetBJetVector(bjetVectors);
-    topEvent.SetLJetVector(ljetVectors);
+    // topEvent.SetBJetVector(bjetVectors);
+    // topEvent.SetLJetVector(ljetVectors);
+    // topEvent.SetLepton(lepVector);
+    // topEvent.SetMET(METVector);
+    
+    // topEvent.SetBJetResVector(bjetResVectors);
+    // topEvent.SetLJetResVector(ljetResVectors);
+    // topEvent.SetIgnoreBtag(true);
+
+    topEvent.SetJetVector(jetVectors);
+    topEvent.SetJetResVector(jetResolutionVectors);
+    topEvent.SetBtagVector(jetBtagVectors);
+
     topEvent.SetLepton(lepVector);
     topEvent.SetMET(METVector);
     
-    topEvent.SetBJetResVector(bjetResVectors);
-    topEvent.SetLJetResVector(ljetResVectors);
-    topEvent.SetIgnoreBtag(true);
-    
     topEvent.Calculate();
+
     if (topEvent.GoodCombination()){
-	bhad = topEvent.getBHad();
-	blep = topEvent.getBLep();
-	Wj1 = topEvent.getJ1();
-	Wj2 = topEvent.getJ2();
-	
+	bhad = jetVectors[topEvent.getBHad()];
+	blep = jetVectors[topEvent.getBLep()];
+	Wj1 = jetVectors[topEvent.getJ1()];
+	Wj2 = jetVectors[topEvent.getJ2()];
+	METVector.SetPz(topEvent.getNuPz());
+
+	_chi2 = topEvent.getChi2();
+
 	_Mt_blgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (blep + lepVector + phoVector).Pt(),2) + pow( (blep + lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((blep + lepVector + phoVector + METVector ).Pt(),2) );
 	_Mt_lgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (lepVector + phoVector).Pt(),2) + pow( (lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((lepVector + phoVector + METVector ).Pt(),2) );
 	_M_bjj = ( bhad + Wj1 + Wj2 ).M();
 	_M_bjjgamma = ( bhad + Wj1 + Wj2 + phoVector).M();
 	_M_jj  = ( Wj1 + Wj2 ).M();
 	
-
+	_TopHad_pt = ( bhad + Wj1 + Wj2 ).Pt();
+	_TopHad_eta = ( bhad + Wj1 + Wj2 ).Eta();
+	_TopLep_pt = ( blep + lepVector + METVector ).Pt();
+	_TopLep_eta = ( blep + lepVector + METVector ).Eta();
+	_TopLep_charge = lepCharge;
 
 	_MassCuts = ( _Mt_blgammaMET > 180 &&
 		      _Mt_lgammaMET > 90 && 

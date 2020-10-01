@@ -13,6 +13,7 @@ TRandom* generator = new TRandom3(0);
 Selector::Selector(){
 
     year = "2016";
+
     // jets
     jet_Pt_cut = 30;
     jet_Eta_cut = 2.4;
@@ -530,12 +531,14 @@ void Selector::filter_jets(){
         
 	double jetSF = 1.;
 
+        double resolution = 0.;
 	if (!tree->isData_){
-	    jetParam.setJetEta(tree->jetEta_[jetInd]);
-	    jetParam.setJetPt(tree->jetPt_[jetInd]);
-	    jetParam.setJetArea(tree->jetArea_[jetInd]);
-	    jetParam.setRho(tree->rho_);
-
+            jetParam.setJetEta(tree->jetEta_[jetInd]);
+            jetParam.setJetPt(tree->jetPt_[jetInd]);
+            jetParam.setJetArea(tree->jetArea_[jetInd]);
+            jetParam.setRho(tree->rho_);
+            resolution = jetResolution->getResolution(jetParam);
+          
 	    if (JERsystLevel==1) jetSF = jetResolutionScaleFactor->getScaleFactor(jetParam,Variation::NOMINAL);
 	    if (JERsystLevel==0) jetSF = jetResolutionScaleFactor->getScaleFactor(jetParam,Variation::DOWN);
 	    if (JERsystLevel==2) jetSF = jetResolutionScaleFactor->getScaleFactor(jetParam,Variation::UP);
@@ -547,7 +550,6 @@ void Selector::filter_jets(){
 		double genJetPt = tree->GenJet_pt_[genIdx];
 		jetSmear = 1. + (jetSF - 1.) * (pt - genJetPt)/pt;
 	    }else{
-		double resolution = jetResolution->getResolution(jetParam);
 		jetSmear = 1 + generator->Gaus(0, resolution) * sqrt( max(jetSF*jetSF - 1, 0.) );
 	    }
 
@@ -617,10 +619,21 @@ void Selector::filter_jets(){
         
         if( jetPresel){
             Jets.push_back(jetInd);
+	    jet_resolution.push_back(resolution);
             if (!useDeepCSVbTag){
-                if( tree->jetBtagCSVV2_[jetInd] > btag_cut) bJets.push_back(jetInd);
+                if( tree->jetBtagCSVV2_[jetInd] > btag_cut){
+		    bJets.push_back(jetInd);
+		    jet_isTagged.push_back(true);
+		} else {
+		    jet_isTagged.push_back(false);
+		}
             } else {
-                if( tree->jetBtagDeepB_[jetInd] > btag_cut_DeepCSV) bJets.push_back(jetInd);
+                if( tree->jetBtagDeepB_[jetInd] > btag_cut_DeepCSV){
+		    bJets.push_back(jetInd);
+		    jet_isTagged.push_back(true);
+		} else {
+		    jet_isTagged.push_back(false);
+		}
             }				
         }
     }
