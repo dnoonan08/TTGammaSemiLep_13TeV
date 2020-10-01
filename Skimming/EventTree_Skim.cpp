@@ -94,6 +94,11 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	chain->SetBranchStatus("nGenPart",1);
 	
 	chain->SetBranchStatus("GenPart_*",1);
+
+	chain->SetBranchStatus("nLHEPart",1);
+
+	chain->SetBranchStatus("LHEPart_*",1);
+
 	// chain->SetBranchAddress("GenPart_pt", &GenPart_pt_);
 	
 	// chain->SetBranchStatus("GenPart_eta",1);
