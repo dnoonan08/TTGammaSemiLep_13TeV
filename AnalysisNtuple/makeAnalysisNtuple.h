@@ -20,8 +20,6 @@
 #include "TRandom3.h"
 #include "ParsePhotonID.h"
 #include "PUReweight.h"
-#include "METzCalculator.h"
-#include "TopEventCombinatoricsV2.h"
 
 #include "EventTree.h"
 #include "EventPick.h"
