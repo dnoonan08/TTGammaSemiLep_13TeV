@@ -69,7 +69,7 @@ Selector::Selector(){
     // photons
     pho_Et_cut = 20.0; 
     pho_Eta_cut = 1.4442;
-    pho_ID_ind = 0; // 0 - Loose, 1 - Medium, 2 - Tight
+    pho_ID_ind = 2; // 1 - Loose, 2 - Medium, 3 - Tight
     pho_noPixelSeed_cut = false;
     pho_noEleVeto_cut = false;
     pho_applyPhoID = true;
@@ -168,7 +168,7 @@ void Selector::filter_photons(){
         
         uint photonID = tree->phoIDcutbased_[phoInd];
 
-        bool passMediumPhotonID = photonID >= 2;
+        bool passMediumPhotonID = photonID >= pho_ID_ind;
 
         double phoPFRelIso = tree->phoPFRelIso_[phoInd];
         double phoPFRelChIso = tree->phoPFRelChIso_[phoInd];
@@ -204,7 +204,7 @@ void Selector::filter_photons(){
 	bool finalsel = phoPresel && passMediumPhotonID ;
 
 
-	vector<bool> cutBasedID_split = parsePhotonVIDCuts(tree->phoVidWPBitmap_[phoInd], 2);
+	vector<bool> cutBasedID_split = parsePhotonVIDCuts(tree->phoVidWPBitmap_[phoInd], pho_ID_ind);
 	bool passMediumIDNoChIso = cutBasedID_split[1] && cutBasedID_split[2] && cutBasedID_split[4] && cutBasedID_split[5]; // HoverE (1), SIEIE (2), NeuIso (4), and PhoIso (5) cuts, skip ChIso (3)
 	bool passMediumIDNoChIsoOrSIEIE = cutBasedID_split[1] && cutBasedID_split[4] && cutBasedID_split[5]; // HoverE (1), NeuIso (4), and PhoIso (5) cuts, skip ChIso (3) and SIEIE (2)
 	

@@ -233,6 +233,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	selector->smearJetPt=false;
     }
 
+    selector->pho_ID_ind = 1;
+    selector->pho_Eta_cut = 1.4442;
+
     selector->pho_applyPhoID = false;
     selector->looseJetID = false;
     
@@ -537,8 +540,18 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	eleSF = new ElectronSF("MuEGammaScaleFactors/ele2016/2016LegacyReReco_ElectronTight_Fall17V2.root",
 			       "MuEGammaScaleFactors/ele2016/EGM2D_BtoH_GT20GeV_RecoSF_Legacy2016.root",
 			       "MuEGammaScaleFactors/ele2016/sf_ele_2016_trig_v5.root");
-	
-	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2016/Fall17V2_2016_Medium_photons.root",
+
+        string photon_ID_SF_File = "MuEGammaScaleFactors/pho2016/Fall17V2_2016_Medium_photons.root";
+        if (selector->pho_ID_ind==1){
+          photon_ID_SF_File="MuEGammaScaleFactors/pho2016/Fall17V2_2016_Loose_photons.root";
+        }
+        if (selector->pho_ID_ind==2){
+          photon_ID_SF_File="MuEGammaScaleFactors/pho2016/Fall17V2_2016_Medium_photons.root";
+        }
+        if (selector->pho_ID_ind==3){
+          photon_ID_SF_File="MuEGammaScaleFactors/pho2016/Fall17V2_2016_Tight_photons.root";
+        }
+	phoSF = new PhotonSF(photon_ID_SF_File,
 			     "MuEGammaScaleFactors/pho2016/ScalingFactors_80X_Summer16.root",
 			     2016);
 
@@ -557,7 +570,18 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			       "MuEGammaScaleFactors/ele2017/sf_ele_2017_trig_v5.root");
 
 	
-	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2017/2017_PhotonsMedium.root",
+        string photon_ID_SF_File = "MuEGammaScaleFactors/pho2017/2017_PhotonsMedium.root";
+        if (selector->pho_ID_ind==1){
+          photon_ID_SF_File = "MuEGammaScaleFactors/pho2017/2017_PhotonsLoose.root";
+        }
+        if (selector->pho_ID_ind==2){
+          photon_ID_SF_File = "MuEGammaScaleFactors/pho2017/2017_PhotonsMedium.root";
+        }
+        if (selector->pho_ID_ind==3){
+          photon_ID_SF_File = "MuEGammaScaleFactors/pho2017/2017_PhotonsMedium.root";
+        }
+
+	phoSF = new PhotonSF(photon_ID_SF_File,
 			     "MuEGammaScaleFactors/pho2017/PixelSeed_ScaleFactors_2017.root",
 			     2017);
 	
@@ -580,7 +604,18 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			       "MuEGammaScaleFactors/ele2018/sf_ele_2018_trig_v5.root");
 
 
-	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2018/2018_PhotonsMedium.root",
+        string photon_ID_SF_File = "MuEGammaScaleFactors/pho2018/2018_PhotonsMedium.root";
+        if (selector->pho_ID_ind==1){
+          photon_ID_SF_File = "MuEGammaScaleFactors/pho2018/2018_PhotonsLoose.root";
+        }
+        if (selector->pho_ID_ind==2){
+          photon_ID_SF_File = "MuEGammaScaleFactors/pho2018/2018_PhotonsMedium.root";
+        }
+        if (selector->pho_ID_ind==3){
+          photon_ID_SF_File = "MuEGammaScaleFactors/pho2018/2018_PhotonsMedium.root";
+        }
+
+	phoSF = new PhotonSF(photon_ID_SF_File,
 			     "MuEGammaScaleFactors/pho2018/HasPix_2018.root",
 			     2018);
 
