@@ -16,17 +16,17 @@ void initCrossSections(){
     crossSections["TTGJets"]               =  {3.697, 3.697, 3.697}; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#TT_X
     crossSections["TGJets"]                =  {2.967, 2.967, 2.967};
 
-    crossSections["TTGamma_Hadronic"]    =  {4.164*2.565, 4.164*2.565, 4.164*2.565}; //10.528;
-    crossSections["TTGamma_SingleLept"]  =  {5.076*1.994, 5.076*1.994, 5.076*1.994}; //10.234;
-    crossSections["TTGamma_Dilepton"]    =  {1.496*1.616, 1.496*1.616, 1.496*1.616}; //2.4243;
+    crossSections["TTGamma_Dilepton"]    =  {1.495*1.616, 1.495*1.616, 1.495*1.616}; //2.4243;
+    crossSections["TTGamma_SingleLept"]  =  {5.056*1.994, 5.056*1.994, 5.056*1.994}; //10.234;
+    crossSections["TTGamma_Hadronic"]    =  {4.149*2.565, 4.149*2.565, 4.149*2.565}; //10.528;
 
-    crossSections["TTGamma_Hadronic_Pt100"]    =  {0.3209, 0.3209, 0.3209};
-    crossSections["TTGamma_SingleLept_Pt100"]  =  {0.2632, 0.2632, 0.2632};
-    crossSections["TTGamma_Dilepton_Pt100"]    =  {0.0554, 0.0554, 0.0554};
+    crossSections["TTGamma_Dilepton_Pt100"]    =  {0.03412*1.616, 0.03412*1.616, 0.03412*1.616};
+    crossSections["TTGamma_SingleLept_Pt100"]  =  {0.1309*1.994, 0.1309*1.994, 0.1309*1.994};
+    crossSections["TTGamma_Hadronic_Pt100"]    =  {0.1249*2.565, 0.1249*2.565, 0.1249*2.565};
 
-    crossSections["TTGamma_Hadronic_Pt200"]    =  {0.068588, 0.068588, 0.068588};
-    crossSections["TTGamma_SingleLept_Pt200"]  =  {0.053898, 0.053898, 0.053898};
-    crossSections["TTGamma_Dilepton_Pt200"]    =  {0.011008, 0.011008, 0.011008};
+    crossSections["TTGamma_Dilepton_Pt200"]    =  {0.006797*1616, 0.006797*1616, 0.006797*1616};
+    crossSections["TTGamma_SingleLept_Pt200"]  =  {0.02685*1.994, 0.02685*1.994, 0.02685*1.994};
+    crossSections["TTGamma_Hadronic_Pt200"]    =  {0.02687*2.565, 0.02687*2.565, 0.02687*2.565};
 
     crossSections["TTGamma_Hadronic_small"]    =  {4.164*2.565, 4.164*2.565, 4.164*2.565}; //10.528;
     crossSections["TTGamma_SingleLept_small"]  =  {5.076*1.994, 5.076*1.994, 5.076*1.994}; //10.234;
