@@ -93,10 +93,14 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
             av[i] = av[i+1];
 	}
 	ac = ac-1;
+        cout << "---------------------------------------" << endl;
+        cout << "Using Dilepton Control Region Selection" << endl;
+        cout << "---------------------------------------" << endl;
     }
 
     if (std::string(av[1])=="qcd" || 
         std::string(av[1])=="qcdCR" ||
+        std::string(av[1])=="QCDcr" ||
         std::string(av[1])=="QCD" ||
         std::string(av[1])=="QCDCR"){
   
@@ -105,6 +109,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
             av[i] = av[i+1];
 	}
 	ac = ac-1;
+        cout << "----------------------------------" << endl;
+        cout << "Using QCD Control Region Selection" << endl;
+        cout << "----------------------------------" << endl;
     }
 
     //check if NofM type format is before output name (for splitting jobs)
@@ -428,7 +435,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	outputFileName.replace(0,outputDirectory.size()+1, outputDirectory + "/Dilep_");
     }
     if (qcdSample){
-	outputFileName.replace(0,outputDirectory.size()+1, outputDirectory + "/QCDCR_");
+	outputFileName.replace(0,outputDirectory.size()+1, outputDirectory + "/QCDcr_");
     }
     if (saveCutflow) {
 	outputFileName.replace(outputFileName.find("AnalysisNtuple"),14, "Cutflow");
