@@ -300,6 +300,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     bool doOverlapRemoval_Z = false;	
     bool doOverlapInvert_TG = false;	
     bool doOverlapRemoval_Tchannel = false;	
+    bool doOverlapRemoval_QCD = false;	
+    bool doOverlapInvert_GJ = false;	
     
     bool invertOverlap = false;
     
@@ -334,12 +336,18 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (sampleType.find("TGJets")!= std::string::npos) {
 	doOverlapInvert_TG = true;
     }    
+    if (sampleType.find("GJets")!= std::string::npos) {
+	doOverlapInvert_GJ = true;
+    }    
+    if ((sampleType.find("QCD")!= std::string::npos) ||(sampleType.find("bcToE")!= std::string::npos) ) {
+	doOverlapRemoval_QCD = true;
+    }    
     
 
-    if(doOverlapRemoval_TT || doOverlapRemoval_W || doOverlapRemoval_Z || doOverlapRemoval_Tchannel) {
+    if(doOverlapRemoval_TT || doOverlapRemoval_W || doOverlapRemoval_Z || doOverlapRemoval_Tchannel || doOverlapRemoval_QCD) {
 	std::cout << "########## Will apply overlap removal ###########" << std::endl;
     }
-    if(doOverlapInvert_TTG || doOverlapInvert_WG || doOverlapInvert_ZG || doOverlapInvert_TG) {
+    if(doOverlapInvert_TTG || doOverlapInvert_WG || doOverlapInvert_ZG || doOverlapInvert_TG || doOverlapInvert_GJ) {
 	std::cout << "##########   Will apply overlap inversion   ###########" << std::endl;
 	std::cout << "########## Keeping only events with overlap ###########" << std::endl;
     }
@@ -701,6 +709,19 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
+	if( isMC && doOverlapInvert_GJ){
+	    //if (!overlapRemoval_Tchannel(tree)){
+	    if (!overlapRemoval(tree, 25., 2.5, 0.4, tree->event_==eventNum)){
+		count_overlap++;
+		continue;
+	    }
+	}
+	if( isMC && doOverlapRemoval_QCD){
+	    if (overlapRemoval(tree, 25., 2.5, 0.4, tree->event_==eventNum)){
+		count_overlap++;
+		continue;
+	    }
+	}
 
 	// //		Apply systematics shifts where needed
 	if( isMC ){
@@ -918,6 +939,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
     if (doOverlapInvert_TG){
 	std::cout << "Total number of events removed from TGJets:"<< count_overlap <<std::endl;
+    }
+    if (doOverlapRemoval_QCD){
+	std::cout << "Total number of events removed from QCD:"<< count_overlap <<std::endl;
+    }
+    if (doOverlapInvert_GJ){
+	std::cout << "Total number of events removed from GJets:"<< count_overlap <<std::endl;
     }
 
     outputFile->cd();

@@ -16,17 +16,17 @@ void initCrossSections(){
     crossSections["TTGJets"]               =  {3.697, 3.697, 3.697}; //https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#TT_X
     crossSections["TGJets"]                =  {2.967, 2.967, 2.967};
 
-    crossSections["TTGamma_Dilepton"]    =  {1.495*1.616, 1.495*1.616, 1.495*1.616}; //2.4243;
-    crossSections["TTGamma_SingleLept"]  =  {5.056*1.994, 5.056*1.994, 5.056*1.994}; //10.234;
-    crossSections["TTGamma_Hadronic"]    =  {4.149*2.565, 4.149*2.565, 4.149*2.565}; //10.528;
+    crossSections["TTGamma_Hadronic"]    =  {4.164*2.565, 4.164*2.565, 4.164*2.565}; //10.528;
+    crossSections["TTGamma_SingleLept"]  =  {5.076*1.994, 5.076*1.994, 5.076*1.994}; //10.234;
+    crossSections["TTGamma_Dilepton"]    =  {1.496*1.616, 1.496*1.616, 1.496*1.616}; //2.4243;
 
-    crossSections["TTGamma_Dilepton_Pt100"]    =  {0.03412*1.616, 0.03412*1.616, 0.03412*1.616};
-    crossSections["TTGamma_SingleLept_Pt100"]  =  {0.1309*1.994, 0.1309*1.994, 0.1309*1.994};
-    crossSections["TTGamma_Hadronic_Pt100"]    =  {0.1249*2.565, 0.1249*2.565, 0.1249*2.565};
+    crossSections["TTGamma_Hadronic_Pt100"]    =  {0.3209, 0.3209, 0.3209};
+    crossSections["TTGamma_SingleLept_Pt100"]  =  {0.2632, 0.2632, 0.2632};
+    crossSections["TTGamma_Dilepton_Pt100"]    =  {0.0554, 0.0554, 0.0554};
 
-    crossSections["TTGamma_Dilepton_Pt200"]    =  {0.006797*1616, 0.006797*1616, 0.006797*1616};
-    crossSections["TTGamma_SingleLept_Pt200"]  =  {0.02685*1.994, 0.02685*1.994, 0.02685*1.994};
-    crossSections["TTGamma_Hadronic_Pt200"]    =  {0.02687*2.565, 0.02687*2.565, 0.02687*2.565};
+    crossSections["TTGamma_Hadronic_Pt200"]    =  {0.068588, 0.068588, 0.068588};
+    crossSections["TTGamma_SingleLept_Pt200"]  =  {0.053898, 0.053898, 0.053898};
+    crossSections["TTGamma_Dilepton_Pt200"]    =  {0.011008, 0.011008, 0.011008};
 
     crossSections["TTGamma_Hadronic_small"]    =  {4.164*2.565, 4.164*2.565, 4.164*2.565}; //10.528;
     crossSections["TTGamma_SingleLept_small"]  =  {5.076*1.994, 5.076*1.994, 5.076*1.994}; //10.234;
@@ -108,6 +108,15 @@ void initCrossSections(){
     crossSections["QCD_Pt170to300_Ele"] = {  18810.,   18810.,   18810.};
     crossSections["QCD_Pt300toInf_Ele"] = {   1350.,    1350.,    1350.};
 
+   //included by aloke
+    crossSections["QCD_Pt20to30_bcToE"]   ={328999.93, 328999.93, 328999.93};
+    crossSections["QCD_Pt30to80_bcToE"]   ={405623.40, 405623.40, 405623.40};
+    crossSections["QCD_Pt80to170_bcToE"]  ={ 38104.43,  38104.43,  38104.43};
+    crossSections["QCD_Pt170to250_bcToE"] ={  2635.81,   2635.81,   2635.81};
+    crossSections["QCD_Pt250toInf_bcToE"] ={   711.92,    711.92,    711.92};
+
+
+
     // GJets cross sections taken from AN2016_471_v6 (SUSY photon + MET analysis)
     crossSections["GJets_HT40To100"]  = {20790.  , 20790.  , 20790.  };
     crossSections["GJets_HT100To200"] = { 9238.  ,  9238.  ,  9238.  };
@@ -159,7 +168,7 @@ double getEvtWeight(string sampleType, int year, double luminosity, double nEven
 
 
 
-const std::string allowedSampleTypes[150] = {"Data",
+const std::string allowedSampleTypes[155] = {"Data",
 					     "Data_SingleMu_a",
 					     "Data_SingleMu_b",
 					     "Data_SingleMu_c",
@@ -249,6 +258,11 @@ const std::string allowedSampleTypes[150] = {"Data",
 					     "QCD_Pt300toInf_Ele",
 					     "QCD_Pt30to40_Ele",
 					     "QCD_Pt40toInf_Ele",
+					     "QCD_Pt20to30_bcToE",
+					     "QCD_Pt30to80_bcToE",
+                                             "QCD_Pt80to170_bcToE",
+ 					     "QCD_Pt170to250_bcToE",
+                                             "QCD_Pt250toInf_bcToE",
 					     "GJets_HT40To100",
 					     "GJets_HT100To200",
 					     "GJets_HT200To400",

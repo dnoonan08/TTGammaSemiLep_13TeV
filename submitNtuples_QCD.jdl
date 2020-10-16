@@ -11,544 +11,65 @@ Output = condor/nTuples_$(cluster)_$(process).stdout
 Error  = condor/nTuples_$(cluster)_$(process).stderr
 Log    = condor/nTuples_$(cluster)_$(process).condor
 
-X=$(step)+1
-
-year=2016
-Arguments = "Data_SingleEle_b $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_c $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_d $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_e $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_f $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_g $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_h $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "Data_SingleMu_b $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_c $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_d $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_e $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_f $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_g $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_h $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "DYjetsM10to50 $(year)"
-Queue 1
-Arguments = "DYjetsM50 $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "GJets_HT40To100 $(year)"
-Queue 1
-Arguments = "GJets_HT100To200 $(year)"
-Queue 1
-Arguments = "GJets_HT200To400 $(year)"
-Queue 1
-Arguments = "GJets_HT400To600 $(year)"
-Queue 1
-Arguments = "GJets_HT600ToInf $(year)"
-Queue 1
-
-Arguments = "QCD_Pt20to30_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt300toInf_Ele $(year)"
-Queue 1
-
-Arguments = "QCD_Pt20to30_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt300to470_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt470to600_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt600to800_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt800to1000_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt1000toInf_Mu $(year)"
-Queue 1
-
-Arguments = "ST_s_channel $(year)"
-Queue 1
-Arguments = "ST_tW_channel $(year)"
-Queue 1
-Arguments = "ST_tbarW_channel $(year)"
-Queue 1
-Arguments = "ST_tbar_channel $(year)"
-Queue 1
-Arguments = "ST_t_channel $(year)"
-Queue 1
-Arguments = "TGJets $(year)"
-Queue 1
-
-Arguments = "TTGamma_Dilepton $(year)"
-Queue 1
-Arguments = "TTGamma_Dilepton_Pt100 $(year)"
-Queue 1
-Arguments = "TTGamma_Dilepton_Pt200 $(year)"
-Queue 1
-
-Arguments = "TTGamma_Hadronic $(year)"
-Queue 1
-Arguments = "TTGamma_Hadronic_Pt100 $(year)"
-Queue 1
-Arguments = "TTGamma_Hadronic_Pt200 $(year)"
-Queue 1
-
-Arguments = "TTGamma_SingleLept $(year)"
-Queue 1
-Arguments = "TTGamma_SingleLept_Pt100 $(year)"
-Queue 1
-Arguments = "TTGamma_SingleLept_Pt200 $(year)"
-Queue 1
-
-Arguments = "TTWtoLNu $(year)"
-Queue 1
-Arguments = "TTWtoQQ $(year)"
-Queue 1
-Arguments = "TTZtoLL $(year)"
-Queue 1
-Arguments = "TTZtoLL_M1to10 $(year)"
-Queue 1
-Arguments = "TTZtoQQ $(year)"
-Queue 1
-
-Arguments = "TTbarPowheg_Dilepton $(year) $INT(X) 5"
-Queue 5
-Arguments = "TTbarPowheg_Hadronic $(year)"
-Queue 1
-Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "W1jets $(year)"
-Queue 1
-Arguments = "W2jets $(year)"
-Queue 1
-Arguments = "W3jets $(year)"
-Queue 1
-Arguments = "W4jets $(year)"
-Queue 1
-
-Arguments = "WGamma_01J_5f $(year)"
-Queue 1
-Arguments = "ZGamma_01J_5f_lowMass $(year)"
-Queue 1
-Arguments = "ZGamma_01J_5f_LoosePt $(year)"
-Queue 1
-
-Arguments = "WW $(year)"
-Queue 1
-Arguments = "WZ $(year)"
-Queue 1
-Arguments = "ZZ $(year)"
-Queue 1
-
-Arguments = "WWToLNuQQ $(year)"
-Queue 1
-Arguments = "WWTo4Q $(year)"
-Queue 1
-
-Arguments = "WZTo1L3Nu $(year)"
-Queue 1
-Arguments = "WZTo1L1Nu2Q $(year)"
-Queue 1
-Arguments = "WZTo2L2Q $(year)"
-Queue 1
-Arguments = "WZTo3L1Nu $(year)"
-Queue 1
-
-Arguments = "ZZTo2L2Q $(year)"
-Queue 1
-Arguments = "ZZTo2Q2Nu $(year)"
-Queue 1
-Arguments = "ZZTo4L $(year)"
-Queue 1
-
-Arguments = "VVTo2L2Nu $(year)"
-Queue 1
-
-
-
-
 year=2017
-Arguments = "Data_SingleEle_b $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_c $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_d $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_e $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_f $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "Data_SingleMu_b $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_c $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_d $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_e $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_f $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "DYjetsM10to50 $(year)"
+Arguments = "QCD_Pt20to30_bcToE $(year)"
 Queue 1
-Arguments = "DYjetsM50 $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "GJets_HT40To100 $(year)"
+Arguments = "QCD_Pt30to80_bcToE $(year)"
 Queue 1
-Arguments = "GJets_HT100To200 $(year)"
+Arguments = "QCD_Pt80to170_bcToE $(year)"
 Queue 1
-Arguments = "GJets_HT200To400 $(year)"
+Arguments = "QCD_Pt170to250_bcToE $(year)"
 Queue 1
-Arguments = "GJets_HT400To600 $(year)"
-Queue 1
-Arguments = "GJets_HT600ToInf $(year)"
+Arguments = "QCD_Pt250toInf_bcToE $(year)"
 Queue 1
 
-Arguments = "QCD_Pt20to30_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt300toInf_Ele $(year)"
-Queue 1
+#Arguments = "GJets_HT40To100 $(year)"
+#Queue 1
+#Arguments = "GJets_HT100To200 $(year)"
+#Queue 1
+#Arguments = "GJets_HT200To400 $(year)"
+#Queue 1
+#Arguments = "GJets_HT400To600 $(year)"
+#Queue 1
+#Arguments = "GJets_HT600ToInf $(year)"
+#Queue 1
 
-Arguments = "QCD_Pt20to30_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt300to470_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt470to600_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt600to800_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt800to1000_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt1000toInf_Mu $(year)"
-Queue 1
+#Arguments = "QCD_Pt20to30_Ele $(year)"
+#Queue 1
+#Arguments = "QCD_Pt30to50_Ele $(year)"
+#Queue 1
+#Arguments = "QCD_Pt50to80_Ele $(year)"
+#Queue 1
+#Arguments = "QCD_Pt80to120_Ele $(year)"
+#Queue 1
+#Arguments = "QCD_Pt120to170_Ele $(year)"
+#Queue 1
+#Arguments = "QCD_Pt170to300_Ele $(year)"
+#Queue 1
+#Arguments = "QCD_Pt300toInf_Ele $(year)"
+#Queue 1
 
-Arguments = "ST_s_channel $(year)"
-Queue 1
-Arguments = "ST_tW_channel $(year)"
-Queue 1
-Arguments = "ST_tbarW_channel $(year)"
-Queue 1
-Arguments = "ST_tbar_channel $(year)"
-Queue 1
-Arguments = "ST_t_channel $(year)"
-Queue 1
-Arguments = "TGJets $(year)"
-Queue 1
-
-Arguments = "TTGamma_Dilepton $(year)"
-Queue 1
-Arguments = "TTGamma_Dilepton_Pt100 $(year)"
-Queue 1
-Arguments = "TTGamma_Dilepton_Pt200 $(year)"
-Queue 1
-
-Arguments = "TTGamma_Hadronic $(year)"
-Queue 1
-Arguments = "TTGamma_Hadronic_Pt100 $(year)"
-Queue 1
-Arguments = "TTGamma_Hadronic_Pt200 $(year)"
-Queue 1
-
-Arguments = "TTGamma_SingleLept $(year)"
-Queue 1
-Arguments = "TTGamma_SingleLept_Pt100 $(year)"
-Queue 1
-Arguments = "TTGamma_SingleLept_Pt200 $(year)"
-Queue 1
-
-Arguments = "TTWtoLNu $(year)"
-Queue 1
-Arguments = "TTWtoQQ $(year)"
-Queue 1
-Arguments = "TTZtoLL $(year)"
-Queue 1
-Arguments = "TTZtoLL_M1to10 $(year)"
-Queue 1
-Arguments = "TTZtoQQ $(year)"
-Queue 1
-
-Arguments = "TTbarPowheg_Dilepton $(year) $INT(X) 5"
-Queue 5
-Arguments = "TTbarPowheg_Hadronic $(year)"
-Queue 1
-Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "W1jets $(year)"
-Queue 1
-Arguments = "W2jets $(year)"
-Queue 1
-Arguments = "W3jets $(year)"
-Queue 1
-Arguments = "W4jets $(year)"
-Queue 1
-
-Arguments = "WGamma_01J_5f $(year)"
-Queue 1
-Arguments = "ZGamma_01J_5f_lowMass $(year)"
-Queue 1
-Arguments = "ZGamma_01J_5f_LoosePt $(year)"
-Queue 1
-
-Arguments = "WW $(year)"
-Queue 1
-Arguments = "WZ $(year)"
-Queue 1
-Arguments = "ZZ $(year)"
-Queue 1
-
-Arguments = "WWToLNuQQ $(year)"
-Queue 1
-Arguments = "WWTo4Q $(year)"
-Queue 1
-
-Arguments = "WZTo1L3Nu $(year)"
-Queue 1
-Arguments = "WZTo1L1Nu2Q $(year)"
-Queue 1
-Arguments = "WZTo2L2Q $(year)"
-Queue 1
-Arguments = "WZTo3L1Nu $(year)"
-Queue 1
-
-Arguments = "ZZTo2L2Q $(year)"
-Queue 1
-Arguments = "ZZTo2Q2Nu $(year)"
-Queue 1
-Arguments = "ZZTo4L $(year)"
-Queue 1
-
-Arguments = "VVTo2L2Nu $(year)"
-Queue 1
+#Arguments = "QCD_Pt20to30_Mu $(year)"
+#Queue 1
+#Arguments = "QCD_Pt30to50_Mu $(year)"
+#Queue 1
+#Arguments = "QCD_Pt50to80_Mu $(year)"
+#Queue 1
+#Arguments = "QCD_Pt80to120_Mu $(year)"
+#Queue 1
+#Arguments = "QCD_Pt120to170_Mu $(year)"
+#Queue 1
+#Arguments = "QCD_Pt170to300_Mu $(year)"
+#Queue 1
+#Arguments = "QCD_Pt300to470_Mu $(year)"
+#Queue 1
+#Arguments = "QCD_Pt470to600_Mu $(year)"
+#Queue 1
+#Arguments = "QCD_Pt600to800_Mu $(year)"
+#Queue 1
+#Arguments = "QCD_Pt800to1000_Mu $(year)"
+#Queue 1
+#Arguments = "QCD_Pt1000toInf_Mu $(year)"
+#Queue 1
 
 
-
-
-
-
-year=2018
-Arguments = "Data_SingleEle_a $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_b $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_c $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleEle_d $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "Data_SingleMu_a $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_b $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_c $(year) $INT(X) 5"
-Queue 5
-Arguments = "Data_SingleMu_d $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "DYjetsM10to50 $(year)"
-Queue 1
-Arguments = "DYjetsM50 $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "GJets_HT40To100 $(year)"
-Queue 1
-Arguments = "GJets_HT100To200 $(year)"
-Queue 1
-Arguments = "GJets_HT200To400 $(year)"
-Queue 1
-Arguments = "GJets_HT400To600 $(year)"
-Queue 1
-Arguments = "GJets_HT600ToInf $(year)"
-Queue 1
-
-Arguments = "QCD_Pt20to30_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt300toInf_Ele $(year)"
-Queue 1
-
-Arguments = "QCD_Pt20to30_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt300to470_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt470to600_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt600to800_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt800to1000_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt1000toInf_Mu $(year)"
-Queue 1
-
-Arguments = "ST_s_channel $(year)"
-Queue 1
-Arguments = "ST_tW_channel $(year)"
-Queue 1
-Arguments = "ST_tbarW_channel $(year)"
-Queue 1
-Arguments = "ST_tbar_channel $(year)"
-Queue 1
-Arguments = "ST_t_channel $(year)"
-Queue 1
-Arguments = "TGJets $(year)"
-Queue 1
-
-Arguments = "TTGamma_Dilepton $(year)"
-Queue 1
-Arguments = "TTGamma_Dilepton_Pt100 $(year)"
-Queue 1
-Arguments = "TTGamma_Dilepton_Pt200 $(year)"
-Queue 1
-
-Arguments = "TTGamma_Hadronic $(year)"
-Queue 1
-Arguments = "TTGamma_Hadronic_Pt100 $(year)"
-Queue 1
-Arguments = "TTGamma_Hadronic_Pt200 $(year)"
-Queue 1
-
-Arguments = "TTGamma_SingleLept $(year)"
-Queue 1
-Arguments = "TTGamma_SingleLept_Pt100 $(year)"
-Queue 1
-Arguments = "TTGamma_SingleLept_Pt200 $(year)"
-Queue 1
-
-Arguments = "TTWtoLNu $(year)"
-Queue 1
-Arguments = "TTWtoQQ $(year)"
-Queue 1
-Arguments = "TTZtoLL $(year)"
-Queue 1
-Arguments = "TTZtoLL_M1to10 $(year)"
-Queue 1
-Arguments = "TTZtoQQ $(year)"
-Queue 1
-
-Arguments = "TTbarPowheg_Dilepton $(year) $INT(X) 5"
-Queue 5
-Arguments = "TTbarPowheg_Hadronic $(year)"
-Queue 1
-Arguments = "TTbarPowheg_Semilept $(year) $INT(X) 5"
-Queue 5
-
-Arguments = "W1jets $(year)"
-Queue 1
-Arguments = "W2jets $(year)"
-Queue 1
-Arguments = "W3jets $(year)"
-Queue 1
-Arguments = "W4jets $(year)"
-Queue 1
-
-Arguments = "WGamma_01J_5f $(year)"
-Queue 1
-Arguments = "ZGamma_01J_5f_lowMass $(year)"
-Queue 1
-Arguments = "ZGamma_01J_5f_LoosePt $(year)"
-Queue 1
-
-Arguments = "WW $(year)"
-Queue 1
-Arguments = "WZ $(year)"
-Queue 1
-Arguments = "ZZ $(year)"
-Queue 1
-
-Arguments = "WWToLNuQQ $(year)"
-Queue 1
-Arguments = "WWTo4Q $(year)"
-Queue 1
-
-Arguments = "WZTo1L3Nu $(year)"
-Queue 1
-Arguments = "WZTo1L1Nu2Q $(year)"
-Queue 1
-Arguments = "WZTo2L2Q $(year)"
-Queue 1
-Arguments = "WZTo3L1Nu $(year)"
-Queue 1
-
-Arguments = "ZZTo2L2Q $(year)"
-Queue 1
-Arguments = "ZZTo2Q2Nu $(year)"
-Queue 1
-Arguments = "ZZTo4L $(year)"
-Queue 1
-
-Arguments = "VVTo2L2Nu $(year)"
-Queue 1

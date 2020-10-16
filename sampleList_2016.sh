@@ -184,3 +184,9 @@ ZZTo2Q2Nu_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims
 
 ZZTo4L_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2016/ZZTo4L_powheg_2016_skim.root"
 
+QCD_Pt20to30_bcToE_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2016/QCD_Pt20to30_bcToE_2016_skim.root"
+QCD_Pt30to80_bcToE_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2016/QCD_Pt30to80_bcToE_2016_skim.root"
+QCD_Pt80to170_bcToE_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2016/QCD_Pt80to170_bcToE_2016_skim.root"
+QCD_Pt170to250_bcToE_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2016/QCD_Pt170to250_bcToE_2016_skim.root"
+QCD_Pt250toInf_bcToE_2016="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2016/QCD_Pt250toInf_bcToE_2016_skim.root"
+
