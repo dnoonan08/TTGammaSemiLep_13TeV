@@ -3,6 +3,7 @@
 
 
 #include "TLorentzVector.h"
+#include "METzCalculator.h"
 #include "TMath.h"
 #include <vector>
 
@@ -10,87 +11,106 @@ class TopEventCombinatorics{
 
  public:
 
-	TopEventCombinatorics(){
-		ClearVectors();
-		mTop = 172.5;
-		mW = 80.4;
-		chi2 = 9999.;
-		goodCombo = false;
-		METerror = 0.2;
-		Leperror = 0.05;
-		useResolutions = true;
-		ignoreBtagInfo = false;
-
-	}
+    TopEventCombinatorics(){
+	ClearVectors();
+	mTop = 172.5;
+	mW = 80.4;
+	chi2 = 9999.;
+	goodCombo = false;
+	METRes = 0.2;
+	leptonRes = 0.05;
+	useResolutions = true;
+	nBjetSize = 2;
+	btagThresh = 0.;
+	bhad_idx = 0;
+	blep_idx = 0;
+	j1_idx = 0;
+	j2_idx = 0;
+    }
 	
-	void SetMtop(double mTop_){ mTop = mTop_;}
-	void SetMW(double mW_){ mW = mW_;}
+    void SetMtop(double mTop_){ mTop = mTop_;}
+    void SetMW(double mW_){ mW = mW_;}
 
-	void SetLJetVector(std::vector<TLorentzVector> jets_){ ljets = jets_;}
-	void SetBJetVector(std::vector<TLorentzVector> jets_){ bjets = jets_;}
-	void SetLJetResVector(std::vector<double> jetres_){ ljetsRes = jetres_;}
-	void SetBJetResVector(std::vector<double> jetres_){ bjetsRes = jetres_;}
-	void SetLepton(TLorentzVector lepton_){ lepton = lepton_;}
-	void SetMET(TLorentzVector met_){ met = met_;}
+    void SetJetVector(std::vector<TLorentzVector> jets_){ jets = jets_;}
+    void SetJetResVector(std::vector<double> jetres_){ jetsRes = jetres_;}
+    void SetBtagVector(std::vector<double> jetsTag_){ btag = jetsTag_;}
 
-	void SetMETerror(double err){ METerror = err;}
-	void SetLeperror(double err){ Leperror = err;}
+    void SetLepton(TLorentzVector lepton_){ lepton = lepton_; metZ.SetLepton(lepton_);}
+    void SetMET(TLorentzVector met_){ met = met_; metZ.SetMET(met_);}
 
-	void SetUseResolutions(bool useRes_){ useResolutions = useRes_;}
-	void SetIgnoreBtag(bool ignoreBtag_){ ignoreBtagInfo = ignoreBtag_;}
+    void SetMETerror(double err){ METRes = err;}
+    void SetLeperror(double err){ leptonRes = err;}
+
+    void SetBJetsSize(int _nB){ nBjetSize = _nB;}
+    void SetBtagThresh(double thresh){ btagThresh = thresh;}
+
+    void SetUseResolutions(bool useRes_){ useResolutions = useRes_;}
 		
-	TLorentzVector getBHad(){ return bhad; }
-	TLorentzVector getBLep(){ return blep; }
-	TLorentzVector getJ1(){ return j1; }
-	TLorentzVector getJ2(){ return j2; }
+    unsigned int getBHad(){ return bhad_idx; }
+    unsigned int getBLep(){ return blep_idx; }
+    unsigned int getJ1(){ return j1_idx; }
+    unsigned int getJ2(){ return j2_idx; }
+    double getNuPz(){ return nu_pz; }
 	
-	bool GoodCombination(){ return goodCombo; }
+    double getChi2(){ return chi2; }
 
-	void ClearVectors(){
-		bjets.clear();
-		ljets.clear();
-	}
-	int Calculate();
+    bool GoodCombination(){ return goodCombo; }
+
+    void ClearVectors(){
+	jets.clear();
+    }
+    int Calculate();
 
 
 
  private:
-	double mTop;
-	double mW;
-	double chi2;
+    double mTop;
+    double mW;
+    double chi2;
 
-	double topChiSq(TLorentzVector j1, TLorentzVector j2, TLorentzVector bh, TLorentzVector bl, double sigma_j1, double sigma_j2, double sigma_bh, double sigma_bl);
+    double topChiSq(TLorentzVector j1, double sigma_j1,
+		    TLorentzVector j2, double sigma_j2,
+		    TLorentzVector bh, double sigma_bh,
+		    TLorentzVector bl, double sigma_bl,
+		    double nu_pz_hypo);
 
-	int run4j2b();
-	int run4j1b();
-	int run4j0b();
-	int runWithoutBInfo();
+    std::vector<TLorentzVector> jets;
+    std::vector<double> jetsRes;
+    std::vector<double> btag;
 
-	bool ignoreBtagInfo;
+    TLorentzVector lepton;
+    double leptonRes;
 
-	std::vector<TLorentzVector> bjets;
-	std::vector<TLorentzVector> ljets;
-	TLorentzVector lepton;
-	TLorentzVector met;
+    TLorentzVector met;
+    double METRes;
+ 
+    std::vector<int> bJetsList;
+    std::vector<double> nu_pz_List;
 
-	std::vector<TLorentzVector> tempJetVector;
-	std::vector<double> tempJetResVector;
+    int nBjetSize;
+
+    std::vector<TLorentzVector> tempJetVector;
+    std::vector<double> tempJetResVector;
 
 
-	TLorentzVector bhad;
-	TLorentzVector blep;
-	TLorentzVector j1;
-	TLorentzVector j2;
+    TLorentzVector bhad;
+    TLorentzVector blep;
+    TLorentzVector j1;
+    TLorentzVector j2;
+
+    int bhad_idx;
+    int blep_idx;
+    int j1_idx;
+    int j2_idx;
+    int nu_pz;
 	
+    bool goodCombo;
 
-	bool goodCombo;
+    bool useResolutions;
 
-	bool useResolutions;
+    double btagThresh;
 
-	std::vector<double> bjetsRes;
-	std::vector<double> ljetsRes;
-	double METerror;
-	double Leperror;
+    METzCalculator metZ;
 
 };
 
