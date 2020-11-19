@@ -1,0 +1,27 @@
+universe = vanilla
+Executable = runSkims.sh
+
+should_transfer_files = YES
+#WhenToTransferOutput  = ON_EXIT
+notification = never
+
+Transfer_Input_Files = makeSkim, fileLists_2018.sh
+
+Output = condor/Skim_2018_$(cluster)_$(process).stdout
+Error  = condor/Skim_2018_$(cluster)_$(process).stderr
+Log    = condor/Skim_2018_$(cluster)_$(process).condor
+
+
+
+Arguments = "QCD_Pt20to30_bcToE 2018"
+Queue 1
+Arguments = "QCD_Pt30to80_bcToE 2018"
+Queue 1
+Arguments = "QCD_Pt80to170_bcToE 2018"
+Queue 1
+Arguments = "QCD_Pt170to250_bcToE 2018"
+Queue 1
+Arguments = "QCD_Pt250toInf_bcToE 2018"
+Queue 1
+
+
