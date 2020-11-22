@@ -108,6 +108,15 @@ void initCrossSections(){
     crossSections["QCD_Pt170to300_Ele"] = {  18810.,   18810.,   18810.};
     crossSections["QCD_Pt300toInf_Ele"] = {   1350.,    1350.,    1350.};
 
+   //included by aloke
+    crossSections["QCD_Pt20to30_bcToE"]   ={328999.93, 328999.93, 328999.93};
+    crossSections["QCD_Pt30to80_bcToE"]   ={405623.40, 405623.40, 405623.40};
+    crossSections["QCD_Pt80to170_bcToE"]  ={ 38104.43,  38104.43,  38104.43};
+    crossSections["QCD_Pt170to250_bcToE"] ={  2635.81,   2635.81,   2635.81};
+    crossSections["QCD_Pt250toInf_bcToE"] ={   711.92,    711.92,    711.92};
+
+
+
     // GJets cross sections taken from AN2016_471_v6 (SUSY photon + MET analysis)
     crossSections["GJets_HT40To100"]  = {20790.  , 20790.  , 20790.  };
     crossSections["GJets_HT100To200"] = { 9238.  ,  9238.  ,  9238.  };
@@ -159,7 +168,7 @@ double getEvtWeight(string sampleType, int year, double luminosity, double nEven
 
 
 
-const std::string allowedSampleTypes[150] = {"Data",
+const std::string allowedSampleTypes[155] = {"Data",
 					     "Data_SingleMu_a",
 					     "Data_SingleMu_b",
 					     "Data_SingleMu_c",
@@ -249,6 +258,11 @@ const std::string allowedSampleTypes[150] = {"Data",
 					     "QCD_Pt300toInf_Ele",
 					     "QCD_Pt30to40_Ele",
 					     "QCD_Pt40toInf_Ele",
+					     "QCD_Pt20to30_bcToE",
+					     "QCD_Pt30to80_bcToE",
+					     "QCD_Pt80to170_bcToE",
+ 					     "QCD_Pt170to250_bcToE",
+					     "QCD_Pt250toInf_bcToE",
 					     "GJets_HT40To100",
 					     "GJets_HT100To200",
 					     "GJets_HT200To400",

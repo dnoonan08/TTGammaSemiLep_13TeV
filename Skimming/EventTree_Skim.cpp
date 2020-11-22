@@ -12,12 +12,14 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	for(int fileI=0; fileI<nFiles; fileI++){
 	    string fName = (string) fileNames[fileI];
 	    chain->Add( (dir + fileNames[fileI]).c_str() );
-	    cout << fName << "  " << chain->GetEntries() << endl;
+	    //cout << dir+fName << "  " << chain->GetEntries() << endl;
+	    cout << (dir + fileNames[fileI]).c_str() << "  " << chain->GetEntries() << endl;
 	}
     }
     else{
 	for(int fileI=0; fileI<nFiles; fileI++){
 	    chain->Add(fileNames[fileI]);
+	    cout <<fileNames[fileI]<<endl;
 	}
     }
     std::cout << "Begin" << std::endl;
@@ -181,6 +183,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     std::cout << "Triggers" << std::endl;
     chain->SetBranchStatus("L1*",1);
     chain->SetBranchStatus("HLT_Ele*",1);
+    chain->SetBranchStatus("HLT_Mu*",1);
     chain->SetBranchStatus("HLT_IsoMu*",1);
     chain->SetBranchStatus("HLT_TkMu*",1);
     chain->SetBranchStatus("HLT_Photon*",1);
@@ -194,6 +197,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	chain->SetBranchAddress("HLT_Photon175",&HLT_Photon175_);
 
 	chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
+        chain->SetBranchStatus("HLT_IsoTkMu*",1);
 	chain->SetBranchAddress("HLT_IsoTkMu24",&HLT_IsoTkMu24_);
 	chain->SetBranchAddress("HLT_Mu50",&HLT_Mu50_);
 	chain->SetBranchAddress("HLT_TkMu50",&HLT_TkMu50_);
@@ -212,6 +216,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	chain->SetBranchAddress("HLT_IsoMu24_eta2p1",&HLT_IsoMu24_eta2p1_);
 	chain->SetBranchAddress("HLT_IsoMu27",&HLT_IsoMu27_);
 	chain->SetBranchAddress("HLT_Mu50",&HLT_Mu50_);
+	chain->SetBranchStatus("HLT_OldMu*",1);
 	chain->SetBranchAddress("HLT_OldMu100",&HLT_OldMu100_);
 	chain->SetBranchAddress("HLT_TkMu100",&HLT_TkMu100_);
 
@@ -223,12 +228,14 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	chain->SetBranchAddress("HLT_Ele38_WPTight_Gsf",&HLT_Ele38_WPTight_Gsf_);
 	chain->SetBranchAddress("HLT_Ele32_WPTight_Gsf_L1DoubleEG",&HLT_Ele32_WPTight_Gsf_L1DoubleEG_);
 	chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
+	chain->SetBranchStatus("HLT_DoubleEle*",1);
 	chain->SetBranchAddress("HLT_DoubleEle25_CaloIdL_MW",&HLT_DoubleEle25_CaloIdL_MW_);
 	chain->SetBranchAddress("HLT_Photon200",&HLT_Photon200_);
 
 	chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
 	chain->SetBranchAddress("HLT_IsoMu27",&HLT_IsoMu27_);
 	chain->SetBranchAddress("HLT_Mu50",&HLT_Mu50_);
+	chain->SetBranchStatus("HLT_OldMu*",1);
 	chain->SetBranchAddress("HLT_OldMu100",&HLT_OldMu100_);
 	chain->SetBranchAddress("HLT_TkMu100",&HLT_TkMu100_);
 
