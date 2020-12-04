@@ -314,8 +314,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     bool invertOverlap = false;
     
     bool skipOverlap = false;
- //test
-    bool isHemVetoObj = false;
     //    applypdfweight = false;
     //    applyqsquare  = false;
     //    if( sampleType == "TTbarPowheg" || sampleType=="isr_up_TTbarPowheg" || sampleType=="fsr_up_TTbarPowheg"|| sampleType=="isr_down_TTbarPowheg"|| sampleType=="fsr_down_TTbarPowheg"|| sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
@@ -651,7 +649,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 	//  cout << entry << endl;
 	tree->GetEntry(entry);
-/*
+
 	if( isMC && doOverlapInvert_TTG){
 	    //if (!overlapRemovalTT(tree, tree->event_==eventNum)){	
 	    if (!overlapRemoval(tree, 10., 5., 0.1, tree->event_==eventNum)){
@@ -659,7 +657,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
-*/
+
 	if( isMC && doOverlapRemoval_TT){
 	    // if (overlapRemovalTT(tree, tree->event_==eventNum) != overlapRemoval(tree, 10., 5., 0.1, tree->event_==eventNum)){	
 	    // 	cout << "ISSUE WITH OVERLAP REMOVAL" << endl;
@@ -748,6 +746,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 
 	//HEM test 
+        bool isHemVetoObj = false;
 	int nHEM_ele=0;
 	bool HEM_ele_Veto=false;
     	for(int eleInd = 0; eleInd < tree->nEle_; ++eleInd){
@@ -759,9 +758,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
         	bool ele_HEM_phi_pass = phi > -1.57 && phi < -0.87;
         	if ( ele_HEM_pt_pass &&  ele_HEM_eta_pass &&  ele_HEM_phi_pass) nHEM_ele++;
 	}
-  	if (nHEM_ele>=1) {
-        	HEM_ele_Veto=true;
-        }
+        	HEM_ele_Veto=(nHEM_ele>=1);
  	int nHEM_pho=0;
     	bool HEM_pho_Veto=false;
     	for(int phoInd = 0; phoInd < tree->nPho_; ++phoInd){
@@ -773,14 +770,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
         	bool pho_HEM_phi_pass = phi > -1.57  && phi < 0.87 ;
         	if (pho_HEM_eta_pass && pho_HEM_phi_pass && pho_HEM_et_pass) {nHEM_pho++ ;}
 	}
-	if (nHEM_pho>=1) {
-        	HEM_pho_Veto=true;
-        }
+        	HEM_pho_Veto= (nHEM_pho>=1);
 
 
-	if((HEM_pho_Veto || HEM_ele_Veto) && year=="2018") isHemVetoObj =true ;
-
-
+        isHemVetoObj=((HEM_pho_Veto || HEM_ele_Veto) && year=="2018");
+         cout <<"is HEM veto obj "<<isHemVetoObj<<endl;
         //cout <<" is data "<<_isData<<"run number = "<<tree->run_<<endl; // HEM test
 		
 	if(_isData &&  tree->run_>=319077 && isHemVetoObj && applyHemVeto){ 
@@ -788,7 +782,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		count_HEM++;
 		continue; 
         }
-
+        if( !applyHemVeto) isHemVetoObj=false;
 	selector->clear_vectors();
 
 	evtPick->process_event(tree, selector, _PUweight);
@@ -799,9 +793,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	    InitVariables();
 	   // FillEvent(year);
-
-	   if(applyHemVeto) FillEvent(year,isHemVetoObj); //HEM test
-	   else FillEvent(year,false);
+	    FillEvent(year,isHemVetoObj); //HEM test
 
 	    if(isMC) {
 		_PUweight    = PUweighter->getWeight(tree->nPUTrue_);
