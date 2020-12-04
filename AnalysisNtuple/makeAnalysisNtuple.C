@@ -93,7 +93,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
             av[i] = av[i+1];
 	}
 	ac = ac-1;
-	cout << "---------------------------------------" << endl;
+        cout << "---------------------------------------" << endl;
         cout << "Using Dilepton Control Region Selection" << endl;
         cout << "---------------------------------------" << endl;
     }
@@ -109,7 +109,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
             av[i] = av[i+1];
 	}
 	ac = ac-1;
-   	cout << "----------------------------------" << endl;
+        cout << "----------------------------------" << endl;
         cout << "Using QCD Control Region Selection" << endl;
         cout << "----------------------------------" << endl;
     }
@@ -227,8 +227,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     evtPick->Njet_ge = 2;
     evtPick->NBjet_ge = 0;
 
-    evtPick->applyMetFilter = true;
-
+    evtPick->applyMetFilter = true; 
+    bool applyHemVeto=true; 
+    //bool applyHemVeto=false; //test
     if (saveCutflow){
 	selector->smearJetPt=false;
 	evtPick->saveCutflows=true;
@@ -313,6 +314,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     bool invertOverlap = false;
     
     bool skipOverlap = false;
+ //test
+    bool isHemVetoObj = false;
     //    applypdfweight = false;
     //    applyqsquare  = false;
     //    if( sampleType == "TTbarPowheg" || sampleType=="isr_up_TTbarPowheg" || sampleType=="fsr_up_TTbarPowheg"|| sampleType=="isr_down_TTbarPowheg"|| sampleType=="fsr_down_TTbarPowheg"|| sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
@@ -443,7 +446,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	outputFileName.replace(0,outputDirectory.size()+1, outputDirectory + "/Dilep_");
     }
     if (qcdSample){
-	outputFileName.replace(0,outputDirectory.size()+1, outputDirectory + "/QCDCr_");
+	outputFileName.replace(0,outputDirectory.size()+1, outputDirectory + "/QCDcr_");
     }
     if (saveCutflow) {
 	outputFileName.replace(outputFileName.find("AnalysisNtuple"),14, "Cutflow");
@@ -615,6 +618,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (nEntr >5000000) { dumpFreq = 500000; }
     if (nEntr >10000000){ dumpFreq = 1000000; }
     int count_overlap=0;
+    int count_HEM=0;
 
     int entryStart;
     int entryStop;
@@ -647,7 +651,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 	//  cout << entry << endl;
 	tree->GetEntry(entry);
-
+/*
 	if( isMC && doOverlapInvert_TTG){
 	    //if (!overlapRemovalTT(tree, tree->event_==eventNum)){	
 	    if (!overlapRemoval(tree, 10., 5., 0.1, tree->event_==eventNum)){
@@ -655,6 +659,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
+*/
 	if( isMC && doOverlapRemoval_TT){
 	    // if (overlapRemovalTT(tree, tree->event_==eventNum) != overlapRemoval(tree, 10., 5., 0.1, tree->event_==eventNum)){	
 	    // 	cout << "ISSUE WITH OVERLAP REMOVAL" << endl;
@@ -674,6 +679,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		}
 	    }
 	}
+
 	if( isMC && doOverlapRemoval_W){
 	    //if (overlapRemovalWJets(tree, tree->event_==eventNum)){
 	    if (overlapRemoval(tree, 15., 2.6, 0.05, tree->event_==eventNum)){
@@ -681,6 +687,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
+
 	if( isMC && doOverlapInvert_WG){
 	    //if (!overlapRemovalWJets(tree, tree->event_==eventNum)){	
 	    if (!overlapRemoval(tree, 15., 2.6, 0.05, tree->event_==eventNum)){
@@ -709,6 +716,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
+
 	if( isMC && doOverlapInvert_TG){
 	    //if (!overlapRemoval_Tchannel(tree)){
 	    if (!overlapRemoval_2To3(tree, 10., 2.6, 0.05, tree->event_==eventNum)){
@@ -716,6 +724,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
+
 	if( isMC && doOverlapInvert_GJ){
 	    //if (!overlapRemoval_Tchannel(tree)){
 	    if (!overlapRemoval(tree, 25., 2.5, 0.4, tree->event_==eventNum)){
@@ -723,6 +732,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
+
 	if( isMC && doOverlapRemoval_QCD){
 	    if (overlapRemoval(tree, 25., 2.5, 0.4, tree->event_==eventNum)){
 		count_overlap++;
@@ -737,6 +747,48 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	    }
 	}
 
+	//HEM test 
+	int nHEM_ele=0;
+	bool HEM_ele_Veto=false;
+    	for(int eleInd = 0; eleInd < tree->nEle_; ++eleInd){
+        	double eta = tree->eleEta_[eleInd];
+ 		double pt = tree->elePt_[eleInd];
+        	double phi = tree->elePhi_[eleInd];
+		bool ele_HEM_pt_pass  = pt >= 15 ;
+        	bool ele_HEM_eta_pass = eta > -3.0 && eta < -1.4 ;
+        	bool ele_HEM_phi_pass = phi > -1.57 && phi < -0.87;
+        	if ( ele_HEM_pt_pass &&  ele_HEM_eta_pass &&  ele_HEM_phi_pass) nHEM_ele++;
+	}
+  	if (nHEM_ele>=1) {
+        	HEM_ele_Veto=true;
+        }
+ 	int nHEM_pho=0;
+    	bool HEM_pho_Veto=false;
+    	for(int phoInd = 0; phoInd < tree->nPho_; ++phoInd){
+        	double et = tree->phoEt_[phoInd];
+        	double eta = tree->phoEta_[phoInd];
+        	double phi = tree->phoPhi_[phoInd];
+ 		bool pho_HEM_eta_pass =  eta > -3.0   && eta < -1.4 ;
+        	bool pho_HEM_et_pass =  et >= 15;
+        	bool pho_HEM_phi_pass = phi > -1.57  && phi < 0.87 ;
+        	if (pho_HEM_eta_pass && pho_HEM_phi_pass && pho_HEM_et_pass) {nHEM_pho++ ;}
+	}
+	if (nHEM_pho>=1) {
+        	HEM_pho_Veto=true;
+        }
+
+
+	if((HEM_pho_Veto || HEM_ele_Veto) && year=="2018") isHemVetoObj =true ;
+
+
+        //cout <<" is data "<<_isData<<"run number = "<<tree->run_<<endl; // HEM test
+		
+	if(_isData &&  tree->run_>=319077 && isHemVetoObj && applyHemVeto){ 
+	    //cout << "Data Veto applying on "<< tree->run_ <<endl;
+		count_HEM++;
+		continue; 
+        }
+
 	selector->clear_vectors();
 
 	evtPick->process_event(tree, selector, _PUweight);
@@ -746,7 +798,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
 	    InitVariables();
-	    FillEvent(year);
+	   // FillEvent(year);
+
+	   if(applyHemVeto) FillEvent(year,isHemVetoObj); //HEM test
+	   else FillEvent(year,false);
 
 	    if(isMC) {
 		_PUweight    = PUweighter->getWeight(tree->nPUTrue_);
@@ -953,7 +1008,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (doOverlapInvert_GJ){
 	std::cout << "Total number of events removed from GJets:"<< count_overlap <<std::endl;
     }
-
+    std:cout << "Total number of HEM events removed from Data  = "<<count_HEM<<std::endl;
     outputFile->cd();
 
     outputTree->Write();
@@ -996,7 +1051,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 }
 
 
-void makeAnalysisNtuple::FillEvent(std::string year)
+//void makeAnalysisNtuple::FillEvent(std::string year)
+void makeAnalysisNtuple::FillEvent(std::string year, bool isHemVetoObj) //HEM test
 {
 
     _run             = tree->run_;
@@ -1017,7 +1073,16 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	_evtWeight= 1.;
 	//	_evtWeightAlt= 1.;
     }
-    
+
+
+//MC HEM test
+    if(isMC && isHemVetoObj){
+                _evtWeight = _evtWeight*0.3518;
+                        }
+
+
+
+
     _genMET		     = tree->GenMET_pt_;
     _pfMET		     = tree->MET_pt_;
     _pfMETPhi    	     = tree->MET_phi_;
