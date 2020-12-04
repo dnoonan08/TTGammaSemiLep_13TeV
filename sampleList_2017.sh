@@ -176,3 +176,9 @@ ZZTo4L_amcatnlo_2017="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2
 
 ZZTo4L_2017="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/ZZTo4L_powheg_ext2_2017_skim_10of10.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/ZZTo4L_powheg_ext2_2017_skim_1of10.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/ZZTo4L_powheg_ext2_2017_skim_2of10.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/ZZTo4L_powheg_ext2_2017_skim_3of10.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/ZZTo4L_powheg_ext2_2017_skim_4of10.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/ZZTo4L_powheg_ext2_2017_skim_5of10.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/ZZTo4L_powheg_ext2_2017_skim_6of10.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/ZZTo4L_powheg_ext2_2017_skim_7of10.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/ZZTo4L_powheg_ext2_2017_skim_8of10.root root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/ZZTo4L_powheg_ext2_2017_skim_9of10.root"
 
+
+QCD_Pt20to30_bcToE_2017="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/QCD_Pt20to30_bcToE_2017_skim.root"
+QCD_Pt30to80_bcToE_2017="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/QCD_Pt30to80_bcToE_2017_skim.root"
+QCD_Pt80to170_bcToE_2017="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/QCD_Pt80to170_bcToE_2017_skim.root"
+QCD_Pt170to250_bcToE_2017="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/QCD_Pt170to250_bcToE_2017_skim.root"
+QCD_Pt250toInf_bcToE_2017="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6/2017/QCD_Pt250toInf_bcToE_2017_skim.root"

@@ -227,8 +227,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     evtPick->Njet_ge = 2;
     evtPick->NBjet_ge = 0;
 
-    evtPick->applyMetFilter = true;
-
+    evtPick->applyMetFilter = true; 
+    bool applyHemVeto=true; 
+    //bool applyHemVeto=false; //test
     if (saveCutflow){
 	selector->smearJetPt=false;
 	evtPick->saveCutflows=true;
@@ -307,6 +308,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     bool doOverlapRemoval_Z = false;	
     bool doOverlapInvert_TG = false;	
     bool doOverlapRemoval_Tchannel = false;	
+    bool doOverlapRemoval_QCD = false;	
+    bool doOverlapInvert_GJ = false;	
     
     bool invertOverlap = false;
     
@@ -341,12 +344,18 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (sampleType.find("TGJets")!= std::string::npos) {
 	doOverlapInvert_TG = true;
     }    
+    if (sampleType.find("GJets")!= std::string::npos) {
+	doOverlapInvert_GJ = true;
+    }    
+    if ((sampleType.find("QCD")!= std::string::npos) ||(sampleType.find("bcToE")!= std::string::npos) ) {
+	doOverlapRemoval_QCD = true;
+    }    
     
 
-    if(doOverlapRemoval_TT || doOverlapRemoval_W || doOverlapRemoval_Z || doOverlapRemoval_Tchannel) {
+    if(doOverlapRemoval_TT || doOverlapRemoval_W || doOverlapRemoval_Z || doOverlapRemoval_Tchannel || doOverlapRemoval_QCD) {
 	std::cout << "########## Will apply overlap removal ###########" << std::endl;
     }
-    if(doOverlapInvert_TTG || doOverlapInvert_WG || doOverlapInvert_ZG || doOverlapInvert_TG) {
+    if(doOverlapInvert_TTG || doOverlapInvert_WG || doOverlapInvert_ZG || doOverlapInvert_TG || doOverlapInvert_GJ) {
 	std::cout << "##########   Will apply overlap inversion   ###########" << std::endl;
 	std::cout << "########## Keeping only events with overlap ###########" << std::endl;
     }
@@ -607,6 +616,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (nEntr >5000000) { dumpFreq = 500000; }
     if (nEntr >10000000){ dumpFreq = 1000000; }
     int count_overlap=0;
+    int count_HEM=0;
 
     int entryStart;
     int entryStop;
@@ -647,6 +657,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
+
 	if( isMC && doOverlapRemoval_TT){
 	    // if (overlapRemovalTT(tree, tree->event_==eventNum) != overlapRemoval(tree, 10., 5., 0.1, tree->event_==eventNum)){	
 	    // 	cout << "ISSUE WITH OVERLAP REMOVAL" << endl;
@@ -666,6 +677,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		}
 	    }
 	}
+
 	if( isMC && doOverlapRemoval_W){
 	    //if (overlapRemovalWJets(tree, tree->event_==eventNum)){
 	    if (overlapRemoval(tree, 15., 2.6, 0.05, tree->event_==eventNum)){
@@ -673,6 +685,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
+
 	if( isMC && doOverlapInvert_WG){
 	    //if (!overlapRemovalWJets(tree, tree->event_==eventNum)){	
 	    if (!overlapRemoval(tree, 15., 2.6, 0.05, tree->event_==eventNum)){
@@ -701,9 +714,25 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		continue;
 	    }
 	}
+
 	if( isMC && doOverlapInvert_TG){
 	    //if (!overlapRemoval_Tchannel(tree)){
 	    if (!overlapRemoval_2To3(tree, 10., 2.6, 0.05, tree->event_==eventNum)){
+		count_overlap++;
+		continue;
+	    }
+	}
+
+	if( isMC && doOverlapInvert_GJ){
+	    //if (!overlapRemoval_Tchannel(tree)){
+	    if (!overlapRemoval(tree, 25., 2.5, 0.4, tree->event_==eventNum)){
+		count_overlap++;
+		continue;
+	    }
+	}
+
+	if( isMC && doOverlapRemoval_QCD){
+	    if (overlapRemoval(tree, 25., 2.5, 0.4, tree->event_==eventNum)){
 		count_overlap++;
 		continue;
 	    }
@@ -716,6 +745,44 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	    }
 	}
 
+	//HEM test 
+        bool isHemVetoObj = false;
+	int nHEM_ele=0;
+	bool HEM_ele_Veto=false;
+    	for(int eleInd = 0; eleInd < tree->nEle_; ++eleInd){
+        	double eta = tree->eleEta_[eleInd];
+ 		double pt = tree->elePt_[eleInd];
+        	double phi = tree->elePhi_[eleInd];
+		bool ele_HEM_pt_pass  = pt >= 15 ;
+        	bool ele_HEM_eta_pass = eta > -3.0 && eta < -1.4 ;
+        	bool ele_HEM_phi_pass = phi > -1.57 && phi < -0.87;
+        	if ( ele_HEM_pt_pass &&  ele_HEM_eta_pass &&  ele_HEM_phi_pass) nHEM_ele++;
+	}
+        	HEM_ele_Veto=(nHEM_ele>=1);
+ 	int nHEM_pho=0;
+    	bool HEM_pho_Veto=false;
+    	for(int phoInd = 0; phoInd < tree->nPho_; ++phoInd){
+        	double et = tree->phoEt_[phoInd];
+        	double eta = tree->phoEta_[phoInd];
+        	double phi = tree->phoPhi_[phoInd];
+ 		bool pho_HEM_eta_pass =  eta > -3.0   && eta < -1.4 ;
+        	bool pho_HEM_et_pass =  et >= 15;
+        	bool pho_HEM_phi_pass = phi > -1.57  && phi < 0.87 ;
+        	if (pho_HEM_eta_pass && pho_HEM_phi_pass && pho_HEM_et_pass) {nHEM_pho++ ;}
+	}
+        	HEM_pho_Veto= (nHEM_pho>=1);
+
+
+        isHemVetoObj=((HEM_pho_Veto || HEM_ele_Veto) && year=="2018");
+         cout <<"is HEM veto obj "<<isHemVetoObj<<endl;
+        //cout <<" is data "<<_isData<<"run number = "<<tree->run_<<endl; // HEM test
+		
+	if(_isData &&  tree->run_>=319077 && isHemVetoObj && applyHemVeto){ 
+	    //cout << "Data Veto applying on "<< tree->run_ <<endl;
+		count_HEM++;
+		continue; 
+        }
+        if( !applyHemVeto) isHemVetoObj=false;
 	selector->clear_vectors();
 
 	evtPick->process_event(tree, selector, _PUweight);
@@ -725,7 +792,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
 	    InitVariables();
-	    FillEvent(year);
+	   // FillEvent(year);
+	    FillEvent(year,isHemVetoObj); //HEM test
 
 	    if(isMC) {
 		_PUweight    = PUweighter->getWeight(tree->nPUTrue_);
@@ -926,7 +994,13 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (doOverlapInvert_TG){
 	std::cout << "Total number of events removed from TGJets:"<< count_overlap <<std::endl;
     }
-
+    if (doOverlapRemoval_QCD){
+	std::cout << "Total number of events removed from QCD:"<< count_overlap <<std::endl;
+    }
+    if (doOverlapInvert_GJ){
+	std::cout << "Total number of events removed from GJets:"<< count_overlap <<std::endl;
+    }
+    std:cout << "Total number of HEM events removed from Data  = "<<count_HEM<<std::endl;
     outputFile->cd();
 
     outputTree->Write();
@@ -969,7 +1043,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 }
 
 
-void makeAnalysisNtuple::FillEvent(std::string year)
+//void makeAnalysisNtuple::FillEvent(std::string year)
+void makeAnalysisNtuple::FillEvent(std::string year, bool isHemVetoObj) //HEM test
 {
 
     _run             = tree->run_;
@@ -990,7 +1065,16 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	_evtWeight= 1.;
 	//	_evtWeightAlt= 1.;
     }
-    
+
+
+//MC HEM test
+    if(isMC && isHemVetoObj){
+                _evtWeight = _evtWeight*0.3518;
+                        }
+
+
+
+
     _genMET		     = tree->GenMET_pt_;
     _pfMET		     = tree->MET_pt_;
     _pfMETPhi    	     = tree->MET_phi_;

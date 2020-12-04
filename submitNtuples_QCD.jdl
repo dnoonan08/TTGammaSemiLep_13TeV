@@ -60,6 +60,18 @@ Queue 1
 Arguments = "GJets_HT600ToInf $(year)"
 Queue 1
 
+Arguments = "QCD_Pt20to30_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt30to80_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt80to170_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt170to250_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt250toInf_bcToE $(year)"
+Queue 1
+
+
 Arguments = "QCD_Pt20to30_Ele $(year)"
 Queue 1
 Arguments = "QCD_Pt30to50_Ele $(year)"
@@ -238,6 +250,18 @@ Arguments = "GJets_HT400To600 $(year)"
 Queue 1
 Arguments = "GJets_HT600ToInf $(year)"
 Queue 1
+
+Arguments = "QCD_Pt20to30_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt30to80_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt80to170_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt170to250_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt250toInf_bcToE $(year)"
+Queue 1
+
 
 Arguments = "QCD_Pt20to30_Ele $(year)"
 Queue 1
@@ -430,6 +454,18 @@ Arguments = "QCD_Pt170to300_Ele $(year)"
 Queue 1
 Arguments = "QCD_Pt300toInf_Ele $(year)"
 Queue 1
+
+Arguments = "QCD_Pt20to30_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt30to80_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt80to170_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt170to250_bcToE $(year)"
+Queue 1
+Arguments = "QCD_Pt250toInf_bcToE $(year)"
+Queue 1
+
 
 Arguments = "QCD_Pt20to30_Mu $(year)"
 Queue 1

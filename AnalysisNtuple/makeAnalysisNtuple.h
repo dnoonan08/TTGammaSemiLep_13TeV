@@ -466,7 +466,8 @@ class makeAnalysisNtuple {
 
 
     void InitVariables();
-    void FillEvent(std::string year);
+    //void FillEvent(std::string year);
+    void FillEvent(std::string year, bool isHemVetoObj); //HEM test
     void InitBranches();
 
     double SFtop(double pt);
