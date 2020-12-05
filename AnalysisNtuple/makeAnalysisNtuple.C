@@ -750,37 +750,34 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	int nHEM_ele=0;
 	bool HEM_ele_Veto=false;
     	for(int eleInd = 0; eleInd < tree->nEle_; ++eleInd){
-        	double eta = tree->eleEta_[eleInd];
- 		double pt = tree->elePt_[eleInd];
-        	double phi = tree->elePhi_[eleInd];
-		bool ele_HEM_pt_pass  = pt >= 15 ;
-        	bool ele_HEM_eta_pass = eta > -3.0 && eta < -1.4 ;
-        	bool ele_HEM_phi_pass = phi > -1.57 && phi < -0.87;
-        	if ( ele_HEM_pt_pass &&  ele_HEM_eta_pass &&  ele_HEM_phi_pass) nHEM_ele++;
+            double eta = tree->eleEta_[eleInd];
+            double pt = tree->elePt_[eleInd];
+            double phi = tree->elePhi_[eleInd];
+            bool ele_HEM_pt_pass  = pt >= 15 ;
+            bool ele_HEM_eta_pass = eta > -3.0 && eta < -1.4 ;
+            bool ele_HEM_phi_pass = phi > -1.57 && phi < -0.87;
+            if ( ele_HEM_pt_pass &&  ele_HEM_eta_pass &&  ele_HEM_phi_pass) nHEM_ele++;
 	}
-        	HEM_ele_Veto=(nHEM_ele>=1);
+        HEM_ele_Veto=(nHEM_ele>=1);
  	int nHEM_pho=0;
     	bool HEM_pho_Veto=false;
     	for(int phoInd = 0; phoInd < tree->nPho_; ++phoInd){
-        	double et = tree->phoEt_[phoInd];
-        	double eta = tree->phoEta_[phoInd];
-        	double phi = tree->phoPhi_[phoInd];
- 		bool pho_HEM_eta_pass =  eta > -3.0   && eta < -1.4 ;
-        	bool pho_HEM_et_pass =  et >= 15;
-        	bool pho_HEM_phi_pass = phi > -1.57  && phi < 0.87 ;
-        	if (pho_HEM_eta_pass && pho_HEM_phi_pass && pho_HEM_et_pass) {nHEM_pho++ ;}
+            double et = tree->phoEt_[phoInd];
+            double eta = tree->phoEta_[phoInd];
+            double phi = tree->phoPhi_[phoInd];
+            bool pho_HEM_eta_pass =  eta > -3.0   && eta < -1.4 ;
+            bool pho_HEM_et_pass =  et >= 15;
+            bool pho_HEM_phi_pass = phi > -1.57  && phi < 0.87 ;
+            if (pho_HEM_eta_pass && pho_HEM_phi_pass && pho_HEM_et_pass) {nHEM_pho++ ;}
 	}
-        	HEM_pho_Veto= (nHEM_pho>=1);
+        HEM_pho_Veto= (nHEM_pho>=1);
 
 
         isHemVetoObj=((HEM_pho_Veto || HEM_ele_Veto) && year=="2018");
-         cout <<"is HEM veto obj "<<isHemVetoObj<<endl;
-        //cout <<" is data "<<_isData<<"run number = "<<tree->run_<<endl; // HEM test
-		
+
 	if(_isData &&  tree->run_>=319077 && isHemVetoObj && applyHemVeto){ 
-	    //cout << "Data Veto applying on "<< tree->run_ <<endl;
-		count_HEM++;
-		continue; 
+            count_HEM++;
+            continue; 
         }
         if( !applyHemVeto) isHemVetoObj=false;
 	selector->clear_vectors();

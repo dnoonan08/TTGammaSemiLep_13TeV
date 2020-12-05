@@ -47,7 +47,7 @@ void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
 		if(tree->jetPt_[jetInd] < 10) continue;
 		if(fabs(tree->jetEta_[jetInd]) > 5.2) continue;
 		JetCorrector->setJetEta(tree->jetEta_[jetInd]);
-		JetCorrector->setJetPt(tree->jetPt_[jetInd] / tree->jetRawFactor_[jetInd]);
+		JetCorrector->setJetPt(tree->jetPt_[jetInd] / (1.+tree->jetRawFactor_[jetInd]));
 		JetCorrector->setJetA(tree->jetArea_[jetInd]);
 		JetCorrector->setRho(tree->rho_);
 		
@@ -74,7 +74,7 @@ void JECvariation::applyJEC(EventTree* tree, int scaleDownNormUp012){
 		//		if(scaleDownNormUp012==1) continue;
 		if(scaleDownNormUp012==2) correction+=unc;
 		
-		tree->jetPt_[jetInd] = tree->jetPt_[jetInd] / tree->jetRawFactor_[jetInd] * correction;
+		tree->jetPt_[jetInd] = tree->jetPt_[jetInd] / (1.+tree->jetRawFactor_[jetInd]) * correction;
 		//tree->jetEn_[jetInd] = tree->jetRawEn_[jetInd] * correction;
 		
 		tjet.SetPtEtaPhiM(tree->jetPt_[jetInd], tree->jetEta_[jetInd], tree->jetPhi_[jetInd], 0.0);		       

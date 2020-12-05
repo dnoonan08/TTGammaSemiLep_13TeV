@@ -60,8 +60,7 @@ Selector::Selector(){
     mu_RelIso_loose = 0.25;
 	
     mu_Iso_invert = false;
-   // smearJetPt = true;
-    smearJetPt = false; //aloke
+    smearJetPt = true;
     smearPho = true;
     smearEle = true;
     scaleEle = true;
