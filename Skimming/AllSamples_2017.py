@@ -33,12 +33,16 @@ sampleList_2017 = {
 'TTGamma_Dilepton_TuneDown' : '/TTGamma_Dilept_TuneCP5Down_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TTGamma_Dilepton_TuneUp'   : '/TTGamma_Dilept_TuneCP5Up_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TTGamma_Dilepton_erdOn'    : '/TTGamma_Dilept_TuneCP5_erdON_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TTGamma_Dilepton_CR1'      : '/TTGamma_Dilept_TuneCP5CR1_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TTGamma_Dilepton_CR2'      : '/TTGamma_Dilept_TuneCP5CR2_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 
 
 
 'TTGamma_SingleLept_TuneDown' : '/TTGamma_SingleLept_TuneCP5Down_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TTGamma_SingleLept_TuneUp'   : '/TTGamma_SingleLept_TuneCP5Up_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TTGamma_SingleLept_erdOn'    : '/TTGamma_SingleLept_TuneCP5_erdON_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TTGamma_SingleLept_CR1'      : '/TTGamma_SingleLept_TuneCP5CR1_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TTGamma_SingleLept_CR2'      : '/TTGamma_SingleLept_TuneCP5CR2_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 
 
 'Data_SingleMu_b' : '/SingleMuon/Run2017B-'+DataType+'/NANOAOD',

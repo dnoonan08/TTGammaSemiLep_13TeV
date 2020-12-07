@@ -32,24 +32,25 @@ Queue 1
 Arguments = "TTGamma_Hadronic_Pt200 2017"
 Queue 1
 
-Arguments = "TTGamma_Dilepton_small 2017"
-Queue 1
-Arguments = "TTGamma_Hadronic_small 2017"
-Queue 1
-Arguments = "TTGamma_SemiLept_small 2017"
-Queue 1
-
 Arguments = "TTGamma_Dilepton_TuneDown 2017"
 Queue 1
 Arguments = "TTGamma_Dilepton_TuneUp 2017"
 Queue 1
 Arguments = "TTGamma_Dilepton_erdOn 2017"
 Queue 1
+Arguments = "TTGamma_Dilepton_CR1 2017"
+Queue 1
+Arguments = "TTGamma_Dilepton_CR2 2017"
+Queue 1
 Arguments = "TTGamma_SingleLept_TuneDown 2017"
 Queue 1
 Arguments = "TTGamma_SingleLept_TuneUp 2017"
 Queue 1
 Arguments = "TTGamma_SingleLept_erdOn 2017"
+Queue 1
+Arguments = "TTGamma_SingleLept_CR1 2017"
+Queue 1
+Arguments = "TTGamma_SingleLept_CR2 2017"
 Queue 1
 
 Arguments = "Data_SingleMu_b 2017 $INT(X) 10"
@@ -220,6 +221,18 @@ Queue 1
 Arguments = "QCD_Pt170to300_Ele 2017"
 Queue 1
 Arguments = "QCD_Pt300toInf_Ele 2017"
+Queue 1
+
+
+Arguments = "QCD_Pt20to30_bcToE 2017"
+Queue 1
+Arguments = "QCD_Pt30to80_bcToE 2017"
+Queue 1
+Arguments = "QCD_Pt80to170_bcToE 2017"
+Queue 1
+Arguments = "QCD_Pt170to250_bcToE 2017"
+Queue 1
+Arguments = "QCD_Pt250toInf_bcToE 2017"
 Queue 1
 
 
