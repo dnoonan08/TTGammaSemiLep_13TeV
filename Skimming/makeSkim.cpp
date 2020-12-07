@@ -22,6 +22,21 @@ int main(int ac, char** av){
 
 	std::cout << "Starting" << std::endl;
 
+        printf("Git Commit Number: %s\n", VERSION);
+        printf("Git Commit Time: %s\n", COMMITTIME);
+        printf("Git Branch: %s\n", BRANCH);
+        printf("Git Status: %s\n", STATUS);
+
+        if (STATUS != ""){
+            cout << endl;
+            cout <<"=============================================" << endl;
+            cout <<"=============================================" << endl;
+            cout <<"Warning, files are missing from github" << endl;
+            cout <<"=============================================" << endl;
+            cout <<"=============================================" << endl;
+            cout << endl;
+        }
+
 	// input: dealing with TTree first
 	bool isMC = true;
 	bool xRootDAccess = false;
@@ -236,6 +251,16 @@ int main(int ac, char** av){
 	hPUTrue_->Write();
 	hEvents_->Write();
 
+        TNamed gitCommit("Git_Commit", VERSION);
+        TNamed gitTime("Git_Commit_Time", COMMITTIME);
+        TNamed gitBranch("Git_Branch", BRANCH);
+        TNamed gitStatus("Git_Status", STATUS);
+
+        gitCommit.Write();
+        gitTime.Write();
+        gitBranch.Write();
+        gitStatus.Write();
+    
 	outFile->Close();
 
 	
