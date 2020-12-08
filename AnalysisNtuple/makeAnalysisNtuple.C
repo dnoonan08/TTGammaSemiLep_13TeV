@@ -2155,8 +2155,20 @@ void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* g
 
 int main(int ac, char** av){
 
-  makeAnalysisNtuple(ac, av);
+  if (std::string(av[1])=="git"){
+    printf("Git Commit Number: %s\n", VERSION);
+    printf("Git Commit Time: %s\n", COMMITTIME);
+    printf("Git Branch: %s\n", BRANCH);
+    printf("Git Status: %s\n", STATUS);
+    bool gitStatus = std::string(STATUS)=="" ;
+    if (!gitStatus){
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 
+  makeAnalysisNtuple(ac, av);
 
   return 0;
 }
