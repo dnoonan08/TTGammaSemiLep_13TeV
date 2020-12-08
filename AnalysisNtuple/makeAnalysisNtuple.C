@@ -1712,8 +1712,11 @@ void makeAnalysisNtuple::FillEvent(std::string year, bool isHemVetoObj) //HEM te
 		if(i==2||i==6){continue;}
 		_genScaleSystWeights.push_back(tree->LHEScaleWeight_[i]);
 	    }
-	    _q2weight_Up = *max_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end())/tree->LHEScaleWeight_[4];
-	    _q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end())/tree->LHEScaleWeight_[4];
+            double nomWeight=tree->LHEScaleWeight_[4];
+            if (nomWeight!=0){
+                _q2weight_Up = *max_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end())/nomWeight;
+                _q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end())/nomWeight;
+            }
 	}
 
 	if (tree->nLHEScaleWeight_==44){
@@ -1728,9 +1731,8 @@ void makeAnalysisNtuple::FillEvent(std::string year, bool isHemVetoObj) //HEM te
 	    _q2weight_Do = *min_element(_genScaleSystWeights.begin(), _genScaleSystWeights.end());
 	}
 
-	_pdfWeight = tree->LHEPdfWeight_[0];
 	double pdfMean = 0.;
-	for (int j=1; j < tree->nLHEPdfWeight_; j++ ){
+	for (int j=0; j < tree->nLHEPdfWeight_; j++ ){
 	    _pdfSystWeight.push_back(tree->LHEPdfWeight_[j]);
 	    pdfMean += tree->LHEPdfWeight_[j];
 	}
@@ -1740,10 +1742,10 @@ void makeAnalysisNtuple::FillEvent(std::string year, bool isHemVetoObj) //HEM te
 	for (int j=0; j < _pdfSystWeight.size(); j++){
 	    pdfVariance += pow((_pdfSystWeight[j]-pdfMean),2.);
 	}
-
-	_pdfuncer = sqrt(pdfVariance/_pdfSystWeight.size());
-	_pdfweight_Up = (_pdfWeight + _pdfuncer)/_pdfWeight;
-	_pdfweight_Do = (_pdfWeight - _pdfuncer)/_pdfWeight;
+        if (pdfMean=0) pdfMean=1;
+	_pdfuncer = sqrt(pdfVariance/_pdfSystWeight.size())/pdfMean;
+	_pdfweight_Up = (1. + _pdfuncer);
+	_pdfweight_Do = (1. - _pdfuncer);
 
 	_ISRweight_Up = 1.;
 	_ISRweight_Do = 1.;
@@ -1752,12 +1754,14 @@ void makeAnalysisNtuple::FillEvent(std::string year, bool isHemVetoObj) //HEM te
 	_FSRweight_Do = 1.;
 	
 	if (tree->nPSWeight_==4){
-	    _ISRweight_Up = tree->PSWeight_[2] * tree->LHEWeight_originalXWGTUP_ / tree->genWeight_;
-	    _ISRweight_Do = tree->PSWeight_[0] * tree->LHEWeight_originalXWGTUP_ / tree->genWeight_;
+            if (tree->genWeight_ != 0){
+                _ISRweight_Up = tree->PSWeight_[2];
+                _ISRweight_Do = tree->PSWeight_[0];
 
-	    _FSRweight_Up = tree->PSWeight_[3] * tree->LHEWeight_originalXWGTUP_ / tree->genWeight_;
-	    _FSRweight_Do = tree->PSWeight_[0] * tree->LHEWeight_originalXWGTUP_ / tree->genWeight_;
-	}
+                _FSRweight_Up = tree->PSWeight_[3];
+                _FSRweight_Do = tree->PSWeight_[1];
+            }
+        }
 
     }
 
