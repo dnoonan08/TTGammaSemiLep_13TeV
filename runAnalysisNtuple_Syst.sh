@@ -2,8 +2,9 @@
 
 sample=$1
 year=$2
-job=$3
-nJobs=$4
+syst=$3
+job=$4
+nJobs=$5
 
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then 
     echo "Running Interactively" ; 
@@ -31,24 +32,30 @@ echo ${year}
 echo ${job}
 echo ${nJobs}
 
-outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/AnalysisNtuples_Dec2020/Dilepton"
+outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/AnalysisNtuples_Dec2020/Systematics"
 
 source sampleList_${year}.sh
-varname=${sample}_${year}
+
+if [ ${syst} = "CR1" ] || [ ${syst} = "CR2" ] || [ ${syst} = "erdOn" ]  || [ ${syst} = "TuneUp" ]  || [ ${syst} = "TuneDown" ] ;
+then
+    varname=${sample}_${syst}_${year}
+else
+    varname=${sample}_${year}
+fi
 
 if [ -z ${job} ] ; then
-    echo "./AnalysisNtuple/makeAnalysisNtuple Dilep ${year} ${sample} . ${!varname}"
-    ./AnalysisNtuple/makeAnalysisNtuple Dilep ${year} ${sample} . ${!varname};
+    echo "./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__${syst} . ${!varname}"
+    ./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__${syst} . ${!varname};
 else
-    echo "./AnalysisNtuple/makeAnalysisNtuple Dilep ${year} ${sample} ${job}of${nJobs} . ${!varname}"
-    ./AnalysisNtuple/makeAnalysisNtuple Dilep ${year} ${sample} ${job}of${nJobs} . ${!varname};
+    echo "./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__${syst} ${job}of${nJobs} . ${!varname}"
+    ./AnalysisNtuple/makeAnalysisNtuple ${year} ${sample}__${syst} ${job}of${nJobs} . ${!varname};
 fi
 
 
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
     echo "Finished" ;
 else
-    xrdcp -f Dilep_${sample}_${year}_AnalysisNtuple*.root ${outputdir}/${year}
+    xrdcp -f ${syst}*${sample}_${year}_AnalysisNtuple*.root ${outputdir}/${year}
     echo "Finished, Cleaning up"
     rm *root
     rm *sh

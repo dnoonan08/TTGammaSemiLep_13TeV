@@ -31,7 +31,7 @@ echo ${year}
 echo ${job}
 echo ${nJobs}
 
-outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/AnalysisNtuples/"
+outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/AnalysisNtuples_Dec2020/"
 
 source sampleList_${year}.sh
 varname=${sample}_${year}

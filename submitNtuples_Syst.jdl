@@ -1,0 +1,524 @@
+universe = vanilla
+Executable = runAnalysisNtuple_Syst.sh
+
+should_transfer_files = YES
+WhenToTransferOutput  = ON_EXIT
+notification = never
+
+Transfer_Input_Files = AnalysisNtuple/makeAnalysisNtuple, sampleList_2016.sh, sampleList_2017.sh, sampleList_2018.sh
+
+Output = condor/nTuples_$(cluster)_$(process).stdout
+Error  = condor/nTuples_$(cluster)_$(process).stderr
+Log    = condor/nTuples_$(cluster)_$(process).condor
+
+X=$(step)+1
+
+systList=(JECTotal_up, JECTotal_down, JER_up, JER_down)
+systListTTG=(JECTotal_up, JECTotal_down, JER_up, JER_down, CR1, CR2, TuneUp, TuneDown, erdOn)
+
+
+
+year=2016
+
+Arguments = "DYjetsM10to50 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "DYjetsM50 $(year) $(syst) $INT(X) 5"
+Queue 5 syst in $(systList)
+
+Arguments = "GJets_HT40To100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT100To200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT200To400 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT400To600 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT600ToInf $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "QCD_Pt20to30_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt30to50_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt50to80_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt80to120_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt120to170_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt170to300_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt300toInf_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "QCD_Pt20to30_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt30to80_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt80to170_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt170to250_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt250toInf_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "QCD_Pt20to30_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt30to50_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt50to80_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt80to120_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt120to170_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt170to300_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt300to470_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt470to600_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt600to800_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt800to1000_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt1000toInf_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "ST_s_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_tW_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_tbarW_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_tbar_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_t_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TGJets $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTGamma_Dilepton $(year) $(syst)"
+Queue 1 syst in $(systListTTG)
+Arguments = "TTGamma_Dilepton_Pt100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_Dilepton_Pt200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTGamma_Hadronic $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_Hadronic_Pt100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_Hadronic_Pt200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTGamma_SingleLept $(year) $(syst)"
+Queue 1 syst in $(systListTTG)
+Arguments = "TTGamma_SingleLept_Pt100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_SingleLept_Pt200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTWtoLNu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTWtoQQ $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTZtoLL $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTZtoLL_M1to10 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTZtoQQ $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTbarPowheg_Dilepton $(year) $(syst) $INT(X) 5"
+Queue 5 syst in $(systList)
+Arguments = "TTbarPowheg_Hadronic $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTbarPowheg_Semilept $(year) $(syst) $INT(X) 5"
+Queue 5 syst in $(systList)
+
+Arguments = "W1jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "W2jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "W3jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "W4jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WGamma_01J_5f $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZGamma_01J_5f_lowMass $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZGamma_01J_5f_LoosePt $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WW $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZ $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZZ $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WWToLNuQQ $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WWTo4Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WZTo1L3Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZTo1L1Nu2Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZTo2L2Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZTo3L1Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "ZZTo2L2Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZZTo2Q2Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZZTo4L $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "VVTo2L2Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+
+
+year=2017
+
+Arguments = "DYjetsM10to50 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "DYjetsM50 $(year) $(syst) $INT(X) 5"
+Queue 5 syst in $(systList)
+
+Arguments = "GJets_HT40To100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT100To200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT200To400 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT400To600 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT600ToInf $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "QCD_Pt20to30_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt30to50_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt50to80_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt80to120_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt120to170_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt170to300_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt300toInf_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "QCD_Pt20to30_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt30to80_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt80to170_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt170to250_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt250toInf_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "QCD_Pt20to30_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt30to50_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt50to80_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt80to120_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt120to170_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt170to300_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt300to470_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt470to600_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt600to800_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt800to1000_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt1000toInf_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "ST_s_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_tW_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_tbarW_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_tbar_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_t_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TGJets $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTGamma_Dilepton $(year) $(syst)"
+Queue 1 syst in $(systListTTG)
+Arguments = "TTGamma_Dilepton_Pt100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_Dilepton_Pt200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTGamma_Hadronic $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_Hadronic_Pt100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_Hadronic_Pt200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTGamma_SingleLept $(year) $(syst)"
+Queue 1 syst in $(systListTTG)
+Arguments = "TTGamma_SingleLept_Pt100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_SingleLept_Pt200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTWtoLNu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTWtoQQ $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTZtoLL $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTZtoLL_M1to10 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTZtoQQ $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTbarPowheg_Dilepton $(year) $(syst) $INT(X) 5"
+Queue 5 syst in $(systList)
+Arguments = "TTbarPowheg_Hadronic $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTbarPowheg_Semilept $(year) $(syst) $INT(X) 5"
+Queue 5 syst in $(systList)
+
+Arguments = "W1jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "W2jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "W3jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "W4jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WGamma_01J_5f $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZGamma_01J_5f_lowMass $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZGamma_01J_5f_LoosePt $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WW $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZ $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZZ $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WWToLNuQQ $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WWTo4Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WZTo1L3Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZTo1L1Nu2Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZTo2L2Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZTo3L1Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "ZZTo2L2Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZZTo2Q2Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZZTo4L $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "VVTo2L2Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+
+
+year=2018
+
+Arguments = "DYjetsM10to50 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "DYjetsM50 $(year) $(syst) $INT(X) 5"
+Queue 5 syst in $(systList)
+
+Arguments = "GJets_HT40To100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT100To200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT200To400 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT400To600 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "GJets_HT600ToInf $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "QCD_Pt20to30_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt30to50_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt50to80_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt80to120_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt120to170_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt170to300_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt300toInf_Ele $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "QCD_Pt20to30_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt30to80_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt80to170_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt170to250_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt250toInf_bcToE $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "QCD_Pt20to30_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt30to50_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt50to80_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt80to120_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt120to170_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt170to300_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt300to470_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt470to600_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt600to800_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt800to1000_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "QCD_Pt1000toInf_Mu $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "ST_s_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_tW_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_tbarW_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_tbar_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ST_t_channel $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TGJets $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTGamma_Dilepton $(year) $(syst)"
+Queue 1 syst in $(systListTTG)
+Arguments = "TTGamma_Dilepton_Pt100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_Dilepton_Pt200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTGamma_Hadronic $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_Hadronic_Pt100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_Hadronic_Pt200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTGamma_SingleLept $(year) $(syst)"
+Queue 1 syst in $(systListTTG)
+Arguments = "TTGamma_SingleLept_Pt100 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTGamma_SingleLept_Pt200 $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTWtoLNu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTWtoQQ $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTZtoLL $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTZtoLL_M1to10 $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTZtoQQ $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "TTbarPowheg_Dilepton $(year) $(syst) $INT(X) 5"
+Queue 5 syst in $(systList)
+Arguments = "TTbarPowheg_Hadronic $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "TTbarPowheg_Semilept $(year) $(syst) $INT(X) 5"
+Queue 5 syst in $(systList)
+
+Arguments = "W1jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "W2jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "W3jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "W4jets $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WGamma_01J_5f $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZGamma_01J_5f_lowMass $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZGamma_01J_5f_LoosePt $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WW $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZ $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZZ $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WWToLNuQQ $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WWTo4Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "WZTo1L3Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZTo1L1Nu2Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZTo2L2Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "WZTo3L1Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "ZZTo2L2Q $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZZTo2Q2Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+Arguments = "ZZTo4L $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+Arguments = "VVTo2L2Nu $(year) $(syst)"
+Queue 1 syst in $(systList)
+
+
+
