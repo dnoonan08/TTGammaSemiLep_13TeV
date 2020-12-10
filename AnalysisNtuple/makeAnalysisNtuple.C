@@ -746,7 +746,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	}
 
 	//HEM test 
-        bool isHemVetoObj = false;
+        _inHEMVeto = false;
+
 	int nHEM_ele=0;
 	bool HEM_ele_Veto=false;
     	for(int eleInd = 0; eleInd < tree->nEle_; ++eleInd){
@@ -759,6 +760,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
             if ( ele_HEM_pt_pass &&  ele_HEM_eta_pass &&  ele_HEM_phi_pass) nHEM_ele++;
 	}
         HEM_ele_Veto=(nHEM_ele>=1);
+
  	int nHEM_pho=0;
     	bool HEM_pho_Veto=false;
     	for(int phoInd = 0; phoInd < tree->nPho_; ++phoInd){
@@ -767,19 +769,19 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
             double phi = tree->phoPhi_[phoInd];
             bool pho_HEM_eta_pass =  eta > -3.0   && eta < -1.4 ;
             bool pho_HEM_et_pass =  et >= 15;
-            bool pho_HEM_phi_pass = phi > -1.57  && phi < 0.87 ;
+            bool pho_HEM_phi_pass = phi > -1.57  && phi < -0.87 ;
             if (pho_HEM_eta_pass && pho_HEM_phi_pass && pho_HEM_et_pass) {nHEM_pho++ ;}
 	}
         HEM_pho_Veto= (nHEM_pho>=1);
 
 
-        isHemVetoObj=((HEM_pho_Veto || HEM_ele_Veto) && year=="2018");
+        _inHEMVeto=(applyHemVeto && (HEM_pho_Veto || HEM_ele_Veto) && year=="2018");
 
-	if(_isData &&  tree->run_>=319077 && isHemVetoObj && applyHemVeto){ 
+	if(_isData &&  tree->run_>=319077 && _inHEMVeto){ 
             count_HEM++;
             continue; 
         }
-        if( !applyHemVeto) isHemVetoObj=false;
+
 	selector->clear_vectors();
 
 	evtPick->process_event(tree, selector, _PUweight);
@@ -790,7 +792,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	    InitVariables();
 	   // FillEvent(year);
-	    FillEvent(year,isHemVetoObj); //HEM test
+	    FillEvent(year); //HEM test
 
 	    if(isMC) {
 		_PUweight    = PUweighter->getWeight(tree->nPUTrue_);
@@ -1040,8 +1042,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 }
 
 
-//void makeAnalysisNtuple::FillEvent(std::string year)
-void makeAnalysisNtuple::FillEvent(std::string year, bool isHemVetoObj) //HEM test
+void makeAnalysisNtuple::FillEvent(std::string year)
+//void makeAnalysisNtuple::FillEvent(std::string year, bool isHemVetoObj) //HEM test
 {
 
     _run             = tree->run_;
@@ -1064,10 +1066,10 @@ void makeAnalysisNtuple::FillEvent(std::string year, bool isHemVetoObj) //HEM te
     }
 
 
-//MC HEM test
-    if(isMC && isHemVetoObj){
-                _evtWeight = _evtWeight*0.3518;
-                        }
+    //MC HEM test
+    if(isMC && _inHEMVeto){
+        _evtWeight = _evtWeight*0.3518;
+    }
 
 
 
@@ -1108,12 +1110,13 @@ void makeAnalysisNtuple::FillEvent(std::string year, bool isHemVetoObj) //HEM te
 	int eleInd = selector->Electrons.at(i_ele);
 	_elePt.push_back(tree->elePt_[eleInd]);
 	_elePhi.push_back(tree->elePhi_[eleInd]);
+	_eleEta.push_back(tree->eleEta_[eleInd]);
 	_eleSCEta.push_back(tree->eleEta_[eleInd] + tree->eleDeltaEtaSC_[eleInd]);
 
 	_elePFRelIso.push_back(tree->elePFRelIso_[eleInd]);
 
 	lepVector.SetPtEtaPhiM(tree->elePt_[eleInd],
-			       tree->eleEta_[eleInd] + tree->eleDeltaEtaSC_[eleInd],
+			       tree->eleEta_[eleInd],
 			       tree->elePhi_[eleInd],
 			       tree->eleMass_[eleInd]);
 	lepCharge=tree->eleCharge_[eleInd];

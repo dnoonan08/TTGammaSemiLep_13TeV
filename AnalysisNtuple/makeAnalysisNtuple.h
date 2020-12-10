@@ -369,6 +369,7 @@ class makeAnalysisNtuple {
 
     std::vector<float>   _elePt;
     std::vector<float>   _elePhi;
+    std::vector<float>   _eleEta;
     std::vector<float>   _eleSCEta;
     std::vector<float>   _elePFRelIso;
     Int_t           _nMu;
@@ -434,6 +435,8 @@ class makeAnalysisNtuple {
     bool  _passAll_Mu;
     bool  dileptonsample;
 
+    bool  _inHEMVeto;
+
     METzCalculator metZ;
     TopEventCombinatorics topEvent;
     TLorentzVector jetVector;
@@ -466,8 +469,8 @@ class makeAnalysisNtuple {
 
 
     void InitVariables();
-    //void FillEvent(std::string year);
-    void FillEvent(std::string year, bool isHemVetoObj); //HEM test
+    void FillEvent(std::string year);
+    //void FillEvent(std::string year, bool isHemVetoObj); //HEM test
     void InitBranches();
 
     double SFtop(double pt);
@@ -724,6 +727,7 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("nEle"                        , &_nEle                       ); 
     outputTree->Branch("elePt"                       , &_elePt                      );
     outputTree->Branch("elePhi"                      , &_elePhi                     ); 
+    outputTree->Branch("eleEta"                      , &_eleEta                     );
     outputTree->Branch("eleSCEta"                    , &_eleSCEta                   ); 
     outputTree->Branch("elePFRelIso"                 , &_elePFRelIso                ); 
 
@@ -802,6 +806,8 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("passAll_Ele"                 , &_passAll_Ele                ); 
     outputTree->Branch("passAll_Mu"                  , &_passAll_Mu                 );
 
+    outputTree->Branch("inHEMVeto"                   , &_inHEMVeto                  );
+
     outputTree->Branch("photonIsGenuine"             , &_photonIsGenuine            );
     outputTree->Branch("photonIsMisIDEle"            , &_photonIsMisIDEle           );
     outputTree->Branch("photonIsHadronicPhoton"      , &_photonIsHadronicPhoton     );
@@ -878,7 +884,6 @@ void makeAnalysisNtuple::InitVariables()
     _passAll_Mu      = false;
 
 
-
     _pdfWeight    = 1.;
     _pdfweight_Up = 1.;
     _pdfweight_Do = 1.;
@@ -952,6 +957,7 @@ void makeAnalysisNtuple::InitVariables()
 
     _elePt.clear();
     _elePhi.clear();
+    _eleEta.clear();
     _eleSCEta.clear();
     _elePFRelIso.clear();
 
