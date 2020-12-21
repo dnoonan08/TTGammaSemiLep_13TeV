@@ -60,7 +60,7 @@ void initCrossSections(){
     crossSections["ZGamma_01J_5f_LoosePt"]    = {124.9, 124.9, 124.9}; //from GenXSecAnalzer of 1M events
 
     //crossSections["WGamma_01J"]    = 203.3  ;  ///?? Old? New one from GenXSecAnalzer is below (change in pt cut?)
-    crossSections["WGamma_01J_5f"]  = {489., 463.9*1.295, 463.9*1.295} ; // LO from GenXSecAnalzer of 1M events
+    crossSections["WGamma"]  = {489., 463.9*1.295, 463.9*1.295} ; // LO from GenXSecAnalzer of 1M events
 
     crossSections["WW"]                = {75.8 ,75.8 ,75.8 };
     crossSections["WZ"]                = {27.6 ,27.6 ,27.6 };

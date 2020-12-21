@@ -146,7 +146,7 @@ Queue 1 syst in $(systList)
 Arguments = "W4jets $(year) $(syst)"
 Queue 1 syst in $(systList)
 
-Arguments = "WGamma_01J_5f $(year) $(syst)"
+Arguments = "WGamma $(year) $(syst)"
 Queue 1 syst in $(systList)
 Arguments = "ZGamma_01J_5f_lowMass $(year) $(syst)"
 Queue 1 syst in $(systList)
@@ -314,7 +314,7 @@ Queue 1 syst in $(systList)
 Arguments = "W4jets $(year) $(syst)"
 Queue 1 syst in $(systList)
 
-Arguments = "WGamma_01J_5f $(year) $(syst)"
+Arguments = "WGamma $(year) $(syst)"
 Queue 1 syst in $(systList)
 Arguments = "ZGamma_01J_5f_lowMass $(year) $(syst)"
 Queue 1 syst in $(systList)
@@ -482,7 +482,7 @@ Queue 1 syst in $(systList)
 Arguments = "W4jets $(year) $(syst)"
 Queue 1 syst in $(systList)
 
-Arguments = "WGamma_01J_5f $(year) $(syst)"
+Arguments = "WGamma $(year) $(syst)"
 Queue 1 syst in $(systList)
 Arguments = "ZGamma_01J_5f_lowMass $(year) $(syst)"
 Queue 1 syst in $(systList)

@@ -146,7 +146,7 @@ TTbarPowheg_Hadronic_2017="${eosDir}/TTbarPowheg_Hadronic_2017_skim_10of10.root 
 
 TTbarPowheg_Semilept_2017="${eosDir}/TTbarPowheg_Semilept_2017_skim_10of10.root ${eosDir}/TTbarPowheg_Semilept_2017_skim_1of10.root ${eosDir}/TTbarPowheg_Semilept_2017_skim_2of10.root ${eosDir}/TTbarPowheg_Semilept_2017_skim_3of10.root ${eosDir}/TTbarPowheg_Semilept_2017_skim_4of10.root ${eosDir}/TTbarPowheg_Semilept_2017_skim_5of10.root ${eosDir}/TTbarPowheg_Semilept_2017_skim_6of10.root ${eosDir}/TTbarPowheg_Semilept_2017_skim_7of10.root ${eosDir}/TTbarPowheg_Semilept_2017_skim_8of10.root ${eosDir}/TTbarPowheg_Semilept_2017_skim_9of10.root"
 
-VVTo2L2Nu_amcatnlo_2017="${eosDir}/VVTo2L2Nu_amcatnlo_2017_skim.root"
+VVTo2L2Nu_2017="${eosDir}/VVTo2L2Nu_amcatnlo_2017_skim.root"
 
 W1jets_2017="${eosDir}/W1jets_2017_skim.root"
 
@@ -160,23 +160,23 @@ WGamma_2017="${eosDir}/WGamma_2017_skim.root"
 
 WW_2017="${eosDir}/WW_2017_skim.root"
 
-WWTo1L1Nu2Q_amcatnlo_2017="${eosDir}/WWTo1L1Nu2Q_amcatnlo_2017_skim.root"
+WWTo1L1Nu2Q_2017="${eosDir}/WWTo1L1Nu2Q_amcatnlo_2017_skim.root"
 
-WWTo2L2Nu_powheg_2017="${eosDir}/WWTo2L2Nu_powheg_2017_skim.root"
+WWTo2L2Nu_2017="${eosDir}/WWTo2L2Nu_powheg_2017_skim.root"
 
-WWTo4Q_powheg_2017="${eosDir}/WWTo4Q_powheg_2017_skim.root"
+WWTo4Q_2017="${eosDir}/WWTo4Q_powheg_2017_skim.root"
 
-WWToLNuQQ_powheg_2017="${eosDir}/WWToLNuQQ_powheg_2017_skim_1of5.root ${eosDir}/WWToLNuQQ_powheg_2017_skim_2of5.root ${eosDir}/WWToLNuQQ_powheg_2017_skim_3of5.root ${eosDir}/WWToLNuQQ_powheg_2017_skim_4of5.root ${eosDir}/WWToLNuQQ_powheg_2017_skim_5of5.root"
+WWToLNuQQ_2017="${eosDir}/WWToLNuQQ_powheg_2017_skim_1of5.root ${eosDir}/WWToLNuQQ_powheg_2017_skim_2of5.root ${eosDir}/WWToLNuQQ_powheg_2017_skim_3of5.root ${eosDir}/WWToLNuQQ_powheg_2017_skim_4of5.root ${eosDir}/WWToLNuQQ_powheg_2017_skim_5of5.root"
 
 WZ_2017="${eosDir}/WZ_2017_skim.root"
 
-WZTo1L1Nu2Q_amcatnlo_2017="${eosDir}/WZTo1L1Nu2Q_amcatnlo_2017_skim_1of5.root ${eosDir}/WZTo1L1Nu2Q_amcatnlo_2017_skim_2of5.root ${eosDir}/WZTo1L1Nu2Q_amcatnlo_2017_skim_3of5.root ${eosDir}/WZTo1L1Nu2Q_amcatnlo_2017_skim_4of5.root ${eosDir}/WZTo1L1Nu2Q_amcatnlo_2017_skim_5of5.root"
+WZTo1L1Nu2Q_2017="${eosDir}/WZTo1L1Nu2Q_amcatnlo_2017_skim_1of5.root ${eosDir}/WZTo1L1Nu2Q_amcatnlo_2017_skim_2of5.root ${eosDir}/WZTo1L1Nu2Q_amcatnlo_2017_skim_3of5.root ${eosDir}/WZTo1L1Nu2Q_amcatnlo_2017_skim_4of5.root ${eosDir}/WZTo1L1Nu2Q_amcatnlo_2017_skim_5of5.root"
 
-WZTo1L3Nu_amcatnlo_2017="${eosDir}/WZTo1L3Nu_amcatnlo_2017_skim.root"
+WZTo1L3Nu_2017="${eosDir}/WZTo1L3Nu_amcatnlo_2017_skim.root"
 
-WZTo2L2Q_amcatnlo_2017="${eosDir}/WZTo2L2Q_amcatnlo_2017_skim_1of5.root ${eosDir}/WZTo2L2Q_amcatnlo_2017_skim_2of5.root ${eosDir}/WZTo2L2Q_amcatnlo_2017_skim_3of5.root ${eosDir}/WZTo2L2Q_amcatnlo_2017_skim_4of5.root ${eosDir}/WZTo2L2Q_amcatnlo_2017_skim_5of5.root"
+WZTo2L2Q_2017="${eosDir}/WZTo2L2Q_amcatnlo_2017_skim_1of5.root ${eosDir}/WZTo2L2Q_amcatnlo_2017_skim_2of5.root ${eosDir}/WZTo2L2Q_amcatnlo_2017_skim_3of5.root ${eosDir}/WZTo2L2Q_amcatnlo_2017_skim_4of5.root ${eosDir}/WZTo2L2Q_amcatnlo_2017_skim_5of5.root"
 
-WZTo3LNu_powheg_2017="${eosDir}/WZTo3LNu_powheg_2017_skim.root"
+WZTo3L1Nu_2017="${eosDir}/WZTo3LNu_powheg_2017_skim.root"
 
 ZGamma_01J_5f_lowMass_2017="${eosDir}/ZGamma_01J_5f_lowMass_2017_skim_1of5.root ${eosDir}/ZGamma_01J_5f_lowMass_2017_skim_2of5.root ${eosDir}/ZGamma_01J_5f_lowMass_2017_skim_3of5.root ${eosDir}/ZGamma_01J_5f_lowMass_2017_skim_4of5.root ${eosDir}/ZGamma_01J_5f_lowMass_2017_skim_5of5.root"
 
@@ -186,13 +186,13 @@ ZGamma_01J_lowMLL_lowGPt_2017="${eosDir}/ZGamma_01J_lowMLL_lowGPt_2017_skim_1of5
 
 ZZ_2017="${eosDir}/ZZ_2017_skim.root"
 
-ZZTo2L2Nu_powheg_2017="${eosDir}/ZZTo2L2Nu_powheg_ext2_2017_skim_1of5.root ${eosDir}/ZZTo2L2Nu_powheg_ext2_2017_skim_2of5.root ${eosDir}/ZZTo2L2Nu_powheg_ext2_2017_skim_3of5.root ${eosDir}/ZZTo2L2Nu_powheg_ext2_2017_skim_4of5.root ${eosDir}/ZZTo2L2Nu_powheg_ext2_2017_skim_5of5.root"
+ZZTo2L2Nu_2017="${eosDir}/ZZTo2L2Nu_powheg_ext2_2017_skim_1of5.root ${eosDir}/ZZTo2L2Nu_powheg_ext2_2017_skim_2of5.root ${eosDir}/ZZTo2L2Nu_powheg_ext2_2017_skim_3of5.root ${eosDir}/ZZTo2L2Nu_powheg_ext2_2017_skim_4of5.root ${eosDir}/ZZTo2L2Nu_powheg_ext2_2017_skim_5of5.root"
 
-ZZTo2L2Q_amcatnlo_2017="${eosDir}/ZZTo2L2Q_amcatnlo_2017_skim_1of5.root ${eosDir}/ZZTo2L2Q_amcatnlo_2017_skim_2of5.root ${eosDir}/ZZTo2L2Q_amcatnlo_2017_skim_3of5.root ${eosDir}/ZZTo2L2Q_amcatnlo_2017_skim_4of5.root ${eosDir}/ZZTo2L2Q_amcatnlo_2017_skim_5of5.root"
+ZZTo2L2Q_2017="${eosDir}/ZZTo2L2Q_amcatnlo_2017_skim_1of5.root ${eosDir}/ZZTo2L2Q_amcatnlo_2017_skim_2of5.root ${eosDir}/ZZTo2L2Q_amcatnlo_2017_skim_3of5.root ${eosDir}/ZZTo2L2Q_amcatnlo_2017_skim_4of5.root ${eosDir}/ZZTo2L2Q_amcatnlo_2017_skim_5of5.root"
 
-ZZTo2Q2Nu_amcatnlo_2017="${eosDir}/ZZTo2Q2Nu_amcatnlo_2017_skim_1of5.root ${eosDir}/ZZTo2Q2Nu_amcatnlo_2017_skim_2of5.root ${eosDir}/ZZTo2Q2Nu_amcatnlo_2017_skim_3of5.root ${eosDir}/ZZTo2Q2Nu_amcatnlo_2017_skim_4of5.root ${eosDir}/ZZTo2Q2Nu_amcatnlo_2017_skim_5of5.root"
+ZZTo2Q2Nu_2017="${eosDir}/ZZTo2Q2Nu_amcatnlo_2017_skim_1of5.root ${eosDir}/ZZTo2Q2Nu_amcatnlo_2017_skim_2of5.root ${eosDir}/ZZTo2Q2Nu_amcatnlo_2017_skim_3of5.root ${eosDir}/ZZTo2Q2Nu_amcatnlo_2017_skim_4of5.root ${eosDir}/ZZTo2Q2Nu_amcatnlo_2017_skim_5of5.root"
 
 ZZTo4L_amcatnlo_2017="${eosDir}/ZZTo4L_amcatnlo_2017_skim_1of5.root ${eosDir}/ZZTo4L_amcatnlo_2017_skim_2of5.root ${eosDir}/ZZTo4L_amcatnlo_2017_skim_3of5.root ${eosDir}/ZZTo4L_amcatnlo_2017_skim_4of5.root ${eosDir}/ZZTo4L_amcatnlo_2017_skim_5of5.root"
 
-ZZTo4L_powheg_2017="${eosDir}/ZZTo4L_powheg_ext1_2017_skim_10of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_1of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_2of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_3of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_4of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_5of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_6of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_7of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_8of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_9of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_10of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_1of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_2of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_3of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_4of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_5of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_6of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_7of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_8of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_9of10.root"
+ZZTo4L_2017="${eosDir}/ZZTo4L_powheg_ext1_2017_skim_10of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_1of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_2of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_3of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_4of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_5of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_6of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_7of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_8of10.root ${eosDir}/ZZTo4L_powheg_ext1_2017_skim_9of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_10of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_1of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_2of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_3of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_4of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_5of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_6of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_7of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_8of10.root ${eosDir}/ZZTo4L_powheg_ext2_2017_skim_9of10.root"
 

@@ -1745,7 +1745,7 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	for (int j=0; j < _pdfSystWeight.size(); j++){
 	    pdfVariance += pow((_pdfSystWeight[j]-pdfMean),2.);
 	}
-        if (pdfMean=0) pdfMean=1;
+        if (pdfMean==0) pdfMean=1;
 	_pdfuncer = sqrt(pdfVariance/_pdfSystWeight.size())/pdfMean;
 	_pdfweight_Up = (1. + _pdfuncer);
 	_pdfweight_Do = (1. - _pdfuncer);
@@ -1758,11 +1758,13 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	
 	if (tree->nPSWeight_==4){
             if (tree->genWeight_ != 0){
-                _ISRweight_Up = tree->PSWeight_[2];
-                _ISRweight_Do = tree->PSWeight_[0];
+                double scaleWeight=tree->PSWeight_[4];
+                if (scaleWeight==0) scaleWeight=1.;
+                _ISRweight_Up = tree->PSWeight_[2]/scaleWeight;
+                _ISRweight_Do = tree->PSWeight_[0]/scaleWeight;
 
-                _FSRweight_Up = tree->PSWeight_[3];
-                _FSRweight_Do = tree->PSWeight_[1];
+                _FSRweight_Up = tree->PSWeight_[3]/scaleWeight;
+                _FSRweight_Do = tree->PSWeight_[1]/scaleWeight;
             }
         }
 
