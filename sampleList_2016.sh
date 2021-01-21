@@ -202,5 +202,5 @@ ZZTo2Q2Nu_2016="${eosDir}/ZZTo2Q2Nu_amcatnlo_2016_skim_1of5.root ${eosDir}/ZZTo2
 
 ZZTo2Q2Nu_powheg_2016="${eosDir}/ZZTo2Q2Nu_powheg_2016_skim.root"
 
-ZZTo4L_powheg_2016="${eosDir}/ZZTo4L_powheg_2016_skim.root"
+ZZTo4L_2016="${eosDir}/ZZTo4L_powheg_2016_skim.root"
 

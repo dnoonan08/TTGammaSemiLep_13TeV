@@ -175,7 +175,7 @@ Arguments = "WGamma $(year)"
 Queue 1
 Arguments = "ZGamma_01J_5f_lowMass $(year)"
 Queue 1
-Arguments = "ZGamma_01J_5f_LoosePt $(year)"
+Arguments = "ZGamma_01J_LoosePt $(year)"
 Queue 1
 
 Arguments = "WW $(year)"
@@ -362,11 +362,11 @@ Queue 1
 Arguments = "W4jets $(year)"
 Queue 1
 
-Arguments = "WGamma_01J_5f $(year)"
+Arguments = "WGamma $(year)"
 Queue 1
 Arguments = "ZGamma_01J_5f_lowMass $(year)"
 Queue 1
-Arguments = "ZGamma_01J_5f_LoosePt $(year)"
+Arguments = "ZGamma_01J_LoosePt $(year)"
 Queue 1
 
 Arguments = "WW $(year)"
@@ -551,11 +551,11 @@ Queue 1
 Arguments = "W4jets $(year)"
 Queue 1
 
-Arguments = "WGamma_01J_5f $(year)"
+Arguments = "WGamma $(year)"
 Queue 1
 Arguments = "ZGamma_01J_5f_lowMass $(year)"
 Queue 1
-Arguments = "ZGamma_01J_5f_LoosePt $(year)"
+Arguments = "ZGamma_01J_LoosePt $(year)"
 Queue 1
 
 Arguments = "WW $(year)"

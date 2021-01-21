@@ -57,7 +57,7 @@ void initCrossSections(){
     //crossSections["WGamma"]            = 585.8; // ?????? https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns lists it as 489
 
     crossSections["ZGamma_01J_5f_lowMass"]    = {98.3, 105.4, 105.4}; //from GenXSecAnalzer of 1M events
-    crossSections["ZGamma_01J_5f_LoosePt"]    = {124.9, 124.9, 124.9}; //from GenXSecAnalzer of 1M events
+    crossSections["ZGamma_01J_LoosePt"]    = {124.9, 124.9, 124.9}; //from GenXSecAnalzer of 1M events
 
     //crossSections["WGamma_01J"]    = 203.3  ;  ///?? Old? New one from GenXSecAnalzer is below (change in pt cut?)
     crossSections["WGamma"]  = {489., 463.9*1.295, 463.9*1.295} ; // LO from GenXSecAnalzer of 1M events
@@ -168,7 +168,7 @@ double getEvtWeight(string sampleType, int year, double luminosity, double nEven
 
 
 
-const std::string allowedSampleTypes[155] = {"Data",
+const std::string allowedSampleTypes[156] = {"Data",
 					     "Data_SingleMu_a",
 					     "Data_SingleMu_b",
 					     "Data_SingleMu_c",
@@ -229,6 +229,7 @@ const std::string allowedSampleTypes[155] = {"Data",
 					     //					     "WGamma",
 					     "ZGamma_01J_5f",
 					     "ZGamma_01J_5f_lowMass",
+                                             "ZGamma_01J_LoosePt",
 					     "WGamma_01J_5f",
 					     "WW",
 					     "WZ",

@@ -150,7 +150,7 @@ Arguments = "WGamma $(year) $(syst)"
 Queue 1 syst in $(systList)
 Arguments = "ZGamma_01J_5f_lowMass $(year) $(syst)"
 Queue 1 syst in $(systList)
-Arguments = "ZGamma_01J_5f_LoosePt $(year) $(syst)"
+Arguments = "ZGamma_01J_LoosePt $(year) $(syst)"
 Queue 1 syst in $(systList)
 
 Arguments = "WW $(year) $(syst)"
@@ -318,7 +318,7 @@ Arguments = "WGamma $(year) $(syst)"
 Queue 1 syst in $(systList)
 Arguments = "ZGamma_01J_5f_lowMass $(year) $(syst)"
 Queue 1 syst in $(systList)
-Arguments = "ZGamma_01J_5f_LoosePt $(year) $(syst)"
+Arguments = "ZGamma_01J_LoosePt $(year) $(syst)"
 Queue 1 syst in $(systList)
 
 Arguments = "WW $(year) $(syst)"
@@ -486,7 +486,7 @@ Arguments = "WGamma $(year) $(syst)"
 Queue 1 syst in $(systList)
 Arguments = "ZGamma_01J_5f_lowMass $(year) $(syst)"
 Queue 1 syst in $(systList)
-Arguments = "ZGamma_01J_5f_LoosePt $(year) $(syst)"
+Arguments = "ZGamma_01J_LoosePt $(year) $(syst)"
 Queue 1 syst in $(systList)
 
 Arguments = "WW $(year) $(syst)"

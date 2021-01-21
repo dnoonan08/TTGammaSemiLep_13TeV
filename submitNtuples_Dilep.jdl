@@ -49,54 +49,54 @@ Queue 1
 Arguments = "DYjetsM50 $(year) $INT(X) 5"
 Queue 5
 
-Arguments = "GJets_HT40To100 $(year)"
-Queue 1
-Arguments = "GJets_HT100To200 $(year)"
-Queue 1
-Arguments = "GJets_HT200To400 $(year)"
-Queue 1
-Arguments = "GJets_HT400To600 $(year)"
-Queue 1
-Arguments = "GJets_HT600ToInf $(year)"
-Queue 1
+# Arguments = "GJets_HT40To100 $(year)"
+# Queue 1
+# Arguments = "GJets_HT100To200 $(year)"
+# Queue 1
+# Arguments = "GJets_HT200To400 $(year)"
+# Queue 1
+# Arguments = "GJets_HT400To600 $(year)"
+# Queue 1
+# Arguments = "GJets_HT600ToInf $(year)"
+# Queue 1
 
-Arguments = "QCD_Pt20to30_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt300toInf_Ele $(year)"
-Queue 1
+# Arguments = "QCD_Pt20to30_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt30to50_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt50to80_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt80to120_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt120to170_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt170to300_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt300toInf_Ele $(year)"
+# Queue 1
 
-Arguments = "QCD_Pt20to30_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt300to470_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt470to600_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt600to800_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt800to1000_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt1000toInf_Mu $(year)"
-Queue 1
+# Arguments = "QCD_Pt20to30_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt30to50_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt50to80_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt80to120_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt120to170_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt170to300_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt300to470_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt470to600_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt600to800_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt800to1000_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt1000toInf_Mu $(year)"
+# Queue 1
 
 Arguments = "ST_s_channel $(year)"
 Queue 1
@@ -163,7 +163,7 @@ Arguments = "WGamma $(year)"
 Queue 1
 Arguments = "ZGamma_01J_5f_lowMass $(year)"
 Queue 1
-Arguments = "ZGamma_01J_5f_LoosePt $(year)"
+Arguments = "ZGamma_01J_LoosePt $(year)"
 Queue 1
 
 Arguments = "WW $(year)"
@@ -228,54 +228,54 @@ Queue 1
 Arguments = "DYjetsM50 $(year) $INT(X) 5"
 Queue 5
 
-Arguments = "GJets_HT40To100 $(year)"
-Queue 1
-Arguments = "GJets_HT100To200 $(year)"
-Queue 1
-Arguments = "GJets_HT200To400 $(year)"
-Queue 1
-Arguments = "GJets_HT400To600 $(year)"
-Queue 1
-Arguments = "GJets_HT600ToInf $(year)"
-Queue 1
+# Arguments = "GJets_HT40To100 $(year)"
+# Queue 1
+# Arguments = "GJets_HT100To200 $(year)"
+# Queue 1
+# Arguments = "GJets_HT200To400 $(year)"
+# Queue 1
+# Arguments = "GJets_HT400To600 $(year)"
+# Queue 1
+# Arguments = "GJets_HT600ToInf $(year)"
+# Queue 1
 
-Arguments = "QCD_Pt20to30_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt300toInf_Ele $(year)"
-Queue 1
+# Arguments = "QCD_Pt20to30_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt30to50_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt50to80_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt80to120_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt120to170_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt170to300_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt300toInf_Ele $(year)"
+# Queue 1
 
-Arguments = "QCD_Pt20to30_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt300to470_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt470to600_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt600to800_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt800to1000_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt1000toInf_Mu $(year)"
-Queue 1
+# Arguments = "QCD_Pt20to30_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt30to50_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt50to80_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt80to120_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt120to170_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt170to300_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt300to470_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt470to600_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt600to800_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt800to1000_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt1000toInf_Mu $(year)"
+# Queue 1
 
 Arguments = "ST_s_channel $(year)"
 Queue 1
@@ -338,11 +338,11 @@ Queue 1
 Arguments = "W4jets $(year)"
 Queue 1
 
-Arguments = "WGamma_01J_5f $(year)"
+Arguments = "WGamma $(year)"
 Queue 1
 Arguments = "ZGamma_01J_5f_lowMass $(year)"
 Queue 1
-Arguments = "ZGamma_01J_5f_LoosePt $(year)"
+Arguments = "ZGamma_01J_LoosePt $(year)"
 Queue 1
 
 Arguments = "WW $(year)"
@@ -405,54 +405,54 @@ Queue 1
 Arguments = "DYjetsM50 $(year) $INT(X) 5"
 Queue 5
 
-Arguments = "GJets_HT40To100 $(year)"
-Queue 1
-Arguments = "GJets_HT100To200 $(year)"
-Queue 1
-Arguments = "GJets_HT200To400 $(year)"
-Queue 1
-Arguments = "GJets_HT400To600 $(year)"
-Queue 1
-Arguments = "GJets_HT600ToInf $(year)"
-Queue 1
+# Arguments = "GJets_HT40To100 $(year)"
+# Queue 1
+# Arguments = "GJets_HT100To200 $(year)"
+# Queue 1
+# Arguments = "GJets_HT200To400 $(year)"
+# Queue 1
+# Arguments = "GJets_HT400To600 $(year)"
+# Queue 1
+# Arguments = "GJets_HT600ToInf $(year)"
+# Queue 1
 
-Arguments = "QCD_Pt20to30_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Ele $(year)"
-Queue 1
-Arguments = "QCD_Pt300toInf_Ele $(year)"
-Queue 1
+# Arguments = "QCD_Pt20to30_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt30to50_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt50to80_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt80to120_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt120to170_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt170to300_Ele $(year)"
+# Queue 1
+# Arguments = "QCD_Pt300toInf_Ele $(year)"
+# Queue 1
 
-Arguments = "QCD_Pt20to30_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt30to50_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt50to80_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt80to120_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt120to170_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt170to300_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt300to470_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt470to600_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt600to800_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt800to1000_Mu $(year)"
-Queue 1
-Arguments = "QCD_Pt1000toInf_Mu $(year)"
-Queue 1
+# Arguments = "QCD_Pt20to30_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt30to50_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt50to80_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt80to120_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt120to170_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt170to300_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt300to470_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt470to600_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt600to800_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt800to1000_Mu $(year)"
+# Queue 1
+# Arguments = "QCD_Pt1000toInf_Mu $(year)"
+# Queue 1
 
 Arguments = "ST_s_channel $(year)"
 Queue 1
@@ -515,11 +515,11 @@ Queue 1
 Arguments = "W4jets $(year)"
 Queue 1
 
-Arguments = "WGamma_01J_5f $(year)"
+Arguments = "WGamma $(year)"
 Queue 1
 Arguments = "ZGamma_01J_5f_lowMass $(year)"
 Queue 1
-Arguments = "ZGamma_01J_5f_LoosePt $(year)"
+Arguments = "ZGamma_01J_LoosePt $(year)"
 Queue 1
 
 Arguments = "WW $(year)"
