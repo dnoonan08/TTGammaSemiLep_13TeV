@@ -23,7 +23,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	}
     }
     std::cout << "Begin" << std::endl;
-    chain->SetBranchStatus("*",0);
+    chain->SetBranchStatus("*",1);
 	
     // keep some important branches
     chain->SetBranchStatus("PV_ndof",1);
