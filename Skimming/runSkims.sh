@@ -4,7 +4,7 @@ channel=$1
 year=$2
 job=$3
 nJobTotal=$4
-
+extraArgs="${@:5}"
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then 
 	echo "Running Interactively" ; 
 else
@@ -24,7 +24,12 @@ fi
 if [ -z $job ] ; then
     jobNum=""
 else
-    jobNum=" ${job}of${nJobTotal}"
+    if [ ${nJobTotal} = "1" ]
+    then
+        jobNum=""
+    else
+        jobNum=" ${job}of${nJobTotal}"
+    fi
 fi
 
 outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6-2/"
@@ -32,8 +37,8 @@ outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6-2
 source fileLists_${year}.sh
 varname=${channel}_FileList_${year}
 
-echo "./makeSkim ${year}${jobNum} ${channel}_${year}_skim.root ${!varname}"
-./makeSkim ${year}${jobNum} ${channel}_${year}_skim.root ${!varname}
+echo "./makeSkim ${extraArgs} ${year}${jobNum} ${channel}_${year}_skim.root ${!varname}"
+./makeSkim ${extraArgs} ${year}${jobNum} ${channel}_${year}_skim.root ${!varname}
 
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
     echo "Running Interactively" ;
