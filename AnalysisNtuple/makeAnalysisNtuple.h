@@ -194,8 +194,12 @@ class makeAnalysisNtuple {
     Float_t         _M_jj;
     Float_t         _TopHad_pt;
     Float_t         _TopHad_eta;
+    Float_t         _TopHad_phi;
+    Float_t         _TopHad_mass;
     Float_t         _TopLep_pt;
     Float_t         _TopLep_eta;
+    Float_t         _TopLep_phi;
+    Float_t         _TopLep_mass;
     Float_t         _TopLep_charge;
 
     Float_t         _chi2;
@@ -385,6 +389,7 @@ class makeAnalysisNtuple {
     std::vector<float>   _jetEta;
     std::vector<float>   _jetPhi;
     std::vector<float>   _jetMass;
+    std::vector<float>   _jetRes;
 
     std::vector<float>   _jetCMVA;
     std::vector<float>   _jetCSVV2;
@@ -632,8 +637,12 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("MassCuts"                   , &_MassCuts                    );
     outputTree->Branch("TopHad_pt"                  , &_TopHad_pt                   );
     outputTree->Branch("TopHad_eta"                 , &_TopHad_eta                  );
+    outputTree->Branch("TopHad_phi"                 , &_TopHad_phi                  );
+    outputTree->Branch("TopHad_mass"                , &_TopHad_mass                 );
     outputTree->Branch("TopLep_pt"                  , &_TopLep_pt                   );
     outputTree->Branch("TopLep_eta"                 , &_TopLep_eta                  );
+    outputTree->Branch("TopLep_phi"                 , &_TopLep_phi                  );
+    outputTree->Branch("TopLep_mass"                , &_TopLep_mass                 );
     outputTree->Branch("TopLep_charge"              , &_TopLep_charge               );
 
     outputTree->Branch("chi2"                       , &_chi2               );
@@ -741,9 +750,10 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("nfwdJet"                        , &_nfwdJet                       );
     outputTree->Branch("nBJet"                       , &_nBJet                      ); 
     outputTree->Branch("jetPt"                       , &_jetPt                      );
-    /* outputTree->Branch("jetEn"                       , &_jetEn                      ); */
     outputTree->Branch("jetEta"                      , &_jetEta                     ); 
     outputTree->Branch("jetPhi"                      , &_jetPhi                     ); 
+    outputTree->Branch("jetMass"                     , &_jetMass                    );
+    outputTree->Branch("jetRes"                      , &_jetRes                     );
     /* outputTree->Branch("jetRawPt"                    , &_jetRawPt                   );  */
     /* outputTree->Branch("jetArea"                     , &_jetArea                    );  */
     if (!isSystematicRun){
@@ -854,8 +864,12 @@ void makeAnalysisNtuple::InitVariables()
     _MassCuts        = false;
     _TopHad_pt       = -9999;
     _TopHad_eta      = -9999;
+    _TopHad_phi      = -9999;
+    _TopHad_mass     = -9999;
     _TopLep_pt       = -9999;
     _TopLep_eta      = -9999;
+    _TopLep_phi      = -9999;
+    _TopLep_mass     = -9999;
     _TopLep_charge   = -9999;
 
     _chi2   = -9999;
@@ -1059,9 +1073,10 @@ void makeAnalysisNtuple::InitVariables()
     _photonNoIDIsHadronicFake.clear();
 
     _jetPt.clear();
-    /* _jetEn.clear(); */
     _jetEta.clear();
     _jetPhi.clear();
+    _jetMass.clear();
+    _jetRes.clear();
     /* _jetRawPt.clear(); */
     /* _jetArea.clear(); */
     _jetCMVA.clear();

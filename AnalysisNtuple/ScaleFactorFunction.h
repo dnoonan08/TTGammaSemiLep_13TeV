@@ -7,6 +7,16 @@ std::map<std::string, vector<double> > crossSections;
 
 void initCrossSections(){
 
+    crossSections["TstarM800"]   =  {1., 1., 1.};
+    crossSections["TstarM900"]   =  {1., 1., 1.};
+    crossSections["TstarM1000"]  =  {1., 1., 1.};
+    crossSections["TstarM1100"]  =  {1., 1., 1.};
+    crossSections["TstarM1200"]  =  {1., 1., 1.};
+    crossSections["TstarM1300"]  =  {1., 1., 1.};
+    crossSections["TstarM1400"]  =  {1., 1., 1.};
+    crossSections["TstarM1500"]  =  {1., 1., 1.};
+    crossSections["TstarM1600"]  =  {1., 1., 1.};
+
     crossSections["TTbarPowheg"]  =  {831.76, 831.76, 831.76};  //ttbar NNLO (http://inspirehep.net/search?p=find+eprint+1112.5675)
 
     crossSections["TTbarPowheg_Dilepton"]             =  { 87.315, 87.315, 87.315};
@@ -168,7 +178,7 @@ double getEvtWeight(string sampleType, int year, double luminosity, double nEven
 
 
 
-const std::string allowedSampleTypes[156] = {"Data",
+const std::string allowedSampleTypes[165] = {"Data",
 					     "Data_SingleMu_a",
 					     "Data_SingleMu_b",
 					     "Data_SingleMu_c",
@@ -185,6 +195,15 @@ const std::string allowedSampleTypes[156] = {"Data",
 					     "Data_SingleEle_f",
 					     "Data_SingleEle_g",
 					     "Data_SingleEle_h",
+					     "TstarM800",
+					     "TstarM900",
+					     "TstarM1000",
+					     "TstarM1100",
+					     "TstarM1200",
+					     "TstarM1300",
+					     "TstarM1400",
+					     "TstarM1500",
+					     "TstarM1600",
 					     "TTGamma_Hadronic",
 					     "TTGamma_Hadronic_Pt100",
 					     "TTGamma_Hadronic_Pt200",

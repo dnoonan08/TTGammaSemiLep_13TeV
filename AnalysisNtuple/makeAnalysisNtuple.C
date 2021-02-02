@@ -1552,6 +1552,8 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 
 	double resolution = selector->jet_resolution.at(i_jet);
 
+	_jetRes.push_back(resolution);
+
 	jetVectors.push_back(jetVector);
 	jetResolutionVectors.push_back(resolution);
 	jetBtagVectors.push_back(tree->jetBtagDeepB_[jetInd]);
@@ -1672,8 +1674,12 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	
 	_TopHad_pt = ( bhad + Wj1 + Wj2 ).Pt();
 	_TopHad_eta = ( bhad + Wj1 + Wj2 ).Eta();
+	_TopHad_phi = ( bhad + Wj1 + Wj2 ).Phi();
+	_TopHad_mass = ( bhad + Wj1 + Wj2 ).M();
 	_TopLep_pt = ( blep + lepVector + METVector ).Pt();
 	_TopLep_eta = ( blep + lepVector + METVector ).Eta();
+	_TopLep_phi = ( blep + lepVector + METVector ).Phi();
+	_TopLep_mass = ( blep + lepVector + METVector ).M();
 	_TopLep_charge = lepCharge;
 
 	_MassCuts = ( _Mt_blgammaMET > 180 &&
