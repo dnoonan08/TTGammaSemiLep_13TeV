@@ -23,7 +23,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	}
     }
     std::cout << "Begin" << std::endl;
-    chain->SetBranchStatus("*",1);
+    chain->SetBranchStatus("*",0);
 	
     // keep some important branches
     chain->SetBranchStatus("PV_ndof",1);
@@ -81,6 +81,9 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
     chain->SetBranchStatus("nJet",1);
     chain->SetBranchStatus("Jet_*",1);
 
+    chain->SetBranchStatus("nFatJet",1);
+    chain->SetBranchStatus("FatJet_*",1);
+
     chain->SetBranchAddress("nJet", &nJet_);
     chain->SetBranchAddress("Jet_jetId", &jetID_);
 
@@ -125,9 +128,14 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	// chain->SetBranchAddress("GenPart_statusFlags", &GenPart_statusFlags_);
     
 
+	chain->SetBranchStatus("nGenJetAK8",1);
+	
+	chain->SetBranchStatus("GenJetAK8_*",1);
+
 	chain->SetBranchStatus("nGenJet",1);
 	
 	chain->SetBranchStatus("GenJet_*",1);
+
 	// chain->SetBranchAddress("GenJet_pt", &GenJet_pt_);
 
 	// chain->SetBranchStatus("GenJet_eta",1);
@@ -230,6 +238,7 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, char** fileName
 	chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
 	chain->SetBranchStatus("HLT_DoubleEle*",1);
 	chain->SetBranchAddress("HLT_DoubleEle25_CaloIdL_MW",&HLT_DoubleEle25_CaloIdL_MW_);
+	chain->SetBranchAddress("HLT_Photon175",&HLT_Photon175_);
 	chain->SetBranchAddress("HLT_Photon200",&HLT_Photon200_);
 
 	chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);

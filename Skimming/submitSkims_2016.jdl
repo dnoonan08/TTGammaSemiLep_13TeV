@@ -14,6 +14,44 @@ Log    = condor/Skim_2016_$(cluster)_$(process).condor
 
 
 X=$(step)+1
+Arguments = "TstarTstarToTgammaTgluon_M800 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M900 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1000 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1100 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1200 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1300 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1400 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1500 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1600 2016"
+Queue 1
+
+Arguments = "TstarTstarToTgluonTgluon_M800 2016"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M900 2016"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1000 2016"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1100 2016"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1200 2016"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1300 2016"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1400 2016"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1500 2016"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1600 2016"
+Queue 1
+
 Arguments = "TTGamma_Dilepton 2016"
 Queue 1
 Arguments = "TTGamma_Hadronic 2016"

@@ -32,7 +32,7 @@ else
     fi
 fi
 
-outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6-2/"
+outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/BSM_Skims/"
 
 source fileLists_${year}.sh
 varname=${channel}_FileList_${year}
