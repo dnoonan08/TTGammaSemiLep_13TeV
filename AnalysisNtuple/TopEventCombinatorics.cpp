@@ -12,15 +12,21 @@ double TopEventCombinatorics::topChiSq(TLorentzVector j1, double sigma_j1,
 
     double sigma2_tHad = sigma_j1*sigma_j1 + sigma_j2*sigma_j2 + sigma_bh*sigma_bh;
     double sigma2_WHad = sigma_j1*sigma_j1 + sigma_j2*sigma_j2;
-    double sigma2_tLep = sigma_bl*sigma_bl + pow(met.Pt()*METRes,2) + pow(lepton.Pt()*leptonRes,2);
+    double sigma2_tLep = sigma_bl*sigma_bl + METRes*METRes + leptonRes*leptonRes;
+    // double sigma2_tLep = sigma_bl*sigma_bl + pow(met.Pt()*METRes,2) + pow(lepton.Pt()*leptonRes,2);
 
     if (!useResolutions){
 	sigma2_tHad = 1.;
 	sigma2_WHad = 1.;
 	sigma2_tLep = 1.;
     }
-    double c = pow( (bh + j1 + j2).M() - mTop,2)/sigma2_tHad + pow( (j1 + j2).M() - mW,2)/sigma2_WHad + pow( (bl + lepton + met).M() - mTop,2)/sigma2_tLep;
+    double tHadM = (bh + j1 + j2).M();
+    double WHadM = (j1 + j2).M();
+    double tLepM = (bl + lepton + met).M();
+    
+    double c = pow( tHadM - mTop,2)/(sigma2_tHad*tHadM*tHadM) + pow( WHadM - mW,2)/(sigma2_WHad*WHadM*WHadM) + pow( tLepM - mTop,2)/(sigma2_tLep*tLepM*tLepM);
 
+    return c;
 }
 
 int TopEventCombinatorics::Calculate(){
@@ -75,6 +81,9 @@ int TopEventCombinatorics::Calculate(){
 						    jets.at(i_bhad), jetsRes.at(i_bhad),
 						    jets.at(i_blep), jetsRes.at(i_blep),
 						    test_nu_pz);
+
+                        //std::cout << comboChi2 << ":   " << i_bhad << ", " << i_blep << ", " << i_j1 << ", " << i_j2 << std::endl;
+
 			if (comboChi2 < chi2){
 			    chi2 = comboChi2;
 			    blep_idx = i_blep;
