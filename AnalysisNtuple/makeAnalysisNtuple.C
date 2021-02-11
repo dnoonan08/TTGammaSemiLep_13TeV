@@ -554,7 +554,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			       "MuEGammaScaleFactors/ele2016/EGM2D_BtoH_GT20GeV_RecoSF_Legacy2016.root",
 			       "MuEGammaScaleFactors/ele2016/sf_ele_2016_trig_v5.root");
 	
-	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2016/Fall17V2_2016_Medium_photons.root",
+	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2016/g2016_egammaPlots_MWP_PhoSFs_2016_LegacyReReco_New_private.root",
 			     "MuEGammaScaleFactors/pho2016/ScalingFactors_80X_Summer16.root",
 			     2016);
 
@@ -573,7 +573,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			       "MuEGammaScaleFactors/ele2017/sf_ele_2017_trig_v5.root");
 
 	
-	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2017/2017_PhotonsMedium.root",
+	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2017/g2017_PhotonsMedium_mod_private_BostonAdded.root",
 			     "MuEGammaScaleFactors/pho2017/PixelSeed_ScaleFactors_2017.root",
 			     2017);
 	
@@ -596,8 +596,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 			       "MuEGammaScaleFactors/ele2018/sf_ele_2018_trig_v5.root");
 
 
-	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2018/2018_PhotonsMedium.root",
-			     "MuEGammaScaleFactors/pho2018/HasPix_2018.root",
+	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2018/g2018_PhotonsMedium_mod_private_BostonAdded.root",
+			     "MuEGammaScaleFactors/pho2018/g2018_HasPix_2018_private.root",
 			     2018);
 
     }
