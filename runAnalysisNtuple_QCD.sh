@@ -31,7 +31,7 @@ echo ${year}
 echo ${job}
 echo ${nJobs}
 
-outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/AnalysisNtuples_Dec2020/QCD_controlRegion"
+outputdir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/AnalysisNtuples_Feb2021/QCD_controlRegion"
 
 source sampleList_${year}.sh
 varname=${sample}_${year}
