@@ -17,7 +17,8 @@ class TopEventCombinatorics{
 	mW = 80.4;
 	chi2 = 9999.;
 	goodCombo = false;
-	goodCombo_Tstar = false;
+	goodCombo_TstarGluGlu = false;
+	goodCombo_TstarGluGamma = false;
 	METRes = 0.2;
 	leptonRes = 0.05;
 	useResolutions = true;
@@ -27,6 +28,8 @@ class TopEventCombinatorics{
 	blep_idx = 0;
 	j1_idx = 0;
 	j2_idx = 0;
+	g_idx = 0;
+	pho_idx = 0;
 	ghad_idx = 0;
 	glep_idx = 0;
     }
@@ -37,6 +40,8 @@ class TopEventCombinatorics{
     void SetJetVector(std::vector<TLorentzVector> jets_){ jets = jets_;}
     void SetJetResVector(std::vector<double> jetres_){ jetsRes = jetres_;}
     void SetBtagVector(std::vector<double> jetsTag_){ btag = jetsTag_;}
+
+    void SetPhotonVector(std::vector<TLorentzVector> photons_){ photons = photons_;}
 
     void SetLepton(TLorentzVector lepton_){ lepton = lepton_; metZ.SetLepton(lepton_);}
     void SetMET(TLorentzVector met_){ met = met_; metZ.SetMET(met_);}
@@ -55,20 +60,26 @@ class TopEventCombinatorics{
     unsigned int getJ2(){ return j2_idx; }
     unsigned int getGHad(){ return ghad_idx; }
     unsigned int getGLep(){ return glep_idx; }
+    unsigned int getG(){ return g_idx; }
+    unsigned int getPho(){ return pho_idx; }
+
+    bool getPhotonSide(){ return photonIsLeptonSide; }
 
     double getNuPz(){ return nu_pz; }
 	
     double getChi2(){ return chi2; }
 
     bool GoodCombination(){ return goodCombo; }
-    bool GoodCombinationTstar(){ return goodCombo_Tstar; }
+    bool GoodCombinationTstarGluGlu(){ return goodCombo_TstarGluGlu; }
+    bool GoodCombinationTstarGluGamma(){ return goodCombo_TstarGluGamma; }
 
     void ClearVectors(){
 	jets.clear();
     }
-    int Calculate();
 
-    int CalculateTstar();
+    int Calculate();
+    int CalculateTstarGluGlu();
+    int CalculateTstarGluGamma();
 
 
 
@@ -83,13 +94,20 @@ class TopEventCombinatorics{
 		    TLorentzVector bl, double sigma_bl,
 		    double nu_pz_hypo);
 
-    double tstarChiSq(TLorentzVector j1, double sigma_j1,
-                      TLorentzVector j2, double sigma_j2,
-                      TLorentzVector bh, double sigma_bh,
-                      TLorentzVector bl, double sigma_bl,
-                      TLorentzVector gh, double sigma_gh,
-                      TLorentzVector gl, double sigma_gl,
+    double tstarChiSq(TLorentzVector j1,
+                      TLorentzVector j2,
+                      TLorentzVector bh,
+                      TLorentzVector bl,
+                      TLorentzVector hadDecay,
+                      TLorentzVector lepDecay,
                       double nu_pz_hypo);
+
+    /* double tstarGluGammaChiSq(TLorentzVector j1, double sigma_j1, */
+    /*                           TLorentzVector j2, double sigma_j2, */
+    /*                           TLorentzVector bh, double sigma_bh, */
+    /*                           TLorentzVector bl, double sigma_bl, */
+    /*                           TLorentzVector g, double sigma_g, */
+    /*                           double nu_pz_hypo); */
 
     std::vector<TLorentzVector> jets;
     std::vector<double> jetsRes;
@@ -97,6 +115,9 @@ class TopEventCombinatorics{
 
     TLorentzVector lepton;
     double leptonRes;
+
+    std::vector<TLorentzVector> photons;
+
 
     TLorentzVector met;
     double METRes;
@@ -119,12 +140,16 @@ class TopEventCombinatorics{
     int blep_idx;
     int j1_idx;
     int j2_idx; 
+    int g_idx;
+    int pho_idx;
     int ghad_idx;
     int glep_idx;
     int nu_pz;
+    int photonIsLeptonSide;
 	
     bool goodCombo;
-    bool goodCombo_Tstar;
+    bool goodCombo_TstarGluGlu;
+    bool goodCombo_TstarGluGamma;
 
     bool useResolutions;
 

@@ -201,28 +201,45 @@ class makeAnalysisNtuple {
     Float_t         _TopLep_phi;
     Float_t         _TopLep_mass;
     Float_t         _TopLep_charge;
-
     Float_t         _chi2;
 
-    Float_t         _TstarFit_TstarHad_pt;
-    Float_t         _TstarFit_TstarHad_eta;
-    Float_t         _TstarFit_TstarHad_phi;
-    Float_t         _TstarFit_TstarHad_mass;
-    Float_t         _TstarFit_TstarLep_pt;
-    Float_t         _TstarFit_TstarLep_eta;
-    Float_t         _TstarFit_TstarLep_phi;
-    Float_t         _TstarFit_TstarLep_mass;
-    Float_t         _TstarFit_TopHad_pt;
-    Float_t         _TstarFit_TopHad_eta;
-    Float_t         _TstarFit_TopHad_phi;
-    Float_t         _TstarFit_TopHad_mass;
-    Float_t         _TstarFit_TopLep_pt;
-    Float_t         _TstarFit_TopLep_eta;
-    Float_t         _TstarFit_TopLep_phi;
-    Float_t         _TstarFit_TopLep_mass;
-    Float_t         _TstarFit_TopLep_charge;
+    Float_t         _TstarGluGlu_TstarHad_pt;
+    Float_t         _TstarGluGlu_TstarHad_eta;
+    Float_t         _TstarGluGlu_TstarHad_phi;
+    Float_t         _TstarGluGlu_TstarHad_mass;
+    Float_t         _TstarGluGlu_TstarLep_pt;
+    Float_t         _TstarGluGlu_TstarLep_eta;
+    Float_t         _TstarGluGlu_TstarLep_phi;
+    Float_t         _TstarGluGlu_TstarLep_mass;
+    Float_t         _TstarGluGlu_TopHad_pt;
+    Float_t         _TstarGluGlu_TopHad_eta;
+    Float_t         _TstarGluGlu_TopHad_phi;
+    Float_t         _TstarGluGlu_TopHad_mass;
+    Float_t         _TstarGluGlu_TopLep_pt;
+    Float_t         _TstarGluGlu_TopLep_eta;
+    Float_t         _TstarGluGlu_TopLep_phi;
+    Float_t         _TstarGluGlu_TopLep_mass;
+    Float_t         _TstarGluGlu_TopLep_charge;
+    Float_t         _TstarGluGlu_chi2;
 
-    Float_t         _TstarFit_chi2;
+    Float_t         _TstarGluGamma_TstarHad_pt;
+    Float_t         _TstarGluGamma_TstarHad_eta;
+    Float_t         _TstarGluGamma_TstarHad_phi;
+    Float_t         _TstarGluGamma_TstarHad_mass;
+    Float_t         _TstarGluGamma_TstarLep_pt;
+    Float_t         _TstarGluGamma_TstarLep_eta;
+    Float_t         _TstarGluGamma_TstarLep_phi;
+    Float_t         _TstarGluGamma_TstarLep_mass;
+    Float_t         _TstarGluGamma_TopHad_pt;
+    Float_t         _TstarGluGamma_TopHad_eta;
+    Float_t         _TstarGluGamma_TopHad_phi;
+    Float_t         _TstarGluGamma_TopHad_mass;
+    Float_t         _TstarGluGamma_TopLep_pt;
+    Float_t         _TstarGluGamma_TopLep_eta;
+    Float_t         _TstarGluGamma_TopLep_phi;
+    Float_t         _TstarGluGamma_TopLep_mass;
+    Float_t         _TstarGluGamma_TopLep_charge;
+    Float_t         _TstarGluGamma_chi2;
 
     Bool_t          _MassCuts;
 
@@ -474,6 +491,7 @@ class makeAnalysisNtuple {
     std::vector<TLorentzVector> ljetVectors;
     std::vector<TLorentzVector> bjetVectors;
     std::vector<TLorentzVector> jetVectors;
+    std::vector<TLorentzVector> phoVectors;
 
     float lepCharge;
 
@@ -487,8 +505,8 @@ class makeAnalysisNtuple {
     TLorentzVector blep;
     TLorentzVector Wj1;
     TLorentzVector Wj2;
-    TLorentzVector ghad;
-    TLorentzVector glep;
+    TLorentzVector hadDecay;
+    TLorentzVector lepDecay;
 
     /* std::vector<bool> isBjet; */
     /* std::vector<int> b_ind; */
@@ -670,27 +688,49 @@ void makeAnalysisNtuple::InitBranches(){
 
     outputTree->Branch("chi2"                       , &_chi2               );
 
-    outputTree->Branch("TstarFit_TstarHad_pt"                  , &_TstarFit_TstarHad_pt                   );
-    outputTree->Branch("TstarFit_TstarHad_eta"                 , &_TstarFit_TstarHad_eta                  );
-    outputTree->Branch("TstarFit_TstarHad_phi"                 , &_TstarFit_TstarHad_phi                  );
-    outputTree->Branch("TstarFit_TstarHad_mass"                , &_TstarFit_TstarHad_mass                 );
-    outputTree->Branch("TstarFit_TstarLep_pt"                  , &_TstarFit_TstarLep_pt                   );
-    outputTree->Branch("TstarFit_TstarLep_eta"                 , &_TstarFit_TstarLep_eta                  );
-    outputTree->Branch("TstarFit_TstarLep_phi"                 , &_TstarFit_TstarLep_phi                  );
-    outputTree->Branch("TstarFit_TstarLep_mass"                , &_TstarFit_TstarLep_mass                 );
+    outputTree->Branch("TstarGluGlu_TstarHad_pt"                  , &_TstarGluGlu_TstarHad_pt                   );
+    outputTree->Branch("TstarGluGlu_TstarHad_eta"                 , &_TstarGluGlu_TstarHad_eta                  );
+    outputTree->Branch("TstarGluGlu_TstarHad_phi"                 , &_TstarGluGlu_TstarHad_phi                  );
+    outputTree->Branch("TstarGluGlu_TstarHad_mass"                , &_TstarGluGlu_TstarHad_mass                 );
+    outputTree->Branch("TstarGluGlu_TstarLep_pt"                  , &_TstarGluGlu_TstarLep_pt                   );
+    outputTree->Branch("TstarGluGlu_TstarLep_eta"                 , &_TstarGluGlu_TstarLep_eta                  );
+    outputTree->Branch("TstarGluGlu_TstarLep_phi"                 , &_TstarGluGlu_TstarLep_phi                  );
+    outputTree->Branch("TstarGluGlu_TstarLep_mass"                , &_TstarGluGlu_TstarLep_mass                 );
 
-    outputTree->Branch("TstarFit_TopHad_pt"                  , &_TstarFit_TopHad_pt                   );
-    outputTree->Branch("TstarFit_TopHad_eta"                 , &_TstarFit_TopHad_eta                  );
-    outputTree->Branch("TstarFit_TopHad_phi"                 , &_TstarFit_TopHad_phi                  );
-    outputTree->Branch("TstarFit_TopHad_mass"                , &_TstarFit_TopHad_mass                 );
+    outputTree->Branch("TstarGluGlu_TopHad_pt"                  , &_TstarGluGlu_TopHad_pt                   );
+    outputTree->Branch("TstarGluGlu_TopHad_eta"                 , &_TstarGluGlu_TopHad_eta                  );
+    outputTree->Branch("TstarGluGlu_TopHad_phi"                 , &_TstarGluGlu_TopHad_phi                  );
+    outputTree->Branch("TstarGluGlu_TopHad_mass"                , &_TstarGluGlu_TopHad_mass                 );
 
-    outputTree->Branch("TstarFit_TopLep_pt"                  , &_TstarFit_TopLep_pt                   );
-    outputTree->Branch("TstarFit_TopLep_eta"                 , &_TstarFit_TopLep_eta                  );
-    outputTree->Branch("TstarFit_TopLep_phi"                 , &_TstarFit_TopLep_phi                  );
-    outputTree->Branch("TstarFit_TopLep_mass"                , &_TstarFit_TopLep_mass                 );
-    outputTree->Branch("TstarFit_TopLep_charge"              , &_TstarFit_TopLep_charge               );
+    outputTree->Branch("TstarGluGlu_TopLep_pt"                  , &_TstarGluGlu_TopLep_pt                   );
+    outputTree->Branch("TstarGluGlu_TopLep_eta"                 , &_TstarGluGlu_TopLep_eta                  );
+    outputTree->Branch("TstarGluGlu_TopLep_phi"                 , &_TstarGluGlu_TopLep_phi                  );
+    outputTree->Branch("TstarGluGlu_TopLep_mass"                , &_TstarGluGlu_TopLep_mass                 );
+    outputTree->Branch("TstarGluGlu_TopLep_charge"              , &_TstarGluGlu_TopLep_charge               );
 
-    outputTree->Branch("TstarFit_chi2"                       , &_TstarFit_chi2               );
+    outputTree->Branch("TstarGluGlu_chi2"                       , &_TstarGluGlu_chi2               );
+
+    outputTree->Branch("TstarGluGamma_TstarHad_pt"                  , &_TstarGluGamma_TstarHad_pt                   );
+    outputTree->Branch("TstarGluGamma_TstarHad_eta"                 , &_TstarGluGamma_TstarHad_eta                  );
+    outputTree->Branch("TstarGluGamma_TstarHad_phi"                 , &_TstarGluGamma_TstarHad_phi                  );
+    outputTree->Branch("TstarGluGamma_TstarHad_mass"                , &_TstarGluGamma_TstarHad_mass                 );
+    outputTree->Branch("TstarGluGamma_TstarLep_pt"                  , &_TstarGluGamma_TstarLep_pt                   );
+    outputTree->Branch("TstarGluGamma_TstarLep_eta"                 , &_TstarGluGamma_TstarLep_eta                  );
+    outputTree->Branch("TstarGluGamma_TstarLep_phi"                 , &_TstarGluGamma_TstarLep_phi                  );
+    outputTree->Branch("TstarGluGamma_TstarLep_mass"                , &_TstarGluGamma_TstarLep_mass                 );
+
+    outputTree->Branch("TstarGluGamma_TopHad_pt"                  , &_TstarGluGamma_TopHad_pt                   );
+    outputTree->Branch("TstarGluGamma_TopHad_eta"                 , &_TstarGluGamma_TopHad_eta                  );
+    outputTree->Branch("TstarGluGamma_TopHad_phi"                 , &_TstarGluGamma_TopHad_phi                  );
+    outputTree->Branch("TstarGluGamma_TopHad_mass"                , &_TstarGluGamma_TopHad_mass                 );
+
+    outputTree->Branch("TstarGluGamma_TopLep_pt"                  , &_TstarGluGamma_TopLep_pt                   );
+    outputTree->Branch("TstarGluGamma_TopLep_eta"                 , &_TstarGluGamma_TopLep_eta                  );
+    outputTree->Branch("TstarGluGamma_TopLep_phi"                 , &_TstarGluGamma_TopLep_phi                  );
+    outputTree->Branch("TstarGluGamma_TopLep_mass"                , &_TstarGluGamma_TopLep_mass                 );
+    outputTree->Branch("TstarGluGamma_TopLep_charge"              , &_TstarGluGamma_TopLep_charge               );
+
+    outputTree->Branch("TstarGluGamma_chi2"                       , &_TstarGluGamma_chi2               );
 
 
     outputTree->Branch("DiphoMass"                  , &_DiphoMass                   ); 
@@ -919,24 +959,43 @@ void makeAnalysisNtuple::InitVariables()
 
     _chi2   = -9999;
 
-    _TstarFit_TstarHad_pt       = -9999;
-    _TstarFit_TstarHad_eta      = -9999;
-    _TstarFit_TstarHad_phi      = -9999;
-    _TstarFit_TstarHad_mass     = -9999;
-    _TstarFit_TstarLep_pt       = -9999;
-    _TstarFit_TstarLep_eta      = -9999;
-    _TstarFit_TstarLep_phi      = -9999;
-    _TstarFit_TstarLep_mass     = -9999;
-    _TstarFit_TopHad_pt       = -9999;
-    _TstarFit_TopHad_eta      = -9999;
-    _TstarFit_TopHad_phi      = -9999;
-    _TstarFit_TopHad_mass     = -9999;
-    _TstarFit_TopLep_pt       = -9999;
-    _TstarFit_TopLep_eta      = -9999;
-    _TstarFit_TopLep_phi      = -9999;
-    _TstarFit_TopLep_mass     = -9999;
-    _TstarFit_TopLep_charge   = -9999;
-    _TstarFit_chi2   = -9999;
+    _TstarGluGlu_TstarHad_pt       = -9999;
+    _TstarGluGlu_TstarHad_eta      = -9999;
+    _TstarGluGlu_TstarHad_phi      = -9999;
+    _TstarGluGlu_TstarHad_mass     = -9999;
+    _TstarGluGlu_TstarLep_pt       = -9999;
+    _TstarGluGlu_TstarLep_eta      = -9999;
+    _TstarGluGlu_TstarLep_phi      = -9999;
+    _TstarGluGlu_TstarLep_mass     = -9999;
+    _TstarGluGlu_TopHad_pt       = -9999;
+    _TstarGluGlu_TopHad_eta      = -9999;
+    _TstarGluGlu_TopHad_phi      = -9999;
+    _TstarGluGlu_TopHad_mass     = -9999;
+    _TstarGluGlu_TopLep_pt       = -9999;
+    _TstarGluGlu_TopLep_eta      = -9999;
+    _TstarGluGlu_TopLep_phi      = -9999;
+    _TstarGluGlu_TopLep_mass     = -9999;
+    _TstarGluGlu_TopLep_charge   = -9999;
+    _TstarGluGlu_chi2   = -9999;
+
+    _TstarGluGamma_TstarHad_pt       = -9999;
+    _TstarGluGamma_TstarHad_eta      = -9999;
+    _TstarGluGamma_TstarHad_phi      = -9999;
+    _TstarGluGamma_TstarHad_mass     = -9999;
+    _TstarGluGamma_TstarLep_pt       = -9999;
+    _TstarGluGamma_TstarLep_eta      = -9999;
+    _TstarGluGamma_TstarLep_phi      = -9999;
+    _TstarGluGamma_TstarLep_mass     = -9999;
+    _TstarGluGamma_TopHad_pt       = -9999;
+    _TstarGluGamma_TopHad_eta      = -9999;
+    _TstarGluGamma_TopHad_phi      = -9999;
+    _TstarGluGamma_TopHad_mass     = -9999;
+    _TstarGluGamma_TopLep_pt       = -9999;
+    _TstarGluGamma_TopLep_eta      = -9999;
+    _TstarGluGamma_TopLep_phi      = -9999;
+    _TstarGluGamma_TopLep_mass     = -9999;
+    _TstarGluGamma_TopLep_charge   = -9999;
+    _TstarGluGamma_chi2   = -9999;
 
     _HT		 = -9999;
     _DilepMass	 = -9999;
