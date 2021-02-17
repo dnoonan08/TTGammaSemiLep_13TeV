@@ -249,6 +249,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     // selector->veto_pho_jet_dR = -1.; //remove jets which have a photon close to them 
     selector->veto_jet_pho_dR = -1.; //remove photons which have a jet close to them (after having removed jets too close to photon from above cut)
 
+
     if (isMC){
     	if (year=="2016") selector->init_JER("./jecFiles/JER/Summer16_25nsV1");
     	if (year=="2017") selector->init_JER("./jecFiles/JER/Fall17_V3");
@@ -277,6 +278,8 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
 
     topEvent.SetBtagThresh(selector->btag_cut_DeepCSV);
+    topEvent.SetBJetsSize(2);
+
 
 
     BTagCalibrationReader reader(BTagEntry::OP_MEDIUM,  // operating point
@@ -1603,19 +1606,18 @@ void makeAnalysisNtuple::FillEvent(std::string year)
     }
 
     
-    // // // Calculate MET z
-    // metZ.SetLepton(lepVector);
+    // // Calculate MET z
+    metZ.SetLepton(lepVector);
 
-    // METVector.SetPtEtaPhiM(tree->MET_pt_,
-    // 			   0.,
-    // 			   tree->MET_phi_,
-    // 			   0.);
-	
-    // metZ.SetMET(METVector);
+    METVector.SetPtEtaPhiM(tree->MET_pt_,
+                           0.,
+                           tree->MET_phi_,
+                           0.);
+
+    metZ.SetMET(METVector);
 
     //Calculate transverse mass variables
-    //W transverse mass		
-
+    //W transverse mass
     _WtransMass = TMath::Sqrt(2*lepVector.Pt()*tree->MET_pt_*( 1.0 - TMath::Cos( lepVector.DeltaPhi(METVector))));
 
 
@@ -1628,25 +1630,9 @@ void makeAnalysisNtuple::FillEvent(std::string year)
     double _met_px = METVector.Px();
     double _met_py = METVector.Py();
 
-    // _nu_pz = metZ.Calculate();
-    // _nu_pz_other = metZ.getOther();
-    // METVector.SetPz(_nu_pz);
-    // cout << _nu_pz << "   ----   " << _nu_pz_other << endl;
-
-    // for (int __j = 0; __j < isBjet.size(); __j++){
-    // 	if (isBjet.at(__j)) b_ind.push_back(__j);
-    // 	else j_ind.push_back(__j);
-    // }
-    
-
-    // topEvent.SetBJetVector(bjetVectors);
-    // topEvent.SetLJetVector(ljetVectors);
-    // topEvent.SetLepton(lepVector);
-    // topEvent.SetMET(METVector);
-    
-    // topEvent.SetBJetResVector(bjetResVectors);
-    // topEvent.SetLJetResVector(ljetResVectors);
-    // topEvent.SetIgnoreBtag(true);
+    _nu_pz = metZ.Calculate();
+    _nu_pz_other = metZ.getOther();
+    METVector.SetXYZM(_met_px, _met_py, _nu_pz, 0);
 
     topEvent.SetJetVector(jetVectors);
     topEvent.SetJetResVector(jetResolutionVectors);

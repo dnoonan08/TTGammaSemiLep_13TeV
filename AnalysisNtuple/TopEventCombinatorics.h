@@ -17,6 +17,7 @@ class TopEventCombinatorics{
 	mW = 80.4;
 	chi2 = 9999.;
 	goodCombo = false;
+	goodCombo_Tstar = false;
 	METRes = 0.2;
 	leptonRes = 0.05;
 	useResolutions = true;
@@ -26,6 +27,8 @@ class TopEventCombinatorics{
 	blep_idx = 0;
 	j1_idx = 0;
 	j2_idx = 0;
+	ghad_idx = 0;
+	glep_idx = 0;
     }
 	
     void SetMtop(double mTop_){ mTop = mTop_;}
@@ -50,16 +53,22 @@ class TopEventCombinatorics{
     unsigned int getBLep(){ return blep_idx; }
     unsigned int getJ1(){ return j1_idx; }
     unsigned int getJ2(){ return j2_idx; }
+    unsigned int getGHad(){ return ghad_idx; }
+    unsigned int getGLep(){ return glep_idx; }
+
     double getNuPz(){ return nu_pz; }
 	
     double getChi2(){ return chi2; }
 
     bool GoodCombination(){ return goodCombo; }
+    bool GoodCombinationTstar(){ return goodCombo_Tstar; }
 
     void ClearVectors(){
 	jets.clear();
     }
     int Calculate();
+
+    int CalculateTstar();
 
 
 
@@ -73,6 +82,14 @@ class TopEventCombinatorics{
 		    TLorentzVector bh, double sigma_bh,
 		    TLorentzVector bl, double sigma_bl,
 		    double nu_pz_hypo);
+
+    double tstarChiSq(TLorentzVector j1, double sigma_j1,
+                      TLorentzVector j2, double sigma_j2,
+                      TLorentzVector bh, double sigma_bh,
+                      TLorentzVector bl, double sigma_bl,
+                      TLorentzVector gh, double sigma_gh,
+                      TLorentzVector gl, double sigma_gl,
+                      double nu_pz_hypo);
 
     std::vector<TLorentzVector> jets;
     std::vector<double> jetsRes;
@@ -93,18 +110,21 @@ class TopEventCombinatorics{
     std::vector<double> tempJetResVector;
 
 
-    TLorentzVector bhad;
-    TLorentzVector blep;
-    TLorentzVector j1;
-    TLorentzVector j2;
+    /* TLorentzVector bhad; */
+    /* TLorentzVector blep; */
+    /* TLorentzVector j1; */
+    /* TLorentzVector j2; */
 
     int bhad_idx;
     int blep_idx;
     int j1_idx;
-    int j2_idx;
+    int j2_idx; 
+    int ghad_idx;
+    int glep_idx;
     int nu_pz;
 	
     bool goodCombo;
+    bool goodCombo_Tstar;
 
     bool useResolutions;
 
