@@ -204,6 +204,26 @@ class makeAnalysisNtuple {
 
     Float_t         _chi2;
 
+    Float_t         _TstarFit_TstarHad_pt;
+    Float_t         _TstarFit_TstarHad_eta;
+    Float_t         _TstarFit_TstarHad_phi;
+    Float_t         _TstarFit_TstarHad_mass;
+    Float_t         _TstarFit_TstarLep_pt;
+    Float_t         _TstarFit_TstarLep_eta;
+    Float_t         _TstarFit_TstarLep_phi;
+    Float_t         _TstarFit_TstarLep_mass;
+    Float_t         _TstarFit_TopHad_pt;
+    Float_t         _TstarFit_TopHad_eta;
+    Float_t         _TstarFit_TopHad_phi;
+    Float_t         _TstarFit_TopHad_mass;
+    Float_t         _TstarFit_TopLep_pt;
+    Float_t         _TstarFit_TopLep_eta;
+    Float_t         _TstarFit_TopLep_phi;
+    Float_t         _TstarFit_TopLep_mass;
+    Float_t         _TstarFit_TopLep_charge;
+
+    Float_t         _TstarFit_chi2;
+
     Bool_t          _MassCuts;
 
     //	Float_t         _HT;
@@ -467,6 +487,8 @@ class makeAnalysisNtuple {
     TLorentzVector blep;
     TLorentzVector Wj1;
     TLorentzVector Wj2;
+    TLorentzVector ghad;
+    TLorentzVector glep;
 
     /* std::vector<bool> isBjet; */
     /* std::vector<int> b_ind; */
@@ -635,6 +657,7 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("M_bjjgamma"                 , &_M_bjjgamma                  );
     outputTree->Branch("M_jj"                       , &_M_jj                        );
     outputTree->Branch("MassCuts"                   , &_MassCuts                    );
+
     outputTree->Branch("TopHad_pt"                  , &_TopHad_pt                   );
     outputTree->Branch("TopHad_eta"                 , &_TopHad_eta                  );
     outputTree->Branch("TopHad_phi"                 , &_TopHad_phi                  );
@@ -646,6 +669,28 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("TopLep_charge"              , &_TopLep_charge               );
 
     outputTree->Branch("chi2"                       , &_chi2               );
+
+    outputTree->Branch("TstarFit_TstarHad_pt"                  , &_TstarFit_TstarHad_pt                   );
+    outputTree->Branch("TstarFit_TstarHad_eta"                 , &_TstarFit_TstarHad_eta                  );
+    outputTree->Branch("TstarFit_TstarHad_phi"                 , &_TstarFit_TstarHad_phi                  );
+    outputTree->Branch("TstarFit_TstarHad_mass"                , &_TstarFit_TstarHad_mass                 );
+    outputTree->Branch("TstarFit_TstarLep_pt"                  , &_TstarFit_TstarLep_pt                   );
+    outputTree->Branch("TstarFit_TstarLep_eta"                 , &_TstarFit_TstarLep_eta                  );
+    outputTree->Branch("TstarFit_TstarLep_phi"                 , &_TstarFit_TstarLep_phi                  );
+    outputTree->Branch("TstarFit_TstarLep_mass"                , &_TstarFit_TstarLep_mass                 );
+
+    outputTree->Branch("TstarFit_TopHad_pt"                  , &_TstarFit_TopHad_pt                   );
+    outputTree->Branch("TstarFit_TopHad_eta"                 , &_TstarFit_TopHad_eta                  );
+    outputTree->Branch("TstarFit_TopHad_phi"                 , &_TstarFit_TopHad_phi                  );
+    outputTree->Branch("TstarFit_TopHad_mass"                , &_TstarFit_TopHad_mass                 );
+
+    outputTree->Branch("TstarFit_TopLep_pt"                  , &_TstarFit_TopLep_pt                   );
+    outputTree->Branch("TstarFit_TopLep_eta"                 , &_TstarFit_TopLep_eta                  );
+    outputTree->Branch("TstarFit_TopLep_phi"                 , &_TstarFit_TopLep_phi                  );
+    outputTree->Branch("TstarFit_TopLep_mass"                , &_TstarFit_TopLep_mass                 );
+    outputTree->Branch("TstarFit_TopLep_charge"              , &_TstarFit_TopLep_charge               );
+
+    outputTree->Branch("TstarFit_chi2"                       , &_TstarFit_chi2               );
 
 
     outputTree->Branch("DiphoMass"                  , &_DiphoMass                   ); 
@@ -873,6 +918,25 @@ void makeAnalysisNtuple::InitVariables()
     _TopLep_charge   = -9999;
 
     _chi2   = -9999;
+
+    _TstarFit_TstarHad_pt       = -9999;
+    _TstarFit_TstarHad_eta      = -9999;
+    _TstarFit_TstarHad_phi      = -9999;
+    _TstarFit_TstarHad_mass     = -9999;
+    _TstarFit_TstarLep_pt       = -9999;
+    _TstarFit_TstarLep_eta      = -9999;
+    _TstarFit_TstarLep_phi      = -9999;
+    _TstarFit_TstarLep_mass     = -9999;
+    _TstarFit_TopHad_pt       = -9999;
+    _TstarFit_TopHad_eta      = -9999;
+    _TstarFit_TopHad_phi      = -9999;
+    _TstarFit_TopHad_mass     = -9999;
+    _TstarFit_TopLep_pt       = -9999;
+    _TstarFit_TopLep_eta      = -9999;
+    _TstarFit_TopLep_phi      = -9999;
+    _TstarFit_TopLep_mass     = -9999;
+    _TstarFit_TopLep_charge   = -9999;
+    _TstarFit_chi2   = -9999;
 
     _HT		 = -9999;
     _DilepMass	 = -9999;

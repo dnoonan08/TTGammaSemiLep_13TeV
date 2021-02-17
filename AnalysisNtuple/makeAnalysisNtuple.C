@@ -1648,7 +1648,7 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	blep = jetVectors[topEvent.getBLep()];
 	Wj1 = jetVectors[topEvent.getJ1()];
 	Wj2 = jetVectors[topEvent.getJ2()];
-	METVector.SetPz(topEvent.getNuPz());
+	METVector.SetXYZM(METVector.Px(), METVector.Py(), topEvent.getNuPz(), 0);
 
 	_chi2 = topEvent.getChi2();
 
@@ -1677,6 +1677,44 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 		      _nPho > 0);
 	
     }
+
+    topEvent.CalculateTstar();
+
+    if (topEvent.GoodCombinationTstar()){
+	bhad = jetVectors[topEvent.getBHad()];
+	blep = jetVectors[topEvent.getBLep()];
+	Wj1 = jetVectors[topEvent.getJ1()];
+	Wj2 = jetVectors[topEvent.getJ2()];
+	ghad = jetVectors[topEvent.getGHad()];
+	glep = jetVectors[topEvent.getGLep()];
+	METVector.SetXYZM(METVector.Px(), METVector.Py(), topEvent.getNuPz(), 0);
+
+        _TstarFit_chi2 = topEvent.getChi2();
+
+        _TstarFit_TstarHad_pt = (bhad + Wj1 + Wj2 + ghad).Pt();
+        _TstarFit_TstarHad_eta = (bhad + Wj1 + Wj2 + ghad).Eta();
+        _TstarFit_TstarHad_phi = (bhad + Wj1 + Wj2 + ghad).Phi();
+        _TstarFit_TstarHad_mass = (bhad + Wj1 + Wj2 + ghad).M();
+
+        _TstarFit_TstarLep_pt = (blep + lepVector + METVector + glep).Pt();
+        _TstarFit_TstarLep_eta = (blep + lepVector + METVector + glep).Eta();
+        _TstarFit_TstarLep_phi = (blep + lepVector + METVector + glep).Phi();
+        _TstarFit_TstarLep_mass = (blep + lepVector + METVector + glep).M();
+
+        _TstarFit_TopHad_pt = (bhad + Wj1 + Wj2).Pt();
+        _TstarFit_TopHad_eta = (bhad + Wj1 + Wj2).Eta();
+        _TstarFit_TopHad_phi = (bhad + Wj1 + Wj2).Phi();
+        _TstarFit_TopHad_mass = (bhad + Wj1 + Wj2).M();
+
+        _TstarFit_TopLep_pt = (blep + lepVector + METVector).Pt();
+        _TstarFit_TopLep_eta = (blep + lepVector + METVector).Eta();
+        _TstarFit_TopLep_phi = (blep + lepVector + METVector).Phi();
+        _TstarFit_TopLep_mass = (blep + lepVector + METVector).M();
+
+        _TstarFit_TopLep_charge = lepCharge;
+    }
+
+
     
     ljetVectors.clear();
     bjetVectors.clear();
