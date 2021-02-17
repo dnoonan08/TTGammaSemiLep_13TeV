@@ -101,6 +101,9 @@ void Selector::init_JER(std::string inputPrefix){
 void Selector::process_objects(EventTree* inp_tree){
     tree = inp_tree;
     clear_vectors();
+    
+    generator->SetSeed(tree->event_ + tree->run_ + tree->lumis_);
+
     //cout << "before selector muons" << endl;
     filter_muons();
 
