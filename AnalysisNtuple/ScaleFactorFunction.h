@@ -7,15 +7,27 @@ std::map<std::string, vector<double> > crossSections;
 
 void initCrossSections(){
 
-    crossSections["TstarM800"]   =  {1., 1., 1.};
-    crossSections["TstarM900"]   =  {1., 1., 1.};
-    crossSections["TstarM1000"]  =  {1., 1., 1.};
-    crossSections["TstarM1100"]  =  {1., 1., 1.};
-    crossSections["TstarM1200"]  =  {1., 1., 1.};
-    crossSections["TstarM1300"]  =  {1., 1., 1.};
-    crossSections["TstarM1400"]  =  {1., 1., 1.};
-    crossSections["TstarM1500"]  =  {1., 1., 1.};
-    crossSections["TstarM1600"]  =  {1., 1., 1.};
+    crossSections["TstarTstar_GluGlu_M700"]   =  {4.92, 4.92, 4.92};
+    crossSections["TstarTstar_GluGlu_M800"]   =  {1.68, 1.68, 1.68};
+    crossSections["TstarTstar_GluGlu_M900"]   =  {0.636, 0.636, 0.636};
+    crossSections["TstarTstar_GluGlu_M1000"]  =  {0.262, 0.262, 0.262};
+    crossSections["TstarTstar_GluGlu_M1100"]  =  {0.116, 0.116, 0.116};
+    crossSections["TstarTstar_GluGlu_M1200"]  =  {0.0537, 0.0537, 0.0537};
+    crossSections["TstarTstar_GluGlu_M1300"]  =  {0.0261, 0.0261, 0.0261};
+    crossSections["TstarTstar_GluGlu_M1400"]  =  {0.0131, 0.0131, 0.0131};
+    crossSections["TstarTstar_GluGlu_M1500"]  =  {0.00677, 0.00677, 0.00677};
+    crossSections["TstarTstar_GluGlu_M1600"]  =  {0.00359, 0.00359, 0.00359};
+
+    crossSections["TstarTstar_GluGamma_M700"]   =  {4.92, 4.92, 4.92};
+    crossSections["TstarTstar_GluGamma_M800"]   =  {1.68, 1.68, 1.68};
+    crossSections["TstarTstar_GluGamma_M900"]   =  {0.636, 0.636, 0.636};
+    crossSections["TstarTstar_GluGamma_M1000"]  =  {0.262, 0.262, 0.262};
+    crossSections["TstarTstar_GluGamma_M1100"]  =  {0.116, 0.116, 0.116};
+    crossSections["TstarTstar_GluGamma_M1200"]  =  {0.0537, 0.0537, 0.0537};
+    crossSections["TstarTstar_GluGamma_M1300"]  =  {0.0261, 0.0261, 0.0261};
+    crossSections["TstarTstar_GluGamma_M1400"]  =  {0.0131, 0.0131, 0.0131};
+    crossSections["TstarTstar_GluGamma_M1500"]  =  {0.00677, 0.00677, 0.00677};
+    crossSections["TstarTstar_GluGamma_M1500"]  =  {0.00359, 0.00359, 0.00359};
 
     crossSections["TTbarPowheg"]  =  {831.76, 831.76, 831.76};  //ttbar NNLO (http://inspirehep.net/search?p=find+eprint+1112.5675)
 
@@ -178,7 +190,7 @@ double getEvtWeight(string sampleType, int year, double luminosity, double nEven
 
 
 
-const std::string allowedSampleTypes[165] = {"Data",
+const std::string allowedSampleTypes[175] = {"Data",
 					     "Data_SingleMu_a",
 					     "Data_SingleMu_b",
 					     "Data_SingleMu_c",
@@ -195,15 +207,26 @@ const std::string allowedSampleTypes[165] = {"Data",
 					     "Data_SingleEle_f",
 					     "Data_SingleEle_g",
 					     "Data_SingleEle_h",
-					     "TstarM800",
-					     "TstarM900",
-					     "TstarM1000",
-					     "TstarM1100",
-					     "TstarM1200",
-					     "TstarM1300",
-					     "TstarM1400",
-					     "TstarM1500",
-					     "TstarM1600",
+					     "TstarTstart_GluGlu_M700",
+					     "TstarTstart_GluGlu_M800",
+					     "TstarTstart_GluGlu_M900",
+					     "TstarTstart_GluGlu_M1000",
+					     "TstarTstart_GluGlu_M1100",
+					     "TstarTstart_GluGlu_M1200",
+					     "TstarTstart_GluGlu_M1300",
+					     "TstarTstart_GluGlu_M1400",
+					     "TstarTstart_GluGlu_M1500",
+					     "TstarTstart_GluGlu_M1600",
+					     "TstarTstart_GluGamma_M700",
+					     "TstarTstart_GluGamma_M800",
+					     "TstarTstart_GluGamma_M900",
+					     "TstarTstart_GluGamma_M1000",
+					     "TstarTstart_GluGamma_M1100",
+					     "TstarTstart_GluGamma_M1200",
+					     "TstarTstart_GluGamma_M1300",
+					     "TstarTstart_GluGamma_M1400",
+					     "TstarTstart_GluGamma_M1500",
+					     "TstarTstart_GluGamma_M1600",
 					     "TTGamma_Hadronic",
 					     "TTGamma_Hadronic_Pt100",
 					     "TTGamma_Hadronic_Pt200",
