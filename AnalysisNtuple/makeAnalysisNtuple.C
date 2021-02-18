@@ -458,11 +458,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if (saveCutflow) {
 	evtPick->init_cutflow_files(outputFileName);
     }
-    cout << "HERE" << endl;
+
     PUReweight* PUweighter = new PUReweight(ac-4, av+4, PUfilename);
     PUReweight* PUweighterUp = new PUReweight(ac-4, av+4, PUfilename_up);
     PUReweight* PUweighterDown = new PUReweight(ac-4, av+4, PUfilename_down);
-    cout << "DONE" << endl;
+
     tree->GetEntry(0);
         
     std::cout << "isMC: " << isMC << endl;
@@ -594,7 +594,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	eleSF = new ElectronSF("MuEGammaScaleFactors/ele2018/2018_ElectronTight.root",
 			       "MuEGammaScaleFactors/ele2018/egammaEffi.txt_EGM2D_updatedAll.root",
 			       "MuEGammaScaleFactors/ele2018/sf_ele_2018_trig_v5.root");
-
 
 	phoSF = new PhotonSF("MuEGammaScaleFactors/pho2018/g2018_PhotonsMedium_mod_private_BostonAdded.root",
 			     "MuEGammaScaleFactors/pho2018/g2018_HasPix_2018_private.root",

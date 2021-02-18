@@ -22,8 +22,8 @@ class PhotonSF
 	} else if (year==2017){
 	    eVetoHist_1D = (TH1F*) eVetoFile->Get("Medium_ID");
 	} else if (year==2018){
-	    eVetoHist_2D = (TH2F*) eVetoFile->Get("eleVeto_SF");
-	    eVetoHist_Unc_2D = (TH2F*) eVetoFile->Get("eleVeto_Unc");
+	    eVetoHist_2D = (TH2F*) eVetoFile->Get("scalefactor");
+	    eVetoHist_Unc_2D = (TH2F*) eVetoFile->Get("uncertainty");
             veto_ptMax = eVetoHist_2D->GetXaxis()->GetXmax();
 	}
     }
