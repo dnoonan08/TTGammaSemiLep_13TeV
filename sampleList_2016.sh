@@ -1,4 +1,4 @@
-eosDir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6-2/2016"
+eosDir="root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/BSM_Skims/2016"
 
 DYjetsM10to50_2016="${eosDir}/DYjetsM10to50_2016_skim.root"
 
@@ -153,6 +153,46 @@ TTbarPowheg_Dilepton_2016="${eosDir}/TTbarPowheg_Dilepton_2016_skim_10of10.root 
 TTbarPowheg_Hadronic_2016="${eosDir}/TTbarPowheg_Hadronic_2016_skim_10of10.root ${eosDir}/TTbarPowheg_Hadronic_2016_skim_1of10.root ${eosDir}/TTbarPowheg_Hadronic_2016_skim_2of10.root ${eosDir}/TTbarPowheg_Hadronic_2016_skim_3of10.root ${eosDir}/TTbarPowheg_Hadronic_2016_skim_4of10.root ${eosDir}/TTbarPowheg_Hadronic_2016_skim_5of10.root ${eosDir}/TTbarPowheg_Hadronic_2016_skim_6of10.root ${eosDir}/TTbarPowheg_Hadronic_2016_skim_7of10.root ${eosDir}/TTbarPowheg_Hadronic_2016_skim_8of10.root ${eosDir}/TTbarPowheg_Hadronic_2016_skim_9of10.root"
 
 TTbarPowheg_Semilept_2016="${eosDir}/TTbarPowheg_Semilept_2016_skim_10of10.root ${eosDir}/TTbarPowheg_Semilept_2016_skim_1of10.root ${eosDir}/TTbarPowheg_Semilept_2016_skim_2of10.root ${eosDir}/TTbarPowheg_Semilept_2016_skim_3of10.root ${eosDir}/TTbarPowheg_Semilept_2016_skim_4of10.root ${eosDir}/TTbarPowheg_Semilept_2016_skim_5of10.root ${eosDir}/TTbarPowheg_Semilept_2016_skim_6of10.root ${eosDir}/TTbarPowheg_Semilept_2016_skim_7of10.root ${eosDir}/TTbarPowheg_Semilept_2016_skim_8of10.root ${eosDir}/TTbarPowheg_Semilept_2016_skim_9of10.root"
+
+TstarTstar_GluGamma_M700_2016="${eosDir}/TstarTstarToTgammaTgluon_M700_2016_skim.root"
+
+TstarTstar_GluGamma_M800_2016="${eosDir}/TstarTstarToTgammaTgluon_M800_2016_skim.root"
+
+TstarTstar_GluGamma_M900_2016="${eosDir}/TstarTstarToTgammaTgluon_M900_2016_skim.root"
+
+TstarTstar_GluGamma_M1000_2016="${eosDir}/TstarTstarToTgammaTgluon_M1000_2016_skim.root"
+
+TstarTstar_GluGamma_M1100_2016="${eosDir}/TstarTstarToTgammaTgluon_M1100_2016_skim.root"
+
+TstarTstar_GluGamma_M1200_2016="${eosDir}/TstarTstarToTgammaTgluon_M1200_2016_skim.root"
+
+TstarTstar_GluGamma_M1300_2016="${eosDir}/TstarTstarToTgammaTgluon_M1300_2016_skim.root"
+
+TstarTstar_GluGamma_M1400_2016="${eosDir}/TstarTstarToTgammaTgluon_M1400_2016_skim.root"
+
+TstarTstar_GluGamma_M1500_2016="${eosDir}/TstarTstarToTgammaTgluon_M1500_2016_skim.root"
+
+TstarTstar_GluGamma_M1600_2016="${eosDir}/TstarTstarToTgammaTgluon_M1600_2016_skim.root"
+
+TstarTstar_GluGlu_M700_2016="${eosDir}/TstarTstarToTgluonTgluon_M700_2016_skim.root"
+
+TstarTstar_GluGlu_M800_2016="${eosDir}/TstarTstarToTgluonTgluon_M800_2016_skim.root"
+
+TstarTstar_GluGlu_M900_2016="${eosDir}/TstarTstarToTgluonTgluon_M900_2016_skim.root"
+
+TstarTstar_GluGlu_M1000_2016="${eosDir}/TstarTstarToTgluonTgluon_M1000_2016_skim.root"
+
+TstarTstar_GluGlu_M1100_2016="${eosDir}/TstarTstarToTgluonTgluon_M1100_2016_skim.root"
+
+TstarTstar_GluGlu_M1200_2016="${eosDir}/TstarTstarToTgluonTgluon_M1200_2016_skim.root"
+
+TstarTstar_GluGlu_M1300_2016="${eosDir}/TstarTstarToTgluonTgluon_M1300_2016_skim.root"
+
+TstarTstar_GluGlu_M1400_2016="${eosDir}/TstarTstarToTgluonTgluon_M1400_2016_skim.root"
+
+TstarTstar_GluGlu_M1500_2016="${eosDir}/TstarTstarToTgluonTgluon_M1500_2016_skim.root"
+
+TstarTstar_GluGlu_M1600_2016="${eosDir}/TstarTstarToTgluonTgluon_M1600_2016_skim.root"
 
 VVTo2L2Nu_2016="${eosDir}/VVTo2L2Nu_amcatnlo_2016_skim.root ${eosDir}/VVTo2L2Nu_amcatnlo_ext1_2016_skim.root"
 
