@@ -171,6 +171,26 @@ class EventTree{
     Int_t           jetHadFlvr_[200];
     Int_t           jetGenJetIdx_[200];
 
+
+    UInt_t          nFatJet_;
+    Float_t         fatJetPt_[200];
+    Float_t         fatJetEta_[200];
+    Float_t         fatJetPhi_[200];
+    Float_t         fatJetMass_[200];
+    Float_t         fatJetMassSoftDrop_[200];
+    Int_t           fatJetID_[200];
+    Float_t         fatJetBtagDeepB_[200];
+    Float_t         fatJetDeepTagT_[200];
+    Float_t         fatJetDeepTagW_[200];
+    Float_t         fatJetDeepTagMDT_[200];
+    Float_t         fatJetDeepTagMDW_[200];
+    Int_t           fatJetHadFlvr_[200];
+    Float_t         fatJetEleIdx_[200];
+    Float_t         fatJetMuIdx_[200];
+    Int_t           fatJetGenJetAK8Idx_[200];
+
+
+
     Float_t  rho_;
 
 

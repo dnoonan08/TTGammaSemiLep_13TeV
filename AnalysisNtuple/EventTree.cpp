@@ -277,6 +277,57 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
 	chain->SetBranchAddress("Jet_genJetIdx", &jetGenJetIdx_);
     }
 
+
+    chain->SetBranchStatus("nFatJet",1);
+    chain->SetBranchAddress("nFatJet", &nFatJet_);
+ 
+    chain->SetBranchStatus("FatJet_pt",1);
+    chain->SetBranchAddress("FatJet_pt", &fatJetPt_);
+
+    chain->SetBranchStatus("FatJet_eta",1);
+    chain->SetBranchAddress("FatJet_eta", &fatJetEta_);
+
+    chain->SetBranchStatus("FatJet_phi",1);
+    chain->SetBranchAddress("FatJet_phi", &fatJetPhi_);
+
+    chain->SetBranchStatus("FatJet_mass",1);
+    chain->SetBranchAddress("FatJet_mass", &fatJetMass_);
+
+    chain->SetBranchStatus("FatJet_msoftdrop",1);
+    chain->SetBranchAddress("FatJet_msoftdrop", &fatJetMassSoftDrop_);
+
+    chain->SetBranchStatus("FatJet_jetId",1);
+    chain->SetBranchAddress("FatJet_jetId", &fatJetID_);
+
+    chain->SetBranchStatus("FatJet_btagDeepB",1);
+    chain->SetBranchAddress("FatJet_btagDeepB", &fatJetBtagDeepB_);
+
+    chain->SetBranchStatus("FatJet_deepTagMD_TvsQCD",1);
+    chain->SetBranchAddress("FatJet_deepTagMD_TvsQCD", &fatJetDeepTagMDT_);
+
+    chain->SetBranchStatus("FatJet_deepTagMD_WvsQCD",1);
+    chain->SetBranchAddress("FatJet_deepTagMD_WvsQCD", &fatJetDeepTagMDW_);
+
+    chain->SetBranchStatus("FatJet_deepTag_TvsQCD",1);
+    chain->SetBranchAddress("FatJet_deepTag_TvsQCD", &fatJetDeepTagT_);
+
+    chain->SetBranchStatus("FatJet_deepTag_WvsQCD",1);
+    chain->SetBranchAddress("FatJet_deepTag_WvsQCD", &fatJetDeepTagW_);
+    
+    chain->SetBranchStatus("FatJet_hadronFlavour",1);
+    chain->SetBranchAddress("FatJet_hadronFlavour", &fatJetHadFlvr_);
+
+    chain->SetBranchStatus("FatJet_electronIdx3SJ",1);
+    chain->SetBranchAddress("FatJet_electronIdx3SJ", &fatJetEleIdx_);
+
+    chain->SetBranchStatus("FatJet_muonIdx3SJ",1);
+    chain->SetBranchAddress("FatJet_muonIdx3SJ", &fatJetMuIdx_);
+
+    if (!isData_){
+        chain->SetBranchStatus("FatJet_genJetAK8Idx",1);
+        chain->SetBranchAddress("FatJet_genJetAK8Idx", &fatJetGenJetAK8Idx_);
+    }
+
     // // photons
 	
     chain->SetBranchStatus("nPhoton",1);

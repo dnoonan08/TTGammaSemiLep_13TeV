@@ -87,6 +87,7 @@ public:
 	std::vector<int> Jets;
 	std::vector<int> bJets;
         std::vector<int> FwdJets;
+	std::vector<int> FatJets;
 
 	std::vector<double> jet_resolution;
 	std::vector<bool>   jet_isTagged;
@@ -120,6 +121,10 @@ public:
 	bool   looseJetID;
 	bool   useDeepCSVbTag;
 	bool   QCDselect;
+
+	double fatJet_Pt_cut;
+	double fatJet_Eta_cut;
+	double fatJet_DeepAk8_cut;
 
 	// electrons
 	double ele_Pt_cut;
@@ -171,6 +176,7 @@ private:
 	void filter_electrons();
 	void filter_muons();
 	void filter_jets();
+	void filter_fatjets();
 	void filter_photons_jetsDR();
 
 	/* double JER(int jetInd); */

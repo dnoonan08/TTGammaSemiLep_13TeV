@@ -116,6 +116,8 @@ void Selector::process_objects(EventTree* inp_tree){
     //cout << "before selector jets" << endl;
     filter_jets();
 
+    filter_fatjets();
+
     //cout << "before photon jet dr" << endl;
     // // add in the DR(photon,jet), removing photons with jet < 0.4 away, needs to be done after the jet selection
     filter_photons_jetsDR();
@@ -144,6 +146,7 @@ void Selector::clear_vectors(){
     Jets.clear();
     FwdJets.clear();
     bJets.clear();
+    FatJets.clear();
 	
     MuRelIso_corr.clear();
     PhoChHadIso_corr.clear();
@@ -648,6 +651,27 @@ void Selector::filter_jets(){
     // }
 }
 
+
+void Selector::filter_fatjets(){
+    if (tree->event_==printEvent){
+    	cout << "Found Event Staring Fat Jets" << endl;
+    }
+
+    for(int jetInd = 0; jetInd < tree->nFatJet_; ++jetInd){
+        double pt = tree->fatJetPt_[jetInd];
+        double eta = tree->fatJetEta_[jetInd];
+        double phi = tree->fatJetPhi_[jetInd];
+
+        bool jetPresel = (pt >= jet_Pt_cut &&
+                          TMath::Abs(eta) <= jet_Eta_cut && 
+                          (tree->fatJetID_[jetInd]&1)==1
+                          );
+        if (jetPresel){
+            FatJets.push_back(jetInd);
+        }
+    }
+
+}
 
 bool Selector::passEleID(int eleInd, int cutVal, bool doRelisoCut){
 
