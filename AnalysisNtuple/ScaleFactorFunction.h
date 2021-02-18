@@ -27,7 +27,7 @@ void initCrossSections(){
     crossSections["TstarTstar_GluGamma_M1300"]  =  {0.0261, 0.0261, 0.0261};
     crossSections["TstarTstar_GluGamma_M1400"]  =  {0.0131, 0.0131, 0.0131};
     crossSections["TstarTstar_GluGamma_M1500"]  =  {0.00677, 0.00677, 0.00677};
-    crossSections["TstarTstar_GluGamma_M1500"]  =  {0.00359, 0.00359, 0.00359};
+    crossSections["TstarTstar_GluGamma_M1600"]  =  {0.00359, 0.00359, 0.00359};
 
     crossSections["TTbarPowheg"]  =  {831.76, 831.76, 831.76};  //ttbar NNLO (http://inspirehep.net/search?p=find+eprint+1112.5675)
 
@@ -190,152 +190,152 @@ double getEvtWeight(string sampleType, int year, double luminosity, double nEven
 
 
 
-const std::string allowedSampleTypes[175] = {"Data",
-					     "Data_SingleMu_a",
-					     "Data_SingleMu_b",
-					     "Data_SingleMu_c",
-					     "Data_SingleMu_d",
-					     "Data_SingleMu_e",
-					     "Data_SingleMu_f",
-					     "Data_SingleMu_g",
-					     "Data_SingleMu_h",
-					     "Data_SingleEle_a",
-					     "Data_SingleEle_b",
-					     "Data_SingleEle_c",
-					     "Data_SingleEle_d",
-					     "Data_SingleEle_e",
-					     "Data_SingleEle_f",
-					     "Data_SingleEle_g",
-					     "Data_SingleEle_h",
-					     "TstarTstart_GluGlu_M700",
-					     "TstarTstart_GluGlu_M800",
-					     "TstarTstart_GluGlu_M900",
-					     "TstarTstart_GluGlu_M1000",
-					     "TstarTstart_GluGlu_M1100",
-					     "TstarTstart_GluGlu_M1200",
-					     "TstarTstart_GluGlu_M1300",
-					     "TstarTstart_GluGlu_M1400",
-					     "TstarTstart_GluGlu_M1500",
-					     "TstarTstart_GluGlu_M1600",
-					     "TstarTstart_GluGamma_M700",
-					     "TstarTstart_GluGamma_M800",
-					     "TstarTstart_GluGamma_M900",
-					     "TstarTstart_GluGamma_M1000",
-					     "TstarTstart_GluGamma_M1100",
-					     "TstarTstart_GluGamma_M1200",
-					     "TstarTstart_GluGamma_M1300",
-					     "TstarTstart_GluGamma_M1400",
-					     "TstarTstart_GluGamma_M1500",
-					     "TstarTstart_GluGamma_M1600",
-					     "TTGamma_Hadronic",
-					     "TTGamma_Hadronic_Pt100",
-					     "TTGamma_Hadronic_Pt200",
-					     "TTGamma_SingleLeptFromTbar",
-					     "TTGamma_SingleLeptFromT",
-					     "TTGamma_SingleLept",
-					     "TTGamma_SingleLept_Pt100",
-					     "TTGamma_SingleLept_Pt200",
-					     "TTGamma_Dilepton",
-					     "TTGamma_Dilepton_Pt100",
-					     "TTGamma_Dilepton_Pt200",
-					     "TTGamma_noFullyHad",
+/* const std::string allowedSampleTypes[175] = {"Data", */
+/* 					     "Data_SingleMu_a", */
+/* 					     "Data_SingleMu_b", */
+/* 					     "Data_SingleMu_c", */
+/* 					     "Data_SingleMu_d", */
+/* 					     "Data_SingleMu_e", */
+/* 					     "Data_SingleMu_f", */
+/* 					     "Data_SingleMu_g", */
+/* 					     "Data_SingleMu_h", */
+/* 					     "Data_SingleEle_a", */
+/* 					     "Data_SingleEle_b", */
+/* 					     "Data_SingleEle_c", */
+/* 					     "Data_SingleEle_d", */
+/* 					     "Data_SingleEle_e", */
+/* 					     "Data_SingleEle_f", */
+/* 					     "Data_SingleEle_g", */
+/* 					     "Data_SingleEle_h", */
+/* 					     "TstarTstart_GluGlu_M700", */
+/* 					     "TstarTstart_GluGlu_M800", */
+/* 					     "TstarTstart_GluGlu_M900", */
+/* 					     "TstarTstart_GluGlu_M1000", */
+/* 					     "TstarTstart_GluGlu_M1100", */
+/* 					     "TstarTstart_GluGlu_M1200", */
+/* 					     "TstarTstart_GluGlu_M1300", */
+/* 					     "TstarTstart_GluGlu_M1400", */
+/* 					     "TstarTstart_GluGlu_M1500", */
+/* 					     "TstarTstart_GluGlu_M1600", */
+/* 					     "TstarTstart_GluGamma_M700", */
+/* 					     "TstarTstart_GluGamma_M800", */
+/* 					     "TstarTstart_GluGamma_M900", */
+/* 					     "TstarTstart_GluGamma_M1000", */
+/* 					     "TstarTstart_GluGamma_M1100", */
+/* 					     "TstarTstart_GluGamma_M1200", */
+/* 					     "TstarTstart_GluGamma_M1300", */
+/* 					     "TstarTstart_GluGamma_M1400", */
+/* 					     "TstarTstart_GluGamma_M1500", */
+/* 					     "TstarTstart_GluGamma_M1600", */
+/* 					     "TTGamma_Hadronic", */
+/* 					     "TTGamma_Hadronic_Pt100", */
+/* 					     "TTGamma_Hadronic_Pt200", */
+/* 					     "TTGamma_SingleLeptFromTbar", */
+/* 					     "TTGamma_SingleLeptFromT", */
+/* 					     "TTGamma_SingleLept", */
+/* 					     "TTGamma_SingleLept_Pt100", */
+/* 					     "TTGamma_SingleLept_Pt200", */
+/* 					     "TTGamma_Dilepton", */
+/* 					     "TTGamma_Dilepton_Pt100", */
+/* 					     "TTGamma_Dilepton_Pt200", */
+/* 					     "TTGamma_noFullyHad", */
 
-					     "TTbarPowheg",
-					     "TTbarPowheg_Semilept",
-					     "TTbarPowheg_Dilepton",
-					     "TTbarPowheg_Hadronic",
-					     "TTbarMCatNLO",
-					     "TTbarMadgraph",
-					     "TTbarMadgraph_SingleLeptFromTbar",
-					     "TTbarMadgraph_SingleLeptFromT",
-					     "TTbarMadgraph_Dilepton",
-					     "WjetsInclusive",
-					     "WjetsInclusive1",
-					     "WjetsInclusive2",
-					     "WjetsInclusive3",
-					     "WjetsInclusive4",
-					     "WjetsInclusive5",
-					     "WjetsInclusive6",
-					     "W1jets",
-					     "W2jets",
-					     "W3jets",
-					     "W4jets",
-					     "DYjetsM10to50",
-					     "DYjetsM50",
-					     "DYjetsM10to50_MLM",
-					     "DYjetsM50_MLM",
-					     "TTWtoQQ",
-					     "TTWtoLNu",
-					     "TTZtoLL",
-					     //					     "ZGamma",
-					     //					     "WGamma",
-					     "ZGamma_01J_5f",
-					     "ZGamma_01J_5f_lowMass",
-                                             "ZGamma_01J_LoosePt",
-					     "WGamma_01J_5f",
-					     "WW",
-					     "WZ",
-					     "ZZ",
-					     "ST_tW_channel",
-					     "ST_tbarW_channel",
-					     "ST_t_channel",
-					     "ST_tbar_channel",
-					     "ST_s_channel",
-					     "QCD_Pt20to30_Mu",
-					     "QCD_Pt30to50_Mu",
-					     "QCD_Pt50to80_Mu",
-					     "QCD_Pt80to120_Mu",
-					     "QCD_Pt120to170_Mu",
-					     "QCD_Pt170to300_Mu",
-					     "QCD_Pt300to470_Mu",
-					     "QCD_Pt470to600_Mu",
-					     "QCD_Pt600to800_Mu",
-					     "QCD_Pt800to1000_Mu",
-					     "QCD_Pt1000toInf_Mu",
-					     "QCD_Pt20to30_Ele",
-					     "QCD_Pt30to50_Ele",
-					     "QCD_Pt50to80_Ele",
-					     "QCD_Pt80to120_Ele",
-					     "QCD_Pt120to170_Ele",
-					     "QCD_Pt170to300_Ele",
-					     "QCD_Pt300toInf_Ele",
-					     "QCD_Pt30to40_Ele",
-					     "QCD_Pt40toInf_Ele",
-					     "QCD_Pt20to30_bcToE",
-					     "QCD_Pt30to80_bcToE",
-					     "QCD_Pt80to170_bcToE",
- 					     "QCD_Pt170to250_bcToE",
-					     "QCD_Pt250toInf_bcToE",
-					     "GJets_HT40To100",
-					     "GJets_HT100To200",
-					     "GJets_HT200To400",
-					     "GJets_HT400To600",
-					     "GJets_HT600ToInf",
-					     "TGJets",
-					     "TTGJets",
-					     /* "isr_up_TTGamma_SingleLeptFromTbar", */
-					     /* "isr_up_TTGamma_SingleLeptFromT", */
-					     /* "isr_up_TTGamma_Dilepton", */
-					     /* "isr_down_TTGamma_SingleLeptFromTbar", */
-					     /* "isr_down_TTGamma_SingleLeptFromT", */
-					     /* "isr_down_TTGamma_Dilepton", */
-					     /* "fsr_up_TTGamma_SingleLeptFromTbar", */
-					     /* "fsr_up_TTGamma_SingleLeptFromT", */
-					     /* "fsr_up_TTGamma_Dilepton", */
-					     /* "fsr_down_TTGamma_SingleLeptFromTbar", */
-					     /* "fsr_down_TTGamma_SingleLeptFromT", */
-					     /* "fsr_down_TTGamma_Dilepton", */
-					     /* "isr_up_TTbarPowheg", */
-					     /* "isr_down_TTbarPowheg", */
-					     /* "fsr_up_TTbarPowheg", */
-					     /* "fsr_down_TTbarPowheg", */
-					     "TestFull",
-					     "TestAll",
-					     "Test",
-					     /* "Gencut_TTGamma_Semilept_T", */
-					     /* "Gencut_TTGamma_Semilept_Tbar", */
-					     /* "Gencut_TTGamma_Dilept", */
-					     /* "Gencut_TTGamma_Hadronic", */
-};
+/* 					     "TTbarPowheg", */
+/* 					     "TTbarPowheg_Semilept", */
+/* 					     "TTbarPowheg_Dilepton", */
+/* 					     "TTbarPowheg_Hadronic", */
+/* 					     "TTbarMCatNLO", */
+/* 					     "TTbarMadgraph", */
+/* 					     "TTbarMadgraph_SingleLeptFromTbar", */
+/* 					     "TTbarMadgraph_SingleLeptFromT", */
+/* 					     "TTbarMadgraph_Dilepton", */
+/* 					     "WjetsInclusive", */
+/* 					     "WjetsInclusive1", */
+/* 					     "WjetsInclusive2", */
+/* 					     "WjetsInclusive3", */
+/* 					     "WjetsInclusive4", */
+/* 					     "WjetsInclusive5", */
+/* 					     "WjetsInclusive6", */
+/* 					     "W1jets", */
+/* 					     "W2jets", */
+/* 					     "W3jets", */
+/* 					     "W4jets", */
+/* 					     "DYjetsM10to50", */
+/* 					     "DYjetsM50", */
+/* 					     "DYjetsM10to50_MLM", */
+/* 					     "DYjetsM50_MLM", */
+/* 					     "TTWtoQQ", */
+/* 					     "TTWtoLNu", */
+/* 					     "TTZtoLL", */
+/* 					     //					     "ZGamma", */
+/* 					     //					     "WGamma", */
+/* 					     "ZGamma_01J_5f", */
+/* 					     "ZGamma_01J_5f_lowMass", */
+/*                                              "ZGamma_01J_LoosePt", */
+/* 					     "WGamma_01J_5f", */
+/* 					     "WW", */
+/* 					     "WZ", */
+/* 					     "ZZ", */
+/* 					     "ST_tW_channel", */
+/* 					     "ST_tbarW_channel", */
+/* 					     "ST_t_channel", */
+/* 					     "ST_tbar_channel", */
+/* 					     "ST_s_channel", */
+/* 					     "QCD_Pt20to30_Mu", */
+/* 					     "QCD_Pt30to50_Mu", */
+/* 					     "QCD_Pt50to80_Mu", */
+/* 					     "QCD_Pt80to120_Mu", */
+/* 					     "QCD_Pt120to170_Mu", */
+/* 					     "QCD_Pt170to300_Mu", */
+/* 					     "QCD_Pt300to470_Mu", */
+/* 					     "QCD_Pt470to600_Mu", */
+/* 					     "QCD_Pt600to800_Mu", */
+/* 					     "QCD_Pt800to1000_Mu", */
+/* 					     "QCD_Pt1000toInf_Mu", */
+/* 					     "QCD_Pt20to30_Ele", */
+/* 					     "QCD_Pt30to50_Ele", */
+/* 					     "QCD_Pt50to80_Ele", */
+/* 					     "QCD_Pt80to120_Ele", */
+/* 					     "QCD_Pt120to170_Ele", */
+/* 					     "QCD_Pt170to300_Ele", */
+/* 					     "QCD_Pt300toInf_Ele", */
+/* 					     "QCD_Pt30to40_Ele", */
+/* 					     "QCD_Pt40toInf_Ele", */
+/* 					     "QCD_Pt20to30_bcToE", */
+/* 					     "QCD_Pt30to80_bcToE", */
+/* 					     "QCD_Pt80to170_bcToE", */
+/*  					     "QCD_Pt170to250_bcToE", */
+/* 					     "QCD_Pt250toInf_bcToE", */
+/* 					     "GJets_HT40To100", */
+/* 					     "GJets_HT100To200", */
+/* 					     "GJets_HT200To400", */
+/* 					     "GJets_HT400To600", */
+/* 					     "GJets_HT600ToInf", */
+/* 					     "TGJets", */
+/* 					     "TTGJets", */
+/* 					     /\* "isr_up_TTGamma_SingleLeptFromTbar", *\/ */
+/* 					     /\* "isr_up_TTGamma_SingleLeptFromT", *\/ */
+/* 					     /\* "isr_up_TTGamma_Dilepton", *\/ */
+/* 					     /\* "isr_down_TTGamma_SingleLeptFromTbar", *\/ */
+/* 					     /\* "isr_down_TTGamma_SingleLeptFromT", *\/ */
+/* 					     /\* "isr_down_TTGamma_Dilepton", *\/ */
+/* 					     /\* "fsr_up_TTGamma_SingleLeptFromTbar", *\/ */
+/* 					     /\* "fsr_up_TTGamma_SingleLeptFromT", *\/ */
+/* 					     /\* "fsr_up_TTGamma_Dilepton", *\/ */
+/* 					     /\* "fsr_down_TTGamma_SingleLeptFromTbar", *\/ */
+/* 					     /\* "fsr_down_TTGamma_SingleLeptFromT", *\/ */
+/* 					     /\* "fsr_down_TTGamma_Dilepton", *\/ */
+/* 					     /\* "isr_up_TTbarPowheg", *\/ */
+/* 					     /\* "isr_down_TTbarPowheg", *\/ */
+/* 					     /\* "fsr_up_TTbarPowheg", *\/ */
+/* 					     /\* "fsr_down_TTbarPowheg", *\/ */
+/* 					     "TestFull", */
+/* 					     "TestAll", */
+/* 					     "Test", */
+/* 					     /\* "Gencut_TTGamma_Semilept_T", *\/ */
+/* 					     /\* "Gencut_TTGamma_Semilept_Tbar", *\/ */
+/* 					     /\* "Gencut_TTGamma_Dilept", *\/ */
+/* 					     /\* "Gencut_TTGamma_Hadronic", *\/ */
+/* }; */
 
 

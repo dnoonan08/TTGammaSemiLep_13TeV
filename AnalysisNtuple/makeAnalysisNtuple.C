@@ -1652,8 +1652,8 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	Wj2 = jetVectors[topEvent.getJ2()];
 	METVector.SetXYZM(METVector.Px(), METVector.Py(), topEvent.getNuPz(), 0);
 
-	_chi2 = topEvent.getChi2();
-
+	_chi2 = topEvent.getChi2_TT();
+        
 	_Mt_blgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (blep + lepVector + phoVector).Pt(),2) + pow( (blep + lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((blep + lepVector + phoVector + METVector ).Pt(),2) );
 	_Mt_lgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (lepVector + phoVector).Pt(),2) + pow( (lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((lepVector + phoVector + METVector ).Pt(),2) );
 	_M_bjj = ( bhad + Wj1 + Wj2 ).M();
@@ -1691,7 +1691,7 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	lepDecay = jetVectors[topEvent.getGLep()];
 	METVector.SetXYZM(METVector.Px(), METVector.Py(), topEvent.getNuPz(), 0);
 
-        _TstarGluGlu_chi2 = topEvent.getChi2();
+        _TstarGluGlu_chi2 = topEvent.getChi2_TstarGluGlu();
 
         _TstarGluGlu_TstarHad_pt = (bhad + Wj1 + Wj2 + hadDecay).Pt();
         _TstarGluGlu_TstarHad_eta = (bhad + Wj1 + Wj2 + hadDecay).Eta();
@@ -1734,7 +1734,7 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 
 	METVector.SetXYZM(METVector.Px(), METVector.Py(), topEvent.getNuPz(), 0);
 
-        _TstarGluGamma_chi2 = topEvent.getChi2();
+        _TstarGluGamma_chi2 = topEvent.getChi2_TstarGluGamma();
 
         _TstarGluGamma_TstarHad_pt = (bhad + Wj1 + Wj2 + hadDecay).Pt();
         _TstarGluGamma_TstarHad_eta = (bhad + Wj1 + Wj2 + hadDecay).Eta();
@@ -1759,8 +1759,6 @@ void makeAnalysisNtuple::FillEvent(std::string year)
         _TstarGluGamma_TopLep_charge = lepCharge;
     }
 
-
-    
     ljetVectors.clear();
     bjetVectors.clear();
     

@@ -62,7 +62,7 @@ int TopEventCombinatorics::Calculate(){
     nu_pz_List.push_back(_nu_pz_1);
     if (_nu_pz_1!=_nu_pz_2) nu_pz_List.push_back(_nu_pz_2);
 
-    chi2 = 9.e9;
+    chi2_TT = 9.e9;
     double comboChi2 = 9.e9;
 
     for (const auto& i_bhad : bJetsList){
@@ -84,8 +84,8 @@ int TopEventCombinatorics::Calculate(){
 
                         //std::cout << comboChi2 << ":   " << i_bhad << ", " << i_blep << ", " << i_j1 << ", " << i_j2 << std::endl;
 
-			if (comboChi2 < chi2){
-			    chi2 = comboChi2;
+			if (comboChi2 < chi2_TT){
+			    chi2_TT = comboChi2;
 			    blep_idx = i_blep;
 			    bhad_idx = i_bhad;
 			    j1_idx = i_j1;
@@ -165,7 +165,7 @@ int TopEventCombinatorics::CalculateTstarGluGlu(){
     nu_pz_List.push_back(_nu_pz_1);
     if (_nu_pz_1!=_nu_pz_2) nu_pz_List.push_back(_nu_pz_2);
 
-    chi2 = 9.e9;
+    chi2_TstarGluGlu = 9.e9;
     double comboChi2 = 9.e9;
 
     for (const auto& i_bhad : bJetsList){
@@ -195,8 +195,8 @@ int TopEventCombinatorics::CalculateTstarGluGlu(){
                                                               jets.at(i_glep),
                                                               test_nu_pz);
 
-                                if (comboChi2 < chi2){
-                                    chi2 = comboChi2;
+                                if (comboChi2 < chi2_TstarGluGlu){
+                                    chi2_TstarGluGlu = comboChi2;
                                     blep_idx = i_blep;
                                     bhad_idx = i_bhad;
                                     j1_idx = i_j1;
@@ -218,31 +218,6 @@ int TopEventCombinatorics::CalculateTstarGluGlu(){
 }
 
 
-
-
-// double TopEventCombinatorics::tstarGluGammaChiSq(TLorentzVector j1, double sigma_j1,
-//                                                  TLorentzVector j2, double sigma_j2,
-//                                                  TLorentzVector bh, double sigma_bh,
-//                                                  TLorentzVector bl, double sigma_bl,
-//                                                  TLorentzVector g,  double sigma_gh,
-//                                                  double nu_pz_hypo){
-
-//     met.SetXYZM(met.Px(), met.Py(), nu_pz_hypo, 0);
-
-//     //https://arxiv.org/pdf/1711.10949.pdf
-//     double sigma2_tHad = 34.0*34.0;
-//     double sigma2_WHad = 24.0*24.0;
-//     double sigma2_tLep = 30.0*30.0;
-//     double sigma2_tstar = 230.0*230.0;
-
-//     double chi2_tHad = pow( (bh + j1 + j2).M() - mTop,2)/sigma2_tHad;
-//     double chi2_WHad = pow( (j1 + j2).M() - mW,2)/sigma2_WHad;
-//     double chi2_tLep = pow( (bl + lepton + met).M() - mTop,2)/sigma2_tLep;
-//     double chi2_tStar = pow( (bh + j1 + j2 + gh).M() - (bl + lepton + met + gl).M(),2)/sigma2_tstar;
-
-//     return chi2_tHad + chi2_WHad + chi2_tLep + chi2_tStar;
-
-// }
 
 int TopEventCombinatorics::CalculateTstarGluGamma(){
 
@@ -279,7 +254,7 @@ int TopEventCombinatorics::CalculateTstarGluGamma(){
     nu_pz_List.push_back(_nu_pz_1);
     if (_nu_pz_1!=_nu_pz_2) nu_pz_List.push_back(_nu_pz_2);
 
-    chi2 = 9.e9;
+    chi2_TstarGluGamma = 9.e9;
     double comboChi2 = 9.e9;
 
     for (unsigned int i_pho=0; i_pho<photons.size(); i_pho++){
@@ -307,8 +282,8 @@ int TopEventCombinatorics::CalculateTstarGluGamma(){
                                                               photons.at(i_pho), //photon in leptonic decay side
                                                               test_nu_pz);
 
-                                if (comboChi2 < chi2){
-                                    chi2 = comboChi2;
+                                if (comboChi2 < chi2_TstarGluGamma){
+                                    chi2_TstarGluGamma = comboChi2;
                                     blep_idx = i_blep;
                                     bhad_idx = i_bhad;
                                     j1_idx = i_j1;
@@ -329,8 +304,8 @@ int TopEventCombinatorics::CalculateTstarGluGamma(){
                                                        jets.at(i_glu), //gluon in leptonic decay side
                                                        test_nu_pz);
 
-                                if (comboChi2 < chi2){
-                                    chi2 = comboChi2;
+                                if (comboChi2 < chi2_TstarGluGamma){
+                                    chi2_TstarGluGamma = comboChi2;
                                     blep_idx = i_blep;
                                     bhad_idx = i_bhad;
                                     j1_idx = i_j1;

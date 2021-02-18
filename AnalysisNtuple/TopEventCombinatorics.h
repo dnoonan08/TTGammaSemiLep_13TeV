@@ -15,7 +15,9 @@ class TopEventCombinatorics{
 	ClearVectors();
 	mTop = 172.5;
 	mW = 80.4;
-	chi2 = 9999.;
+	chi2_TT = 9999.;
+	chi2_TstarGluGlu = 9999.;
+	chi2_TstarGluGamma = 9999.;
 	goodCombo = false;
 	goodCombo_TstarGluGlu = false;
 	goodCombo_TstarGluGamma = false;
@@ -67,7 +69,9 @@ class TopEventCombinatorics{
 
     double getNuPz(){ return nu_pz; }
 	
-    double getChi2(){ return chi2; }
+    double getChi2_TT(){ return chi2_TT; }
+    double getChi2_TstarGluGlu(){ return chi2_TstarGluGlu; }
+    double getChi2_TstarGluGamma(){ return chi2_TstarGluGamma; }
 
     bool GoodCombination(){ return goodCombo; }
     bool GoodCombinationTstarGluGlu(){ return goodCombo_TstarGluGlu; }
@@ -86,7 +90,9 @@ class TopEventCombinatorics{
  private:
     double mTop;
     double mW;
-    double chi2;
+    double chi2_TT;
+    double chi2_TstarGluGlu;
+    double chi2_TstarGluGamma;
 
     double topChiSq(TLorentzVector j1, double sigma_j1,
 		    TLorentzVector j2, double sigma_j2,
