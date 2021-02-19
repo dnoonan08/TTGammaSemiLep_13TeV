@@ -10,21 +10,24 @@ double TopEventCombinatorics::topChiSq(TLorentzVector j1, double sigma_j1,
 
     met.SetXYZM(met.Px(), met.Py(), nu_pz_hypo, 0);
 
-    double sigma2_tHad = sigma_j1*sigma_j1 + sigma_j2*sigma_j2 + sigma_bh*sigma_bh;
-    double sigma2_WHad = sigma_j1*sigma_j1 + sigma_j2*sigma_j2;
-    double sigma2_tLep = sigma_bl*sigma_bl + METRes*METRes + leptonRes*leptonRes;
+    double sigma2_tHad = 34.0*34.0;
+    double sigma2_WHad = 24.0*24.0;
+    double sigma2_tLep = 30.0*30.0;
+    // double sigma2_tHad = sigma_j1*sigma_j1 + sigma_j2*sigma_j2 + sigma_bh*sigma_bh;
+    // double sigma2_WHad = sigma_j1*sigma_j1 + sigma_j2*sigma_j2;
+    // double sigma2_tLep = sigma_bl*sigma_bl + METRes*METRes + leptonRes*leptonRes;
     // double sigma2_tLep = sigma_bl*sigma_bl + pow(met.Pt()*METRes,2) + pow(lepton.Pt()*leptonRes,2);
 
-    if (!useResolutions){
-	sigma2_tHad = 1.;
-	sigma2_WHad = 1.;
-	sigma2_tLep = 1.;
-    }
+    // if (!useResolutions){
+    //     sigma2_tHad = 1.;
+    //     sigma2_WHad = 1.;
+    //     sigma2_tLep = 1.;
+    // }
     double tHadM = (bh + j1 + j2).M();
     double WHadM = (j1 + j2).M();
     double tLepM = (bl + lepton + met).M();
     
-    double c = pow( tHadM - mTop,2)/(sigma2_tHad*tHadM*tHadM) + pow( WHadM - mW,2)/(sigma2_WHad*WHadM*WHadM) + pow( tLepM - mTop,2)/(sigma2_tLep*tLepM*tLepM);
+    double c = pow( tHadM - mTop,2)/(sigma2_tHad) + pow( WHadM - mW,2)/(sigma2_WHad) + pow( tLepM - mTop,2)/(sigma2_tLep);
 
     return c;
 }
