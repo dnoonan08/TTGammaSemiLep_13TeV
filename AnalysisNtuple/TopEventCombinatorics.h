@@ -82,8 +82,8 @@ class TopEventCombinatorics{
     }
 
     int Calculate();
-    int CalculateTstarGluGlu();
-    int CalculateTstarGluGamma();
+    int CalculateTstarGluGlu(int nLeadingJets=6);
+    int CalculateTstarGluGamma(int nLeadingJets=5);
 
 
 

@@ -133,7 +133,7 @@ double TopEventCombinatorics::tstarChiSq(TLorentzVector j1,
 
 }
 
-int TopEventCombinatorics::CalculateTstarGluGlu(){
+int TopEventCombinatorics::CalculateTstarGluGlu(int nLeadingJets){
 
     goodCombo_TstarGluGlu = false;
 
@@ -144,22 +144,17 @@ int TopEventCombinatorics::CalculateTstarGluGlu(){
     bJetsList.clear();
     nu_pz_List.clear();
 
-    // If no bjet size declared, consider all jets as a possibility
-    // Otherwise, take the btagged jets, if not enough btagged jets use the leading jets to fill the list
-    if (nBjetSize==-1){
-	for (unsigned int i =0; i < jets.size(); i++) bJetsList.push_back(i);
-    } else {
-	for (unsigned int i =0; i < jets.size(); i++){
-	    if (btag[i] > btagThresh) bJetsList.push_back(i);
-	}
-	if (bJetsList.size() < nBjetSize){
-	    for (unsigned int i =0; i < jets.size(); i++){
-		if (std::find(bJetsList.begin(), bJetsList.end(), i) == bJetsList.end()){
-		    bJetsList.push_back(i);
-		}
-		if (bJetsList.size()==nBjetSize) break;
-	    }
-	}
+    int nJets = jets.size();
+    if (nLeadingJets != -1 && nLeadingJets<nJets) nJets=nLeadingJets;
+
+    // count the number of btags in the leading N jets
+    int nBtags = 0;
+    for (unsigned int i =0; i < nJets; i++){
+        if (btag[i] > btagThresh) nBtags += 1;
+    }
+    // if more than 2 btags, set at 2
+    if (nBtags>2){
+        nBtags = 2;
     }
 
     double _nu_pz_1 = metZ.Calculate();
@@ -171,20 +166,27 @@ int TopEventCombinatorics::CalculateTstarGluGlu(){
     chi2_TstarGluGlu = 9.e9;
     double comboChi2 = 9.e9;
 
-    for (const auto& i_bhad : bJetsList){
-	for (const auto& i_blep : bJetsList){
+    for (unsigned int i_bhad=0; i_bhad<nJets; i_bhad++){
+        int bcandHad_tag = 0;
+        if (btag[i_bhad]>btagThresh) bcandHad_tag = 1;
+        for (unsigned int i_blep=0; i_blep<nJets; i_blep++){
 	    if (i_bhad==i_blep) continue;
+            int bcandLep_tag = 0;
+            if (btag[i_blep]>btagThresh) bcandLep_tag = 1;
 
-	    for (unsigned int i_j1=0; i_j1<jets.size(); i_j1++){
+            // skip combinations which haven't used all of the btagged jets as b-candidates
+            if ((bcandHad_tag + bcandLep_tag) != nBtags) continue;
+
+	    for (unsigned int i_j1=0; i_j1<nJets; i_j1++){
 		if (i_bhad==i_j1 || i_blep==i_j1) continue; //skip if i_j1 is already used as a bjet
 
-		for (unsigned int i_j2=i_j1+1; i_j2<jets.size(); i_j2++){
+		for (unsigned int i_j2=i_j1+1; i_j2<nJets; i_j2++){
 		    if (i_bhad==i_j2 || i_blep==i_j2) continue; //skip if i_j2 is already used as a bjet
 
-                    for (unsigned int i_ghad=0; i_ghad<jets.size(); i_ghad++){
+                    for (unsigned int i_ghad=0; i_ghad<nJets; i_ghad++){
                         if (i_bhad==i_ghad || i_blep==i_ghad || i_ghad==i_j1 || i_ghad==i_j2) continue; //skip if i_ghad is already used as a bjet or one of the light jets
 
-                        for (unsigned int i_glep=0; i_glep<jets.size(); i_glep++){
+                        for (unsigned int i_glep=0; i_glep<nJets; i_glep++){
                             if (i_bhad==i_glep || i_blep==i_glep || i_glep==i_j1 || i_glep==i_j2 || i_glep==i_ghad) continue; //skip if i_j1 is already used as a bjet or one of the light jets
 
                             //loop over nu_pz solutions
@@ -222,7 +224,7 @@ int TopEventCombinatorics::CalculateTstarGluGlu(){
 
 
 
-int TopEventCombinatorics::CalculateTstarGluGamma(){
+int TopEventCombinatorics::CalculateTstarGluGamma(int nLeadingJets){
 
     goodCombo_TstarGluGamma = false;
 
@@ -230,25 +232,20 @@ int TopEventCombinatorics::CalculateTstarGluGamma(){
 	return -1;
     }
 
+    int nJets = jets.size();
+    if (nLeadingJets != -1 && nLeadingJets<nJets) nJets=nLeadingJets;
+
     bJetsList.clear();
     nu_pz_List.clear();
 
-    // If no bjet size declared, consider all jets as a possibility
-    // Otherwise, take the btagged jets, if not enough btagged jets use the leading jets to fill the list
-    if (nBjetSize==-1){
-	for (unsigned int i =0; i < jets.size(); i++) bJetsList.push_back(i);
-    } else {
-	for (unsigned int i =0; i < jets.size(); i++){
-	    if (btag[i] > btagThresh) bJetsList.push_back(i);
-	}
-	if (bJetsList.size() < nBjetSize){
-	    for (unsigned int i =0; i < jets.size(); i++){
-		if (std::find(bJetsList.begin(), bJetsList.end(), i) == bJetsList.end()){
-		    bJetsList.push_back(i);
-		}
-		if (bJetsList.size()==nBjetSize) break;
-	    }
-	}
+    // count the number of btags in the leading N jets
+    int nBtags = 0;
+    for (unsigned int i =0; i < nJets; i++){
+        if (btag[i] > btagThresh) nBtags += 1;
+    }
+    // if more than 2 btags, set at 2
+    if (nBtags>2){
+        nBtags = 2;
     }
 
     double _nu_pz_1 = metZ.Calculate();
@@ -261,17 +258,25 @@ int TopEventCombinatorics::CalculateTstarGluGamma(){
     double comboChi2 = 9.e9;
 
     for (unsigned int i_pho=0; i_pho<photons.size(); i_pho++){
-        for (const auto& i_bhad : bJetsList){
-            for (const auto& i_blep : bJetsList){
-                if (i_bhad==i_blep) continue;
 
-                for (unsigned int i_j1=0; i_j1<jets.size(); i_j1++){
+        for (unsigned int i_bhad=0; i_bhad<nJets; i_bhad++){
+            int bcandHad_tag = 0;
+            if (btag[i_bhad]>btagThresh) bcandHad_tag = 1;
+            for (unsigned int i_blep=0; i_blep<nJets; i_blep++){
+                if (i_bhad==i_blep) continue;
+                int bcandLep_tag = 0;
+                if (btag[i_blep]>btagThresh) bcandLep_tag = 1;
+
+                // skip combinations which haven't used all of the btagged jets as b-candidates
+                if ((bcandHad_tag + bcandLep_tag) != nBtags) continue;
+
+                for (unsigned int i_j1=0; i_j1<nJets; i_j1++){
                     if (i_bhad==i_j1 || i_blep==i_j1) continue; //skip if i_j1 is already used as a bjet
 
-                    for (unsigned int i_j2=i_j1+1; i_j2<jets.size(); i_j2++){
+                    for (unsigned int i_j2=i_j1+1; i_j2<nJets; i_j2++){
                         if (i_bhad==i_j2 || i_blep==i_j2) continue; //skip if i_j2 is already used as a bjet
 
-                        for (unsigned int i_glu=0; i_glu<jets.size(); i_glu++){
+                        for (unsigned int i_glu=0; i_glu<nJets; i_glu++){
                             if (i_bhad==i_glu || i_blep==i_glu || i_glu==i_j1 || i_glu==i_j2) continue; //skip if i_glu is already used as a bjet or one of the light jets
                             //loop over nu_pz solutions
                             for (const auto& test_nu_pz: nu_pz_List){
