@@ -14,6 +14,8 @@ Log    = condor/Skim_2016_$(cluster)_$(process).condor
 
 
 X=$(step)+1
+Arguments = "TstarTstarToTgammaTgluon_M700 2016"
+Queue 1
 Arguments = "TstarTstarToTgammaTgluon_M800 2016"
 Queue 1
 Arguments = "TstarTstarToTgammaTgluon_M900 2016"
@@ -33,6 +35,29 @@ Queue 1
 Arguments = "TstarTstarToTgammaTgluon_M1600 2016"
 Queue 1
 
+Arguments = "TstarTstarToTgammaTgamma_M700 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M800 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M900 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1000 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1100 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1200 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1300 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1400 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1500 2016"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1600 2016"
+Queue 1
+
+Arguments = "TstarTstarToTgluonTgluon_M700 2016"
+Queue 1
 Arguments = "TstarTstarToTgluonTgluon_M800 2016"
 Queue 1
 Arguments = "TstarTstarToTgluonTgluon_M900 2016"
@@ -210,11 +235,11 @@ Queue 1
 Arguments = "WZTo1L1Nu2Q_amcatnlo 2016 $INT(X) 5" 
 Queue 5
 Arguments = "WZTo2L2Q_amcatnlo 2016 $INT(X) 10" 
-Queue 5
+Queue 10
 Arguments = "WZTo3LNu_powheg 2016" 
 Queue 1
 Arguments = "WZTo3LNu_powheg_ext1 2016 $INT(X) 10" 
-Queue 5
+Queue 10
 Arguments = "ZZTo2L2Q_powheg 2016" 
 Queue 1
 Arguments = "ZZTo2L2Nu_powheg 2016" 

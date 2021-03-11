@@ -49,6 +49,8 @@ class EventTree{
     Bool_t  HLT_TkMu50_;
     Bool_t  HLT_OldMu100_;
     Bool_t  HLT_TkMu100_;
+    Bool_t  HLT_Mu15_IsoVVVL_PFHT350_;
+    Bool_t  HLT_Mu15_IsoVVVL_PFHT450_;
 
     Bool_t  HLT_Ele27_WPTight_Gsf_;
     Bool_t  HLT_Ele32_WPTight_Gsf_;
@@ -57,9 +59,16 @@ class EventTree{
     Bool_t  HLT_Ele38_WPTight_Gsf_;
     Bool_t  HLT_Ele105_CaloIdVT_GsfTrkIdT_;
     Bool_t  HLT_Ele115_CaloIdVT_GsfTrkIdT_;
+    Bool_t  HLT_Ele15_IsoVVVL_PFHT350_;
+    Bool_t  HLT_Ele15_IsoVVVL_PFHT450_;
     Bool_t  HLT_DoubleEle25_CaloIdL_MW_;
     Bool_t  HLT_Photon175_;
     Bool_t  HLT_Photon200_;
+
+    Bool_t  HLT_PFHT780_;
+    Bool_t  HLT_PFHT800_;
+    Bool_t  HLT_PFHT890_;
+    Bool_t  HLT_PFHT900_;
 
     Bool_t   HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_;
     Bool_t   HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_;

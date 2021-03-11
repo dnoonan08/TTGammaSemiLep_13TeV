@@ -36,18 +36,55 @@ void EventPick::process_event(EventTree* tree){
     bool applyMetFilter   = false;
     bool Pass_trigger_mu  = false;
     bool Pass_trigger_ele = false;
+    bool Pass_trigger_ht  = false;
 
     if (year=="2016") {
-	Pass_trigger_mu = (tree->HLT_IsoMu24_ || tree->HLT_IsoTkMu24_ || tree->HLT_Mu50_);
-	Pass_trigger_ele = (tree->HLT_Ele27_WPTight_Gsf_ || tree->HLT_Ele115_CaloIdVT_GsfTrkIdT_ || tree->HLT_Photon175_);
+	Pass_trigger_mu = (tree->HLT_IsoMu24_ || 
+                           tree->HLT_IsoTkMu24_ || 
+                           tree->HLT_Mu50_ || 
+                           tree->HLT_TkMu50_ || 
+                           tree->HLT_Mu15_IsoVVVL_PFHT350_);
+	Pass_trigger_ele = (tree->HLT_Ele27_WPTight_Gsf_ || 
+                            tree->HLT_Ele35_WPTight_Gsf_ || 
+                            tree->HLT_Ele38_WPTight_Gsf_ || 
+                            tree->HLT_Ele115_CaloIdVT_GsfTrkIdT_ || 
+                            tree->HLT_Photon175_ || 
+                            tree->HLT_Ele15_IsoVVVL_PFHT350_);
+        Pass_trigger_ht = (tree->HLT_PFHT800_ || 
+                           tree->HLT_PFHT900_);
     }
     if (year=="2017"){
-	Pass_trigger_mu = (tree->HLT_IsoMu24_ || tree->HLT_IsoMu27_ || tree->HLT_Mu50_);
-	Pass_trigger_ele = (tree->HLT_Ele32_WPTight_Gsf_L1DoubleEG_ || tree->HLT_Ele32_WPTight_Gsf_ || tree->HLT_Ele115_CaloIdVT_GsfTrkIdT_ || tree->HLT_Photon175_);
+	Pass_trigger_mu = (tree->HLT_IsoMu24_ || 
+                           tree->HLT_IsoMu27_ || 
+                           tree->HLT_Mu50_ || 
+                           tree->HLT_TkMu100_ || 
+                           tree->HLT_OldMu100_ || 
+                           tree->HLT_Mu15_IsoVVVL_PFHT450_);
+	Pass_trigger_ele = (tree->HLT_Ele32_WPTight_Gsf_L1DoubleEG_ || 
+                            tree->HLT_Ele32_WPTight_Gsf_ || 
+                            tree->HLT_Ele115_CaloIdVT_GsfTrkIdT_ || 
+                            tree->HLT_Photon175_ || 
+                            tree->HLT_Ele35_WPTight_Gsf_  || 
+                            tree->HLT_Ele38_WPTight_Gsf_  || 
+                            tree->HLT_Ele15_IsoVVVL_PFHT450_);
+        Pass_trigger_ht = (tree->HLT_PFHT780_ || 
+                           tree->HLT_PFHT890_);
     }
     if (year=="2018"){
-	Pass_trigger_mu = (tree->HLT_IsoMu24_ || tree->HLT_IsoMu27_ || tree->HLT_Mu50_);
-	Pass_trigger_ele = (tree->HLT_Ele32_WPTight_Gsf_ || tree->HLT_Ele35_WPTight_Gsf_ || tree->HLT_Ele115_CaloIdVT_GsfTrkIdT_ || tree->HLT_Photon175_);
+	Pass_trigger_mu = (tree->HLT_IsoMu24_ || 
+                           tree->HLT_IsoMu27_ || 
+                           tree->HLT_Mu50_  || 
+                           tree->HLT_TkMu100_ || 
+                           tree->HLT_OldMu100_ || 
+                           tree->HLT_Mu15_IsoVVVL_PFHT450_);
+	Pass_trigger_ele = (tree->HLT_Ele32_WPTight_Gsf_ || 
+                            tree->HLT_Ele35_WPTight_Gsf_ || 
+                            tree->HLT_Ele38_WPTight_Gsf_ || 
+                            tree->HLT_Ele115_CaloIdVT_GsfTrkIdT_ || 
+                            tree->HLT_Photon175_ || 
+                            tree->HLT_Ele15_IsoVVVL_PFHT450_);
+        Pass_trigger_ht = (tree->HLT_PFHT780_ || 
+                           tree->HLT_PFHT890_);
     }
 
     bool filters = (tree->Flag_goodVertices_ &&
@@ -64,7 +101,7 @@ void EventPick::process_event(EventTree* tree){
 	Pass_trigger_mu = Pass_trigger_mu && filters ;     
 	Pass_trigger_ele = Pass_trigger_ele && filters ;     
     }
-    passSkim = (Pass_trigger_ele || Pass_trigger_mu) && filters;
+    passSkim = (Pass_trigger_ele || Pass_trigger_mu || Pass_trigger_ht) && filters;
 
 
     // if (!passSkim){

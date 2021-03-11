@@ -6,12 +6,11 @@ MCType_ext2=MCType.replace('-v1','_ext2-v1')
 MCType_ext3=MCType.replace('-v1','_ext3-v1')
 MCType_noPULabel = MCType.replace('PUMoriond17_','')
 
-MCType_v2 = MCType.replace('-v1','-v2')
-
-DataType='Nano1June2019-v1'
-DataType_ver2='_ver2-Nano1June2019_ver2-v1'
+DataType='02Apr2020-v1'
+DataType_ver2='02Apr2020_ver2-v1'
 
 sampleList_2016 = {
+'TstarTstarToTgammaTgluon_M700'  : '/TstarTstarToTgammaTgluon_M-700_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TstarTstarToTgammaTgluon_M800'  : '/TstarTstarToTgammaTgluon_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TstarTstarToTgammaTgluon_M900'  : '/TstarTstarToTgammaTgluon_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TstarTstarToTgammaTgluon_M1000' : '/TstarTstarToTgammaTgluon_M-1000_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
@@ -22,6 +21,7 @@ sampleList_2016 = {
 'TstarTstarToTgammaTgluon_M1500' : '/TstarTstarToTgammaTgluon_M-1500_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TstarTstarToTgammaTgluon_M1600' : '/TstarTstarToTgammaTgluon_M-1600_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 
+'TstarTstarToTgluonTgluon_M700'  : '/TstarTstarToTgluonTgluon_M-700_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TstarTstarToTgluonTgluon_M800'  : '/TstarTstarToTgluonTgluon_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TstarTstarToTgluonTgluon_M900'  : '/TstarTstarToTgluonTgluon_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TstarTstarToTgluonTgluon_M1000' : '/TstarTstarToTgluonTgluon_M-1000_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
@@ -31,6 +31,17 @@ sampleList_2016 = {
 'TstarTstarToTgluonTgluon_M1400' : '/TstarTstarToTgluonTgluon_M-1400_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TstarTstarToTgluonTgluon_M1500' : '/TstarTstarToTgluonTgluon_M-1500_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TstarTstarToTgluonTgluon_M1600' : '/TstarTstarToTgluonTgluon_M-1600_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+
+'TstarTstarToTgammaTgamma_M700'  : '/TstarTstarToTgammaTgamma_M-700_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TstarTstarToTgammaTgamma_M800'  : '/TstarTstarToTgammaTgamma_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TstarTstarToTgammaTgamma_M900'  : '/TstarTstarToTgammaTgamma_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TstarTstarToTgammaTgamma_M1000' : '/TstarTstarToTgammaTgamma_M-1000_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TstarTstarToTgammaTgamma_M1100' : '/TstarTstarToTgammaTgamma_M-1100_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TstarTstarToTgammaTgamma_M1200' : '/TstarTstarToTgammaTgamma_M-1200_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TstarTstarToTgammaTgamma_M1300' : '/TstarTstarToTgammaTgamma_M-1300_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TstarTstarToTgammaTgamma_M1400' : '/TstarTstarToTgammaTgamma_M-1400_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TstarTstarToTgammaTgamma_M1500' : '/TstarTstarToTgammaTgamma_M-1500_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
+'TstarTstarToTgammaTgamma_M1600' : '/TstarTstarToTgammaTgamma_M-1600_TuneCUETP8M1_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 
 'TTGamma_Dilepton'     : '/TTGamma_Dilept_TuneCP5_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 'TTGamma_Hadronic'   : '/TTGamma_Hadronic_TuneCP5_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
@@ -63,7 +74,7 @@ sampleList_2016 = {
 'TTGamma_SingleLept_CR2'      : '/TTGamma_SingleLept_TuneCP5CR2_PSweights_13TeV-madgraph-pythia8/'+MCType+'/NANOAODSIM',
 
 
-'Data_SingleMu_b' : '/SingleMuon/Run2016B'+DataType_ver2+'/NANOAOD',
+'Data_SingleMu_b' : '/SingleMuon/Run2016B-'+DataType_ver2+'/NANOAOD',
 'Data_SingleMu_c' : '/SingleMuon/Run2016C-'+DataType+'/NANOAOD',
 'Data_SingleMu_d' : '/SingleMuon/Run2016D-'+DataType+'/NANOAOD',
 'Data_SingleMu_e' : '/SingleMuon/Run2016E-'+DataType+'/NANOAOD',
@@ -71,7 +82,7 @@ sampleList_2016 = {
 'Data_SingleMu_g' : '/SingleMuon/Run2016G-'+DataType+'/NANOAOD',
 'Data_SingleMu_h' : '/SingleMuon/Run2016H-'+DataType+'/NANOAOD',
 
-'Data_SingleEle_b' : '/SingleElectron/Run2016B'+DataType_ver2+'/NANOAOD',
+'Data_SingleEle_b' : '/SingleElectron/Run2016B-'+DataType_ver2+'/NANOAOD',
 'Data_SingleEle_c' : '/SingleElectron/Run2016C-'+DataType+'/NANOAOD',
 'Data_SingleEle_d' : '/SingleElectron/Run2016D-'+DataType+'/NANOAOD',
 'Data_SingleEle_e' : '/SingleElectron/Run2016E-'+DataType+'/NANOAOD',

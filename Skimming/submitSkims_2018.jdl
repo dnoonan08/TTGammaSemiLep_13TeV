@@ -13,6 +13,89 @@ Log    = condor/Skim_2018_$(cluster)_$(process).condor
 
 
 X=$(step)+1
+Arguments = "TstarTstarToTgammaTgluon_M700 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M800 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M900 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1000 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1200 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1300 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1400 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1500 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1600 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1700 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1800 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M1900 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgluon_M2000 2018"
+Queue 1
+
+Arguments = "TstarTstarToTgammaTgamma_M700 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M800 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M900 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1000 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1200 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1300 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1400 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1500 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1600 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1700 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1800 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M1900 2018"
+Queue 1
+Arguments = "TstarTstarToTgammaTgamma_M2000 2018"
+Queue 1
+
+Arguments = "TstarTstarToTgluonTgluon_M700 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M800 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M900 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1000 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1100 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1200 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1300 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1400 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1500 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1600 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1700 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1800 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M1900 2018"
+Queue 1
+Arguments = "TstarTstarToTgluonTgluon_M2000 2018"
+Queue 1
+
 Arguments = "TTGamma_Dilepton 2018"
 Queue 1
 Arguments = "TTGamma_Hadronic 2018"
@@ -75,6 +158,8 @@ Arguments = "TTbarPowheg_Hadronic 2018 $INT(X) 10"
 Queue 10
 Arguments = "TTbarPowheg_Semilept 2018 $INT(X) 10"
 Queue 10
+Arguments = "TTbarPowheg_Semilept_ext3 2018 $INT(X) 20"
+Queue 20
 
 Arguments = "W1jets 2018 $INT(X) 5"
 Queue 5
