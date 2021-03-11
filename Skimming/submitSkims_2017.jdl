@@ -12,31 +12,31 @@ Error  = condor/Skim_2017_$(cluster)_$(process).stderr
 Log    = condor/Skim_2017_$(cluster)_$(process).condor
 
 X=$(step)+1
-Arguments = "TstarTstarToTgammaTgluon_M700 2017"
+Arguments = "TstarTstarToTgammaTgluon_M700 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M800 2017"
+Arguments = "TstarTstarToTgammaTgluon_M800 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M900 2017"
+Arguments = "TstarTstarToTgammaTgluon_M900 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M1000 2017"
+Arguments = "TstarTstarToTgammaTgluon_M1000 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M1200 2017"
+Arguments = "TstarTstarToTgammaTgluon_M1200 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M1300 2017"
+Arguments = "TstarTstarToTgammaTgluon_M1300 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M1400 2017"
+Arguments = "TstarTstarToTgammaTgluon_M1400 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M1500 2017"
+Arguments = "TstarTstarToTgammaTgluon_M1500 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M1600 2017"
+Arguments = "TstarTstarToTgammaTgluon_M1600 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M1700 2017"
+Arguments = "TstarTstarToTgammaTgluon_M1700 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M1800 2017"
+Arguments = "TstarTstarToTgammaTgluon_M1800 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M1900 2017"
+Arguments = "TstarTstarToTgammaTgluon_M1900 2017 1 1 passAll"
 Queue 1
-Arguments = "TstarTstarToTgammaTgluon_M2000 2017"
+Arguments = "TstarTstarToTgammaTgluon_M2000 2017 1 1 passAll"
 Queue 1
 
 Arguments = "TstarTstarToTgammaTgamma_M700 2017"

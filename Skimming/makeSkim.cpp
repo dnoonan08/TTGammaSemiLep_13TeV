@@ -254,11 +254,16 @@ int main(int ac, char** av){
 		    hEvents_->Fill(0.);
 		}
 
-		evtPick->process_event(tree);
+                if (passAll){
+                    newTree->Fill();
+                }
+                else{
+                    evtPick->process_event(tree);
 
-		if( evtPick->passSkim || passAll){
+                    if( evtPick->passSkim){
 			newTree->Fill();
-		}
+                    }
+                }
 	}
 
 	newTree->Write();
