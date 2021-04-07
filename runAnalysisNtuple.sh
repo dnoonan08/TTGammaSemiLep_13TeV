@@ -18,7 +18,7 @@ else
     eval `scramv1 runtime -sh`
     cd -
     echo "Untarring Scale Factors"
-    xrdcp root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/AnalysisNtuples/RequiredScaleFactors.tgz .
+    xrdcp root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/RequiredScaleFactors.tgz .
     tar -zxf RequiredScaleFactors.tgz
     mkdir AnalysisNtuple
     mv makeAnalysisNtuple AnalysisNtuple/makeAnalysisNtuple
