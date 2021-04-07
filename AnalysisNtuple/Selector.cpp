@@ -18,6 +18,9 @@ Selector::Selector(){
     jet_Pt_cut = 30;
     jet_Eta_cut = 2.4;
 
+    ak8jet_Pt_cut = 350;
+    ak8jet_Eta_cut = 2.4;
+
     printEvent = -1;
 
     looseJetID = false;
@@ -40,6 +43,9 @@ Selector::Selector(){
     // DeepCSV
     btag_cut_DeepCSV = 0.6324;  
 
+    topTagWP = 0.8;  
+
+    useMiniIso = true;
 
     // whether to invert lepton requirements for 
     QCDselect = false;
@@ -114,9 +120,9 @@ void Selector::process_objects(EventTree* inp_tree){
     filter_photons();
 
     //cout << "before selector jets" << endl;
-    filter_jets();
-
     filter_fatjets();
+
+    filter_jets();
 
     //cout << "before photon jet dr" << endl;
     // // add in the DR(photon,jet), removing photons with jet < 0.4 away, needs to be done after the jet selection
@@ -426,6 +432,21 @@ void Selector::filter_electrons(){
 			     passD0 &&
 			     passDz);
 	
+        if (useMiniIso) {
+            double MiniIso = tree->eleMiniIso_[eleInd];
+            eleSel = (pt >=50 &&
+                      absEta <= 2.2 &&
+                      passEtaEBEEGap &&
+                      tree->eleMVAFall17V2noIso_WP90_ &&
+                      MiniIso < 0.1);
+
+            looseSel = (pt >=35 &&
+                        absEta <= 2.2 &&
+                        passEtaEBEEGap &&
+                        tree->eleMVAFall17V2noIso_WPL_ &&
+                        !tree->eleMVAFall17V2noIso_WP90_ &&
+                        MiniIso < 0.4);
+        }
         
 	if (tree->event_==printEvent){
 	    cout << "-- " << eleInd << " eleSel=" <<  eleSel << " looseSel=" <<  looseSel << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->elePhi_[eleInd]<< " eleID="<<eleID << " passD0="<<passD0<< "("<<tree->eleD0_[eleInd]<<") passDz="<<passDz<< "("<<tree->eleDz_[eleInd]<<")"<< endl;
@@ -487,18 +508,26 @@ void Selector::filter_muons(){
 			  TMath::Abs(eta) <= mu_Eta_loose &&
 			  looseMuonID &&
 			  (PFrelIso_corr < mu_RelIso_loose)
-			  //(!QCDselect ? (PFrelIso_corr < mu_RelIso_loose): PFrelIso_corr > mu_RelIso_loose) 
 			  );
-	// if (QCDselect){ //ignoring Iso cut in  QCDCR
-	//     bool passLoose = (pt >= mu_PtLoose_cut &&
-	// 		      TMath::Abs(eta) <= mu_Eta_loose &&
-	// 		      looseMuonID 
-	// 		      );
-	// }
+
 	bool passTight_noIso = (pt >= mu_Pt_cut &&
 				TMath::Abs(eta) <= mu_Eta_tight &&
 				tightMuonID
 				);
+
+        if (useMiniIso) {
+            double MiniIso = tree->muMiniIso_[muInd];
+            passTight = (pt >=55 &&
+                         TMath::Abs(eta) <=2.4 &&
+                         tightMuonID &&
+                         MiniIso < 0.1);
+
+            passLoose = (pt >=30 &&
+                         TMath::Abs(eta) <=2.4 &&
+                         looseMuonID &&
+                         MiniIso < 0.4 &&
+                         ~passTight);
+        }
 	
 	if (tree->event_==printEvent){
 	    cout << "-- " << muInd << " passTight="<<passTight<< " passLoose="<<passLoose << " pt="<<pt<< " eta="<<eta<< " phi="<<tree->muPhi_[muInd]<< " tightID="<<tightMuonID<< " looseID="<<looseMuonID << " pfRelIso="<<PFrelIso_corr << endl;
@@ -593,11 +622,18 @@ void Selector::filter_jets(){
 	    if (dR(eta, phi, tree->phoEta_[*phoInd], tree->phoPhi_[*phoInd]) < veto_pho_jet_dR) passDR_pho_jet = false;
 	}
 
+        //loop over selected fat jets
+        bool passDR_fatJet=true;
+        for(std::vector<int>::const_iterator ak8Ind = FatJets.begin(); ak8Ind != FatJets.end(); ak8Ind++) {
+          if (dR(eta, phi, tree->fatJetEta_[*ak8Ind], tree->fatJetPhi_[*ak8Ind]) < 0.8) passDR_fatJet = false;
+        }
+
         bool jetPresel = (pt >= jet_Pt_cut &&
                           TMath::Abs(eta) <= jet_Eta_cut &&
                           jetID_pass &&
                           passDR_lep_jet &&
-                          passDR_pho_jet
+                          passDR_pho_jet &&
+                          passDR_fatJet
                           );
 
 	if (tree->event_==printEvent){
@@ -662,9 +698,35 @@ void Selector::filter_fatjets(){
         double eta = tree->fatJetEta_[jetInd];
         double phi = tree->fatJetPhi_[jetInd];
 
-        bool jetPresel = (pt >= jet_Pt_cut &&
-                          TMath::Abs(eta) <= jet_Eta_cut && 
-                          (tree->fatJetID_[jetInd]&1)==1
+        double softDropMass = tree->fatJetMassSoftDrop_[jetInd];
+        double topTag = tree->fatJetDeepTagT_[jetInd];
+
+        bool passDR_lep_jet = true;
+
+        //loop over selected electrons
+        for(std::vector<int>::const_iterator eleInd = Electrons.begin(); eleInd != Electrons.end(); eleInd++) {
+	    if (dR(eta, phi, tree->eleEta_[*eleInd], tree->elePhi_[*eleInd]) < veto_lep_jet_dR) passDR_lep_jet = false;
+        }
+
+        //loop over selected muons
+        for(std::vector<int>::const_iterator muInd = Muons.begin(); muInd != Muons.end(); muInd++) {
+          if (dR(eta, phi, tree->muEta_[*muInd], tree->muPhi_[*muInd]) < veto_lep_jet_dR) passDR_lep_jet = false;
+        }
+
+        bool passDR_pho_jet = true;
+        //loop over selected photons
+        for(std::vector<int>::const_iterator phoInd = Photons.begin(); phoInd != Photons.end(); phoInd++) {
+	    if (dR(eta, phi, tree->phoEta_[*phoInd], tree->phoPhi_[*phoInd]) < veto_pho_jet_dR) passDR_pho_jet = false;
+	}
+
+        bool jetPresel = (pt >= ak8jet_Pt_cut &&
+                          TMath::Abs(eta) <= ak8jet_Eta_cut && 
+                          (tree->fatJetID_[jetInd]&1)==1 &&
+                          passDR_pho_jet && 
+                          passDR_lep_jet && 
+                          softDropMass >= 105 &&
+                          softDropMass <= 210 && 
+                          topTag >= topTagWP
                           );
         if (jetPresel){
             FatJets.push_back(jetInd);

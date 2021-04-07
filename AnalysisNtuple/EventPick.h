@@ -36,6 +36,7 @@ public:
 	// cuts as parameters, to modify easily
 	double MET_cut;
 	bool no_trigger;
+	bool nonIso_trigger;
 
 	bool loosePhotonVeto;
 

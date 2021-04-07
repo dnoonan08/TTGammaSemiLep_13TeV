@@ -34,11 +34,13 @@ class TopEventCombinatorics{
 	pho_idx = 0;
 	ghad_idx = 0;
 	glep_idx = 0;
+	tHad_idx = 0;
     }
 	
     void SetMtop(double mTop_){ mTop = mTop_;}
     void SetMW(double mW_){ mW = mW_;}
 
+    void SetFatJetVector(std::vector<TLorentzVector> jets_){ ak8jets = jets_;}
     void SetJetVector(std::vector<TLorentzVector> jets_){ jets = jets_;}
     void SetJetResVector(std::vector<double> jetres_){ jetsRes = jetres_;}
     void SetBtagVector(std::vector<double> jetsTag_){ btag = jetsTag_;}
@@ -65,6 +67,8 @@ class TopEventCombinatorics{
     unsigned int getG(){ return g_idx; }
     unsigned int getPho(){ return pho_idx; }
 
+    unsigned int getTHad(){ return tHad_idx; }
+
     bool getPhotonSide(){ return photonIsLeptonSide; }
 
     double getNuPz(){ return nu_pz; }
@@ -79,11 +83,13 @@ class TopEventCombinatorics{
 
     void ClearVectors(){
 	jets.clear();
+	ak8jets.clear();
     }
 
     int Calculate();
-    int CalculateTstarGluGlu();
-    int CalculateTstarGluGamma();
+    int CalculateTstarGluGlu(int N=-1);
+    int CalculateTstarGluGamma(int N=-1);
+    int CalculateTstarGluGamma_Boosted(int N=-1);
 
 
 
@@ -108,6 +114,12 @@ class TopEventCombinatorics{
                       TLorentzVector lepDecay,
                       double nu_pz_hypo);
 
+    double tstarChiSq_boosted(TLorentzVector ak8j,
+                              TLorentzVector bl,
+                              TLorentzVector hadDecay,
+                              TLorentzVector lepDecay,
+                              double nu_pz_hypo);
+
     /* double tstarGluGammaChiSq(TLorentzVector j1, double sigma_j1, */
     /*                           TLorentzVector j2, double sigma_j2, */
     /*                           TLorentzVector bh, double sigma_bh, */
@@ -116,6 +128,7 @@ class TopEventCombinatorics{
     /*                           double nu_pz_hypo); */
 
     std::vector<TLorentzVector> jets;
+    std::vector<TLorentzVector> ak8jets;
     std::vector<double> jetsRes;
     std::vector<double> btag;
 
@@ -142,6 +155,7 @@ class TopEventCombinatorics{
     /* TLorentzVector j1; */
     /* TLorentzVector j2; */
 
+    int tHad_idx;
     int bhad_idx;
     int blep_idx;
     int j1_idx;

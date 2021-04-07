@@ -99,6 +99,10 @@ public:
 	std::vector<double> PhoPhoIso_corr;
 	std::vector<std::vector<float>> PhoRandConeChHadIso_corr;
 
+	double ak8jet_Pt_cut;
+	double ak8jet_Eta_cut;
+	double topTagWP;
+
 	double jet_Pt_cut;
 	double jet_Eta_cut;
 	double btag_cut;
@@ -146,6 +150,12 @@ public:
 	int    ele_MissInnHit_cut;
 	bool   ele_Iso_MVA_invert;
 	
+        bool useMiniIso;
+	double mu_MiniIso_tight;
+	double mu_MiniIso_loose;
+	double ele_MiniIso_tight;
+	double ele_MiniIso_loose;
+
 	// photons
 	double pho_Et_cut;
 	double pho_Eta_cut;

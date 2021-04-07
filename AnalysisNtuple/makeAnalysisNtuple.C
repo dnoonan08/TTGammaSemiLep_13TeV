@@ -13,14 +13,6 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 int phoscale012_g = 1;
 int elescale012_g = 1;
 
-// bool overlapRemoval(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
-// bool overlapRemoval_2To3(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
-// bool overlapRemovalTT(EventTree* tree, bool verbose);
-// bool overlapRemovalZJets(EventTree* tree, bool verbose=false);
-// bool overlapRemovalWJets(EventTree* tree, bool verbose=false);
-// bool overlapRemoval_Tchannel(EventTree* tree);
-// double getJetResolution(double, double, double);
-
 
 bool dileptonsample;
 bool qcdSample;
@@ -317,6 +309,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     bool invertOverlap = false;
     
     bool skipOverlap = false;
+
+    bool lowPtTTGamma = false;
+
     //    applypdfweight = false;
     //    applyqsquare  = false;
     //    if( sampleType == "TTbarPowheg" || sampleType=="isr_up_TTbarPowheg" || sampleType=="fsr_up_TTbarPowheg"|| sampleType=="isr_down_TTbarPowheg"|| sampleType=="fsr_down_TTbarPowheg"|| sampleType == "TTbarPowheg1" || sampleType == "TTbarPowheg2" || sampleType == "TTbarPowheg3" || sampleType == "TTbarPowheg4" || sampleType == "TTbarMCatNLO" || sampleType == "TTbarMadgraph_SingleLeptFromT" || sampleType == "TTbarMadgraph_SingleLeptFromTbar" || sampleType == "TTbarMadgraph_Dilepton" || sampleType == "TTbarMadgraph" ) doOverlapRemoval = true;
@@ -327,6 +322,10 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
     if (sampleType.find("TTGamma")!= std::string::npos) {
 	doOverlapInvert_TTG = true;
+        if (sampleType=="TTGamma_SingleLept" || sampleType=="TTGamma_Dilepton" || sampleType=="TTGamma_Hadronic" ){
+            lowPtTTGamma = true;
+            cout << "Inclusive TTGamma sample, will remove high Pt photon events" << endl;
+        }
     }    
     if( sampleType == "W1jets" || sampleType == "W2jets" ||  sampleType == "W3jets" || sampleType == "W4jets"){
 	doOverlapRemoval_W = true;
@@ -658,6 +657,17 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 		count_overlap++;			
 		continue;
 	    }
+            
+            // remove events with LHEPart photon with pt>100 GeV to avoid double counting with high pt samples
+            if (lowPtTTGamma){
+                for (int lheind = 0; lheind < tree-> nLHEPart_; lheind++){
+                    if (tree->LHEPart_pdgId_[lheind]==22 && tree->LHEPart_pt_[lheind]>100.){
+                        continue;
+                    }
+                }
+            }
+
+
 	}
 
 	if( isMC && doOverlapRemoval_TT){
@@ -1089,6 +1099,7 @@ void makeAnalysisNtuple::FillEvent(std::string year)
     _nMuLoose                = selector->MuonsLoose.size();
     
     _nJet            = selector->Jets.size();
+    _nFatJet         = selector->FatJets.size();
     _nfwdJet         = selector->FwdJets.size();
     _nBJet           = selector->bJets.size();
 
@@ -1538,6 +1549,8 @@ void makeAnalysisNtuple::FillEvent(std::string year)
     jetResolutionVectors.clear();
     jetBtagVectors.clear();
 
+    ak8jetVectors.clear();
+
     for (int i_jet = 0; i_jet <_nJet; i_jet++){
 		
 	int jetInd = selector->Jets.at(i_jet);
@@ -1563,15 +1576,21 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	jetResolutionVectors.push_back(resolution);
 	jetBtagVectors.push_back(tree->jetBtagDeepB_[jetInd]);
 	
-	if (selector->jet_isTagged.at(i_jet)){
-	    //	if ( (tree->jetBtagDeepB_[jetInd]) > selector->btag_cut_DeepCSV){
-	    bjetVectors.push_back(jetVector);
-	    bjetResVectors.push_back(resolution);
-	} else {
-	    ljetVectors.push_back(jetVector);
-	    ljetResVectors.push_back(resolution);
-	}
+            
+	// if (selector->jet_isTagged.at(i_jet)){
+	//     bjetVectors.push_back(jetVector);
+	//     bjetResVectors.push_back(resolution);
+	// } else {
+	//     ljetVectors.push_back(jetVector);
+	//     ljetResVectors.push_back(resolution);
+	// }
     }	
+
+    for (int i_fatjet = 0; i_fatjet <_nFatJet; i_fatjet++){
+        int fatjetInd = selector->FatJets.at(i_fatjet);
+        fatjetVector.SetPtEtaPhiM(tree->fatJetPt_[fatjetInd], tree->fatJetEta_[fatjetInd], tree->fatJetPhi_[fatjetInd], tree->fatJetMass_[fatjetInd]);
+        ak8jetVectors.push_back(fatjetVector);
+    }
 
     //Compute M3
     _M3 = -1.;
@@ -1642,83 +1661,85 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 
     topEvent.SetLepton(lepVector);
     topEvent.SetMET(METVector);
-    
-    topEvent.Calculate();
 
-    if (topEvent.GoodCombination()){
-	bhad = jetVectors[topEvent.getBHad()];
-	blep = jetVectors[topEvent.getBLep()];
-	Wj1 = jetVectors[topEvent.getJ1()];
-	Wj2 = jetVectors[topEvent.getJ2()];
-	METVector.SetXYZM(METVector.Px(), METVector.Py(), topEvent.getNuPz(), 0);
+    topEvent.SetFatJetVector(ak8jetVectors);
 
-	_chi2 = topEvent.getChi2_TT();
+    // topEvent.Calculate();
+
+    // if (topEvent.GoodCombination()){
+    //     bhad = jetVectors[topEvent.getBHad()];
+    //     blep = jetVectors[topEvent.getBLep()];
+    //     Wj1 = jetVectors[topEvent.getJ1()];
+    //     Wj2 = jetVectors[topEvent.getJ2()];
+    //     METVector.SetXYZM(METVector.Px(), METVector.Py(), topEvent.getNuPz(), 0);
+
+    //     _chi2 = topEvent.getChi2_TT();
         
-	_Mt_blgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (blep + lepVector + phoVector).Pt(),2) + pow( (blep + lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((blep + lepVector + phoVector + METVector ).Pt(),2) );
-	_Mt_lgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (lepVector + phoVector).Pt(),2) + pow( (lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((lepVector + phoVector + METVector ).Pt(),2) );
-	_M_bjj = ( bhad + Wj1 + Wj2 ).M();
-	_M_bjjgamma = ( bhad + Wj1 + Wj2 + phoVector).M();
-	_M_jj  = ( Wj1 + Wj2 ).M();
+    //     _Mt_blgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (blep + lepVector + phoVector).Pt(),2) + pow( (blep + lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((blep + lepVector + phoVector + METVector ).Pt(),2) );
+    //     _Mt_lgammaMET = TMath::Sqrt( pow(TMath::Sqrt( pow( (lepVector + phoVector).Pt(),2) + pow( (lepVector + phoVector).M(),2) ) + METVector.Pt(), 2) - pow((lepVector + phoVector + METVector ).Pt(),2) );
+    //     _M_bjj = ( bhad + Wj1 + Wj2 ).M();
+    //     _M_bjjgamma = ( bhad + Wj1 + Wj2 + phoVector).M();
+    //     _M_jj  = ( Wj1 + Wj2 ).M();
 	
-	_TopHad_pt = ( bhad + Wj1 + Wj2 ).Pt();
-	_TopHad_eta = ( bhad + Wj1 + Wj2 ).Eta();
-	_TopHad_phi = ( bhad + Wj1 + Wj2 ).Phi();
-	_TopHad_mass = ( bhad + Wj1 + Wj2 ).M();
-	_TopLep_pt = ( blep + lepVector + METVector ).Pt();
-	_TopLep_eta = ( blep + lepVector + METVector ).Eta();
-	_TopLep_phi = ( blep + lepVector + METVector ).Phi();
-	_TopLep_mass = ( blep + lepVector + METVector ).M();
-	_TopLep_charge = lepCharge;
+    //     _TopHad_pt = ( bhad + Wj1 + Wj2 ).Pt();
+    //     _TopHad_eta = ( bhad + Wj1 + Wj2 ).Eta();
+    //     _TopHad_phi = ( bhad + Wj1 + Wj2 ).Phi();
+    //     _TopHad_mass = ( bhad + Wj1 + Wj2 ).M();
+    //     _TopLep_pt = ( blep + lepVector + METVector ).Pt();
+    //     _TopLep_eta = ( blep + lepVector + METVector ).Eta();
+    //     _TopLep_phi = ( blep + lepVector + METVector ).Phi();
+    //     _TopLep_mass = ( blep + lepVector + METVector ).M();
+    //     _TopLep_charge = lepCharge;
 
-	_MassCuts = ( _Mt_blgammaMET > 180 &&
-		      _Mt_lgammaMET > 90 && 
-		      _M_bjj > 160 && 
-		      _M_bjj < 180 && 
-		      _M_jj > 70 &&
-		      _M_jj < 90 &&
-		      _nPho > 0);
+    //     _MassCuts = ( _Mt_blgammaMET > 180 &&
+    //     	      _Mt_lgammaMET > 90 && 
+    //     	      _M_bjj > 160 && 
+    //     	      _M_bjj < 180 && 
+    //     	      _M_jj > 70 &&
+    //     	      _M_jj < 90 &&
+    //     	      _nPho > 0);
 	
-    }
+    // }
 
 
-    topEvent.CalculateTstarGluGlu();
-    if (topEvent.GoodCombinationTstarGluGlu()){
-	bhad = jetVectors[topEvent.getBHad()];
-	blep = jetVectors[topEvent.getBLep()];
-	Wj1 = jetVectors[topEvent.getJ1()];
-	Wj2 = jetVectors[topEvent.getJ2()];
-	hadDecay = jetVectors[topEvent.getGHad()];
-	lepDecay = jetVectors[topEvent.getGLep()];
-	METVector.SetXYZM(METVector.Px(), METVector.Py(), topEvent.getNuPz(), 0);
+    // topEvent.CalculateTstarGluGlu();
+    // if (topEvent.GoodCombinationTstarGluGlu()){
+    //     bhad = jetVectors[topEvent.getBHad()];
+    //     blep = jetVectors[topEvent.getBLep()];
+    //     Wj1 = jetVectors[topEvent.getJ1()];
+    //     Wj2 = jetVectors[topEvent.getJ2()];
+    //     hadDecay = jetVectors[topEvent.getGHad()];
+    //     lepDecay = jetVectors[topEvent.getGLep()];
+    //     METVector.SetXYZM(METVector.Px(), METVector.Py(), topEvent.getNuPz(), 0);
 
-        _TstarGluGlu_chi2 = topEvent.getChi2_TstarGluGlu();
+    //     _TstarGluGlu_chi2 = topEvent.getChi2_TstarGluGlu();
 
-        _TstarGluGlu_TstarHad_pt = (bhad + Wj1 + Wj2 + hadDecay).Pt();
-        _TstarGluGlu_TstarHad_eta = (bhad + Wj1 + Wj2 + hadDecay).Eta();
-        _TstarGluGlu_TstarHad_phi = (bhad + Wj1 + Wj2 + hadDecay).Phi();
-        _TstarGluGlu_TstarHad_mass = (bhad + Wj1 + Wj2 + hadDecay).M();
+    //     _TstarGluGlu_TstarHad_pt = (bhad + Wj1 + Wj2 + hadDecay).Pt();
+    //     _TstarGluGlu_TstarHad_eta = (bhad + Wj1 + Wj2 + hadDecay).Eta();
+    //     _TstarGluGlu_TstarHad_phi = (bhad + Wj1 + Wj2 + hadDecay).Phi();
+    //     _TstarGluGlu_TstarHad_mass = (bhad + Wj1 + Wj2 + hadDecay).M();
 
-        _TstarGluGlu_TstarLep_pt = (blep + lepVector + METVector + lepDecay).Pt();
-        _TstarGluGlu_TstarLep_eta = (blep + lepVector + METVector + lepDecay).Eta();
-        _TstarGluGlu_TstarLep_phi = (blep + lepVector + METVector + lepDecay).Phi();
-        _TstarGluGlu_TstarLep_mass = (blep + lepVector + METVector + lepDecay).M();
+    //     _TstarGluGlu_TstarLep_pt = (blep + lepVector + METVector + lepDecay).Pt();
+    //     _TstarGluGlu_TstarLep_eta = (blep + lepVector + METVector + lepDecay).Eta();
+    //     _TstarGluGlu_TstarLep_phi = (blep + lepVector + METVector + lepDecay).Phi();
+    //     _TstarGluGlu_TstarLep_mass = (blep + lepVector + METVector + lepDecay).M();
 
-        _TstarGluGlu_TopHad_pt = (bhad + Wj1 + Wj2).Pt();
-        _TstarGluGlu_TopHad_eta = (bhad + Wj1 + Wj2).Eta();
-        _TstarGluGlu_TopHad_phi = (bhad + Wj1 + Wj2).Phi();
-        _TstarGluGlu_TopHad_mass = (bhad + Wj1 + Wj2).M();
+    //     _TstarGluGlu_TopHad_pt = (bhad + Wj1 + Wj2).Pt();
+    //     _TstarGluGlu_TopHad_eta = (bhad + Wj1 + Wj2).Eta();
+    //     _TstarGluGlu_TopHad_phi = (bhad + Wj1 + Wj2).Phi();
+    //     _TstarGluGlu_TopHad_mass = (bhad + Wj1 + Wj2).M();
 
-        _TstarGluGlu_TopLep_pt = (blep + lepVector + METVector).Pt();
-        _TstarGluGlu_TopLep_eta = (blep + lepVector + METVector).Eta();
-        _TstarGluGlu_TopLep_phi = (blep + lepVector + METVector).Phi();
-        _TstarGluGlu_TopLep_mass = (blep + lepVector + METVector).M();
+    //     _TstarGluGlu_TopLep_pt = (blep + lepVector + METVector).Pt();
+    //     _TstarGluGlu_TopLep_eta = (blep + lepVector + METVector).Eta();
+    //     _TstarGluGlu_TopLep_phi = (blep + lepVector + METVector).Phi();
+    //     _TstarGluGlu_TopLep_mass = (blep + lepVector + METVector).M();
 
-        _TstarGluGlu_TopLep_charge = lepCharge;
-    }
+    //     _TstarGluGlu_TopLep_charge = lepCharge;
+    // }
 
     topEvent.SetPhotonVector(phoVectors);
 
-    topEvent.CalculateTstarGluGamma();
+    topEvent.CalculateTstarGluGamma(5);
     if (topEvent.GoodCombinationTstarGluGamma()){
 	bhad = jetVectors[topEvent.getBHad()];
 	blep = jetVectors[topEvent.getBLep()];
@@ -1746,26 +1767,57 @@ void makeAnalysisNtuple::FillEvent(std::string year)
         _TstarGluGamma_TstarLep_phi = (blep + lepVector + METVector + lepDecay).Phi();
         _TstarGluGamma_TstarLep_mass = (blep + lepVector + METVector + lepDecay).M();
 
-        _TstarGluGamma_TopHad_pt = (bhad + Wj1 + Wj2).Pt();
-        _TstarGluGamma_TopHad_eta = (bhad + Wj1 + Wj2).Eta();
-        _TstarGluGamma_TopHad_phi = (bhad + Wj1 + Wj2).Phi();
-        _TstarGluGamma_TopHad_mass = (bhad + Wj1 + Wj2).M();
+        _TstarGluGamma_Tstar_mass = (_TstarGluGamma_TstarHad_mass + _TstarGluGamma_TstarLep_mass)/2.;
 
-        _TstarGluGamma_TopLep_pt = (blep + lepVector + METVector).Pt();
-        _TstarGluGamma_TopLep_eta = (blep + lepVector + METVector).Eta();
-        _TstarGluGamma_TopLep_phi = (blep + lepVector + METVector).Phi();
-        _TstarGluGamma_TopLep_mass = (blep + lepVector + METVector).M();
+        // _TstarGluGamma_TopHad_pt = (bhad + Wj1 + Wj2).Pt();
+        // _TstarGluGamma_TopHad_eta = (bhad + Wj1 + Wj2).Eta();
+        // _TstarGluGamma_TopHad_phi = (bhad + Wj1 + Wj2).Phi();
+        // _TstarGluGamma_TopHad_mass = (bhad + Wj1 + Wj2).M();
 
-        _TstarGluGamma_TopLep_charge = lepCharge;
+        // _TstarGluGamma_TopLep_pt = (blep + lepVector + METVector).Pt();
+        // _TstarGluGamma_TopLep_eta = (blep + lepVector + METVector).Eta();
+        // _TstarGluGamma_TopLep_phi = (blep + lepVector + METVector).Phi();
+        // _TstarGluGamma_TopLep_mass = (blep + lepVector + METVector).M();
+        // _TstarGluGamma_TopLep_charge = lepCharge;
     }
 
-    ljetVectors.clear();
-    bjetVectors.clear();
+    topEvent.CalculateTstarGluGamma_Boosted(2);
+    if (topEvent.GoodCombinationTstarGluGamma()){
+	blep = jetVectors[topEvent.getBLep()];
+	bhad = ak8jetVectors[topEvent.getTHad()];
+
+        if (topEvent.getPhotonSide()){ //photon is on leptonic side
+            hadDecay = jetVectors[topEvent.getG()];
+            lepDecay = phoVectors[topEvent.getPho()];
+        }else{ //photon is on hadronic side
+            hadDecay = phoVectors[topEvent.getPho()];
+            lepDecay = jetVectors[topEvent.getG()];
+        }
+
+	METVector.SetXYZM(METVector.Px(), METVector.Py(), topEvent.getNuPz(), 0);
+
+        _TstarGluGamma_Boosted_chi2 = topEvent.getChi2_TstarGluGamma();
+
+        _TstarGluGamma_Boosted_TstarHad_pt = (bhad + hadDecay).Pt();
+        _TstarGluGamma_Boosted_TstarHad_eta = (bhad + hadDecay).Eta();
+        _TstarGluGamma_Boosted_TstarHad_phi = (bhad + hadDecay).Phi();
+        _TstarGluGamma_Boosted_TstarHad_mass = (bhad + hadDecay).M();
+
+        _TstarGluGamma_Boosted_TstarLep_pt = (blep + lepVector + METVector + lepDecay).Pt();
+        _TstarGluGamma_Boosted_TstarLep_eta = (blep + lepVector + METVector + lepDecay).Eta();
+        _TstarGluGamma_Boosted_TstarLep_phi = (blep + lepVector + METVector + lepDecay).Phi();
+        _TstarGluGamma_Boosted_TstarLep_mass = (blep + lepVector + METVector + lepDecay).M();
+
+        _TstarGluGamma_Boosted_Tstar_mass = (_TstarGluGamma_Boosted_TstarHad_mass + _TstarGluGamma_Boosted_TstarLep_mass)/2.;
+
+    }
+
+    // ljetVectors.clear();
+    // bjetVectors.clear();
     
-    ljetResVectors.clear();
-    bjetResVectors.clear();
-    
-    
+    // ljetResVectors.clear();
+    // bjetResVectors.clear();
+        
     if (isMC){
 
 	// Float_t LHE scale variation weights (w_var / w_nominal); 

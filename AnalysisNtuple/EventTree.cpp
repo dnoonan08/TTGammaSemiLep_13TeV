@@ -140,6 +140,15 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("Electron_pfRelIso03_all",1);
     chain->SetBranchAddress("Electron_pfRelIso03_all", &elePFRelIso_);
 
+    chain->SetBranchStatus("Electron_miniPFRelIso_all",1);
+    chain->SetBranchAddress("Electron_miniPFRelIso_all", &eleMiniIso_);
+
+    chain->SetBranchStatus("Electron_mvaFall17V2noIso_WPL",1);
+    chain->SetBranchAddress("Electron_mvaFall17V2noIso_WPL", &eleMVAFall17V2noIso_WPL_);
+
+    chain->SetBranchStatus("Electron_mvaFall17V2noIso_WP90",1);
+    chain->SetBranchAddress("Electron_mvaFall17V2noIso_WP90", &eleMVAFall17V2noIso_WP90_);
+
     chain->SetBranchStatus("Electron_sieie",1);
     chain->SetBranchAddress("Electron_sieie", &eleSIEIE_);
 	
@@ -165,14 +174,14 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchAddress("Electron_dz", &eleDz_);
 
     
-    chain->SetBranchStatus("Electron_dr03EcalRecHitSumEt",1);
-    chain->SetBranchAddress("Electron_dr03EcalRecHitSumEt", &eleEcalSumEtDr03_);
+    // chain->SetBranchStatus("Electron_dr03EcalRecHitSumEt",1);
+    // chain->SetBranchAddress("Electron_dr03EcalRecHitSumEt", &eleEcalSumEtDr03_);
 
-    chain->SetBranchStatus("Electron_dr03HcalDepth1TowerSumEt",1);
-    chain->SetBranchAddress("Electron_dr03HcalDepth1TowerSumEt", &eleHcalSumEtDr03_);
+    // chain->SetBranchStatus("Electron_dr03HcalDepth1TowerSumEt",1);
+    // chain->SetBranchAddress("Electron_dr03HcalDepth1TowerSumEt", &eleHcalSumEtDr03_);
 
-    chain->SetBranchStatus("Electron_dr03TkSumPt",1);
-    chain->SetBranchAddress("Electron_dr03TkSumPt", &eleTrkSumPtDr03_);
+    // chain->SetBranchStatus("Electron_dr03TkSumPt",1);
+    // chain->SetBranchAddress("Electron_dr03TkSumPt", &eleTrkSumPtDr03_);
 
     chain->SetBranchStatus("Electron_photonIdx",1);
     chain->SetBranchAddress("Electron_photonIdx", &elePhoIdx_);
@@ -205,6 +214,9 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
 
     chain->SetBranchStatus("Muon_pfRelIso04_all",1);
     chain->SetBranchAddress("Muon_pfRelIso04_all", &muPFRelIso_);
+
+    chain->SetBranchStatus("Muon_miniPFRelIso_all",1);
+    chain->SetBranchAddress("Muon_miniPFRelIso_all", &muMiniIso_);
 
     chain->SetBranchStatus("Muon_tightId",1);
     chain->SetBranchAddress("Muon_tightId", &muTightId_);
@@ -248,26 +260,26 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("Jet_area",1);
     chain->SetBranchAddress("Jet_area", &jetArea_);
 
-    chain->SetBranchStatus("Jet_btagCMVA",1);
-    chain->SetBranchAddress("Jet_btagCMVA", &jetBtagCMVA_);
+    // chain->SetBranchStatus("Jet_btagCMVA",1);
+    // chain->SetBranchAddress("Jet_btagCMVA", &jetBtagCMVA_);
 
-    chain->SetBranchStatus("Jet_btagCSVV2",1);
-    chain->SetBranchAddress("Jet_btagCSVV2", &jetBtagCSVV2_);
+    // chain->SetBranchStatus("Jet_btagCSVV2",1);
+    // chain->SetBranchAddress("Jet_btagCSVV2", &jetBtagCSVV2_);
 
     chain->SetBranchStatus("Jet_btagDeepB",1);
     chain->SetBranchAddress("Jet_btagDeepB", &jetBtagDeepB_);
 
-    chain->SetBranchStatus("Jet_btagDeepC",1);
-    chain->SetBranchAddress("Jet_btagDeepC", &jetBtagDeepC_);
+    // chain->SetBranchStatus("Jet_btagDeepC",1);
+    // chain->SetBranchAddress("Jet_btagDeepC", &jetBtagDeepC_);
 
-    chain->SetBranchStatus("Jet_btagDeepFlavB",1);
-    chain->SetBranchAddress("Jet_btagDeepFlavB", &jetBtagDeepFlavB_);
+    // chain->SetBranchStatus("Jet_btagDeepFlavB",1);
+    // chain->SetBranchAddress("Jet_btagDeepFlavB", &jetBtagDeepFlavB_);
 
-    chain->SetBranchStatus("Jet_chEmEF",1);
-    chain->SetBranchAddress("Jet_chEmEF", &jetchEmEF_);
+    // chain->SetBranchStatus("Jet_chEmEF",1);
+    // chain->SetBranchAddress("Jet_chEmEF", &jetchEmEF_);
 
-    chain->SetBranchStatus("Jet_neEmEF",1);
-    chain->SetBranchAddress("Jet_neEmEF", &jetneEmEF_);
+    // chain->SetBranchStatus("Jet_neEmEF",1);
+    // chain->SetBranchAddress("Jet_neEmEF", &jetneEmEF_);
 
     if (!isData_){
 	chain->SetBranchStatus("Jet_hadronFlavour",1);
@@ -299,29 +311,29 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("FatJet_jetId",1);
     chain->SetBranchAddress("FatJet_jetId", &fatJetID_);
 
-    chain->SetBranchStatus("FatJet_btagDeepB",1);
-    chain->SetBranchAddress("FatJet_btagDeepB", &fatJetBtagDeepB_);
+    // chain->SetBranchStatus("FatJet_btagDeepB",1);
+    // chain->SetBranchAddress("FatJet_btagDeepB", &fatJetBtagDeepB_);
 
-    chain->SetBranchStatus("FatJet_deepTagMD_TvsQCD",1);
-    chain->SetBranchAddress("FatJet_deepTagMD_TvsQCD", &fatJetDeepTagMDT_);
+    // chain->SetBranchStatus("FatJet_deepTagMD_TvsQCD",1);
+    // chain->SetBranchAddress("FatJet_deepTagMD_TvsQCD", &fatJetDeepTagMDT_);
 
-    chain->SetBranchStatus("FatJet_deepTagMD_WvsQCD",1);
-    chain->SetBranchAddress("FatJet_deepTagMD_WvsQCD", &fatJetDeepTagMDW_);
+    // chain->SetBranchStatus("FatJet_deepTagMD_WvsQCD",1);
+    // chain->SetBranchAddress("FatJet_deepTagMD_WvsQCD", &fatJetDeepTagMDW_);
 
     chain->SetBranchStatus("FatJet_deepTag_TvsQCD",1);
     chain->SetBranchAddress("FatJet_deepTag_TvsQCD", &fatJetDeepTagT_);
 
-    chain->SetBranchStatus("FatJet_deepTag_WvsQCD",1);
-    chain->SetBranchAddress("FatJet_deepTag_WvsQCD", &fatJetDeepTagW_);
+    // chain->SetBranchStatus("FatJet_deepTag_WvsQCD",1);
+    // chain->SetBranchAddress("FatJet_deepTag_WvsQCD", &fatJetDeepTagW_);
     
-    chain->SetBranchStatus("FatJet_hadronFlavour",1);
-    chain->SetBranchAddress("FatJet_hadronFlavour", &fatJetHadFlvr_);
+    // chain->SetBranchStatus("FatJet_hadronFlavour",1);
+    // chain->SetBranchAddress("FatJet_hadronFlavour", &fatJetHadFlvr_);
 
-    chain->SetBranchStatus("FatJet_electronIdx3SJ",1);
-    chain->SetBranchAddress("FatJet_electronIdx3SJ", &fatJetEleIdx_);
+    // chain->SetBranchStatus("FatJet_electronIdx3SJ",1);
+    // chain->SetBranchAddress("FatJet_electronIdx3SJ", &fatJetEleIdx_);
 
-    chain->SetBranchStatus("FatJet_muonIdx3SJ",1);
-    chain->SetBranchAddress("FatJet_muonIdx3SJ", &fatJetMuIdx_);
+    // chain->SetBranchStatus("FatJet_muonIdx3SJ",1);
+    // chain->SetBranchAddress("FatJet_muonIdx3SJ", &fatJetMuIdx_);
 
     if (!isData_){
         chain->SetBranchStatus("FatJet_genJetAK8Idx",1);
@@ -401,6 +413,15 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
 
     // Gen Partons
     if (!isData_){
+	chain->SetBranchStatus("nLHEPart",1);
+	chain->SetBranchAddress("nLHEPart", &nLHEPart_);
+	
+	chain->SetBranchStatus("LHEPart_pt",1);
+	chain->SetBranchAddress("LHEPart_pt", &LHEPart_pt_);
+	
+	chain->SetBranchStatus("LHEPart_pdgId",1);
+	chain->SetBranchAddress("LHEPart_pdgId", &LHEPart_pdgId_);
+	
 	chain->SetBranchStatus("nGenPart",1);
 	chain->SetBranchAddress("nGenPart", &nGenPart_);
 	
@@ -474,15 +495,15 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     if (year=="2016"){
 	chain->SetBranchStatus("HLT_Ele27_WPTight_Gsf",1);
 	chain->SetBranchAddress("HLT_Ele27_WPTight_Gsf",&HLT_Ele27_WPTight_Gsf_);
-	
+
 	// chain->SetBranchStatus("HLT_Ele105_CaloIdVT_GsfTrkIdT",1);
 	// chain->SetBranchAddress("HLT_Ele105_CaloIdVT_GsfTrkIdT",&HLT_Ele105_CaloIdVT_GsfTrkIdT_);
 	
-	// chain->SetBranchStatus("HLT_Ele115_CaloIdVT_GsfTrkIdT",1);
-	// chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
+	chain->SetBranchStatus("HLT_Ele115_CaloIdVT_GsfTrkIdT",1);
+	chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
 	
-	// chain->SetBranchStatus("HLT_Photon175",1);
-	// chain->SetBranchAddress("HLT_Photon175",&HLT_Photon175_);
+	chain->SetBranchStatus("HLT_Photon175",1);
+	chain->SetBranchAddress("HLT_Photon175",&HLT_Photon175_);
 
 	// chain->SetBranchStatus("HLT_Ele32_eta2p1_WPTight_Gsf",1);
 	// chain->SetBranchAddress("HLT_Ele32_eta2p1_WPTight_Gsf",&HLT_Ele32_eta2p1_WPTight_Gsf_);
@@ -493,6 +514,12 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
 	chain->SetBranchStatus("HLT_IsoTkMu24",1);
 	chain->SetBranchAddress("HLT_IsoTkMu24",&HLT_IsoTkMu24_);
 	
+	chain->SetBranchStatus("HLT_Mu50",1);
+	chain->SetBranchAddress("HLT_Mu50",&HLT_Mu50_);
+	
+	chain->SetBranchStatus("HLT_TkMu50",1);
+	chain->SetBranchAddress("HLT_TkMu50",&HLT_TkMu50_);
+	
     }
     
     if (year=="2017"){
@@ -502,14 +529,14 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
 	// chain->SetBranchStatus("HLT_Ele32_WPTight_Gsf",1);
 	// chain->SetBranchAddress("HLT_Ele32_WPTight_Gsf",&HLT_Ele32_WPTight_Gsf_);
 	
-	// chain->SetBranchStatus("HLT_Ele35_WPTight_Gsf",1);
-	// chain->SetBranchAddress("HLT_Ele35_WPTight_Gsf",&HLT_Ele35_WPTight_Gsf_);
+	chain->SetBranchStatus("HLT_Ele35_WPTight_Gsf",1);
+	chain->SetBranchAddress("HLT_Ele35_WPTight_Gsf",&HLT_Ele35_WPTight_Gsf_);
 	
-	// chain->SetBranchStatus("HLT_Ele115_CaloIdVT_GsfTrkIdT",1);
-	// chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
+	chain->SetBranchStatus("HLT_Ele115_CaloIdVT_GsfTrkIdT",1);
+	chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
 	
-	// chain->SetBranchStatus("HLT_Photon200",1);
-	// chain->SetBranchAddress("HLT_Photon200",&HLT_Photon200_);
+	chain->SetBranchStatus("HLT_Photon200",1);
+	chain->SetBranchAddress("HLT_Photon200",&HLT_Photon200_);
 
 	chain->SetBranchStatus("HLT_IsoMu24",1);
 	chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
@@ -523,6 +550,15 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
 	chain->SetBranchStatus("HLT_IsoMu27",1);
 	chain->SetBranchAddress("HLT_IsoMu27",&HLT_IsoMu27_);
 
+	chain->SetBranchStatus("HLT_Mu50",1);
+	chain->SetBranchAddress("HLT_Mu50",&HLT_Mu50_);
+	
+	chain->SetBranchStatus("HLT_TkMu100",1);
+	chain->SetBranchAddress("HLT_TkMu100",&HLT_TkMu100_);
+
+	chain->SetBranchStatus("HLT_OldMu100",1);
+	chain->SetBranchAddress("HLT_OldMu100",&HLT_OldMu100_);
+	
 	chain->SetBranchAddress("L1_SingleEG24",&L1_SingleEG24_);
 	chain->SetBranchAddress("L1_SingleEG26",&L1_SingleEG26_);
 	chain->SetBranchAddress("L1_SingleEG30",&L1_SingleEG30_);
@@ -561,8 +597,8 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
 	chain->SetBranchStatus("HLT_Ele32_WPTight_Gsf",1);
 	chain->SetBranchAddress("HLT_Ele32_WPTight_Gsf",&HLT_Ele32_WPTight_Gsf_);
 
-	// chain->SetBranchStatus("HLT_Ele35_WPTight_Gsf",1);
-	// chain->SetBranchAddress("HLT_Ele35_WPTight_Gsf",&HLT_Ele35_WPTight_Gsf_);
+	chain->SetBranchStatus("HLT_Ele35_WPTight_Gsf",1);
+	chain->SetBranchAddress("HLT_Ele35_WPTight_Gsf",&HLT_Ele35_WPTight_Gsf_);
 
 	// chain->SetBranchStatus("HLT_Ele38_WPTight_Gsf",1);
 	// chain->SetBranchAddress("HLT_Ele38_WPTight_Gsf",&HLT_Ele38_WPTight_Gsf_);
@@ -570,18 +606,26 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
 	// chain->SetBranchStatus("HLT_Ele32_WPTight_Gsf_L1DoubleEG",1);
 	// chain->SetBranchAddress("HLT_Ele32_WPTight_Gsf_L1DoubleEG",&HLT_Ele32_WPTight_Gsf_L1DoubleEG_);
 
-	// chain->SetBranchStatus("HLT_Ele115_CaloIdVT_GsfTrkIdT",1);
-	// chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
+	chain->SetBranchStatus("HLT_Ele115_CaloIdVT_GsfTrkIdT",1);
+	chain->SetBranchAddress("HLT_Ele115_CaloIdVT_GsfTrkIdT",&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
 	
 	// chain->SetBranchStatus("HLT_DoubleEle25_CaloIdL_MW",1);
 	// chain->SetBranchAddress("HLT_DoubleEle25_CaloIdL_MW",&HLT_DoubleEle25_CaloIdL_MW_);
 
-	// chain->SetBranchStatus("HLT_Photon200",1);
-	// chain->SetBranchAddress("HLT_Photon200",&HLT_Photon200_);
+	chain->SetBranchStatus("HLT_Photon200",1);
+	chain->SetBranchAddress("HLT_Photon200",&HLT_Photon200_);
 
 	chain->SetBranchStatus("HLT_IsoMu24",1);
 	chain->SetBranchAddress("HLT_IsoMu24",&HLT_IsoMu24_);
 
+	chain->SetBranchStatus("HLT_Mu50",1);
+	chain->SetBranchAddress("HLT_Mu50",&HLT_Mu50_);
+	
+	chain->SetBranchStatus("HLT_TkMu100",1);
+	chain->SetBranchAddress("HLT_TkMu100",&HLT_TkMu100_);
+
+	chain->SetBranchStatus("HLT_OldMu100",1);
+	chain->SetBranchAddress("HLT_OldMu100",&HLT_OldMu100_);
     }	
 
     chain->SetBranchStatus("fixedGridRhoFastjetAll",1);

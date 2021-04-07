@@ -62,6 +62,10 @@ class EventTree{
     Int_t     GenPart_pdgId_[300];
     Int_t     GenPart_status_[300];
     Int_t     GenPart_statusFlags_[300];
+
+    UInt_t    nLHEPart_;
+    Float_t   LHEPart_pt_[300];
+    Int_t     LHEPart_pdgId_[300];
     
     
     UInt_t    nGenJet_;
@@ -92,10 +96,14 @@ class EventTree{
     Float_t         eleMass_[20];
     Float_t         elePFRelIso_[20];
     Float_t         elePFRelChIso_[20];
+    Float_t         eleMiniIso_[20];
     Int_t           eleIDcutbased_[20];
     Float_t         eleD0_[20];
     Float_t         eleDz_[20];
     Float_t         eleSIEIE_[20];
+
+    Bool_t          eleMVAFall17V2noIso_WPL_[20];
+    Bool_t          eleMVAFall17V2noIso_WP90_[20];
 
     Int_t           eleVidWPBitmap_[20];
     Float_t         eleEcalSumEtDr03_[20];
@@ -143,6 +151,7 @@ class EventTree{
     Int_t           muCharge_[15];
     Float_t         muMass_[15];
     Float_t         muPFRelIso_[15];
+    Float_t         muMiniIso_[15];
     Bool_t          muMediumId_[15];
     Bool_t          muTightId_[15];
     Bool_t          muIsPFMuon_[15];
@@ -200,6 +209,10 @@ class EventTree{
     Bool_t   HLT_Ele32_WPTight_Gsf_L1DoubleEG_;
     Bool_t   HLT_IsoMu24_eta2p1_;
     Bool_t   HLT_IsoMu27_;
+    Bool_t   HLT_Mu50_;
+    Bool_t   HLT_TkMu50_;
+    Bool_t   HLT_TkMu100_;
+    Bool_t   HLT_OldMu100_;
 
     Bool_t   HLT_Ele105_CaloIdVT_GsfTrkIdT_;
     Bool_t   HLT_Ele115_CaloIdVT_GsfTrkIdT_;

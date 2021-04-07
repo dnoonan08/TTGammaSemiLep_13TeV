@@ -45,6 +45,7 @@ EventPick::EventPick(std::string titleIn){
 
     MET_cut = 0.0;
     no_trigger = false;
+    nonIso_trigger = true;
 
     skimEle = false;
     skimMu = false;
@@ -87,6 +88,10 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
     if (year=="2016") {
 	Pass_trigger_mu = (tree->HLT_IsoMu24_ || tree->HLT_IsoTkMu24_  ) || no_trigger;
 	Pass_trigger_ele = tree->HLT_Ele27_WPTight_Gsf_ || no_trigger;
+        if (nonIso_trigger){
+            Pass_trigger_mu = (tree->HLT_Mu50_ || tree->HLT_TkMu50_  ) || no_trigger;
+            Pass_trigger_ele = tree->HLT_Ele27_WPTight_Gsf_ || tree->HLT_Ele115_CaloIdVT_GsfTrkIdT_ || tree->HLT_Photon175_ || no_trigger;
+        }
     }
     if (year=="2017"){
 	Pass_trigger_mu = (tree->HLT_IsoMu27_) || no_trigger;
@@ -123,10 +128,18 @@ void EventPick::process_event(EventTree* tree, Selector* selector, double weight
 	
 	Pass_trigger_ele = (tree->HLT_Ele32_WPTight_Gsf_L1DoubleEG_ && allSingleEGL1or) || no_trigger;
 
+        if (nonIso_trigger){
+            Pass_trigger_mu = (tree->HLT_Mu50_ || tree->HLT_TkMu100_ || tree-> HLT_OldMu100_) || no_trigger;
+            Pass_trigger_ele = tree->HLT_Ele35_WPTight_Gsf_ || tree->HLT_Ele115_CaloIdVT_GsfTrkIdT_ || tree->HLT_Photon200_ || no_trigger;
+        }
     }
     if (year=="2018"){
 	Pass_trigger_mu = (tree->HLT_IsoMu24_) || no_trigger;
 	Pass_trigger_ele = tree->HLT_Ele32_WPTight_Gsf_ || no_trigger;
+        if (nonIso_trigger){
+            Pass_trigger_mu = (tree->HLT_Mu50_ || tree->HLT_TkMu100_ || tree-> HLT_OldMu100_) || no_trigger;
+            Pass_trigger_ele = tree->HLT_Ele35_WPTight_Gsf_ || tree->HLT_Ele115_CaloIdVT_GsfTrkIdT_ || tree->HLT_Photon200_ || no_trigger;
+        }
     }
 
     bool filters = (tree->Flag_goodVertices_ &&
