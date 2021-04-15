@@ -10,21 +10,24 @@ double TopEventCombinatorics::topChiSq(TLorentzVector j1, double sigma_j1,
 
     met.SetXYZM(met.Px(), met.Py(), nu_pz_hypo, 0);
 
-    double sigma2_tHad = sigma_j1*sigma_j1 + sigma_j2*sigma_j2 + sigma_bh*sigma_bh;
-    double sigma2_WHad = sigma_j1*sigma_j1 + sigma_j2*sigma_j2;
-    double sigma2_tLep = sigma_bl*sigma_bl + METRes*METRes + leptonRes*leptonRes;
+    double sigma2_tHad = 34.0*34.0;
+    double sigma2_WHad = 24.0*24.0;
+    double sigma2_tLep = 30.0*30.0;
+    // double sigma2_tHad = sigma_j1*sigma_j1 + sigma_j2*sigma_j2 + sigma_bh*sigma_bh;
+    // double sigma2_WHad = sigma_j1*sigma_j1 + sigma_j2*sigma_j2;
+    // double sigma2_tLep = sigma_bl*sigma_bl + METRes*METRes + leptonRes*leptonRes;
     // double sigma2_tLep = sigma_bl*sigma_bl + pow(met.Pt()*METRes,2) + pow(lepton.Pt()*leptonRes,2);
 
-    if (!useResolutions){
-	sigma2_tHad = 1.;
-	sigma2_WHad = 1.;
-	sigma2_tLep = 1.;
-    }
+    // if (!useResolutions){
+    //     sigma2_tHad = 1.;
+    //     sigma2_WHad = 1.;
+    //     sigma2_tLep = 1.;
+    // }
     double tHadM = (bh + j1 + j2).M();
     double WHadM = (j1 + j2).M();
     double tLepM = (bl + lepton + met).M();
     
-    double c = pow( tHadM - mTop,2)/(sigma2_tHad*tHadM*tHadM) + pow( WHadM - mW,2)/(sigma2_WHad*WHadM*WHadM) + pow( tLepM - mTop,2)/(sigma2_tLep*tLepM*tLepM);
+    double c = pow( tHadM - mTop,2)/(sigma2_tHad) + pow( WHadM - mW,2)/(sigma2_WHad) + pow( tLepM - mTop,2)/(sigma2_tLep);
 
     return c;
 }
@@ -161,25 +164,16 @@ int TopEventCombinatorics::CalculateTstarGluGlu(int N){
     int nJets = jets.size();
     if (N>0) nJets = std::min(nJets,N);
 
-    bJetsList.clear();
     nu_pz_List.clear();
 
-    // If no bjet size declared, consider all jets as a possibility
-    // Otherwise, take the btagged jets, if not enough btagged jets use the leading jets to fill the list
-    if (nBjetSize==-1){
-	for (unsigned int i =0; i < nJets; i++) bJetsList.push_back(i);
-    } else {
-	for (unsigned int i =0; i < nJets; i++){
-	    if (btag[i] > btagThresh) bJetsList.push_back(i);
-	}
-	if (bJetsList.size() < nBjetSize){
-	    for (unsigned int i =0; i < nJets; i++){
-		if (std::find(bJetsList.begin(), bJetsList.end(), i) == bJetsList.end()){
-		    bJetsList.push_back(i);
-		}
-		if (bJetsList.size()==nBjetSize) break;
-	    }
-	}
+    // count the number of btags in the leading N jets
+    int nBtags = 0;
+    for (unsigned int i =0; i < nJets; i++){
+        if (btag[i] > btagThresh) nBtags += 1;
+    }
+    // if more than 2 btags, set at 2
+    if (nBtags>2){
+        nBtags = 2;
     }
 
     double _nu_pz_1 = metZ.Calculate();
@@ -191,9 +185,16 @@ int TopEventCombinatorics::CalculateTstarGluGlu(int N){
     chi2_TstarGluGlu = 9.e9;
     double comboChi2 = 9.e9;
 
-    for (const auto& i_bhad : bJetsList){
-	for (const auto& i_blep : bJetsList){
+    for (unsigned int i_bhad=0; i_bhad<nJets; i_bhad++){
+        int bcandHad_tag = 0;
+        if (btag[i_bhad]>btagThresh) bcandHad_tag = 1;
+        for (unsigned int i_blep=0; i_blep<nJets; i_blep++){
 	    if (i_bhad==i_blep) continue;
+            int bcandLep_tag = 0;
+            if (btag[i_blep]>btagThresh) bcandLep_tag = 1;
+
+            // skip combinations which haven't used all of the btagged jets as b-candidates
+            if ((bcandHad_tag + bcandLep_tag) != nBtags) continue;
 
 	    for (unsigned int i_j1=0; i_j1<nJets; i_j1++){
 		if (i_bhad==i_j1 || i_blep==i_j1) continue; //skip if i_j1 is already used as a bjet
@@ -251,6 +252,7 @@ int TopEventCombinatorics::CalculateTstarGluGamma(int N){
     }
 
     int nJets = jets.size();
+
     if (N>0) nJets = std::min(nJets,N);
 
     nu_pz_List.clear();

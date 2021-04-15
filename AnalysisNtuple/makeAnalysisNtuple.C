@@ -207,11 +207,14 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     }
 
     selector = new Selector();
-    
+
     evtPick = new EventPick("");
     
     selector->year = year;
     evtPick->year = year;
+
+    selector->mu_Eta_tight = 2.1;
+    evtPick->MET_cut = 30.;
     
     selector->printEvent = eventNum;
     evtPick->printEvent = eventNum;

@@ -87,10 +87,10 @@ class TopEventCombinatorics{
     }
 
     int Calculate();
+
     int CalculateTstarGluGlu(int N=-1);
     int CalculateTstarGluGamma(int N=-1);
     int CalculateTstarGluGamma_Boosted(int N=-1);
-
 
 
  private:
