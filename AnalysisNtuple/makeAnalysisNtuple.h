@@ -434,19 +434,26 @@ class makeAnalysisNtuple {
 	
     Int_t                _nJet;
     Int_t                _nBJet;
-    Int_t                _nFatJet;
     std::vector<float>   _jetPt;
     std::vector<float>   _jetEta;
     std::vector<float>   _jetPhi;
     std::vector<float>   _jetMass;
     std::vector<float>   _jetRes;
 
-    std::vector<float>   _jetCMVA;
-    std::vector<float>   _jetCSVV2;
     std::vector<float>   _jetDeepB;
-    std::vector<float>   _jetDeepC;
 
     std::vector<Int_t>   _jetGenJetIdx;
+
+
+    Int_t                _nFatJet;
+    std::vector<float>   _fatJetPt;
+    std::vector<float>   _fatJetEta;
+    std::vector<float>   _fatJetPhi;
+    std::vector<float>   _fatJetMass;
+    std::vector<float>   _fatJetMassSoftDrop;
+    std::vector<float>   _fatJetDeepB;
+    std::vector<float>   _fatJetDeepAK8;
+
 
     /* std::vector<int>     _jetPartonID; */
     /* std::vector<float>   _jetGenJetPt; */
@@ -871,16 +878,19 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("jetPhi"                      , &_jetPhi                     ); 
     outputTree->Branch("jetMass"                     , &_jetMass                    );
     outputTree->Branch("jetRes"                      , &_jetRes                     );
-    /* outputTree->Branch("jetRawPt"                    , &_jetRawPt                   );  */
-    /* outputTree->Branch("jetArea"                     , &_jetArea                    );  */
+    outputTree->Branch("jetDeepB"                    , &_jetDeepB                   );
     if (!isSystematicRun){
-	/* outputTree->Branch("jetCMVA"  , &_jetCMVA ); */
-	/* outputTree->Branch("jetCSVV2"  , &_jetCSVV2 ); */
-	outputTree->Branch("jetDeepB"  , &_jetDeepB );
-	/* outputTree->Branch("jetDeepC"  , &_jetDeepC ); */
-
 	outputTree->Branch("jetGenJetIdx"  , &_jetGenJetIdx );
     }
+
+    outputTree->Branch("nFatJet"                        , &_nFatJet                       ); 
+    outputTree->Branch("fatJetPt"                       , &_fatJetPt                      );
+    outputTree->Branch("fatJetEta"                      , &_fatJetEta                     ); 
+    outputTree->Branch("fatJetPhi"                      , &_fatJetPhi                     ); 
+    outputTree->Branch("fatJetMass"                     , &_fatJetMass                    );
+    outputTree->Branch("fatJetMassSoftDrop"             , &_fatJetMassSoftDrop            );
+    outputTree->Branch("fatJetDeepB"                    , &_fatJetDeepB                   );
+    outputTree->Branch("fatJetDeepAK8"                  , &_fatJetDeepAK8                 );
 	
     /* if (!tree->isData_){ */
     /* 	outputTree->Branch("jetPartonID"                 , &_jetPartonID                );  */
@@ -897,7 +907,6 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("fwdJetPhi"                      , &_fwdJetPhi                     );
     outputTree->Branch("fwdJetMass"                     , &_fwdJetMass                    );
 
-    outputTree->Branch("nFatJet"                        , &_nFatJet                       ); 
 
     outputTree->Branch("dRPhotonJet"                 , &_dRPhotonJet                );
     outputTree->Branch("dRPhotonLepton"              , &_dRPhotonLepton             );
@@ -1246,14 +1255,18 @@ void makeAnalysisNtuple::InitVariables()
     _jetPhi.clear();
     _jetMass.clear();
     _jetRes.clear();
-    /* _jetRawPt.clear(); */
-    /* _jetArea.clear(); */
-    _jetCMVA.clear();
-    _jetCSVV2.clear();
     _jetDeepB.clear();
-    _jetDeepC.clear();
 
     _jetGenJetIdx.clear();
+
+
+    _fatJetPt.clear();
+    _fatJetEta.clear();
+    _fatJetPhi.clear();
+    _fatJetMass.clear();
+    _fatJetMassSoftDrop.clear();
+    _fatJetDeepB.clear();
+    _fatJetDeepAK8.clear();
 
     _fwdJetPt.clear();
     _fwdJetEta.clear();

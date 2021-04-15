@@ -106,9 +106,6 @@ class EventTree{
     Bool_t          eleMVAFall17V2noIso_WP90_[20];
 
     Int_t           eleVidWPBitmap_[20];
-    Float_t         eleEcalSumEtDr03_[20];
-    Float_t         eleHcalSumEtDr03_[20];
-    Float_t         eleTrkSumPtDr03_[20];
 
     Int_t           elePhoIdx_[20];
 
@@ -170,11 +167,7 @@ class EventTree{
     Float_t         jetRawFactor_[200];
     Int_t           jetID_[200];
     Float_t         jetArea_[200];
-    Float_t         jetBtagCMVA_[200];
-    Float_t         jetBtagCSVV2_[200];
     Float_t         jetBtagDeepB_[200];
-    Float_t         jetBtagDeepC_[200];
-    Float_t         jetBtagDeepFlavB_[200];
     Float_t         jetchEmEF_[200];
     Float_t         jetneEmEF_[200];
     Int_t           jetHadFlvr_[200];

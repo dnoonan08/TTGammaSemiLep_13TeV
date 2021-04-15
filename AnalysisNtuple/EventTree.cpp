@@ -152,20 +152,11 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("Electron_sieie",1);
     chain->SetBranchAddress("Electron_sieie", &eleSIEIE_);
 	
-    if (year=="2016"){
-	chain->SetBranchStatus("Electron_cutBased",1); 
-	chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
+    chain->SetBranchStatus("Electron_cutBased",1);
+    chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
 
-	chain->SetBranchStatus("Electron_vidNestedWPBitmap",1);
-	chain->SetBranchAddress("Electron_vidNestedWPBitmap", &eleVidWPBitmap_);
-    }
-    if (year=="2017" || year=="2018"){
-	chain->SetBranchStatus("Electron_cutBased",1);
-	chain->SetBranchAddress("Electron_cutBased", &eleIDcutbased_);
-
-	chain->SetBranchStatus("Electron_vidNestedWPBitmap",1);
-	chain->SetBranchAddress("Electron_vidNestedWPBitmap", &eleVidWPBitmap_);
-    }
+    chain->SetBranchStatus("Electron_vidNestedWPBitmap",1);
+    chain->SetBranchAddress("Electron_vidNestedWPBitmap", &eleVidWPBitmap_);
 
     chain->SetBranchStatus("Electron_dxy",1);
     chain->SetBranchAddress("Electron_dxy", &eleD0_);
@@ -173,21 +164,8 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("Electron_dz",1);
     chain->SetBranchAddress("Electron_dz", &eleDz_);
 
-    
-    // chain->SetBranchStatus("Electron_dr03EcalRecHitSumEt",1);
-    // chain->SetBranchAddress("Electron_dr03EcalRecHitSumEt", &eleEcalSumEtDr03_);
-
-    // chain->SetBranchStatus("Electron_dr03HcalDepth1TowerSumEt",1);
-    // chain->SetBranchAddress("Electron_dr03HcalDepth1TowerSumEt", &eleHcalSumEtDr03_);
-
-    // chain->SetBranchStatus("Electron_dr03TkSumPt",1);
-    // chain->SetBranchAddress("Electron_dr03TkSumPt", &eleTrkSumPtDr03_);
-
     chain->SetBranchStatus("Electron_photonIdx",1);
     chain->SetBranchAddress("Electron_photonIdx", &elePhoIdx_);
-
-
-
 
         
 
@@ -260,26 +238,14 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("Jet_area",1);
     chain->SetBranchAddress("Jet_area", &jetArea_);
 
-    // chain->SetBranchStatus("Jet_btagCMVA",1);
-    // chain->SetBranchAddress("Jet_btagCMVA", &jetBtagCMVA_);
-
-    // chain->SetBranchStatus("Jet_btagCSVV2",1);
-    // chain->SetBranchAddress("Jet_btagCSVV2", &jetBtagCSVV2_);
-
     chain->SetBranchStatus("Jet_btagDeepB",1);
     chain->SetBranchAddress("Jet_btagDeepB", &jetBtagDeepB_);
 
-    // chain->SetBranchStatus("Jet_btagDeepC",1);
-    // chain->SetBranchAddress("Jet_btagDeepC", &jetBtagDeepC_);
+    chain->SetBranchStatus("Jet_chEmEF",1);
+    chain->SetBranchAddress("Jet_chEmEF", &jetchEmEF_);
 
-    // chain->SetBranchStatus("Jet_btagDeepFlavB",1);
-    // chain->SetBranchAddress("Jet_btagDeepFlavB", &jetBtagDeepFlavB_);
-
-    // chain->SetBranchStatus("Jet_chEmEF",1);
-    // chain->SetBranchAddress("Jet_chEmEF", &jetchEmEF_);
-
-    // chain->SetBranchStatus("Jet_neEmEF",1);
-    // chain->SetBranchAddress("Jet_neEmEF", &jetneEmEF_);
+    chain->SetBranchStatus("Jet_neEmEF",1);
+    chain->SetBranchAddress("Jet_neEmEF", &jetneEmEF_);
 
     if (!isData_){
 	chain->SetBranchStatus("Jet_hadronFlavour",1);
@@ -311,21 +277,15 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("FatJet_jetId",1);
     chain->SetBranchAddress("FatJet_jetId", &fatJetID_);
 
-    // chain->SetBranchStatus("FatJet_btagDeepB",1);
-    // chain->SetBranchAddress("FatJet_btagDeepB", &fatJetBtagDeepB_);
+    chain->SetBranchStatus("FatJet_btagDeepB",1);
+    chain->SetBranchAddress("FatJet_btagDeepB", &fatJetBtagDeepB_);
 
-    // chain->SetBranchStatus("FatJet_deepTagMD_TvsQCD",1);
-    // chain->SetBranchAddress("FatJet_deepTagMD_TvsQCD", &fatJetDeepTagMDT_);
-
-    // chain->SetBranchStatus("FatJet_deepTagMD_WvsQCD",1);
-    // chain->SetBranchAddress("FatJet_deepTagMD_WvsQCD", &fatJetDeepTagMDW_);
+    chain->SetBranchStatus("FatJet_deepTagMD_TvsQCD",1);
+    chain->SetBranchAddress("FatJet_deepTagMD_TvsQCD", &fatJetDeepTagMDT_);
 
     chain->SetBranchStatus("FatJet_deepTag_TvsQCD",1);
     chain->SetBranchAddress("FatJet_deepTag_TvsQCD", &fatJetDeepTagT_);
 
-    // chain->SetBranchStatus("FatJet_deepTag_WvsQCD",1);
-    // chain->SetBranchAddress("FatJet_deepTag_WvsQCD", &fatJetDeepTagW_);
-    
     // chain->SetBranchStatus("FatJet_hadronFlavour",1);
     // chain->SetBranchAddress("FatJet_hadronFlavour", &fatJetHadFlvr_);
 
@@ -360,14 +320,17 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("Photon_isScEtaEE",1);
     chain->SetBranchAddress("Photon_isScEtaEE", &phoIsEE_);
 
-    if (year=="2016"){
-	chain->SetBranchStatus("Photon_cutBased",1);
-	chain->SetBranchAddress("Photon_cutBased", &phoIDcutbased_);
-    }
-    if (year=="2017" || year=="2018"){
-	chain->SetBranchStatus("Photon_cutBasedBitmap",1);
-	chain->SetBranchAddress("Photon_cutBasedBitmap", &phoIDcutbased_);
-    }
+    chain->SetBranchStatus("Photon_cutBased",1);
+    chain->SetBranchAddress("Photon_cutBased", &phoIDcutbased_);
+
+    // if (year=="2016"){
+    //     chain->SetBranchStatus("Photon_cutBased",1);
+    //     chain->SetBranchAddress("Photon_cutBased", &phoIDcutbased_);
+    // }
+    // if (year=="2017" || year=="2018"){
+    //     chain->SetBranchStatus("Photon_cutBasedBitmap",1);
+    //     chain->SetBranchAddress("Photon_cutBasedBitmap", &phoIDcutbased_);
+    // }
 	
 
     chain->SetBranchStatus("Photon_pfRelIso03_all",1);
@@ -398,17 +361,17 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("Photon_electronVeto",1);
     chain->SetBranchAddress("Photon_electronVeto", &phoEleVeto_);
 	
-    chain->SetBranchStatus("Photon_mvaID",1);
-    chain->SetBranchAddress("Photon_mvaID", &phoMVAId_);
+    // chain->SetBranchStatus("Photon_mvaID",1);
+    // chain->SetBranchAddress("Photon_mvaID", &phoMVAId_);
 
-    if (year=="2016"){
-	chain->SetBranchStatus("Photon_mvaID17",1);
-	chain->SetBranchAddress("Photon_mvaID17", &phoMVAId17V1_);
-    }
-    if (year=="2017" || year=="2018"){
-	chain->SetBranchStatus("Photon_mvaIDV1",1);
-	chain->SetBranchAddress("Photon_mvaIDV1", &phoMVAId17V1_);
-    }
+    // if (year=="2016"){
+    //     chain->SetBranchStatus("Photon_mvaID17",1);
+    //     chain->SetBranchAddress("Photon_mvaID17", &phoMVAId17V1_);
+    // }
+    // if (year=="2017" || year=="2018"){
+    //     chain->SetBranchStatus("Photon_mvaIDV1",1);
+    //     chain->SetBranchAddress("Photon_mvaIDV1", &phoMVAId17V1_);
+    // }
     
 
     // Gen Partons

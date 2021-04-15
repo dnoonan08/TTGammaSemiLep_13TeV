@@ -662,21 +662,12 @@ void Selector::filter_jets(){
         if( jetPresel){
             Jets.push_back(jetInd);
 	    jet_resolution.push_back(resolution);
-            if (!useDeepCSVbTag){
-                if( tree->jetBtagCSVV2_[jetInd] > btag_cut){
-		    bJets.push_back(jetInd);
-		    jet_isTagged.push_back(true);
-		} else {
-		    jet_isTagged.push_back(false);
-		}
+            if( tree->jetBtagDeepB_[jetInd] > btag_cut_DeepCSV){
+                bJets.push_back(jetInd);
+                jet_isTagged.push_back(true);
             } else {
-                if( tree->jetBtagDeepB_[jetInd] > btag_cut_DeepCSV){
-		    bJets.push_back(jetInd);
-		    jet_isTagged.push_back(true);
-		} else {
-		    jet_isTagged.push_back(false);
-		}
-            }				
+                jet_isTagged.push_back(false);
+            }
         }
     }
     
@@ -719,15 +710,34 @@ void Selector::filter_fatjets(){
 	    if (dR(eta, phi, tree->phoEta_[*phoInd], tree->phoPhi_[*phoInd]) < veto_pho_jet_dR) passDR_pho_jet = false;
 	}
 
+	int jetID_cutBit = 1;
+	if (year=="2016"){ jetID_cutBit = 0; }
+        bool jetID_pass = ((tree->fatJetID_[jetInd] >> jetID_cutBit) & 1) == 1;
+
         bool jetPresel = (pt >= ak8jet_Pt_cut &&
                           TMath::Abs(eta) <= ak8jet_Eta_cut && 
-                          (tree->fatJetID_[jetInd]&1)==1 &&
+                          jetID_pass &
                           passDR_pho_jet && 
                           passDR_lep_jet && 
                           softDropMass >= 105 &&
                           softDropMass <= 210 && 
                           topTag >= topTagWP
                           );
+
+	if (tree->event_==printEvent){
+	    cout << "   pt=" << pt << "  eta=" << eta << " phi=" << phi << "  jetID=" << jetID_pass << endl;
+	    cout << "         presel=" << jetPresel << endl;
+	    cout << "              pt=" << (pt >= ak8jet_Pt_cut) <<endl;
+	    cout << "              eta=" << (TMath::Abs(eta) <= ak8jet_Eta_cut) <<endl;
+	    cout << "              jetID=" << jetID_pass <<endl;
+	    cout << "              dRLep=" << passDR_lep_jet <<endl;
+	    cout << "              dRPho=" << passDR_pho_jet << endl;
+	    cout << "              softDrop=" << (softDropMass >= 105 && softDropMass <=210) << endl;
+	    cout << "              topTag="<<(topTag >= topTagWP) << endl;
+
+	}
+
+
         if (jetPresel){
             FatJets.push_back(jetInd);
         }

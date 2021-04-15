@@ -1559,10 +1559,7 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 	_jetPhi.push_back(tree->jetPhi_[jetInd]);
 	_jetMass.push_back(tree->jetMass_[jetInd]);
 
-	_jetCMVA.push_back(tree->jetBtagCMVA_[jetInd]);
-	_jetCSVV2.push_back(tree->jetBtagCSVV2_[jetInd]);
 	_jetDeepB.push_back(tree->jetBtagDeepB_[jetInd]);
-	_jetDeepC.push_back(tree->jetBtagDeepC_[jetInd]);
 	
 	jetVector.SetPtEtaPhiM(tree->jetPt_[jetInd], tree->jetEta_[jetInd], tree->jetPhi_[jetInd], tree->jetMass_[jetInd]);
 	
@@ -1588,6 +1585,16 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 
     for (int i_fatjet = 0; i_fatjet <_nFatJet; i_fatjet++){
         int fatjetInd = selector->FatJets.at(i_fatjet);
+
+	_fatJetPt.push_back(tree->fatJetPt_[fatjetInd]);
+	_fatJetEta.push_back(tree->fatJetEta_[fatjetInd]);
+	_fatJetPhi.push_back(tree->fatJetPhi_[fatjetInd]);
+	_fatJetMass.push_back(tree->fatJetMass_[fatjetInd]);
+	_fatJetMassSoftDrop.push_back(tree->fatJetMassSoftDrop_[fatjetInd]);
+
+	_fatJetDeepB.push_back(tree->fatJetBtagDeepB_[fatjetInd]);
+	_fatJetDeepAK8.push_back(tree->fatJetDeepTagT_[fatjetInd]);
+
         fatjetVector.SetPtEtaPhiM(tree->fatJetPt_[fatjetInd], tree->fatJetEta_[fatjetInd], tree->fatJetPhi_[fatjetInd], tree->fatJetMass_[fatjetInd]);
         ak8jetVectors.push_back(fatjetVector);
     }
