@@ -233,6 +233,7 @@ class makeAnalysisNtuple {
     Float_t         _TstarGluGamma_TstarLep_phi;
     Float_t         _TstarGluGamma_TstarLep_mass;
     Float_t         _TstarGluGamma_Tstar_mass;
+    Float_t         _TstarGluGamma_gluon_pt;
     Float_t         _TstarGluGamma_TopHad_pt;
     Float_t         _TstarGluGamma_TopHad_eta;
     Float_t         _TstarGluGamma_TopHad_phi;
@@ -244,16 +245,16 @@ class makeAnalysisNtuple {
     Float_t         _TstarGluGamma_TopLep_charge;
     Float_t         _TstarGluGamma_chi2;
 
-    Float_t         _TstarGluGamma_Boosted_TstarHad_pt;
-    Float_t         _TstarGluGamma_Boosted_TstarHad_eta;
-    Float_t         _TstarGluGamma_Boosted_TstarHad_phi;
-    Float_t         _TstarGluGamma_Boosted_TstarHad_mass;
-    Float_t         _TstarGluGamma_Boosted_TstarLep_pt;
-    Float_t         _TstarGluGamma_Boosted_TstarLep_eta;
-    Float_t         _TstarGluGamma_Boosted_TstarLep_phi;
-    Float_t         _TstarGluGamma_Boosted_TstarLep_mass;
-    Float_t         _TstarGluGamma_Boosted_Tstar_mass;
-    Float_t         _TstarGluGamma_Boosted_chi2;
+    /* Float_t         _TstarGluGamma_Boosted_TstarHad_pt; */
+    /* Float_t         _TstarGluGamma_Boosted_TstarHad_eta; */
+    /* Float_t         _TstarGluGamma_Boosted_TstarHad_phi; */
+    /* Float_t         _TstarGluGamma_Boosted_TstarHad_mass; */
+    /* Float_t         _TstarGluGamma_Boosted_TstarLep_pt; */
+    /* Float_t         _TstarGluGamma_Boosted_TstarLep_eta; */
+    /* Float_t         _TstarGluGamma_Boosted_TstarLep_phi; */
+    /* Float_t         _TstarGluGamma_Boosted_TstarLep_mass; */
+    /* Float_t         _TstarGluGamma_Boosted_Tstar_mass; */
+    /* Float_t         _TstarGluGamma_Boosted_chi2; */
 
     Bool_t          _MassCuts;
 
@@ -528,6 +529,7 @@ class makeAnalysisNtuple {
     std::vector<double> jetResolutionVectors;
     std::vector<double> jetBtagVectors;
 
+    TLorentzVector topHad;
     TLorentzVector bhad;
     TLorentzVector blep;
     TLorentzVector Wj1;
@@ -751,6 +753,8 @@ void makeAnalysisNtuple::InitBranches(){
     outputTree->Branch("TstarGluGamma_TstarLep_mass"                , &_TstarGluGamma_TstarLep_mass                 );
     outputTree->Branch("TstarGluGamma_Tstar_mass"                   , &_TstarGluGamma_Tstar_mass                    );
 
+    outputTree->Branch("TstarGluGamma_gluon_pt"                     , &_TstarGluGamma_gluon_pt                      );
+
     outputTree->Branch("TstarGluGamma_chi2"                       , &_TstarGluGamma_chi2               );
 
     /* outputTree->Branch("TstarGluGamma_TopHad_pt"                  , &_TstarGluGamma_TopHad_pt                   ); */
@@ -766,16 +770,16 @@ void makeAnalysisNtuple::InitBranches(){
 
 
 
-    outputTree->Branch("TstarGluGamma_Boosted_TstarHad_pt"                  , &_TstarGluGamma_Boosted_TstarHad_pt                   );
-    outputTree->Branch("TstarGluGamma_Boosted_TstarHad_eta"                 , &_TstarGluGamma_Boosted_TstarHad_eta                  );
-    outputTree->Branch("TstarGluGamma_Boosted_TstarHad_phi"                 , &_TstarGluGamma_Boosted_TstarHad_phi                  );
-    outputTree->Branch("TstarGluGamma_Boosted_TstarHad_mass"                , &_TstarGluGamma_Boosted_TstarHad_mass                 );
-    outputTree->Branch("TstarGluGamma_Boosted_TstarLep_pt"                  , &_TstarGluGamma_Boosted_TstarLep_pt                   );
-    outputTree->Branch("TstarGluGamma_Boosted_TstarLep_eta"                 , &_TstarGluGamma_Boosted_TstarLep_eta                  );
-    outputTree->Branch("TstarGluGamma_Boosted_TstarLep_phi"                 , &_TstarGluGamma_Boosted_TstarLep_phi                  );
-    outputTree->Branch("TstarGluGamma_Boosted_TstarLep_mass"                , &_TstarGluGamma_Boosted_TstarLep_mass                 );
-    outputTree->Branch("TstarGluGamma_Boosted_Tstar_mass"                   , &_TstarGluGamma_Boosted_Tstar_mass                    );
-    outputTree->Branch("TstarGluGamma_Boosted_chi2"                       , &_TstarGluGamma_Boosted_chi2               );
+    /* outputTree->Branch("TstarGluGamma_Boosted_TstarHad_pt"                  , &_TstarGluGamma_Boosted_TstarHad_pt                   ); */
+    /* outputTree->Branch("TstarGluGamma_Boosted_TstarHad_eta"                 , &_TstarGluGamma_Boosted_TstarHad_eta                  ); */
+    /* outputTree->Branch("TstarGluGamma_Boosted_TstarHad_phi"                 , &_TstarGluGamma_Boosted_TstarHad_phi                  ); */
+    /* outputTree->Branch("TstarGluGamma_Boosted_TstarHad_mass"                , &_TstarGluGamma_Boosted_TstarHad_mass                 ); */
+    /* outputTree->Branch("TstarGluGamma_Boosted_TstarLep_pt"                  , &_TstarGluGamma_Boosted_TstarLep_pt                   ); */
+    /* outputTree->Branch("TstarGluGamma_Boosted_TstarLep_eta"                 , &_TstarGluGamma_Boosted_TstarLep_eta                  ); */
+    /* outputTree->Branch("TstarGluGamma_Boosted_TstarLep_phi"                 , &_TstarGluGamma_Boosted_TstarLep_phi                  ); */
+    /* outputTree->Branch("TstarGluGamma_Boosted_TstarLep_mass"                , &_TstarGluGamma_Boosted_TstarLep_mass                 ); */
+    /* outputTree->Branch("TstarGluGamma_Boosted_Tstar_mass"                   , &_TstarGluGamma_Boosted_Tstar_mass                    ); */
+    /* outputTree->Branch("TstarGluGamma_Boosted_chi2"                       , &_TstarGluGamma_Boosted_chi2               ); */
 
 
     outputTree->Branch("DiphoMass"                  , &_DiphoMass                   ); 
@@ -1036,7 +1040,8 @@ void makeAnalysisNtuple::InitVariables()
     _TstarGluGamma_TstarLep_eta      = -9999;
     _TstarGluGamma_TstarLep_phi      = -9999;
     _TstarGluGamma_TstarLep_mass     = -9999;
-    _TstarGluGamma_Tstar_mass     = -9999;
+    _TstarGluGamma_Tstar_mass        = -9999;
+    _TstarGluGamma_gluon_pt          = -9999;
     _TstarGluGamma_TopHad_pt       = -9999;
     _TstarGluGamma_TopHad_eta      = -9999;
     _TstarGluGamma_TopHad_phi      = -9999;
@@ -1048,16 +1053,16 @@ void makeAnalysisNtuple::InitVariables()
     _TstarGluGamma_TopLep_charge   = -9999;
     _TstarGluGamma_chi2   = -9999;
 
-    _TstarGluGamma_Boosted_TstarHad_pt       = -9999;
-    _TstarGluGamma_Boosted_TstarHad_eta      = -9999;
-    _TstarGluGamma_Boosted_TstarHad_phi      = -9999;
-    _TstarGluGamma_Boosted_TstarHad_mass     = -9999;
-    _TstarGluGamma_Boosted_TstarLep_pt       = -9999;
-    _TstarGluGamma_Boosted_TstarLep_eta      = -9999;
-    _TstarGluGamma_Boosted_TstarLep_phi      = -9999;
-    _TstarGluGamma_Boosted_TstarLep_mass     = -9999;
-    _TstarGluGamma_Boosted_Tstar_mass     = -9999;
-    _TstarGluGamma_Boosted_chi2   = -9999;
+    /* _TstarGluGamma_Boosted_TstarHad_pt       = -9999; */
+    /* _TstarGluGamma_Boosted_TstarHad_eta      = -9999; */
+    /* _TstarGluGamma_Boosted_TstarHad_phi      = -9999; */
+    /* _TstarGluGamma_Boosted_TstarHad_mass     = -9999; */
+    /* _TstarGluGamma_Boosted_TstarLep_pt       = -9999; */
+    /* _TstarGluGamma_Boosted_TstarLep_eta      = -9999; */
+    /* _TstarGluGamma_Boosted_TstarLep_phi      = -9999; */
+    /* _TstarGluGamma_Boosted_TstarLep_mass     = -9999; */
+    /* _TstarGluGamma_Boosted_Tstar_mass     = -9999; */
+    /* _TstarGluGamma_Boosted_chi2   = -9999; */
 
     _HT		 = -9999;
     _DilepMass	 = -9999;
