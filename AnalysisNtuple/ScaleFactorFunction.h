@@ -46,7 +46,7 @@ void initCrossSections(){
     crossSections["TTGamma_SingleLept_Pt100"]  =  {0.1309*1.4852, 0.1309*1.4852, 0.1309*1.4852};
     crossSections["TTGamma_Hadronic_Pt100"]    =  {0.1249*1.4852, 0.1249*1.4852, 0.1249*1.4852};
 
-    crossSections["TTGamma_Dilepton_Pt200"]    =  {0.006797*1616, 0.006797*1616, 0.006797*1616};
+    crossSections["TTGamma_Dilepton_Pt200"]    =  {0.006797*1.4852, 0.006797*1.4852, 0.006797*1.4852};
     crossSections["TTGamma_SingleLept_Pt200"]  =  {0.02685*1.4852, 0.02685*1.4852, 0.02685*1.4852};
     crossSections["TTGamma_Hadronic_Pt200"]    =  {0.02687*1.4852, 0.02687*1.4852, 0.02687*1.4852};
 
