@@ -182,6 +182,8 @@ class makeAnalysisNtuple {
 
     Float_t         _genMET;
         
+    Float_t         _genNLeptons;
+        
     Float_t         _pfMET;
     Float_t         _pfMETPhi;
     Float_t         _nu_pz;
@@ -552,6 +554,8 @@ class makeAnalysisNtuple {
     /* double getMuSF(int muInd, int systLevel); */
     /* double getEleSF(int eleInd, int systLevel); */
 
+    int findNGenLeptons(EventTree* tree);
+
     void findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool* hadronicfake, bool* puPhoton, bool verbose=false);
     /* int findPhotonParentage(int phoInd, EventTree* tree); */
     int findPhotonGenMatch(int phoInd, EventTree* tree);
@@ -687,6 +691,8 @@ void makeAnalysisNtuple::InitBranches(){
     /* outputTree->Branch("rho"                        , &_rho                         );  */
     if (!isSystematicRun){
 	outputTree->Branch("genMET"                     , &_genMET                      ); 
+
+	outputTree->Branch("genNLeptons"                , &_genNLeptons                 );
     }
     outputTree->Branch("pfMET"                      , &_pfMET                       );
     outputTree->Branch("pfMETPhi"                   , &_pfMETPhi                    ); 
@@ -976,6 +982,8 @@ void makeAnalysisNtuple::InitVariables()
     /* _rho		     = -9999; */
 
     _genMET		     = -9999;
+
+    _genNLeptons	     = -9999;
 
     _pfMET		     = -9999;
     _pfMETPhi	     = -9999;

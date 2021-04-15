@@ -1086,6 +1086,8 @@ void makeAnalysisNtuple::FillEvent(std::string year)
 
 
 
+    _genNLeptons	     = findNGenLeptons(tree);
+
     _genMET		     = tree->GenMET_pt_;
     _pfMET		     = tree->MET_pt_;
     _pfMETPhi    	     = tree->MET_phi_;
@@ -2151,11 +2153,16 @@ vector<bool> makeAnalysisNtuple::passPhoTightID(int phoInd){
 
 }
 
-
-
-// //This is defined in OverlapRemoval.cpp
-// double minGenDr(int myInd, const EventTree* tree);
-
+int makeAnalysisNtuple::findNGenLeptons(EventTree* tree){
+    int nLepton=0;
+    for( int lheIdx = 0; lheIdx < tree->nLHEPart_; lheIdx++){
+        int pdgId = abs(tree->LHEPart_pdgId_[lheIdx]);
+        if ( pdgId==11 || pdgId==13 || pdgId==15){
+            nLepton+=1;
+        }
+    }
+    return nLepton;
+}
 
 void makeAnalysisNtuple::findPhotonCategory(int phoInd, EventTree* tree, bool* genuine, bool *misIDele, bool *hadronicphoton, bool *hadronicfake, bool *puPhoton, bool verbose){ // to use official phoGenMatch
 
