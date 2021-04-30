@@ -161,6 +161,9 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("Electron_dxy",1);
     chain->SetBranchAddress("Electron_dxy", &eleD0_);
 
+    chain->SetBranchStatus("Electron_energyErr",1);
+    chain->SetBranchAddress("Electron_energyErr", &eleSSUncer_);
+
     chain->SetBranchStatus("Electron_dz",1);
     chain->SetBranchAddress("Electron_dz", &eleDz_);
 

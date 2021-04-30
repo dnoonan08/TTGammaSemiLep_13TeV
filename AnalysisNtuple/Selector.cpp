@@ -31,6 +31,9 @@ Selector::Selector(){
     JECsystLevel  = 1;
     phosmearLevel = 1;
     elesmearLevel = 1;
+
+    elesmearscaleLevel = 1; //nabin
+    
     phoscaleLevel = 1;
     elescaleLevel = 1;
     useDeepCSVbTag = false;
@@ -65,6 +68,8 @@ Selector::Selector(){
     smearEle = true;
     scaleEle = true;
     scalePho = true;
+
+    scalesmearEle = true; //nabin
 
     // photons
     pho_Et_cut = 20.0; 
@@ -325,13 +330,27 @@ void Selector::filter_electrons(){
         
         
 
-        double EleSmear = 1.;
+        double EleSmearScale = 1.;
 
-        /////////NEEDS TO BE REIMPLEMENTED
+        /////////NEEDS TO BE REIMPLEMENTED- First trial
 
-        // if (!tree->isData_ && elesmearLevel==1) {EleSmear = generator->Gaus(1,(tree->eleResol_rho_up_[eleInd]+tree->eleResol_rho_dn_[eleInd])/2.);}
-        // if (!tree->isData_ && elesmearLevel==0) {EleSmear = generator->Gaus(1,tree->eleResol_rho_dn_[eleInd]);}
-        // if (!tree->isData_ && elesmearLevel==2) {EleSmear = generator->Gaus(1,tree->eleResol_rho_up_[eleInd]);}
+        if (!tree->isData_ && elesmearscaleLevel==0) {EleSmearScale = -tree->eleSSUncer_[eleInd];} // -ve in front of tree
+        if (!tree->isData_ && elesmearscaleLevel==2) {EleSmearScale = tree->eleSSUncer_[eleInd];}
+
+        if (pt<10.){
+          smearscaleEle= false;
+        }
+        if (smearscaleEle){
+          pt = pt*(1+EleSmearScale);
+          en = (1+EleSmearScale)*en;
+        }
+        tree->elePt_[eleInd] = pt;
+        tree->eleEn_[eleInd]= en;  
+
+
+        // if (!tree->isData_ && elesmearsLevel==1) {EleSmear = generator->Gaus(1,(tree->eleResol_rho_up_[eleInd]+tree->eleResol_rho_dn_[eleInd])/2.);}
+        // if (!tree->isData_ && elesmearsLevel==0) {EleSmear = generator->Gaus(1, tree->eleResol_rho_dn_[eleInd]);}
+        // if (!tree->isData_ && elesmearsLevel==2) {EleSmear = generator->Gaus(1, tree->eleResol_rho_up_[eleInd]);}
         // if (pt<10.){
         //   smearEle= false;
         // }
@@ -341,9 +360,13 @@ void Selector::filter_electrons(){
         // }
         // tree->elePt_[eleInd] = pt;
         // tree->eleEn_[eleInd]= en;   
+        
         // double EleScale = 1.;
         // double nom_scale =  (float(tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);
-        // if (tree->isData_ && elescaleLevel==1) {EleScale = ((tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);}
+
+
+        // if (tree->isData_  && elescaleLevel==1){EleScale = ((tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);}
+        
         // if (!tree->isData_ && elescaleLevel==2){EleScale = 1.+sqrt(pow((1-tree->eleScale_syst_up_[eleInd]),2)+pow((1-tree->eleScale_stat_up_[eleInd]),2)+pow((1-tree->eleScale_gain_up_[eleInd]),2));}
         // if (!tree->isData_ && elescaleLevel==0){EleScale = 1.-(sqrt(pow((1-tree->eleScale_syst_dn_[eleInd]),2)+pow(1-(tree->eleScale_stat_dn_[eleInd]),2)+pow((1-tree->eleScale_gain_dn_[eleInd]),2)));}
         // if (scaleEle){

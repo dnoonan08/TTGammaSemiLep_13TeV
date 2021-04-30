@@ -112,11 +112,18 @@ public:
 	int elesmearLevel;
 	int phoscaleLevel;
 	int elescaleLevel;
+
+	int elescalesmearLevel; //nabin
+	
 	bool   smearJetPt;
 	bool scaleEle;
 	bool smearEle;
 	bool scalePho;
 	bool smearPho;
+
+	bool scalesmearEle; //nabin
+
+
 	bool   looseJetID;
 	bool   useDeepCSVbTag;
 	bool   QCDselect;

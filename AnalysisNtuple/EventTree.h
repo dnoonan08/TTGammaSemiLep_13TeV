@@ -93,6 +93,9 @@ class EventTree{
     Float_t         elePFRelIso_[20];
     Float_t         elePFRelChIso_[20];
     Int_t           eleIDcutbased_[20];
+    
+    Float_t         eleSSUncer_[20]; //nabin smear scale uncertainty
+    
     Float_t         eleD0_[20];
     Float_t         eleDz_[20];
     Float_t         eleSIEIE_[20];

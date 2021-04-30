@@ -13,6 +13,9 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 int phoscale012_g = 1;
 int elescale012_g = 1;
 
+int elescalesmear012_g = 1;
+int phoscalesmear012_g = 1;
+
 // bool overlapRemoval(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
 // bool overlapRemoval_2To3(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
 // bool overlapRemovalTT(EventTree* tree, bool verbose);
@@ -394,6 +397,9 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if(systematicType=="phoscale_up")   {phoscale012_g=2;selector->phoscaleLevel=2; isSystematicRun = true;}
     if(systematicType=="elescale_down") {elescale012_g=0;selector->elescaleLevel=0; isSystematicRun = true;}
     if(systematicType=="elescale_up")   {elescale012_g=2;  selector->elescaleLevel=2; isSystematicRun = true;}
+    // nabin
+    if(systematicType=="elescalesmear_down") {elescalesmear012_g=0;  selector->elescalesmearLevel=0; isSystematicRun = true;}
+    if(systematicType=="elescalesmear_up")   {elescalesmear012_g=2;  selector->elescalesmearLevel=2; isSystematicRun = true;}
 
     // if( systematicType=="pho_up")       {phosmear012_g = 2;}
     // if( systematicType=="pho_down")     {phosmear012_g = 0;}
