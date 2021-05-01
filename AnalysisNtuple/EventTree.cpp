@@ -161,6 +161,9 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     chain->SetBranchStatus("Electron_dxy",1);
     chain->SetBranchAddress("Electron_dxy", &eleD0_);
 
+    chain->SetBranchStatus("Electron_energyErr",1);
+    chain->SetBranchAddress("Electron_energyErr", &eleSSUncer_);
+
     chain->SetBranchStatus("Electron_dz",1);
     chain->SetBranchAddress("Electron_dz", &eleDz_);
 
@@ -306,6 +309,10 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
 	chain->SetBranchAddress("Photon_cutBasedBitmap", &phoIDcutbased_);
     }
 	
+
+    chain->SetBranchStatus("Photon_energyErr",1);
+    chain->SetBranchAddress("Photon_energyErr", &phoSSUncer_);
+
 
     chain->SetBranchStatus("Photon_pfRelIso03_all",1);
     chain->SetBranchAddress("Photon_pfRelIso03_all", &phoPFRelIso_);

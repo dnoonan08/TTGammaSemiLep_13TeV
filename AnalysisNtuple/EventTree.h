@@ -93,6 +93,9 @@ class EventTree{
     Float_t         elePFRelIso_[20];
     Float_t         elePFRelChIso_[20];
     Int_t           eleIDcutbased_[20];
+    
+    Float_t         eleSSUncer_[20]; //nabin smear scale uncertainty
+    
     Float_t         eleD0_[20];
     Float_t         eleDz_[20];
     Float_t         eleSIEIE_[20];
@@ -128,6 +131,7 @@ class EventTree{
     
     Int_t           phoGenPartIdx_[15];
     
+    Float_t         phoSSUncer_[20]; //nabin smear scale uncertainty
 
     // I don't know why, but these two lines are needed to avoid possible memory issue with nMuon (segfault when it thinks there are 2**32-1 muons in an event
     // These vectors are not used
