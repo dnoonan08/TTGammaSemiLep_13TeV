@@ -310,6 +310,10 @@ EventTree::EventTree(int nFiles, bool xRootDAccess, string year, bool isData, ch
     }
 	
 
+    chain->SetBranchStatus("Photon_energyErr",1);
+    chain->SetBranchAddress("Photon_energyErr", &phoSSUncer_);
+
+
     chain->SetBranchStatus("Photon_pfRelIso03_all",1);
     chain->SetBranchAddress("Photon_pfRelIso03_all", &phoPFRelIso_);
 

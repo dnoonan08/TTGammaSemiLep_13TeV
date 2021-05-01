@@ -131,6 +131,7 @@ class EventTree{
     
     Int_t           phoGenPartIdx_[15];
     
+    Float_t         phoSSUncer_[20]; //nabin smear scale uncertainty
 
     // I don't know why, but these two lines are needed to avoid possible memory issue with nMuon (segfault when it thinks there are 2**32-1 muons in an event
     // These vectors are not used

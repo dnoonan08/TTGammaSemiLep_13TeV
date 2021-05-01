@@ -13,8 +13,8 @@ int elesmear012_g = 1; // 0:down, 1:norm, 2: up
 int phoscale012_g = 1;
 int elescale012_g = 1;
 
-int elescalesmear012_g = 1;
-int phoscalesmear012_g = 1;
+int elesmearscale012_g = 1;
+int phosmearscale012_g = 1;
 
 // bool overlapRemoval(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
 // bool overlapRemoval_2To3(EventTree* tree, double Et_cut, double Eta_cut, double dR_cut, bool verbose);
@@ -185,31 +185,31 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
     if (year=="2016"){
-	// PUfilename      = "PileupHists/Data_2016BCDGH_Pileup.root";
-	// PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
-	// PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
+	PUfilename      = "PileupHists/Data_2016BCDGH_Pileup.root";
+	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
 
-	PUfilename      = "PileupHists/New/PU_2016_35920_XSecCentral.root";
-	PUfilename_up   = "PileupHists/New/PU_2016_35920_XSecUp.root";
-	PUfilename_down = "PileupHists/New/PU_2016_35920_XSecDown.root";
+	// PUfilename      = "PileupHists/New/PU_2016_35920_XSecCentral.root";
+	// PUfilename_up   = "PileupHists/New/PU_2016_35920_XSecUp.root";
+	// PUfilename_down = "PileupHists/New/PU_2016_35920_XSecDown.root";
     }
     if (year=="2017"){
-	// PUfilename      = "PileupHists/Data_2017BCDEF_Pileup.root";
-	// PUfilename_up   = "PileupHists/Data_2017BCDEF_Pileup_scaledUp.root";
-	// PUfilename_down = "PileupHists/Data_2017BCDEF_Pileup_scaledDown.root";
+	PUfilename      = "PileupHists/Data_2017BCDEF_Pileup.root";
+	PUfilename_up   = "PileupHists/Data_2017BCDEF_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2017BCDEF_Pileup_scaledDown.root";
 
-	PUfilename      = "PileupHists/New/PU_2017_41530_XSecCentral.root";
-	PUfilename_up   = "PileupHists/New/PU_2017_41530_XSecUp.root";
-	PUfilename_down = "PileupHists/New/PU_2017_41530_XSecDown.root";
+	// PUfilename      = "PileupHists/New/PU_2017_41530_XSecCentral.root";
+	// PUfilename_up   = "PileupHists/New/PU_2017_41530_XSecUp.root";
+	// PUfilename_down = "PileupHists/New/PU_2017_41530_XSecDown.root";
     }
     if (year=="2018"){
-	// PUfilename      = "PileupHists/Data_2018ABCD_Pileup.root";
-	// PUfilename_up   = "PileupHists/Data_2018ABCD_Pileup_scaledUp.root";
-	// PUfilename_down = "PileupHists/Data_2018ABCD_Pileup_scaledDown.root";
+	PUfilename      = "PileupHists/Data_2018ABCD_Pileup.root";
+	PUfilename_up   = "PileupHists/Data_2018ABCD_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2018ABCD_Pileup_scaledDown.root";
 
-	PUfilename      = "PileupHists/New/PU_2018_59740_XSecCentral.root";
-	PUfilename_up   = "PileupHists/New/PU_2018_59740_XSecUp.root";
-	PUfilename_down = "PileupHists/New/PU_2018_59740_XSecDown.root";
+	// PUfilename      = "PileupHists/New/PU_2018_59740_XSecCentral.root";
+	// PUfilename_up   = "PileupHists/New/PU_2018_59740_XSecUp.root";
+	// PUfilename_down = "PileupHists/New/PU_2018_59740_XSecDown.root";
     }
     if (eventNum > -1) {
 	string cut = "event=="+eventStr;
@@ -398,8 +398,11 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     if(systematicType=="elescale_down") {elescale012_g=0;selector->elescaleLevel=0; isSystematicRun = true;}
     if(systematicType=="elescale_up")   {elescale012_g=2;  selector->elescaleLevel=2; isSystematicRun = true;}
     // nabin
-    if(systematicType=="elescalesmear_down") {elescalesmear012_g=0;  selector->elescalesmearLevel=0; isSystematicRun = true;}
-    if(systematicType=="elescalesmear_up")   {elescalesmear012_g=2;  selector->elescalesmearLevel=2; isSystematicRun = true;}
+    if(systematicType=="elesmearscale_up")   {elesmearscale012_g=2;  selector->elesmearscaleLevel=2; isSystematicRun = true;}
+    if(systematicType=="elesmearscale_down") {elesmearscale012_g=0;  selector->elesmearscaleLevel=0; isSystematicRun = true;}
+
+    if(systematicType=="phosmearscale_up")   {phosmearscale012_g=2;  selector->phosmearscaleLevel=2; isSystematicRun = true;}
+    if(systematicType=="phosmearscale_down") {phosmearscale012_g=0;  selector->phosmearscaleLevel=0; isSystematicRun = true;}
 
     // if( systematicType=="pho_up")       {phosmear012_g = 2;}
     // if( systematicType=="pho_down")     {phosmear012_g = 0;}

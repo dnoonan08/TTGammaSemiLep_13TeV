@@ -113,7 +113,8 @@ public:
 	int phoscaleLevel;
 	int elescaleLevel;
 
-	int elescalesmearLevel; //nabin
+	int elesmearscaleLevel; //nabin
+	int phosmearscaleLevel; //nabin
 	
 	bool   smearJetPt;
 	bool scaleEle;
@@ -121,7 +122,8 @@ public:
 	bool scalePho;
 	bool smearPho;
 
-	bool scalesmearEle; //nabin
+	bool smearscaleEle; //nabin
+	bool smearscalePho; //nabin
 
 
 	bool   looseJetID;
