@@ -98,6 +98,9 @@ void Selector::init_JER(std::string inputPrefix){
     // cout << JetCorrector << endl;
 }
 
+
+
+
 void Selector::process_objects(EventTree* inp_tree){
     tree = inp_tree;
     clear_vectors();
@@ -323,24 +326,39 @@ void Selector::filter_electrons(){
         bool passDz = ((absEta < 1.479 && abs(tree->eleDz_[eleInd]) < 0.1) ||
                        (absEta > 1.479 && abs(tree->eleDz_[eleInd]) < 0.2));
         
-        
 
         double EleSmear = 1.;
 
         /////////NEEDS TO BE REIMPLEMENTED
 
-        // if (!tree->isData_ && elesmearLevel==1) {EleSmear = generator->Gaus(1,(tree->eleResol_rho_up_[eleInd]+tree->eleResol_rho_dn_[eleInd])/2.);}
-        // if (!tree->isData_ && elesmearLevel==0) {EleSmear = generator->Gaus(1,tree->eleResol_rho_dn_[eleInd]);}
-        // if (!tree->isData_ && elesmearLevel==2) {EleSmear = generator->Gaus(1,tree->eleResol_rho_up_[eleInd]);}
-        // if (pt<10.){
-        //   smearEle= false;
-        // }
-        // if (smearEle){
-        //   pt = pt*EleSmear;
-        //   en = EleSmear*en;
-        // }
-        // tree->elePt_[eleInd] = pt;
-        // tree->eleEn_[eleInd]= en;   
+        // ./runAnalysisNtuple_Syst.sh WGamma 2016 elesmear_up
+
+// ./AnalysisNtuple/makeAnalysisNtuple event 100 2016 WGamma__elesmear_up . root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6-2/2016/WGamma_2016_skim.root
+
+        // 0 is down, 2 is up.
+        // according to root file, we need to take abs of eta
+        // read smae file for up and down but read different histogram
+
+        // pt_eta_ResUp->GetNbinsX, pt_eta_ResUp->GetNbinsY, ==> 10, 310, 300/10, 30 
+         // pt_eta_ResUp->GetBinContent()
+        //10x5 bins, 
+
+        if (tree->event_==printEvent){ cout  << "pt before " << pt << endl;}
+        if (!tree->isData_ && elesmearLevel==0) {
+        	if (pt <= 15) {pt = 16.0;}
+        	if (absEta >= 2.4) {absEta = 2.39;}
+        	EleSmear = eleSmearSF->getEleSmearSFDo(pt, absEta); 
+			// EleSmear = 1.5; getEleSmearSF
+			pt = pt*EleSmear; 
+       		 if (tree->event_==printEvent){ cout  << "smear value " << EleSmear << endl;}
+
+
+        } 
+   
+        tree->elePt_[eleInd] = pt;
+
+        if (tree->event_==printEvent){ cout  << "pt after " << pt << endl;}
+
         // double EleScale = 1.;
         // double nom_scale =  (float(tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);
         // if (tree->isData_ && elescaleLevel==1) {EleScale = ((tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);}

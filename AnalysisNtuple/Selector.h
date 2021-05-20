@@ -26,6 +26,9 @@
 
 #include <random>
 
+//nabin
+#include "eleSmearSF_reader.h"
+
 
 // https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
 // photon ID is not going to be changed every time this code runs

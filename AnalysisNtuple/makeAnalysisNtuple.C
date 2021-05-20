@@ -182,31 +182,31 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 
     if (year=="2016"){
-	// PUfilename      = "PileupHists/Data_2016BCDGH_Pileup.root";
-	// PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
-	// PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
+	PUfilename      = "PileupHists/Data_2016BCDGH_Pileup.root";
+	PUfilename_up   = "PileupHists/Data_2016BCDGH_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2016BCDGH_Pileup_scaledDown.root";
 
-	PUfilename      = "PileupHists/New/PU_2016_35920_XSecCentral.root";
-	PUfilename_up   = "PileupHists/New/PU_2016_35920_XSecUp.root";
-	PUfilename_down = "PileupHists/New/PU_2016_35920_XSecDown.root";
+	// PUfilename      = "PileupHists/New/PU_2016_35920_XSecCentral.root";
+	// PUfilename_up   = "PileupHists/New/PU_2016_35920_XSecUp.root";
+	// PUfilename_down = "PileupHists/New/PU_2016_35920_XSecDown.root";
     }
     if (year=="2017"){
-	// PUfilename      = "PileupHists/Data_2017BCDEF_Pileup.root";
-	// PUfilename_up   = "PileupHists/Data_2017BCDEF_Pileup_scaledUp.root";
-	// PUfilename_down = "PileupHists/Data_2017BCDEF_Pileup_scaledDown.root";
+	PUfilename      = "PileupHists/Data_2017BCDEF_Pileup.root";
+	PUfilename_up   = "PileupHists/Data_2017BCDEF_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2017BCDEF_Pileup_scaledDown.root";
 
-	PUfilename      = "PileupHists/New/PU_2017_41530_XSecCentral.root";
-	PUfilename_up   = "PileupHists/New/PU_2017_41530_XSecUp.root";
-	PUfilename_down = "PileupHists/New/PU_2017_41530_XSecDown.root";
+	// PUfilename      = "PileupHists/New/PU_2017_41530_XSecCentral.root";
+	// PUfilename_up   = "PileupHists/New/PU_2017_41530_XSecUp.root";
+	// PUfilename_down = "PileupHists/New/PU_2017_41530_XSecDown.root";
     }
     if (year=="2018"){
-	// PUfilename      = "PileupHists/Data_2018ABCD_Pileup.root";
-	// PUfilename_up   = "PileupHists/Data_2018ABCD_Pileup_scaledUp.root";
-	// PUfilename_down = "PileupHists/Data_2018ABCD_Pileup_scaledDown.root";
+	PUfilename      = "PileupHists/Data_2018ABCD_Pileup.root";
+	PUfilename_up   = "PileupHists/Data_2018ABCD_Pileup_scaledUp.root";
+	PUfilename_down = "PileupHists/Data_2018ABCD_Pileup_scaledDown.root";
 
-	PUfilename      = "PileupHists/New/PU_2018_59740_XSecCentral.root";
-	PUfilename_up   = "PileupHists/New/PU_2018_59740_XSecUp.root";
-	PUfilename_down = "PileupHists/New/PU_2018_59740_XSecDown.root";
+	// PUfilename      = "PileupHists/New/PU_2018_59740_XSecCentral.root";
+	// PUfilename_up   = "PileupHists/New/PU_2018_59740_XSecUp.root";
+	// PUfilename_down = "PileupHists/New/PU_2018_59740_XSecDown.root";
     }
     if (eventNum > -1) {
 	string cut = "event=="+eventStr;
@@ -561,6 +561,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	l1PrefireSF = new PrefireWeights("MuEGammaScaleFactors/prefire/L1prefiring_photonpt_2016BtoH.root", "L1prefiring_photonpt_2016BtoH",
 					 "MuEGammaScaleFactors/prefire/L1prefiring_jetpt_2016BtoH.root", "L1prefiring_jetpt_2016BtoH");
 
+	eleSmearSF = new EleSmearSF("SmearingScalingFiles/electron_2016_Res.root");
 
     } else if (year=="2017") {
 	
