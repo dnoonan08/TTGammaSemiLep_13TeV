@@ -6,6 +6,7 @@
 #include <iomanip>
 #include<algorithm>
 #include<TH1F.h>
+#include<TH2F.h>
 #include<TMath.h>
 #include<TLorentzVector.h>
 #include"EventTree.h"
@@ -26,8 +27,10 @@
 
 #include <random>
 
-//nabin
-#include "eleSmearSF_reader.h"
+
+
+
+
 
 
 // https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
@@ -124,6 +127,9 @@ public:
 	bool   useDeepCSVbTag;
 	bool   QCDselect;
 
+
+    std::string unc_fname;
+
 	// electrons
 	double ele_Pt_cut;
 	double ele_PtLoose_cut;
@@ -164,6 +170,8 @@ public:
 	int printEvent;
 
 	void clear_vectors();
+
+	double  getElePhoSmearScaleSF(double pt, double eta);
 	
 	void init_JER(std::string inputPrefix);
 
@@ -193,8 +201,6 @@ private:
 	JME::JetResolution *jetResolution;
 	JME::JetResolutionScaleFactor *jetResolutionScaleFactor;
 	JME::JetParameters jetParam;
-	//nabin
-    EleSmearSF *eleSmearSF;
 
 
 };
@@ -257,6 +263,7 @@ public:
         double ele_Dxy_cut;
         int    ele_MissInnHit_cut;
         bool   ele_Iso_MVA_invert;
+
 
 	double pho_Et_cut;
         double pho_Eta_cut;

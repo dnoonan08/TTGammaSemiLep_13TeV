@@ -47,8 +47,6 @@
 
 #include "muSF_reader.h"
 #include "eleSF_reader.h"
-//nabin
-// #include "eleSmearSF_reader.h"
 #include "phoSF_reader.h"
 
 #include "PrefireWeights.h"
@@ -93,8 +91,6 @@ class makeAnalysisNtuple {
 
     PrefireWeights* l1PrefireSF;
 
-    //nabin
-    // EleSmearSF* eleSmearSF;
     
     TH2D* l_eff;
     TH2D* c_eff;

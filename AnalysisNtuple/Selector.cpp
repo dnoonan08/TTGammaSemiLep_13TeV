@@ -74,7 +74,79 @@ Selector::Selector(){
     pho_noEleVeto_cut = false;
     pho_applyPhoID = true;
 	
- 	eleSmearSF = new EleSmearSF("SmearingScalingFiles/electron_2016_Res.root");
+    unc_fname = "";
+
+}
+
+
+double Selector::getElePhoSmearScaleSF(double pt, double eta){
+
+	TFile* uncFile = TFile::Open(unc_fname.c_str(),"READ");
+	TH2F *uncHist  = (TH2F*) uncFile->Get("pt_eta");
+    int xBin=1;
+    int yBin=1;
+
+    if      ((pt > 10  && pt <=40 ) && (eta >=0 && eta<=0.48)){xBin=1;yBin=1;}
+    else if ((pt > 40  && pt <=70 ) && (eta >=0 && eta<=0.48)){xBin=2;yBin=1;}
+    else if ((pt > 70  && pt <=100) && (eta >=0 && eta<=0.48)){xBin=3;yBin=1;}
+    else if ((pt > 100 && pt <=130) && (eta >=0 && eta<=0.48)){xBin=4;yBin=1;}
+    else if ((pt > 130 && pt <=160) && (eta >=0 && eta<=0.48)){xBin=5;yBin=1;}
+    else if ((pt > 160 && pt <=190) && (eta >=0 && eta<=0.48)){xBin=6;yBin=1;}
+    else if ((pt > 190 && pt <=220) && (eta >=0 && eta<=0.48)){xBin=7;yBin=1;}
+    else if ((pt > 220 && pt <=250) && (eta >=0 && eta<=0.48)){xBin=8;yBin=1;}
+    else if ((pt > 250 && pt <=280) && (eta >=0 && eta<=0.48)){xBin=9;yBin=1;}
+    else if ((pt > 280 && pt <=310) && (eta >=0 && eta<=0.48)){xBin=10;yBin=1;}
+
+    else if ((pt > 10  && pt <=40 ) && (eta >0.48 && eta<=0.96)){xBin=1;yBin=2;}
+    else if ((pt > 40  && pt <=70 ) && (eta >0.48 && eta<=0.96)){xBin=2;yBin=2;}
+    else if ((pt > 70  && pt <=100) && (eta >0.48 && eta<=0.96)){xBin=3;yBin=2;}
+    else if ((pt > 100 && pt <=130) && (eta >0.48 && eta<=0.96)){xBin=4;yBin=2;}
+    else if ((pt > 130 && pt <=160) && (eta >0.48 && eta<=0.96)){xBin=5;yBin=2;}
+    else if ((pt > 160 && pt <=190) && (eta >0.48 && eta<=0.96)){xBin=6;yBin=2;}
+    else if ((pt > 190 && pt <=220) && (eta >0.48 && eta<=0.96)){xBin=7;yBin=2;}
+    else if ((pt > 220 && pt <=250) && (eta >0.48 && eta<=0.96)){xBin=8;yBin=2;}
+    else if ((pt > 250 && pt <=280) && (eta >0.48 && eta<=0.96)){xBin=9;yBin=2;}
+    else if ((pt > 280 && pt <=310) && (eta >0.48 && eta<=0.96)){xBin=10;yBin=2;}
+
+    else if ((pt > 10  && pt <=40 ) && (eta >0.96 && eta<=1.44)){xBin=1;yBin=3;}
+    else if ((pt > 40  && pt <=70 ) && (eta >0.96 && eta<=1.44)){xBin=2;yBin=3;}
+    else if ((pt > 70  && pt <=100) && (eta >0.96 && eta<=1.44)){xBin=3;yBin=3;}
+    else if ((pt > 100 && pt <=130) && (eta >0.96 && eta<=1.44)){xBin=4;yBin=3;}
+    else if ((pt > 130 && pt <=160) && (eta >0.96 && eta<=1.44)){xBin=5;yBin=3;}
+    else if ((pt > 160 && pt <=190) && (eta >0.96 && eta<=1.44)){xBin=6;yBin=3;}
+    else if ((pt > 190 && pt <=220) && (eta >0.96 && eta<=1.44)){xBin=7;yBin=3;}
+    else if ((pt > 220 && pt <=250) && (eta >0.96 && eta<=1.44)){xBin=8;yBin=3;}
+    else if ((pt > 250 && pt <=280) && (eta >0.96 && eta<=1.44)){xBin=9;yBin=3;}
+    else if ((pt > 280 && pt <=310) && (eta >0.96 && eta<=1.44)){xBin=10;yBin=3;}
+
+    else if ((pt > 10  && pt <=40 ) && (eta >1.44 && eta<=1.92)){xBin=1;yBin=4;}
+    else if ((pt > 40  && pt <=70 ) && (eta >1.44 && eta<=1.92)){xBin=2;yBin=4;}
+    else if ((pt > 70  && pt <=100) && (eta >1.44 && eta<=1.92)){xBin=3;yBin=4;}
+    else if ((pt > 100 && pt <=130) && (eta >1.44 && eta<=1.92)){xBin=4;yBin=4;}
+    else if ((pt > 130 && pt <=160) && (eta >1.44 && eta<=1.92)){xBin=5;yBin=4;}
+    else if ((pt > 160 && pt <=190) && (eta >1.44 && eta<=1.92)){xBin=6;yBin=4;}
+    else if ((pt > 190 && pt <=220) && (eta >1.44 && eta<=1.92)){xBin=7;yBin=4;}
+    else if ((pt > 220 && pt <=250) && (eta >1.44 && eta<=1.92)){xBin=8;yBin=4;}
+    else if ((pt > 250 && pt <=280) && (eta >1.44 && eta<=1.92)){xBin=9;yBin=4;}
+    else if ((pt > 280 && pt <=310) && (eta >1.44 && eta<=1.92)){xBin=10;yBin=4;}
+
+    else if ((pt > 10  && pt <=40 ) && (eta >1.92 && eta<=2.4)){xBin=1;yBin=5;}
+    else if ((pt > 40  && pt <=70 ) && (eta >1.92 && eta<=2.4)){xBin=2;yBin=5;}
+    else if ((pt > 70  && pt <=100) && (eta >1.92 && eta<=2.4)){xBin=3;yBin=5;}
+    else if ((pt > 100 && pt <=130) && (eta >1.92 && eta<=2.4)){xBin=4;yBin=5;}
+    else if ((pt > 130 && pt <=160) && (eta >1.92 && eta<=2.4)){xBin=5;yBin=5;}
+    else if ((pt > 160 && pt <=190) && (eta >1.92 && eta<=2.4)){xBin=6;yBin=5;}
+    else if ((pt > 190 && pt <=220) && (eta >1.92 && eta<=2.4)){xBin=7;yBin=5;}
+    else if ((pt > 220 && pt <=250) && (eta >1.92 && eta<=2.4)){xBin=8;yBin=5;}
+    else if ((pt > 250 && pt <=280) && (eta >1.92 && eta<=2.4)){xBin=9;yBin=5;}
+
+    else {xBin=10;yBin=1;}
+    // else if ((pt > 280 && pt <=310) && (eta >=0 && eta<=0.48)){xBin=10;yBin=1;}
+
+    double unc_SF_value = uncHist->GetBinContent(xBin,yBin);
+
+    return unc_SF_value;
+
 
 }
 
@@ -344,23 +416,36 @@ void Selector::filter_electrons(){
          // pt_eta_ResUp->GetBinContent()
         //10x5 bins, 
 
-        if (tree->event_==printEvent){ cout  << "pt before " << pt << endl;}
-        if (!tree->isData_ && elesmearLevel==0) {
+        // if (tree->event_==printEvent){ cout  << "======> pt before " << pt << endl;}
+        if (!tree->isData_ && (elesmearLevel==0 || elesmearLevel==2)) {
         	if (pt <= 15) {pt = 16.0;}
         	if (absEta >= 2.4) {absEta = 2.39;}
-        	EleSmear = eleSmearSF->getEleSmearSFDo(pt,absEta); 
+        	EleSmear = getElePhoSmearScaleSF(pt,absEta); 
 			// EleSmear = 1.5; getEleSmearSF
 			pt = pt*EleSmear; 
-       		if (tree->event_==printEvent){ cout  << "smear value " << EleSmear << endl;}
+       		// if (tree->event_==printEvent){ cout  << "======> smear value " << EleSmear << endl;}
 
 
         } 
    
         tree->elePt_[eleInd] = pt;
 
-        if (tree->event_==printEvent){ cout  << "pt after " << pt << endl;}
+        // if (tree->event_==printEvent){ cout  << "=======> pt after " << pt << endl;}
 
-        // double EleScale = 1.;
+        double EleScale = 1.;
+
+        if (tree->isData_ && (elescaleLevel==0 || elescaleLevel==2)) {
+        	if (pt <= 15) {pt = 16.0;}
+        	if (absEta >= 2.4) {absEta = 2.39;}
+        	EleScale = getElePhoSmearScaleSF(pt,absEta); 
+			// EleSmear = 1.5; getEleSmearSF
+			pt = pt*EleScale; 
+       		// if (tree->event_==printEvent){ cout  << "======> smear value " << EleSmear << endl;}
+
+
+        } 
+   
+
         // double nom_scale =  (float(tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);
         // if (tree->isData_ && elescaleLevel==1) {EleScale = ((tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);}
         // if (!tree->isData_ && elescaleLevel==2){EleScale = 1.+sqrt(pow((1-tree->eleScale_syst_up_[eleInd]),2)+pow((1-tree->eleScale_stat_up_[eleInd]),2)+pow((1-tree->eleScale_gain_up_[eleInd]),2));}

@@ -391,14 +391,76 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     // if( systematicType=="JEC_down")     {jecvar012_g = 0; selector->JECsystLevel=0;}
     if( systematicType=="JER_up")       {jervar012_g = 2; selector->JERsystLevel=2; isSystematicRun = true;}
     if( systematicType=="JER_down")     {jervar012_g = 0; selector->JERsystLevel=0; isSystematicRun = true;}
-    if(systematicType=="phosmear_down") {phosmear012_g=0;selector->phosmearLevel=0; isSystematicRun = true;}
-    if(systematicType=="phosmear_up")   {phosmear012_g=2;selector->phosmearLevel=2; isSystematicRun = true;}
-    if(systematicType=="elesmear_down") {elesmear012_g=0;selector->elesmearLevel=0; isSystematicRun = true;}
-    if(systematicType=="elesmear_up")   {elesmear012_g=2;selector->elesmearLevel=2; isSystematicRun = true;}
-    if(systematicType=="phoscale_down") {phoscale012_g=0;selector->phoscaleLevel=0; isSystematicRun = true;} 
-    if(systematicType=="phoscale_up")   {phoscale012_g=2;selector->phoscaleLevel=2; isSystematicRun = true;}
-    if(systematicType=="elescale_down") {elescale012_g=0;selector->elescaleLevel=0; isSystematicRun = true;}
-    if(systematicType=="elescale_up")   {elescale012_g=2;  selector->elescaleLevel=2; isSystematicRun = true;}
+
+
+
+
+    
+    if(systematicType=="elesmear_down") {
+    	elesmear012_g=0; selector->elesmearLevel=0; isSystematicRun = true;
+    	if (year=="2016") {selector->unc_fname = "SmearingScalingFiles/electron_2016_ResDo.root";} 
+    	if (year=="2017") {selector->unc_fname = "SmearingScalingFiles/electron_2017_ResDo.root";} 
+    	if (year=="2018") {selector->unc_fname = "SmearingScalingFiles/electron_2018_ResDo.root";} 
+
+    }
+
+    if(systematicType=="elesmear_up")   {
+    	elesmear012_g=2;selector->elesmearLevel=2; isSystematicRun = true;
+    	if (year=="2016") {selector->unc_fname = "SmearingScalingFiles/electron_2016_ResUp.root";} 
+    	if (year=="2017") {selector->unc_fname = "SmearingScalingFiles/electron_2017_ResUp.root";} 
+    	if (year=="2018") {selector->unc_fname = "SmearingScalingFiles/electron_2018_ResUp.root";} 
+
+    }
+
+    if(systematicType=="elescale_down") {
+    	elescale012_g=0;selector->elescaleLevel=0; isSystematicRun = true;
+
+    	if (year=="2016") {selector->unc_fname = "SmearingScalingFiles/electron_2016_ScaleDo.root";} 
+    	if (year=="2017") {selector->unc_fname = "SmearingScalingFiles/electron_2017_ScaleDo.root";} 
+    	if (year=="2018") {selector->unc_fname = "SmearingScalingFiles/electron_2018_ScaleDo.root";} 
+    }
+    if(systematicType=="elescale_up")   {
+    	elescale012_g=2;selector->elescaleLevel=2; isSystematicRun = true;
+
+   		if (year=="2016") {selector->unc_fname = "SmearingScalingFiles/electron_2016_ScaleUp.root";} 
+    	if (year=="2017") {selector->unc_fname = "SmearingScalingFiles/electron_2017_ScaleUp.root";} 
+    	if (year=="2018") {selector->unc_fname = "SmearingScalingFiles/electron_2018_ScaleUp.root";} 
+    }
+
+
+
+    if(systematicType=="phosmear_down") {
+    	phosmear012_g=0;selector->phosmearLevel=0; isSystematicRun = true;
+
+   		if (year=="2016") {selector->unc_fname = "SmearingScalingFiles/photon_2016_ResDo.root";} 
+    	if (year=="2017") {selector->unc_fname = "SmearingScalingFiles/photon_2017_ResDo.root";} 
+    	if (year=="2018") {selector->unc_fname = "SmearingScalingFiles/photon_2018_ResDo.root";} 
+    }
+    if(systematicType=="phosmear_up")   {
+    	phosmear012_g=2;selector->phosmearLevel=2; isSystematicRun = true;
+
+    	if (year=="2016") {selector->unc_fname = "SmearingScalingFiles/photon_2016_ResUp.root";} 
+    	if (year=="2017") {selector->unc_fname = "SmearingScalingFiles/photon_2017_ResUp.root";} 
+    	if (year=="2018") {selector->unc_fname = "SmearingScalingFiles/photon_2018_ResUp.root";} 
+    }
+
+
+    if(systematicType=="phoscale_down") {
+    	phoscale012_g=0;selector->phoscaleLevel=0; isSystematicRun = true;
+    	if (year=="2016") {selector->unc_fname = "SmearingScalingFiles/photon_2016_ScaleDo.root";} 
+    	if (year=="2017") {selector->unc_fname = "SmearingScalingFiles/photon_2017_ScaleDo.root";} 
+    	if (year=="2018") {selector->unc_fname = "SmearingScalingFiles/photon_2018_ScaleDo.root";} 
+
+    } 
+    if(systematicType=="phoscale_up")   {
+    	phoscale012_g=2;selector->phoscaleLevel=2; isSystematicRun = true;
+    	if (year=="2016") {selector->unc_fname = "SmearingScalingFiles/photon_2016_ScaleUp.root";} 
+    	if (year=="2017") {selector->unc_fname = "SmearingScalingFiles/photon_2017_ScaleUp.root";} 
+    	if (year=="2018") {selector->unc_fname = "SmearingScalingFiles/photon_2018_ScaleUp.root";} 
+    }
+
+
+
 
     // if( systematicType=="pho_up")       {phosmear012_g = 2;}
     // if( systematicType=="pho_down")     {phosmear012_g = 0;}
@@ -565,7 +627,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	l1PrefireSF = new PrefireWeights("MuEGammaScaleFactors/prefire/L1prefiring_photonpt_2016BtoH.root", "L1prefiring_photonpt_2016BtoH",
 					 "MuEGammaScaleFactors/prefire/L1prefiring_jetpt_2016BtoH.root", "L1prefiring_jetpt_2016BtoH");
-	// nabin
 
     } else if (year=="2017") {
 	
