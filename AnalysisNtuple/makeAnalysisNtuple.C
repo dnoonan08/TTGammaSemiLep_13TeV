@@ -241,6 +241,12 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 	selector->smearJetPt=false;
     }
 
+
+
+
+
+
+
     selector->pho_applyPhoID = false;
     selector->looseJetID = false;
     
@@ -254,7 +260,6 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
     	if (year=="2017") selector->init_JER("./jecFiles/JER/Fall17_V3");
     	if (year=="2018") selector->init_JER("./jecFiles/JER/Autumn18_V7b");
     }
-
 
 
     if (year=="2016") selector->btag_cut_DeepCSV = 0.6321;
@@ -560,8 +565,7 @@ makeAnalysisNtuple::makeAnalysisNtuple(int ac, char** av)
 
 	l1PrefireSF = new PrefireWeights("MuEGammaScaleFactors/prefire/L1prefiring_photonpt_2016BtoH.root", "L1prefiring_photonpt_2016BtoH",
 					 "MuEGammaScaleFactors/prefire/L1prefiring_jetpt_2016BtoH.root", "L1prefiring_jetpt_2016BtoH");
-
-	eleSmearSF = new EleSmearSF("SmearingScalingFiles/electron_2016_Res.root");
+	// nabin
 
     } else if (year=="2017") {
 	

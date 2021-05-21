@@ -74,9 +74,10 @@ Selector::Selector(){
     pho_noEleVeto_cut = false;
     pho_applyPhoID = true;
 	
-
+ 	eleSmearSF = new EleSmearSF("SmearingScalingFiles/electron_2016_Res.root");
 
 }
+
 
 void Selector::init_JER(std::string inputPrefix){
 
@@ -347,10 +348,10 @@ void Selector::filter_electrons(){
         if (!tree->isData_ && elesmearLevel==0) {
         	if (pt <= 15) {pt = 16.0;}
         	if (absEta >= 2.4) {absEta = 2.39;}
-        	EleSmear = eleSmearSF->getEleSmearSFDo(pt, absEta); 
+        	EleSmear = eleSmearSF->getEleSmearSFDo(pt,absEta); 
 			// EleSmear = 1.5; getEleSmearSF
 			pt = pt*EleSmear; 
-       		 if (tree->event_==printEvent){ cout  << "smear value " << EleSmear << endl;}
+       		if (tree->event_==printEvent){ cout  << "smear value " << EleSmear << endl;}
 
 
         } 

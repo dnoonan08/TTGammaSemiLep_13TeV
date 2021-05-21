@@ -94,7 +94,7 @@ class makeAnalysisNtuple {
     PrefireWeights* l1PrefireSF;
 
     //nabin
-    EleSmearSF* eleSmearSF;
+    // EleSmearSF* eleSmearSF;
     
     TH2D* l_eff;
     TH2D* c_eff;

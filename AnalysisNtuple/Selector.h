@@ -89,7 +89,7 @@ public:
 	std::vector<int> MuonsNoIso;
 	std::vector<int> Jets;
 	std::vector<int> bJets;
-        std::vector<int> FwdJets;
+    std::vector<int> FwdJets;
 
 	std::vector<double> jet_resolution;
 	std::vector<bool>   jet_isTagged;
@@ -167,7 +167,6 @@ public:
 	
 	void init_JER(std::string inputPrefix);
 
-
 private:
 	EventTree* tree;
 	void filter_photons();
@@ -194,6 +193,9 @@ private:
 	JME::JetResolution *jetResolution;
 	JME::JetResolutionScaleFactor *jetResolutionScaleFactor;
 	JME::JetParameters jetParam;
+	//nabin
+    EleSmearSF *eleSmearSF;
+
 
 };
 
