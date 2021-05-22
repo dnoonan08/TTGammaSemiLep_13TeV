@@ -74,79 +74,18 @@ Selector::Selector(){
     pho_noEleVeto_cut = false;
     pho_applyPhoID = true;
 	
-    unc_fname = "";
+    // unc_fname = "";
+
+	// TH2F *uncHist  = (TH2F*) uncFile->Get("pt_eta");
+	uncHist;
 
 }
 
 
 double Selector::getElePhoSmearScaleSF(double pt, double eta){
 
-	TFile* uncFile = TFile::Open(unc_fname.c_str(),"READ");
-	TH2F *uncHist  = (TH2F*) uncFile->Get("pt_eta");
-    int xBin=1;
-    int yBin=1;
-
-    if      ((pt > 10  && pt <=40 ) && (eta >=0 && eta<=0.48)){xBin=1;yBin=1;}
-    else if ((pt > 40  && pt <=70 ) && (eta >=0 && eta<=0.48)){xBin=2;yBin=1;}
-    else if ((pt > 70  && pt <=100) && (eta >=0 && eta<=0.48)){xBin=3;yBin=1;}
-    else if ((pt > 100 && pt <=130) && (eta >=0 && eta<=0.48)){xBin=4;yBin=1;}
-    else if ((pt > 130 && pt <=160) && (eta >=0 && eta<=0.48)){xBin=5;yBin=1;}
-    else if ((pt > 160 && pt <=190) && (eta >=0 && eta<=0.48)){xBin=6;yBin=1;}
-    else if ((pt > 190 && pt <=220) && (eta >=0 && eta<=0.48)){xBin=7;yBin=1;}
-    else if ((pt > 220 && pt <=250) && (eta >=0 && eta<=0.48)){xBin=8;yBin=1;}
-    else if ((pt > 250 && pt <=280) && (eta >=0 && eta<=0.48)){xBin=9;yBin=1;}
-    else if ((pt > 280 && pt <=310) && (eta >=0 && eta<=0.48)){xBin=10;yBin=1;}
-
-    else if ((pt > 10  && pt <=40 ) && (eta >0.48 && eta<=0.96)){xBin=1;yBin=2;}
-    else if ((pt > 40  && pt <=70 ) && (eta >0.48 && eta<=0.96)){xBin=2;yBin=2;}
-    else if ((pt > 70  && pt <=100) && (eta >0.48 && eta<=0.96)){xBin=3;yBin=2;}
-    else if ((pt > 100 && pt <=130) && (eta >0.48 && eta<=0.96)){xBin=4;yBin=2;}
-    else if ((pt > 130 && pt <=160) && (eta >0.48 && eta<=0.96)){xBin=5;yBin=2;}
-    else if ((pt > 160 && pt <=190) && (eta >0.48 && eta<=0.96)){xBin=6;yBin=2;}
-    else if ((pt > 190 && pt <=220) && (eta >0.48 && eta<=0.96)){xBin=7;yBin=2;}
-    else if ((pt > 220 && pt <=250) && (eta >0.48 && eta<=0.96)){xBin=8;yBin=2;}
-    else if ((pt > 250 && pt <=280) && (eta >0.48 && eta<=0.96)){xBin=9;yBin=2;}
-    else if ((pt > 280 && pt <=310) && (eta >0.48 && eta<=0.96)){xBin=10;yBin=2;}
-
-    else if ((pt > 10  && pt <=40 ) && (eta >0.96 && eta<=1.44)){xBin=1;yBin=3;}
-    else if ((pt > 40  && pt <=70 ) && (eta >0.96 && eta<=1.44)){xBin=2;yBin=3;}
-    else if ((pt > 70  && pt <=100) && (eta >0.96 && eta<=1.44)){xBin=3;yBin=3;}
-    else if ((pt > 100 && pt <=130) && (eta >0.96 && eta<=1.44)){xBin=4;yBin=3;}
-    else if ((pt > 130 && pt <=160) && (eta >0.96 && eta<=1.44)){xBin=5;yBin=3;}
-    else if ((pt > 160 && pt <=190) && (eta >0.96 && eta<=1.44)){xBin=6;yBin=3;}
-    else if ((pt > 190 && pt <=220) && (eta >0.96 && eta<=1.44)){xBin=7;yBin=3;}
-    else if ((pt > 220 && pt <=250) && (eta >0.96 && eta<=1.44)){xBin=8;yBin=3;}
-    else if ((pt > 250 && pt <=280) && (eta >0.96 && eta<=1.44)){xBin=9;yBin=3;}
-    else if ((pt > 280 && pt <=310) && (eta >0.96 && eta<=1.44)){xBin=10;yBin=3;}
-
-    else if ((pt > 10  && pt <=40 ) && (eta >1.44 && eta<=1.92)){xBin=1;yBin=4;}
-    else if ((pt > 40  && pt <=70 ) && (eta >1.44 && eta<=1.92)){xBin=2;yBin=4;}
-    else if ((pt > 70  && pt <=100) && (eta >1.44 && eta<=1.92)){xBin=3;yBin=4;}
-    else if ((pt > 100 && pt <=130) && (eta >1.44 && eta<=1.92)){xBin=4;yBin=4;}
-    else if ((pt > 130 && pt <=160) && (eta >1.44 && eta<=1.92)){xBin=5;yBin=4;}
-    else if ((pt > 160 && pt <=190) && (eta >1.44 && eta<=1.92)){xBin=6;yBin=4;}
-    else if ((pt > 190 && pt <=220) && (eta >1.44 && eta<=1.92)){xBin=7;yBin=4;}
-    else if ((pt > 220 && pt <=250) && (eta >1.44 && eta<=1.92)){xBin=8;yBin=4;}
-    else if ((pt > 250 && pt <=280) && (eta >1.44 && eta<=1.92)){xBin=9;yBin=4;}
-    else if ((pt > 280 && pt <=310) && (eta >1.44 && eta<=1.92)){xBin=10;yBin=4;}
-
-    else if ((pt > 10  && pt <=40 ) && (eta >1.92 && eta<=2.4)){xBin=1;yBin=5;}
-    else if ((pt > 40  && pt <=70 ) && (eta >1.92 && eta<=2.4)){xBin=2;yBin=5;}
-    else if ((pt > 70  && pt <=100) && (eta >1.92 && eta<=2.4)){xBin=3;yBin=5;}
-    else if ((pt > 100 && pt <=130) && (eta >1.92 && eta<=2.4)){xBin=4;yBin=5;}
-    else if ((pt > 130 && pt <=160) && (eta >1.92 && eta<=2.4)){xBin=5;yBin=5;}
-    else if ((pt > 160 && pt <=190) && (eta >1.92 && eta<=2.4)){xBin=6;yBin=5;}
-    else if ((pt > 190 && pt <=220) && (eta >1.92 && eta<=2.4)){xBin=7;yBin=5;}
-    else if ((pt > 220 && pt <=250) && (eta >1.92 && eta<=2.4)){xBin=8;yBin=5;}
-    else if ((pt > 250 && pt <=280) && (eta >1.92 && eta<=2.4)){xBin=9;yBin=5;}
-
-    else {xBin=10;yBin=1;}
-    // else if ((pt > 280 && pt <=310) && (eta >=0 && eta<=0.48)){xBin=10;yBin=1;}
-
-    double unc_SF_value = uncHist->GetBinContent(xBin,yBin);
-
+    double unc_SF_value = uncHist->GetBinContent(uncHist->FindBin(pt,eta));
     return unc_SF_value;
-
 
 }
 
@@ -237,6 +176,41 @@ void Selector::filter_photons(){
         double eta = tree->phoEta_[phoInd];
         double absEta = TMath::Abs(eta);
         double phi = tree->phoPhi_[phoInd];
+
+
+
+
+
+        double PhoSmear = 1.;
+
+        if (!tree->isData_ && (phosmearLevel==0 || elesmearLevel==2)) {
+        	if (et <= 15) {et = 16.0;}
+        	if (absEta >= 2.4) {absEta = 2.39;}
+        	PhoSmear = getElePhoSmearScaleSF(et,absEta); 
+			et = et*PhoSmear; 
+
+
+        } 
+   
+        // tree->phoEt_[phoInd] = et;
+
+
+        double PhoScale = 1.;
+
+        if (tree->isData_ && (phoscaleLevel==0 || phoscaleLevel==2)) {
+        	if (et <= 15) {et = 16.0;}
+        	if (absEta >= 2.4) {absEta = 2.39;}
+        	PhoScale = getElePhoSmearScaleSF(et,absEta); 
+			et = et*PhoScale; 
+
+
+        } 
+   
+
+        tree->phoEt_[phoInd] = et;
+
+
+
 
 	
         bool isEB = tree->phoIsEB_[phoInd];
@@ -402,21 +376,7 @@ void Selector::filter_electrons(){
 
         double EleSmear = 1.;
 
-        /////////NEEDS TO BE REIMPLEMENTED
-
-        // ./runAnalysisNtuple_Syst.sh WGamma 2016 elesmear_up
-
-// ./AnalysisNtuple/makeAnalysisNtuple event 100 2016 WGamma__elesmear_up . root://cmseos.fnal.gov//store/user/lpctop/TTGamma_FullRun2/Skims_v6-2/2016/WGamma_2016_skim.root
-
-        // 0 is down, 2 is up.
-        // according to root file, we need to take abs of eta
-        // read smae file for up and down but read different histogram
-
-        // pt_eta_ResUp->GetNbinsX, pt_eta_ResUp->GetNbinsY, ==> 10, 310, 300/10, 30 
-         // pt_eta_ResUp->GetBinContent()
-        //10x5 bins, 
-
-        // if (tree->event_==printEvent){ cout  << "======> pt before " << pt << endl;}
+       // if (tree->event_==printEvent){ cout  << "======> pt before " << pt << endl;}
         if (!tree->isData_ && (elesmearLevel==0 || elesmearLevel==2)) {
         	if (pt <= 15) {pt = 16.0;}
         	if (absEta >= 2.4) {absEta = 2.39;}
@@ -428,7 +388,6 @@ void Selector::filter_electrons(){
 
         } 
    
-        tree->elePt_[eleInd] = pt;
 
         // if (tree->event_==printEvent){ cout  << "=======> pt after " << pt << endl;}
 
@@ -445,6 +404,7 @@ void Selector::filter_electrons(){
 
         } 
    
+        tree->elePt_[eleInd] = pt;
 
         // double nom_scale =  (float(tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);
         // if (tree->isData_ && elescaleLevel==1) {EleScale = ((tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);}

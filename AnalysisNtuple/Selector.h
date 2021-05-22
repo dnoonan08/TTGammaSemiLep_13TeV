@@ -128,7 +128,7 @@ public:
 	bool   QCDselect;
 
 
-    std::string unc_fname;
+	TH2F *uncHist;
 
 	// electrons
 	double ele_Pt_cut;
