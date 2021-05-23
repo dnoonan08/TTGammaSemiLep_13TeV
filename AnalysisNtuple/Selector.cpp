@@ -183,7 +183,7 @@ void Selector::filter_photons(){
 
         double PhoSmear = 1.;
 
-        if (!tree->isData_ && (phosmearLevel==0 || elesmearLevel==2)) {
+        if (!tree->isData_ && (phosmearLevel==0 || phosmearLevel==2)) {
         	if (et <= 15) {et = 16.0;}
         	if (absEta >= 2.4) {absEta = 2.39;}
         	PhoSmear = getElePhoSmearScaleSF(et,absEta); 
