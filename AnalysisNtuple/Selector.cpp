@@ -197,7 +197,7 @@ void Selector::filter_photons(){
 
         double PhoScale = 1.;
 
-        if (tree->isData_ && (phoscaleLevel==0 || phoscaleLevel==2)) {
+        if (!tree->isData_ && (phoscaleLevel==0 || phoscaleLevel==2)) {
         	if (et <= 15) {et = 16.0;}
         	if (absEta >= 2.4) {absEta = 2.39;}
         	PhoScale = getElePhoSmearScaleSF(et,absEta); 
@@ -393,7 +393,7 @@ void Selector::filter_electrons(){
 
         double EleScale = 1.;
 
-        if (tree->isData_ && (elescaleLevel==0 || elescaleLevel==2)) {
+        if (!tree->isData_ && (elescaleLevel==0 || elescaleLevel==2)) {
         	if (pt <= 15) {pt = 16.0;}
         	if (absEta >= 2.4) {absEta = 2.39;}
         	EleScale = getElePhoSmearScaleSF(pt,absEta); 
