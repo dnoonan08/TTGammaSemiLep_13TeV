@@ -177,41 +177,32 @@ void Selector::filter_photons(){
         double absEta = TMath::Abs(eta);
         double phi = tree->phoPhi_[phoInd];
 
-
-
-
-
         double PhoSmear = 1.;
 
         if (!tree->isData_ && (phosmearLevel==0 || phosmearLevel==2)) {
-        	if (et <= 15) {et = 16.0;}
-        	if (absEta >= 2.4) {absEta = 2.39;}
-        	PhoSmear = getElePhoSmearScaleSF(et,absEta); 
+            double tempEt = et;
+            double tempAbsEta = absEta;
+            if (et<15) {tempEt = 15.01;}
+            if (et>310) {tempEt = 310-0.1;}
+            if (absEta >=2.4) {tempAbsEta=2.39;}
+        	PhoSmear = getElePhoSmearScaleSF(tempEt,tempAbsEta); 
 			et = et*PhoSmear; 
-
-
         } 
    
-        // tree->phoEt_[phoInd] = et;
-
-
         double PhoScale = 1.;
 
         if (!tree->isData_ && (phoscaleLevel==0 || phoscaleLevel==2)) {
-        	if (et <= 15) {et = 16.0;}
-        	if (absEta >= 2.4) {absEta = 2.39;}
-        	PhoScale = getElePhoSmearScaleSF(et,absEta); 
-			et = et*PhoScale; 
-
+            double tempEt = et;
+            double tempAbsEta = absEta;
+            if (et<15) {tempEt = 15.01;}
+            if (et>310) {tempEt = 310-0.1;}
+            if (absEta >=2.4) {tempAbsEta=2.39;}
+        	PhoScale = getElePhoSmearScaleSF(tempEt,tempAbsEta); 
+            et = et*PhoScale; 
 
         } 
-   
-
+  
         tree->phoEt_[phoInd] = et;
-
-
-
-
 	
         bool isEB = tree->phoIsEB_[phoInd];
         bool isEE = tree->phoIsEE_[phoInd];
@@ -376,32 +367,26 @@ void Selector::filter_electrons(){
 
         double EleSmear = 1.;
 
-       // if (tree->event_==printEvent){ cout  << "======> pt before " << pt << endl;}
         if (!tree->isData_ && (elesmearLevel==0 || elesmearLevel==2)) {
-        	if (pt <= 15) {pt = 16.0;}
-        	if (absEta >= 2.4) {absEta = 2.39;}
-        	EleSmear = getElePhoSmearScaleSF(pt,absEta); 
-			// EleSmear = 1.5; getEleSmearSF
+            double tempPt = pt;
+            double tempAbsEta = absEta;
+            if (pt<15) {tempPt = 15.01;}
+            if (pt>310) {tempPt = 310-0.1;}
+            if (absEta >=2.4) {tempAbsEta=2.39;}  
+        	EleSmear = getElePhoSmearScaleSF(tempPt,tempAbsEta); 
 			pt = pt*EleSmear; 
-       		// if (tree->event_==printEvent){ cout  << "======> smear value " << EleSmear << endl;}
-
-
         } 
    
-
-        // if (tree->event_==printEvent){ cout  << "=======> pt after " << pt << endl;}
-
         double EleScale = 1.;
 
         if (!tree->isData_ && (elescaleLevel==0 || elescaleLevel==2)) {
-        	if (pt <= 15) {pt = 16.0;}
-        	if (absEta >= 2.4) {absEta = 2.39;}
-        	EleScale = getElePhoSmearScaleSF(pt,absEta); 
-			// EleSmear = 1.5; getEleSmearSF
+            double tempPt = pt;
+            double tempAbsEta = absEta;
+            if (pt<15) {tempPt = 15.01;}
+            if (pt>310) {tempPt = 310-0.1;}
+            if (absEta >=2.4) {tempAbsEta=2.39;}        
+        	EleScale = getElePhoSmearScaleSF(tempPt,tempAbsEta); 
 			pt = pt*EleScale; 
-       		// if (tree->event_==printEvent){ cout  << "======> smear value " << EleSmear << endl;}
-
-
         } 
    
         tree->elePt_[eleInd] = pt;
@@ -421,8 +406,8 @@ void Selector::filter_electrons(){
         // tree->eleEn_[eleInd]= en;
         
 
-	// upper limit on the QCD iso of the vetoID value
-	bool passTightID_noIso = passEleID(eleInd, 4,false) && passVetoID;
+	    // upper limit on the QCD iso of the vetoID value
+	    bool passTightID_noIso = passEleID(eleInd, 4,false) && passVetoID;
 	
         if (QCDselect){
             Float_t isoEBcut = 0.0287 + 0.506/tree->elePt_[eleInd];
