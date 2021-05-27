@@ -74,9 +74,21 @@ Selector::Selector(){
     pho_noEleVeto_cut = false;
     pho_applyPhoID = true;
 	
+    // unc_fname = "";
 
+	// TH2F *uncHist  = (TH2F*) uncFile->Get("pt_eta");
+	uncHist;
 
 }
+
+
+double Selector::getElePhoSmearScaleSF(double pt, double eta){
+
+    double unc_SF_value = uncHist->GetBinContent(uncHist->FindBin(pt,eta));
+    return unc_SF_value;
+
+}
+
 
 void Selector::init_JER(std::string inputPrefix){
 
@@ -97,6 +109,9 @@ void Selector::init_JER(std::string inputPrefix){
 
     // cout << JetCorrector << endl;
 }
+
+
+
 
 void Selector::process_objects(EventTree* inp_tree){
     tree = inp_tree;
@@ -162,6 +177,32 @@ void Selector::filter_photons(){
         double absEta = TMath::Abs(eta);
         double phi = tree->phoPhi_[phoInd];
 
+        double PhoSmear = 1.;
+
+        if (!tree->isData_ && (phosmearLevel==0 || phosmearLevel==2)) {
+            double tempEt = et;
+            double tempAbsEta = absEta;
+            if (et<15) {tempEt = 15.01;}
+            if (et>310) {tempEt = 310-0.1;}
+            if (absEta >=2.4) {tempAbsEta=2.39;}
+        	PhoSmear = getElePhoSmearScaleSF(tempEt,tempAbsEta); 
+			et = et*PhoSmear; 
+        } 
+   
+        double PhoScale = 1.;
+
+        if (!tree->isData_ && (phoscaleLevel==0 || phoscaleLevel==2)) {
+            double tempEt = et;
+            double tempAbsEta = absEta;
+            if (et<15) {tempEt = 15.01;}
+            if (et>310) {tempEt = 310-0.1;}
+            if (absEta >=2.4) {tempAbsEta=2.39;}
+        	PhoScale = getElePhoSmearScaleSF(tempEt,tempAbsEta); 
+            et = et*PhoScale; 
+
+        } 
+  
+        tree->phoEt_[phoInd] = et;
 	
         bool isEB = tree->phoIsEB_[phoInd];
         bool isEE = tree->phoIsEE_[phoInd];
@@ -323,25 +364,33 @@ void Selector::filter_electrons(){
         bool passDz = ((absEta < 1.479 && abs(tree->eleDz_[eleInd]) < 0.1) ||
                        (absEta > 1.479 && abs(tree->eleDz_[eleInd]) < 0.2));
         
-        
 
         double EleSmear = 1.;
 
-        /////////NEEDS TO BE REIMPLEMENTED
+        if (!tree->isData_ && (elesmearLevel==0 || elesmearLevel==2)) {
+            double tempPt = pt;
+            double tempAbsEta = absEta;
+            if (pt<15) {tempPt = 15.01;}
+            if (pt>310) {tempPt = 310-0.1;}
+            if (absEta >=2.4) {tempAbsEta=2.39;}  
+        	EleSmear = getElePhoSmearScaleSF(tempPt,tempAbsEta); 
+			pt = pt*EleSmear; 
+        } 
+   
+        double EleScale = 1.;
 
-        // if (!tree->isData_ && elesmearLevel==1) {EleSmear = generator->Gaus(1,(tree->eleResol_rho_up_[eleInd]+tree->eleResol_rho_dn_[eleInd])/2.);}
-        // if (!tree->isData_ && elesmearLevel==0) {EleSmear = generator->Gaus(1,tree->eleResol_rho_dn_[eleInd]);}
-        // if (!tree->isData_ && elesmearLevel==2) {EleSmear = generator->Gaus(1,tree->eleResol_rho_up_[eleInd]);}
-        // if (pt<10.){
-        //   smearEle= false;
-        // }
-        // if (smearEle){
-        //   pt = pt*EleSmear;
-        //   en = EleSmear*en;
-        // }
-        // tree->elePt_[eleInd] = pt;
-        // tree->eleEn_[eleInd]= en;   
-        // double EleScale = 1.;
+        if (!tree->isData_ && (elescaleLevel==0 || elescaleLevel==2)) {
+            double tempPt = pt;
+            double tempAbsEta = absEta;
+            if (pt<15) {tempPt = 15.01;}
+            if (pt>310) {tempPt = 310-0.1;}
+            if (absEta >=2.4) {tempAbsEta=2.39;}        
+        	EleScale = getElePhoSmearScaleSF(tempPt,tempAbsEta); 
+			pt = pt*EleScale; 
+        } 
+   
+        tree->elePt_[eleInd] = pt;
+
         // double nom_scale =  (float(tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);
         // if (tree->isData_ && elescaleLevel==1) {EleScale = ((tree->eleScale_stat_up_[eleInd]+tree->eleScale_stat_dn_[eleInd])/2.);}
         // if (!tree->isData_ && elescaleLevel==2){EleScale = 1.+sqrt(pow((1-tree->eleScale_syst_up_[eleInd]),2)+pow((1-tree->eleScale_stat_up_[eleInd]),2)+pow((1-tree->eleScale_gain_up_[eleInd]),2));}
@@ -357,8 +406,8 @@ void Selector::filter_electrons(){
         // tree->eleEn_[eleInd]= en;
         
 
-	// upper limit on the QCD iso of the vetoID value
-	bool passTightID_noIso = passEleID(eleInd, 4,false) && passVetoID;
+	    // upper limit on the QCD iso of the vetoID value
+	    bool passTightID_noIso = passEleID(eleInd, 4,false) && passVetoID;
 	
         if (QCDselect){
             Float_t isoEBcut = 0.0287 + 0.506/tree->elePt_[eleInd];

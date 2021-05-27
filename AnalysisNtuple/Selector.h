@@ -6,6 +6,7 @@
 #include <iomanip>
 #include<algorithm>
 #include<TH1F.h>
+#include<TH2F.h>
 #include<TMath.h>
 #include<TLorentzVector.h>
 #include"EventTree.h"
@@ -25,6 +26,11 @@
 //#include"JEC/JERScaleFactors.h"
 
 #include <random>
+
+
+
+
+
 
 
 // https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
@@ -86,7 +92,7 @@ public:
 	std::vector<int> MuonsNoIso;
 	std::vector<int> Jets;
 	std::vector<int> bJets;
-        std::vector<int> FwdJets;
+    std::vector<int> FwdJets;
 
 	std::vector<double> jet_resolution;
 	std::vector<bool>   jet_isTagged;
@@ -120,6 +126,9 @@ public:
 	bool   looseJetID;
 	bool   useDeepCSVbTag;
 	bool   QCDselect;
+
+
+	TH2F *uncHist;
 
 	// electrons
 	double ele_Pt_cut;
@@ -161,9 +170,10 @@ public:
 	int printEvent;
 
 	void clear_vectors();
+
+	double  getElePhoSmearScaleSF(double pt, double eta);
 	
 	void init_JER(std::string inputPrefix);
-
 
 private:
 	EventTree* tree;
@@ -191,6 +201,7 @@ private:
 	JME::JetResolution *jetResolution;
 	JME::JetResolutionScaleFactor *jetResolutionScaleFactor;
 	JME::JetParameters jetParam;
+
 
 };
 
@@ -252,6 +263,7 @@ public:
         double ele_Dxy_cut;
         int    ele_MissInnHit_cut;
         bool   ele_Iso_MVA_invert;
+
 
 	double pho_Et_cut;
         double pho_Eta_cut;

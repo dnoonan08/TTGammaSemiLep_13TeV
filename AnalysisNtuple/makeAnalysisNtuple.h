@@ -90,6 +90,7 @@ class makeAnalysisNtuple {
     PhotonSF* phoSF;
 
     PrefireWeights* l1PrefireSF;
+
     
     TH2D* l_eff;
     TH2D* c_eff;
